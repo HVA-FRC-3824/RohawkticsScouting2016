@@ -1,4 +1,4 @@
-package com.example.akmessing1.scoutingtest;
+package com.example.akmessing1.scoutingtest.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,14 +9,11 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,15 +21,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.akmessing1.scoutingtest.JsonUTF8Request;
+import com.example.akmessing1.scoutingtest.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-public class matchList extends AppCompatActivity {
+public class MatchList extends AppCompatActivity {
 
-    private static final String TAG = matchList.class.getSimpleName();
+    private static final String TAG = MatchList.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +50,7 @@ public class matchList extends AppCompatActivity {
             tv.setTextColor(Color.BLACK);
             tv.setTextSize(42);
             tv.setGravity(Gravity.CENTER_HORIZONTAL);
-            matchList.addView(tv);
+            MatchList.addView(tv);
             return;
         }
         */
@@ -115,7 +113,7 @@ public class matchList extends AppCompatActivity {
                             }
 
                         }
-                        Intent intent = new Intent(getApplicationContext(), matchList.class);
+                        Intent intent = new Intent(getApplicationContext(), MatchList.class);
                         startActivity(intent);
 
                     }
@@ -179,7 +177,7 @@ public class matchList extends AppCompatActivity {
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(),matchScouting.class);
+                            Intent intent = new Intent(MatchList.this,MatchScouting.class);
                             intent.putExtra("match_number",matchNum);
                             startActivity(intent);
                         }

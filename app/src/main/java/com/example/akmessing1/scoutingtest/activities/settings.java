@@ -1,4 +1,4 @@
-package com.example.akmessing1.scoutingtest;
+package com.example.akmessing1.scoutingtest.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
+
+import com.example.akmessing1.scoutingtest.R;
 
 import java.util.Arrays;
 
-public class settings extends AppCompatActivity {
+public class Settings extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

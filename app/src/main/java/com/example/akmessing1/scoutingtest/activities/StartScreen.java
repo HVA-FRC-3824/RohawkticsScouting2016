@@ -1,17 +1,14 @@
-package com.example.akmessing1.scoutingtest;
+package com.example.akmessing1.scoutingtest.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.content.Intent;
 import android.widget.Button;
+
+import com.example.akmessing1.scoutingtest.R;
 
 public class StartScreen extends AppCompatActivity {
 
@@ -21,7 +18,7 @@ public class StartScreen extends AppCompatActivity {
         setContentView(R.layout.activity_start_screen);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String type = sharedPreferences.getString("type","Match Scout");
+        String type = sharedPreferences.getString("type", "Match Scout");
         if(type.equals("Match Scout"))
         {
             Button button = (Button)findViewById(R.id.scoutMatch_button);
@@ -66,13 +63,13 @@ public class StartScreen extends AppCompatActivity {
 
     public void match_schedule(View view)
     {
-        Intent intent = new Intent(this, matchSchedule.class);
+        Intent intent = new Intent(this, MatchSchedule.class);
         startActivity(intent);
     }
 
     public void scout_match(View view)
     {
-        Intent intent = new Intent(this, matchList.class);
+        Intent intent = new Intent(this, MatchList.class);
         startActivity(intent);
     }
 
@@ -93,7 +90,7 @@ public class StartScreen extends AppCompatActivity {
 
     public void settings(View view)
     {
-        Intent intent = new Intent(this, settings.class);
+        Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
     }
 }

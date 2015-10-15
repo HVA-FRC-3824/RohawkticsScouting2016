@@ -1,4 +1,4 @@
-package com.example.akmessing1.scoutingtest;
+package com.example.akmessing1.scoutingtest.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,44 +10,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.akmessing1.scoutingtest.JsonUTF8Request;
+import com.example.akmessing1.scoutingtest.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-
-public class matchSchedule extends AppCompatActivity {
-    private static final String TAG = matchSchedule.class.getSimpleName();
+public class MatchSchedule extends AppCompatActivity {
+    private static final String TAG = MatchSchedule.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +102,7 @@ public class matchSchedule extends AppCompatActivity {
                             }
 
                         }
-                        Intent intent = new Intent(getApplicationContext(), matchSchedule.class);
+                        Intent intent = new Intent(MatchSchedule.this, MatchSchedule.class);
                         startActivity(intent);
 
                     }
