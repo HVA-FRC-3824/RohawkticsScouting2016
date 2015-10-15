@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -38,7 +39,7 @@ public class matchList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_list);
 
-        LinearLayout matchList = (LinearLayout)findViewById(R.id.matchList);
+        final LinearLayout matchList = (LinearLayout)findViewById(R.id.matchList);
         SharedPreferences sharedPreferences = getSharedPreferences( "appData", Context.MODE_PRIVATE );
 
         /*
@@ -174,6 +175,15 @@ public class matchList extends AppCompatActivity {
                         }
                     }
                     button.setText(buttonText);
+                    final int matchNum = i+1;
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getApplicationContext(),matchScouting.class);
+                            intent.putExtra("match_number",matchNum);
+                            startActivity(intent);
+                        }
+                    });
                     matchList.addView(button);
                     cursor.moveToNext();
                 }

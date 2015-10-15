@@ -20,17 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".match_list"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_match_list"
-            android:theme="@style/FullscreenTheme" >
-        </activity>
         <activity android:name=".matchList" >
         </activity>
         <activity android:name=".settings" >
         </activity>
         <activity android:name=".matchSchedule" >
+        </activity>
+        <activity
+            android:name=".matchScouting"
+            android:label="@string/title_activity_match_scouting"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 
