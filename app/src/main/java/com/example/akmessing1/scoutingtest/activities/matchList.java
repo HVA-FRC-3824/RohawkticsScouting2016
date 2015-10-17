@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.akmessing1.scoutingtest.JsonUTF8Request;
 import com.example.akmessing1.scoutingtest.R;
+import com.example.akmessing1.scoutingtest.ScheduleDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +39,7 @@ public class MatchList extends AppCompatActivity {
         setContentView(R.layout.activity_match_list);
 
         final LinearLayout matchList = (LinearLayout)findViewById(R.id.matchList);
-        SharedPreferences sharedPreferences = getSharedPreferences( "appData", Context.MODE_PRIVATE );
+        final SharedPreferences sharedPreferences = getSharedPreferences( "appData", Context.MODE_PRIVATE );
 
         final String eventID = sharedPreferences.getString("event_id", "");
 
@@ -48,15 +49,9 @@ public class MatchList extends AppCompatActivity {
         }
         else {
 
-            final SQLiteDatabase database = openOrCreateDatabase("RoHawkticsScouting", MODE_PRIVATE, null);
-            String queryString = "CREATE TABLE IF NOT EXISTS schedule_" + eventID + "( matchNum INTEGER PRIMARY KEY UNIQUE NOT NULL, blue1 INTEGER NOT NULL, blue2 INTEGER NOT NULL, blue3 INT NOT NULL, red1 INTEGER NOT NULL, red2 INTEGER NOT NULL, red3 INTEGER NOT NULL);";
-            Log.d(TAG, "Query: " + queryString);
-            database.execSQL(queryString);
-            queryString = "select * from schedule_" + eventID + ";";
-            Log.d(TAG, "Query: " + queryString);
-            Cursor cursor = database.rawQuery(queryString, null);
+            final ScheduleDB scheduleDB = new ScheduleDB(this,eventID);
 
-            if (cursor.getCount() == 0) {
+            if(scheduleDB.getNumMatches() == 0) {
                 Log.d(TAG, "Table empty");
                 RequestQueue queue = Volley.newRequestQueue(this);
                 String url = "http://www.thebluealliance.com/api/v2/event/" + eventID + "/matches?X-TBA-App-Id=amessing:scoutingTest:v1";
@@ -65,42 +60,47 @@ public class MatchList extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Schedule received");
+                        scheduleDB.createSchedule(response);
+                        Cursor cursor = scheduleDB.getSchedule();
+                        String color = sharedPreferences.getString("alliance_color", "Blue");
+                        int num = sharedPreferences.getInt("alliance_number", 1);
+                        TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        trlp.setMargins(2, 2, 2, 2);
 
-                        for (int i = 0; i < response.length(); i++) {
+                        for(int i = 0; i < cursor.getCount(); i++)
+                        {
+                            Button button = new Button(getApplicationContext());
+                            String buttonText = "Match " + (i + 1)+": ";
+                            button.setLayoutParams(trlp);
+                            int tn = -1;
+                            if(color.equals("Blue"))
+                            {
+                                button.setBackgroundColor(Color.BLUE);
+                                tn = Integer.parseInt(cursor.getString(num));
+                                buttonText += tn;
 
-                            try {
-                                JSONObject jsonObject = response.getJSONObject(i);
-                                Log.d(TAG, "comp_level: " + jsonObject.getString("comp_level"));
-                                if (jsonObject.getString("comp_level").equals("qm")) {
-
-                                    String matchNum = jsonObject.getString("match_number");
-
-                                    JSONObject alliances = jsonObject.getJSONObject("alliances");
-
-                                    JSONObject blue = alliances.getJSONObject("blue");
-                                    JSONArray blueTeams = blue.getJSONArray("teams");
-                                    String blue1 = blueTeams.getString(0).substring(3);
-                                    String blue2 = blueTeams.getString(1).substring(3);
-                                    String blue3 = blueTeams.getString(2).substring(3);
-
-                                    JSONObject red = alliances.getJSONObject("red");
-                                    JSONArray redTeams = red.getJSONArray("teams");
-                                    String red1 = redTeams.getString(0).substring(3);
-                                    String red2 = redTeams.getString(1).substring(3);
-                                    String red3 = redTeams.getString(2).substring(3);
-                                    String queryString = "insert into schedule_" + eventID + " (matchNum, blue1, blue2, blue3, red1, red2, red3) values (" + matchNum + ", " + blue1 + ", " + blue2 + ", " + blue3 + ", " + red1 + ", " + red2 + ", " + red3 + ");";
-                                    Log.d(TAG, "Query: " + queryString);
-                                    database.execSQL(queryString);
-                                }
-
-                            } catch (JSONException e) {
-                                Log.d(TAG, "Exception: " + e.toString());
                             }
-
+                            else
+                            {
+                                button.setBackgroundColor(Color.RED);
+                                tn = Integer.parseInt(cursor.getString(num+3));
+                                buttonText += tn;
+                            }
+                            button.setText(buttonText);
+                            final int matchNum = i+1;
+                            final int teamNum = tn;
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(MatchList.this,MatchScouting.class);
+                                    intent.putExtra("match_number",matchNum);
+                                    intent.putExtra("team_number",teamNum);
+                                    startActivity(intent);
+                                }
+                            });
+                            matchList.addView(button);
+                            cursor.moveToNext();
                         }
-                        Intent intent = new Intent(getApplicationContext(), MatchList.class);
-                        startActivity(intent);
-
                     }
                 }, new Response.ErrorListener() {
 
@@ -115,11 +115,13 @@ public class MatchList extends AppCompatActivity {
 
             } else {
                 Log.d(TAG, "Table not empty");
-                String color = sharedPreferences.getString("alliance_color","Blue");
+                Cursor cursor = scheduleDB.getSchedule();
+                cursor.moveToFirst();
+                String color = sharedPreferences.getString("alliance_color", "Blue");
                 int num = sharedPreferences.getInt("alliance_number", 1);
                 TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 trlp.setMargins(2, 2, 2, 2);
-                cursor.moveToFirst();
+
                 for(int i = 0; i < cursor.getCount(); i++)
                 {
                     Button button = new Button(getApplicationContext());
