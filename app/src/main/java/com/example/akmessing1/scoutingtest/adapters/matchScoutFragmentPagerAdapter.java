@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.View;
 
 import com.example.akmessing1.scoutingtest.fragments.MatchAuto;
 import com.example.akmessing1.scoutingtest.fragments.MatchPost;
@@ -31,27 +32,19 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment;
         switch (position)
         {
             case 0:
-                fragment = new MatchPre();
-                break;
+                return new MatchPre();
             case 1:
-                fragment = new MatchAuto();
-                break;
+                return new MatchAuto();
             case 2:
-                fragment = new MatchTeleop();
-                break;
+                return new MatchTeleop();
             case 3:
-                fragment = new MatchPost();
-                break;
+                return new MatchPost();
             default:
-                fragment = null;
-                break;
+                return null;
         }
-        return fragment;
     }
-
 
 }

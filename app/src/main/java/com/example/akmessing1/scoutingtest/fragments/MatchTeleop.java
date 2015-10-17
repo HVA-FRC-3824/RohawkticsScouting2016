@@ -10,10 +10,18 @@ import com.example.akmessing1.scoutingtest.R;
 
 public class MatchTeleop extends Fragment {
 
+    public MatchTeleop() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_match_teleop, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_match_teleop, container, false);
     }
 }

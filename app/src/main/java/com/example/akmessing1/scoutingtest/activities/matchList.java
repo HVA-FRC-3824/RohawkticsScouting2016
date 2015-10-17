@@ -40,21 +40,6 @@ public class MatchList extends AppCompatActivity {
         final LinearLayout matchList = (LinearLayout)findViewById(R.id.matchList);
         SharedPreferences sharedPreferences = getSharedPreferences( "appData", Context.MODE_PRIVATE );
 
-        /*
-        boolean matchScout = sharedPreferences.getBoolean("match_scout", false);
-
-        if(!matchScout)
-        {
-            TextView tv = new TextView(getApplicationContext());
-            tv.setText("Not a match scout");
-            tv.setTextColor(Color.BLACK);
-            tv.setTextSize(42);
-            tv.setGravity(Gravity.CENTER_HORIZONTAL);
-            MatchList.addView(tv);
-            return;
-        }
-        */
-
         final String eventID = sharedPreferences.getString("event_id", "");
 
         if(eventID == "")
@@ -140,20 +125,25 @@ public class MatchList extends AppCompatActivity {
                     Button button = new Button(getApplicationContext());
                     String buttonText = "Match " + (i + 1)+": ";
                     button.setLayoutParams(trlp);
+                    int tn = -1;
                     if(color.equals("Blue"))
                     {
                         button.setBackgroundColor(Color.BLUE);
                         if (num == 1)
                         {
-                            buttonText += cursor.getString(1);
+                            tn = Integer.parseInt(cursor.getString(1));
+                            buttonText += tn;
+
                         }
                         else if (num == 2)
                         {
-                            buttonText += cursor.getString(2);
+                            tn = Integer.parseInt(cursor.getString(2));
+                            buttonText += tn;
                         }
                         else if(num == 3)
                         {
-                            buttonText += cursor.getString(3);
+                            tn = Integer.parseInt(cursor.getString(3));
+                            buttonText += tn;
                         }
                     }
                     else
@@ -161,24 +151,29 @@ public class MatchList extends AppCompatActivity {
                         button.setBackgroundColor(Color.RED);
                         if (num == 1)
                         {
-                            buttonText += cursor.getString(4);
+                            tn = Integer.parseInt(cursor.getString(4));
+                            buttonText += tn;
                         }
                         else if (num == 2)
                         {
-                            buttonText += cursor.getString(5);
+                            tn = Integer.parseInt(cursor.getString(5));
+                            buttonText += tn;
                         }
                         else if(num == 3)
                         {
-                            buttonText += cursor.getString(6);
+                            tn = Integer.parseInt(cursor.getString(6));
+                            buttonText += tn;
                         }
                     }
                     button.setText(buttonText);
                     final int matchNum = i+1;
+                    final int teamNum = tn;
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(MatchList.this,MatchScouting.class);
                             intent.putExtra("match_number",matchNum);
+                            intent.putExtra("team_number",teamNum);
                             startActivity(intent);
                         }
                     });
