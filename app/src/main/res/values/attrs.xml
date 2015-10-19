@@ -9,8 +9,14 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="CustomCheckbox">
+    <declare-styleable name="CustomScoutView">
         <attr name="label" format="string"/>
+        <attr name="key" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomSpinner">
+        <attr name="values" format="reference"/>
+        <attr name="defaultValue" format="string"/>
     </declare-styleable>
 
 </resources>

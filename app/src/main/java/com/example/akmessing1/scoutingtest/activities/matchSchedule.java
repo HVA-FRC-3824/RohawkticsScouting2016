@@ -1,10 +1,8 @@
 package com.example.akmessing1.scoutingtest.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +24,6 @@ import com.example.akmessing1.scoutingtest.R;
 import com.example.akmessing1.scoutingtest.ScheduleDB;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class MatchSchedule extends AppCompatActivity {
@@ -43,7 +39,7 @@ public class MatchSchedule extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences( "appData", Context.MODE_PRIVATE );
         final String eventID = sharedPreferences.getString("event_id","");
 
-        if(eventID == "")
+        if(eventID.equals(""))
         {
             Log.d(TAG,"No Event ID");
         }

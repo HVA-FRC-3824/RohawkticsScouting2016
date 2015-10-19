@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.akmessing1.scoutingtest.R;
 import com.example.akmessing1.scoutingtest.ScheduleDB;
@@ -29,9 +28,9 @@ public class MatchScouting extends AppCompatActivity {
     private MatchScoutFragmentPagerAdapter adapter;
     private Toolbar toolbar;
 
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
-    public int teamNumber;
+    private int teamNumber;
     private int matchNumber;
     private String allianceColor;
 

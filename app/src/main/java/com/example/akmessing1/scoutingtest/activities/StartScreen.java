@@ -19,45 +19,47 @@ public class StartScreen extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String type = sharedPreferences.getString("type", "Match Scout");
-        if(type.equals("Match Scout"))
-        {
-            Button button = (Button)findViewById(R.id.scoutMatch_button);
-            button.setVisibility(View.VISIBLE);
-        }
-        else if(type.equals("Pit Scout"))
-        {
-            Button button = (Button)findViewById(R.id.scoutPit_button);
-            button.setVisibility(View.VISIBLE);
-        }
-        else if(type.equals("Super Scout"))
-        {
-            Button button = (Button)findViewById(R.id.superScout_button);
-            button.setVisibility(View.VISIBLE);
-        }
-        else if(type.equals("Drive Team"))
-        {
-            Button button = (Button)findViewById(R.id.viewTeam_button);
-            button.setVisibility(View.VISIBLE);
-        }
-        else if(type.equals("Strategy"))
-        {
-            Button button = (Button)findViewById(R.id.viewTeam_button);
-            button.setVisibility(View.VISIBLE);
-            button = (Button)findViewById(R.id.viewPicklist_button);
-            button.setVisibility(View.VISIBLE);
-        }
-        else if(type.equals("Admin"))
-        {
-            Button button = (Button)findViewById(R.id.scoutMatch_button);
-            button.setVisibility(View.VISIBLE);
-            button = (Button)findViewById(R.id.scoutPit_button);
-            button.setVisibility(View.VISIBLE);
-            button = (Button)findViewById(R.id.superScout_button);
-            button.setVisibility(View.VISIBLE);
-            button = (Button)findViewById(R.id.viewTeam_button);
-            button.setVisibility(View.VISIBLE);
-            button = (Button)findViewById(R.id.viewPicklist_button);
-            button.setVisibility(View.VISIBLE);
+        switch (type) {
+            case "Match Scout": {
+                Button button = (Button) findViewById(R.id.scoutMatch_button);
+                button.setVisibility(View.VISIBLE);
+                break;
+            }
+            case "Pit Scout": {
+                Button button = (Button) findViewById(R.id.scoutPit_button);
+                button.setVisibility(View.VISIBLE);
+                break;
+            }
+            case "Super Scout": {
+                Button button = (Button) findViewById(R.id.superScout_button);
+                button.setVisibility(View.VISIBLE);
+                break;
+            }
+            case "Drive Team": {
+                Button button = (Button) findViewById(R.id.viewTeam_button);
+                button.setVisibility(View.VISIBLE);
+                break;
+            }
+            case "Strategy": {
+                Button button = (Button) findViewById(R.id.viewTeam_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.viewPicklist_button);
+                button.setVisibility(View.VISIBLE);
+                break;
+            }
+            case "Admin": {
+                Button button = (Button) findViewById(R.id.scoutMatch_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.scoutPit_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.superScout_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.viewTeam_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.viewPicklist_button);
+                button.setVisibility(View.VISIBLE);
+                break;
+            }
         }
     }
 

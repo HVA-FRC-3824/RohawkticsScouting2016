@@ -6,34 +6,33 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.akmessing1.scoutingtest.R;
 
-public class CustomCheckbox extends CustomScoutView {
+/**
+ * Created by akmessing1 on 10/17/15.
+ */
+public class CustomEdittext extends CustomScoutView {
 
-    private final CheckBox checkbox;
+    private TextView label;
+    private EditText edittext;
 
-    public CustomCheckbox(Context context, AttributeSet attrs)
+    public CustomEdittext(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.custom_checkbox, this);
+        inflater.inflate(R.layout.custom_edittext, this);
 
-        checkbox = (CheckBox)this.findViewById(R.id.checkbox);
-        TextView label = (TextView) this.findViewById(R.id.label);
+        edittext = (EditText)this.findViewById(R.id.edittext);
+        label = (TextView)this.findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
         typedArray.recycle();
-
-        this.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkbox.setChecked(!checkbox.isChecked());
-            }
-        });
     }
 
 }

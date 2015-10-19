@@ -114,14 +114,11 @@ public class Settings extends AppCompatActivity {
 
     public void save_settings(View view)
     {
-
-
         Spinner typeSelector = (Spinner)findViewById(R.id.typeSelector);
         Spinner colorSelector = (Spinner)findViewById(R.id.colorSelector);
         Spinner numSelector = (Spinner)findViewById(R.id.numSelector);
         EditText eventID = (EditText)findViewById(R.id.eventID);
 
-        SharedPreferences sharedPref = getSharedPreferences( "appData", Context.MODE_PRIVATE );
         SharedPreferences.Editor prefEditor = getSharedPreferences( "appData", Context.MODE_PRIVATE ).edit();
         prefEditor.putString("type", String.valueOf(typeSelector.getSelectedItem()));
         prefEditor.putString("alliance_color", String.valueOf(colorSelector.getSelectedItem()));

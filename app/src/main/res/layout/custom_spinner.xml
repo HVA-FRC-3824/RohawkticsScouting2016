@@ -20,12 +20,14 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"/>
 
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/label"
+        android:textSize="20sp"
         android:layout_marginRight="4dp"/>
 
 </RelativeLayout>
