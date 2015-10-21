@@ -22,8 +22,19 @@ public class ScheduleDB extends SQLiteOpenHelper
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
-    private static final String DATABASE_NAME = "BookDB";
+    private static final String DATABASE_NAME = "RohawkticsDB";
     private String TAG = "ScheduleDB";
+
+    // Table Columns names
+    public static final String KEY_MATCH_NUMBER = "_id";
+    public static final String KEY_BLUE1 = "blue1";
+    public static final String KEY_BLUE2 = "blue2";
+    public static final String KEY_BLUE3 = "blue3";
+    public static final String KEY_RED1 = "red1";
+    public static final String KEY_RED2 = "red2";
+    public static final String KEY_RED3 = "red3";
+
+    private static final String[] COLUMNS = {KEY_MATCH_NUMBER,KEY_BLUE1,KEY_BLUE2,KEY_BLUE3,KEY_RED1,KEY_RED2,KEY_RED3};
 
     private String tableName;
 
@@ -33,39 +44,25 @@ public class ScheduleDB extends SQLiteOpenHelper
         tableName = "schedule_"+eventID;
     }
 
+    @Override
     public void onCreate(SQLiteDatabase db)
     {
         String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( matchNum INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " blue1 INTEGER NOT NULL,"+
-                " blue2 INTEGER NOT NULL,"+
-                " blue3 INT NOT NULL,"+
-                " red1 INTEGER NOT NULL,"+
-                " red2 INTEGER NOT NULL,"+
-                " red3 INTEGER NOT NULL);";
+                "( "+KEY_MATCH_NUMBER+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_BLUE1+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE2+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE3+" INT NOT NULL,"+
+                " "+KEY_RED1+" INTEGER NOT NULL,"+
+                " "+KEY_RED2+" INTEGER NOT NULL,"+
+                " "+KEY_RED3+" INTEGER NOT NULL);";
         db.execSQL(queryString);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older books table if existed
         db.execSQL("DROP TABLE IF EXISTS "+tableName);
-
-        // create fresh books table
         this.onCreate(db);
     }
-
-    // Books Table Columns names
-    private static final String KEY_MATCH_NUMBER = "matchNum";
-    private static final String KEY_BLUE1 = "blue1";
-    private static final String KEY_BLUE2 = "blue2";
-    private static final String KEY_BLUE3 = "blue3";
-    private static final String KEY_RED1 = "red1";
-    private static final String KEY_RED2 = "red2";
-    private static final String KEY_RED3 = "red3";
-
-    private static final String[] COLUMNS = {KEY_MATCH_NUMBER,KEY_BLUE1,KEY_BLUE2,KEY_BLUE3,KEY_RED1,KEY_RED2,KEY_RED3};
-
 
     public void addMatch(int matchNum, int blue1, int blue2, int blue3, int red1, int red2, int red3)
     {

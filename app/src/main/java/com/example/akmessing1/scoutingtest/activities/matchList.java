@@ -1,18 +1,26 @@
 package com.example.akmessing1.scoutingtest.activities;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,27 +38,65 @@ import java.util.Objects;
 
 public class MatchList extends AppCompatActivity {
 
-    private static final String TAG = MatchList.class.getSimpleName();
+    private static final String TAG = "MatchList";
+    private SimpleCursorAdapter dataAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_list);
 
-        final LinearLayout matchList = (LinearLayout)findViewById(R.id.matchList);
-        final SharedPreferences sharedPreferences = getSharedPreferences( "appData", Context.MODE_PRIVATE );
-
+        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
-        if(eventID.equals(""))
-        {
-            Log.d(TAG,"No eventID");
+        if (eventID.equals("")) {
+            Log.d(TAG, "No Event ID");
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            final View view = inflater.inflate(R.layout.dialog_set_event_id, null);
+            builder.setView(view);
+            // Save button saves new event id
+            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    TextView textView = (TextView) view.findViewById(R.id.set_event_id);
+                    String eventId = String.valueOf(textView.getText());
+                    Log.d(TAG, "Event ID: " + eventId);
+                    if (!eventId.equals("")) {
+                        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
+                        prefEditor.putString("event_id", eventId);
+                        prefEditor.commit();
+                    }
+                    Intent intent = new Intent(MatchList.this, MatchList.class);
+                    startActivity(intent);
+                }
+            });
+            // Back button goes back to the start screen
+            builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent intent = new Intent(MatchList.this, StartScreen.class);
+                    startActivity(intent);
+                }
+            });
+            builder.show();
+            return;
         }
-        else {
 
-            final ScheduleDB scheduleDB = new ScheduleDB(this,eventID);
+            Button button = (Button)findViewById(R.id.match_list_back);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MatchList.this,StartScreen.class);
+                startActivity(intent);
 
-            if(scheduleDB.getNumMatches() == 0) {
+            }
+        });
+
+            final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
+
+            if (scheduleDB.getNumMatches() == 0) {
                 Log.d(TAG, "Table empty");
                 RequestQueue queue = Volley.newRequestQueue(this);
                 String url = "http://www.thebluealliance.com/api/v2/event/" + eventID + "/matches?X-TBA-App-Id=amessing:scoutingTest:v1";
@@ -60,46 +106,7 @@ public class MatchList extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Schedule received");
                         scheduleDB.createSchedule(response);
-                        Cursor cursor = scheduleDB.getSchedule();
-                        String color = sharedPreferences.getString("alliance_color", "Blue");
-                        int num = sharedPreferences.getInt("alliance_number", 1);
-                        TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        trlp.setMargins(2, 2, 2, 2);
-
-                        for(int i = 0; i < cursor.getCount(); i++)
-                        {
-                            Button button = new Button(getApplicationContext());
-                            String buttonText = "Match " + (i + 1)+": ";
-                            button.setLayoutParams(trlp);
-                            int tn;
-                            if(color.equals("Blue"))
-                            {
-                                button.setBackgroundColor(Color.BLUE);
-                                tn = Integer.parseInt(cursor.getString(num));
-                                buttonText += tn;
-
-                            }
-                            else
-                            {
-                                button.setBackgroundColor(Color.RED);
-                                tn = Integer.parseInt(cursor.getString(num+3));
-                                buttonText += tn;
-                            }
-                            button.setText(buttonText);
-                            final int matchNum = i+1;
-                            final int teamNum = tn;
-                            button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(MatchList.this,MatchScouting.class);
-                                    intent.putExtra("match_number",matchNum);
-                                    intent.putExtra("team_number",teamNum);
-                                    startActivity(intent);
-                                }
-                            });
-                            matchList.addView(button);
-                            cursor.moveToNext();
-                        }
+                        displayListView(scheduleDB, sharedPreferences);
                     }
                 }, new Response.ErrorListener() {
 
@@ -114,75 +121,94 @@ public class MatchList extends AppCompatActivity {
 
             } else {
                 Log.d(TAG, "Table not empty");
-                Cursor cursor = scheduleDB.getSchedule();
-                cursor.moveToFirst();
-                String color = sharedPreferences.getString("alliance_color", "Blue");
-                int num = sharedPreferences.getInt("alliance_number", 1);
-                TableRow.LayoutParams trlp = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                trlp.setMargins(2, 2, 2, 2);
-
-                for(int i = 0; i < cursor.getCount(); i++)
-                {
-                    Button button = new Button(getApplicationContext());
-                    String buttonText = "Match " + (i + 1)+": ";
-                    button.setLayoutParams(trlp);
-                    int tn = -1;
-                    if(color.equals("Blue"))
-                    {
-                        button.setBackgroundColor(Color.BLUE);
-                        if (num == 1)
-                        {
-                            tn = Integer.parseInt(cursor.getString(1));
-                            buttonText += tn;
-
-                        }
-                        else if (num == 2)
-                        {
-                            tn = Integer.parseInt(cursor.getString(2));
-                            buttonText += tn;
-                        }
-                        else if(num == 3)
-                        {
-                            tn = Integer.parseInt(cursor.getString(3));
-                            buttonText += tn;
-                        }
-                    }
-                    else
-                    {
-                        button.setBackgroundColor(Color.RED);
-                        if (num == 1)
-                        {
-                            tn = Integer.parseInt(cursor.getString(4));
-                            buttonText += tn;
-                        }
-                        else if (num == 2)
-                        {
-                            tn = Integer.parseInt(cursor.getString(5));
-                            buttonText += tn;
-                        }
-                        else if(num == 3)
-                        {
-                            tn = Integer.parseInt(cursor.getString(6));
-                            buttonText += tn;
-                        }
-                    }
-                    button.setText(buttonText);
-                    final int matchNum = i+1;
-                    final int teamNum = tn;
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(MatchList.this,MatchScouting.class);
-                            intent.putExtra("match_number",matchNum);
-                            intent.putExtra("team_number",teamNum);
-                            startActivity(intent);
-                        }
-                    });
-                    matchList.addView(button);
-                    cursor.moveToNext();
-                }
+                displayListView(scheduleDB, sharedPreferences);
             }
-        }
 
+
+    }
+
+    private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences)
+    {
+        Cursor cursor = scheduleDB.getSchedule();
+        if(cursor != null)
+        {
+            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_list);
+            int alliance_number = sharedPreferences.getInt("alliance_number",0);
+            String alliance_color = sharedPreferences.getString("alliance_color","");
+            if(alliance_color.equals(""))
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Set Alliance Color");
+                String[] colors = new String[]{"Blue","Red"};
+                builder.setItems(colors, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
+                        switch (which) {
+                            case 0:
+                                prefEditor.putString("alliance_color", "Blue");
+                                break;
+                            case 1:
+                                prefEditor.putString("alliance_color", "Red");
+                                break;
+                        }
+                        prefEditor.commit();
+                        Intent intent = new Intent(MatchList.this, MatchList.class);
+                        startActivity(intent);
+                    }
+                });
+                builder.show();
+                return;
+            }
+
+            if(alliance_number == 0)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Set Alliance Color");
+                String[] numbers = new String[]{"1","2", "3"};
+                builder.setItems(numbers, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
+                        prefEditor.putInt("alliance_number", which + 1);
+                        prefEditor.commit();
+                        Intent intent = new Intent(MatchList.this, MatchList.class);
+                        startActivity(intent);
+                    }
+                });
+                builder.show();
+                return;
+            }
+            cursor.moveToFirst();
+            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(4,4,4,4);
+            do{
+                Button button = new Button(this);
+                button.setLayoutParams(lp);
+                final int matchNumber = cursor.getInt(0);
+                final int teamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
+                button.setText("Match " + matchNumber + ": " + teamNumber);
+                switch (alliance_color.toLowerCase())
+                {
+                    case "blue":
+                        button.setBackgroundColor(Color.BLUE);
+                        break;
+                    case "red":
+                        button.setBackgroundColor(Color.RED);
+                        break;
+                }
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MatchList.this, MatchScouting.class);
+                        intent.putExtra("team_number",teamNumber);
+                        intent.putExtra("match_number",matchNumber);
+                        startActivity(intent);
+                    }
+                });
+                linearLayout.addView(button);
+                cursor.moveToNext();
+            }while(!cursor.isAfterLast());
+        }
     }
 }
