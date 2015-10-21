@@ -3,6 +3,7 @@ package com.example.akmessing1.scoutingtest.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -11,14 +12,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.akmessing1.scoutingtest.R;
+import com.example.akmessing1.scoutingtest.ScoutValue;
+
+import java.util.Map;
 
 /**
  * Created by akmessing1 on 10/17/15.
  */
 public class CustomEdittext extends CustomScoutView {
 
+    private String TAG = "CustomEdittext";
+
     private TextView label;
     private EditText edittext;
+    private String key;
 
     public CustomEdittext(Context context, AttributeSet attrs)
     {
@@ -32,7 +39,22 @@ public class CustomEdittext extends CustomScoutView {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
+        key = typedArray.getString(R.styleable.CustomScoutView_key);
         typedArray.recycle();
     }
 
+    @Override
+    public void writeToMap(Map<String, ScoutValue> map)
+    {
+        map.put(key, new ScoutValue(String.valueOf(edittext.getText())));
+    }
+
+    @Override
+    public void restoreFromMap(Map<String, ScoutValue> map)
+    {
+        ScoutValue sv = map.get(key);
+        if(sv != null) {
+            edittext.setText(sv.getString());
+        }
+    }
 }

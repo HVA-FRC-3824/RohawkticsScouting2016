@@ -10,15 +10,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.akmessing1.scoutingtest.R;
+import com.example.akmessing1.scoutingtest.ScoutValue;
 
-/**
- * Created by akmessing1 on 10/17/15.
- */
+import java.util.Map;
+
 public class CustomCounter extends CustomScoutView{
 
     private TextView label;
     private TextView countView;
     private int count;
+    private String key;
 
     public CustomCounter(Context context, AttributeSet attrs)
     {
@@ -31,6 +32,7 @@ public class CustomCounter extends CustomScoutView{
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
+        key = typedArray.getString(R.styleable.CustomScoutView_key);
         typedArray.recycle();
 
         count = 0;
@@ -59,5 +61,19 @@ public class CustomCounter extends CustomScoutView{
         });
     }
 
+    @Override
+    public void writeToMap(Map<String, ScoutValue> map)
+    {
+        map.put(key,new ScoutValue(count));
+    }
 
+    @Override
+    public void restoreFromMap(Map<String, ScoutValue> map)
+    {
+        ScoutValue sv = map.get(key);
+        if(sv != null) {
+            count = sv.getInt();
+            countView.setText(Integer.toString(count));
+        }
+    }
 }
