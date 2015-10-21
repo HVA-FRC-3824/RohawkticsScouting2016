@@ -14,6 +14,8 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
+// class extension that fixes the utf8 response being handled correctly
+// needed for the blue alliance requests
 public class JsonUTF8Request extends JsonRequest<JSONArray> {
     public JsonUTF8Request(int method, String url, JSONArray jsonRequest,
                            Listener<JSONArray> listener, ErrorListener errorListener) {
@@ -24,7 +26,6 @@ public class JsonUTF8Request extends JsonRequest<JSONArray> {
     @Override
     protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
         try {
-            // solution 1:
             String jsonString = new String(response.data, "UTF-8");
             return Response.success(new JSONArray(jsonString),
                     HttpHeaderParser.parseCacheHeaders(response));

@@ -12,6 +12,7 @@ import com.example.akmessing1.scoutingtest.R;
 
 public class StartScreen extends AppCompatActivity {
 
+    // Buttons become visible based on the role
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

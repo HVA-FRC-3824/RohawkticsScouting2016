@@ -42,6 +42,7 @@ public class MatchSchedule extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
+        // Check if event ID is set and ask for one if it is not
         if(eventID.equals(""))
         {
             Log.d(TAG, "No Event ID");
@@ -51,6 +52,7 @@ public class MatchSchedule extends AppCompatActivity {
             // Pass null as the parent view because its going in the dialog layout
             final View view = inflater.inflate(R.layout.dialog_set_event_id, null);
             builder.setView(view);
+
             // Save button saves new event id
             builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         @Override
@@ -67,6 +69,7 @@ public class MatchSchedule extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
+
             // Back button goes back to the start screen
             builder.setNeutralButton("Back", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
@@ -81,6 +84,7 @@ public class MatchSchedule extends AppCompatActivity {
             Log.d(TAG, "Event ID found");
             final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
 
+            // If schedule is empty then try to get one from the blue alliance
             if (scheduleDB.getNumMatches() == 0) {
                 Log.d(TAG, "Table empty");
                 RequestQueue queue = Volley.newRequestQueue(this);
@@ -97,6 +101,7 @@ public class MatchSchedule extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        //TODO: Schedule builder
                         Log.d(TAG, "Error: " + error.getMessage());
 
                     }
@@ -112,12 +117,14 @@ public class MatchSchedule extends AppCompatActivity {
         }
     }
 
+    // back button goes to home page
     public void back(View view)
     {
         Intent intent = new Intent(this, StartScreen.class);
         startActivity(intent);
     }
 
+    // set up listview
     private void displayListView(ScheduleDB scheduleDB)
     {
         ListView listview = (ListView)findViewById(R.id.schedule_list);

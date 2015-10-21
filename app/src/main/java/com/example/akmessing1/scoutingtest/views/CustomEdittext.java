@@ -16,9 +16,6 @@ import com.example.akmessing1.scoutingtest.ScoutValue;
 
 import java.util.Map;
 
-/**
- * Created by akmessing1 on 10/17/15.
- */
 public class CustomEdittext extends CustomScoutView {
 
     private String TAG = "CustomEdittext";

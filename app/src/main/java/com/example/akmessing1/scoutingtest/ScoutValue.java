@@ -1,5 +1,6 @@
 package com.example.akmessing1.scoutingtest;
 
+// Object that supports multiple types
 public class ScoutValue {
     public enum ValueType{STRING_TYPE, INT_TYPE, FLOAT_TYPE};
     ValueType type;

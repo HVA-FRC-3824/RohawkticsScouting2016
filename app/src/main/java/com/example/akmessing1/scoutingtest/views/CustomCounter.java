@@ -14,6 +14,7 @@ import com.example.akmessing1.scoutingtest.ScoutValue;
 
 import java.util.Map;
 
+// Custom field with label and clickable counter
 public class CustomCounter extends CustomScoutView{
 
     private TextView label;
@@ -30,16 +31,19 @@ public class CustomCounter extends CustomScoutView{
 
         label = (TextView)this.findViewById(R.id.label);
 
+        // Set label and get key
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
         key = typedArray.getString(R.styleable.CustomScoutView_key);
         typedArray.recycle();
 
+        // Setup counter
         count = 0;
 
         countView = (TextView)this.findViewById(R.id.counter);
         countView.setText(Integer.toString(count));
 
+        // clicking on the field increments the counter
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,6 +52,7 @@ public class CustomCounter extends CustomScoutView{
             }
         });
 
+        // a long click decrements the counter
         this.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -61,12 +66,14 @@ public class CustomCounter extends CustomScoutView{
         });
     }
 
+    // Custom save
     @Override
     public void writeToMap(Map<String, ScoutValue> map)
     {
         map.put(key,new ScoutValue(count));
     }
 
+    // Custom restore
     @Override
     public void restoreFromMap(Map<String, ScoutValue> map)
     {

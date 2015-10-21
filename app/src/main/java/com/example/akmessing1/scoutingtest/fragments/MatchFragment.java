@@ -11,6 +11,7 @@ import com.example.akmessing1.scoutingtest.views.CustomScoutView;
 
 import java.util.Map;
 
+// abstract base class for each of the match scouting fragments
 public abstract class MatchFragment  extends Fragment {
 
     private String TAG = "MatchFragment";
@@ -25,6 +26,7 @@ public abstract class MatchFragment  extends Fragment {
         valueMap = map;
     }
 
+    // Recursive functions to get all the values and store them in a map
     public void writeContentsToMap(Map<String, ScoutValue> map)
     {
         // Get the ViewGroup holding all of the widgets
@@ -58,12 +60,11 @@ public abstract class MatchFragment  extends Fragment {
         }
     }
 
+    // Recursive function to get all the values from a map and populate the fields
     public void restoreContentsFromMap(Map<String, ScoutValue> map) {
-        Log.d(TAG,"restoreContentsFromMap");
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
         if (vg == null) {
-            Log.d("wildrank", "view is null");
             // If the view has been destroyed, state should already be saved
             // to parent activity
             return;
@@ -80,7 +81,6 @@ public abstract class MatchFragment  extends Fragment {
     }
 
     public void restoreContentsFromMap(Map<String, ScoutValue> map, ViewGroup viewGroup) {
-        Log.d(TAG,"restoreContentsFromMap2");
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = viewGroup.getChildAt(i);

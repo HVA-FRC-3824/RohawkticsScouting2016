@@ -39,4 +39,11 @@
         app:key="test_spinner"
         app:values="@array/test_array"/>
 
+    <com.example.akmessing1.scoutingtest.views.CustomNumeric
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/test_numeric"
+        app:label="Test Numeric"
+        app:key="test_numeric"/>
+
 </LinearLayout>

@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 public class Settings extends AppCompatActivity {
 
+    // Populate the settings fields with their respective values
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,13 +106,14 @@ public class Settings extends AppCompatActivity {
         });
     }
 
+    // back button goes to the start screen
     public void back(View view)
     {
         Intent intent = new Intent(this,StartScreen.class);
         startActivity(intent);
     }
 
-
+    // Save the current settings to shared preferences
     public void save_settings(View view)
     {
         Spinner typeSelector = (Spinner)findViewById(R.id.typeSelector);

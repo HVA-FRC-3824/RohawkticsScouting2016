@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+// Setup up page fragments for match scouting
 public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
     private String tabTitles[] = new String[] { "Autonomous", "Teleop","Post-Match" };
@@ -60,6 +60,8 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
                 fragment = null; // There has been a problem!
                 break;
         }
+
+        // sets the value map for restoring values
         if(valueMap != null) {
             fragment.setValuesMap(valueMap);
         }
@@ -67,11 +69,14 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
         return fragment;
     }
 
+    // sets the value map for restoring values
     public void setValueMap(Map<String, ScoutValue> map)
     {
         valueMap = map;
     }
 
+    // returns all the fragments
+    // used to get all the values for saving
     public List<MatchFragment> getAllFragments(){
         List<MatchFragment> fragmentList = new ArrayList<>();
         for(Map.Entry<Integer,WeakReference<MatchFragment>> entry: fragments.entrySet())

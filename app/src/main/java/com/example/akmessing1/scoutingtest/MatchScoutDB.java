@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+// Database helper for match scouting data
 public class MatchScoutDB extends SQLiteOpenHelper {
 
     // Database Version
@@ -50,12 +51,14 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
+    // Add column to table
     public void addColumn(String columnName, String columnType)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
     }
 
+    // Store data in the database for a specific match and team
     public void updateMatch(Map<String, ScoutValue> map)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -116,7 +119,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         db.close();
     }
 
-
+    // Get all the scouting information about a specific match
     public Cursor getMatchInfo(int matchNum)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -149,6 +152,8 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         return cursor;
     }
 
+    // Function for getting the scouting information about a specific team in a specific match
+    // Used in restoring field values
     public Map<String, ScoutValue> getTeamMatchInfo(int teamNum, int matchNum)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -160,11 +165,13 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
+        // First time for a match and team number combination
         if (cursor == null || cursor.getCount() == 0) {
             Log.d(TAG,"No rows came back");
             return null;
         }
 
+        // Setup map
         Map<String, ScoutValue> map = new HashMap<>();
         cursor.moveToFirst();
         for(int i = 1; i < cursor.getColumnCount(); i++)

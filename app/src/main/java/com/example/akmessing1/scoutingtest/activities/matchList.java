@@ -36,6 +36,8 @@ import org.json.JSONArray;
 
 import java.util.Objects;
 
+// Activity which displays each match and corresponding team based on the selected alliance color
+// and number as button which lead to match scouting
 public class MatchList extends AppCompatActivity {
 
     private static final String TAG = "MatchList";
@@ -49,6 +51,7 @@ public class MatchList extends AppCompatActivity {
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
+        // If there is no Event ID stored then a dialog box will popup to set one
         if (eventID.equals("")) {
             Log.d(TAG, "No Event ID");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -84,7 +87,8 @@ public class MatchList extends AppCompatActivity {
             return;
         }
 
-            Button button = (Button)findViewById(R.id.match_list_back);
+        // Back button will send user to the home screen
+        Button button = (Button)findViewById(R.id.match_list_back);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,39 +98,41 @@ public class MatchList extends AppCompatActivity {
             }
         });
 
-            final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
+        final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
 
-            if (scheduleDB.getNumMatches() == 0) {
-                Log.d(TAG, "Table empty");
-                RequestQueue queue = Volley.newRequestQueue(this);
-                String url = "http://www.thebluealliance.com/api/v2/event/" + eventID + "/matches?X-TBA-App-Id=amessing:scoutingTest:v1";
-                Log.d(TAG, "url: " + url);
-                JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, "Schedule received");
-                        scheduleDB.createSchedule(response);
-                        displayListView(scheduleDB, sharedPreferences);
-                    }
-                }, new Response.ErrorListener() {
+        // If there are no matches in the database pull from schedule the blue alliance
+        if (scheduleDB.getNumMatches() == 0) {
+            Log.d(TAG, "Table empty");
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "http://www.thebluealliance.com/api/v2/event/" + eventID + "/matches?X-TBA-App-Id=amessing:scoutingTest:v1";
+            Log.d(TAG, "url: " + url);
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error: " + error.getMessage());
-
-                    }
-                });
-
-                queue.add(jsonReq);
-
-            } else {
-                Log.d(TAG, "Table not empty");
-                displayListView(scheduleDB, sharedPreferences);
-            }
+            //Request schedule
+            JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    Log.d(TAG, "Schedule received");
+                    scheduleDB.createSchedule(response);
+                    //
+                    displayListView(scheduleDB, sharedPreferences);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    //TODO: Allow schedule building
+                    Log.d(TAG, "Error: " + error.getMessage());
+                }
+            });
+            queue.add(jsonReq);
+        } else {
+            Log.d(TAG, "Table not empty");
+            displayListView(scheduleDB, sharedPreferences);
+        }
 
 
     }
 
+    // Setup list view with the schedule
     private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences)
     {
         Cursor cursor = scheduleDB.getSchedule();
@@ -135,6 +141,8 @@ public class MatchList extends AppCompatActivity {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_list);
             int alliance_number = sharedPreferences.getInt("alliance_number",0);
             String alliance_color = sharedPreferences.getString("alliance_color","");
+
+            // If no alliance color set, ask for one via dialog box
             if(alliance_color.equals(""))
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -161,6 +169,7 @@ public class MatchList extends AppCompatActivity {
                 return;
             }
 
+            // if no alliance number set, ask for one via dialog box
             if(alliance_number == 0)
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -179,9 +188,12 @@ public class MatchList extends AppCompatActivity {
                 builder.show();
                 return;
             }
+
             cursor.moveToFirst();
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4,4,4,4);
+
+            // Add buttons
             do{
                 Button button = new Button(this);
                 button.setLayoutParams(lp);

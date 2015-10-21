@@ -18,16 +18,16 @@
         android:textSize="20sp"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:inputType="textCapSentences"/>
+        android:layout_marginBottom="4dp"/>
 
     <EditText
-        android:id="@+id/edittext"
+        android:id="@+id/numeric"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/label"
-        android:layout_marginRight="4dp"/>
+        android:layout_marginRight="4dp"
+        android:inputType="numberDecimal"/>
 
 </RelativeLayout>
