@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Autonomous Fragment"
-        android:layout_centerInParent="true"
-        android:textColor="#000000" />
-    <com.example.akmessing1.scoutingtest.views.CustomCheckbox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/test_checkbox"
-        app:label="Test Checkbox"
-        app:key="test_checkbox"/>
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Autonomous Fragment"
+            android:layout_centerInParent="true"
+            android:textColor="#000000" />
+        <com.example.akmessing1.scoutingtest.views.CustomCheckbox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/test_checkbox"
+            app:label="Test Checkbox"
+            app:key="test_checkbox"/>
 
-    <com.example.akmessing1.scoutingtest.views.CustomCounter
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/test_counter"
-        app:label="Test Counter"
-        app:key="test_counter"/>
+        <com.example.akmessing1.scoutingtest.views.CustomCounter
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/test_counter"
+            app:label="Test Counter"
+            app:key="test_counter"/>
 
-    <com.example.akmessing1.scoutingtest.views.CustomEdittext
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/test_edittext"
-        app:label="Test Edittext"
-        app:key="test_edittext"/>
+        <com.example.akmessing1.scoutingtest.views.CustomEdittext
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/test_edittext"
+            app:label="Test Edittext"
+            app:key="test_edittext"/>
 
-    <com.example.akmessing1.scoutingtest.views.CustomSpinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/test_spinner"
-        app:label="Test Spinner"
-        app:key="test_spinner"
-        app:values="@array/test_array"/>
+        <com.example.akmessing1.scoutingtest.views.CustomSpinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/test_spinner"
+            app:label="Test Spinner"
+            app:key="test_spinner"
+            app:values="@array/test_array"/>
 
-    <com.example.akmessing1.scoutingtest.views.CustomNumeric
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/test_numeric"
-        app:label="Test Numeric"
-        app:key="test_numeric"/>
+        <com.example.akmessing1.scoutingtest.views.CustomNumeric
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/test_numeric"
+            app:label="Test Numeric"
+            app:key="test_numeric"/>
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
