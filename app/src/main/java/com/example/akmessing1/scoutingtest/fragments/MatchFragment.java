@@ -32,6 +32,7 @@ public abstract class MatchFragment  extends Fragment {
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
         if (vg == null) {
+            Log.d(TAG,"Null view");
             // If the view has been destroyed, state should already be saved
             // to parent activity
             return;
@@ -65,6 +66,7 @@ public abstract class MatchFragment  extends Fragment {
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
         if (vg == null) {
+            Log.d(TAG,"Null view");
             // If the view has been destroyed, state should already be saved
             // to parent activity
             return;
