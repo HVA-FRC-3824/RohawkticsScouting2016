@@ -5,99 +5,82 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.akmessing1.scoutingtest.MatchScoutDB;
+import com.example.akmessing1.scoutingtest.PitScoutDB;
 import com.example.akmessing1.scoutingtest.R;
-import com.example.akmessing1.scoutingtest.ScheduleDB;
 import com.example.akmessing1.scoutingtest.ScoutValue;
 import com.example.akmessing1.scoutingtest.adapters.MatchScoutFragmentPagerAdapter;
+import com.example.akmessing1.scoutingtest.adapters.PitScoutFragmentPagerAdapter;
 import com.example.akmessing1.scoutingtest.fragments.ScoutFragment;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+public class PitScouting extends AppCompatActivity {
 
-public class MatchScouting extends AppCompatActivity {
-
-    private static String TAG = "MatchScouting";
+    final private String TAG = "PitScouting";
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private MatchScoutFragmentPagerAdapter adapter;
-    //private Toolbar toolbar;
+    private PitScoutFragmentPagerAdapter adapter;
 
     private int teamNumber;
-    private int matchNumber;
-    private String allianceColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_match_scouting);
+        setContentView(R.layout.activity_pit_scouting);
 
-        // Get Match Number and Team Number from the intent
         Bundle extras = getIntent().getExtras();
         teamNumber = extras.getInt("team_number");
-        matchNumber = extras.getInt("match_number");
 
-        // Write Match Number and Team Number to the screen
-        TextView tv = (TextView)findViewById(R.id.team_num);
+        TextView tv = (TextView)findViewById(R.id.pit_team_num);
         tv.setText("Team Number: "+teamNumber);
-        tv = (TextView)findViewById(R.id.match_num);
-        tv.setText("Match Number: " + matchNumber);
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        allianceColor = sharedPreferences.getString("alliance_color", "");
-
-        // Set up tabs and pages for different fragments of a match
         findViewById(android.R.id.content).setKeepScreenOn(true);
-        viewPager = (ViewPager) findViewById(R.id.match_view_pager);
-        adapter = new MatchScoutFragmentPagerAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
+        adapter = new PitScoutFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-        tabLayout = (TabLayout)findViewById(R.id.match_tab_layout);
+        tabLayout = (TabLayout)findViewById(R.id.pit_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        // Restore any values from the database if this team/match combo has been scouted before
-        // (basically if updating)
-        String eventId = sharedPreferences.getString("event_id","");
-        MatchScoutDB matchScoutDB = new MatchScoutDB(this,eventId);
-        Map<String, ScoutValue> map = matchScoutDB.getTeamMatchInfo(teamNumber, matchNumber);
-        if(map != null) {
+        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        String eventId = sharedPreferences.getString("event_id", "");
+        final PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
+        Map<String, ScoutValue> map = pitScoutDB.getTeamMap(teamNumber);
+        if(map.get(PitScoutDB.KEY_COMPLETE).getInt() != 0)
+        {
             adapter.setValueMap(map);
         }
 
-        ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
-        // First match doesn't need a previous button
-        if(matchNumber == 1)
+        final int previousTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
+        if(previousTeamNumber == -1)
         {
-            Button previous = (Button)findViewById(R.id.previous_match);
+            Button previous = (Button)findViewById(R.id.previous_team);
             previous.setVisibility(View.INVISIBLE);
         }
-        // TODO: Set up previous button to ask about saving like the next button does
-        // Setup dialog box for going to the previous match
         else
         {
-            Cursor prevCursor = scheduleDB.getMatch(matchNumber-1);
-            int allianceNum = sharedPreferences.getInt("alliance_number", 0);
-            Log.d(TAG,allianceColor.toLowerCase() + allianceNum+"->"+prevCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
-            final int prevTeamNumber = prevCursor.getInt(prevCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
-            Button prev = (Button)findViewById(R.id.previous_match);
+            Button prev = (Button)findViewById(R.id.previous_team);
             prev.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG,"previous match pressed");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
-                    builder.setTitle("Save match data?");
+                    Log.d(TAG, "previous team pressed");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
+                    builder.setTitle("Save pit data?");
 
                     // Save option
                     builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
@@ -113,17 +96,13 @@ public class MatchScouting extends AppCompatActivity {
 
                             Log.d(TAG,"Saving values");
                             // Add the team and match numbers
-                            String eventId = sharedPreferences.getString("event_id","");
-                            MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                            data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                            data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
                             // Store values to the database
-                            matchScoutDB.updateMatch(data);
+                            pitScoutDB.updatePit(data);
 
                             // Go to the next match
-                            Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                            intent.putExtra("team_number",prevTeamNumber);
-                            intent.putExtra("match_number",matchNumber-1);
+                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                            intent.putExtra("team_number",previousTeamNumber);
                             startActivity(intent);
                         }
                     });
@@ -141,9 +120,8 @@ public class MatchScouting extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // Go to the next match
-                            Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                            intent.putExtra("team_number", prevTeamNumber);
-                            intent.putExtra("match_number", matchNumber - 1);
+                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                            intent.putExtra("team_number", previousTeamNumber);
                             startActivity(intent);
                         }
                     });
@@ -152,28 +130,21 @@ public class MatchScouting extends AppCompatActivity {
             });
         }
 
-        // Determine if the last match or not
-        Cursor nextCursor = scheduleDB.getMatch(matchNumber + 1);
-
-        //Last match doesn't need a next button
-        if(nextCursor == null)
+        final int nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
+        if(nextTeamNumber == -1)
         {
-            Button next = (Button)findViewById(R.id.next_match);
+            Button next = (Button)findViewById(R.id.next_team);
             next.setVisibility(View.INVISIBLE);
         }
-        // Otherwise setup dialog box for moving to the next match that checks about saving
         else
         {
-            int allianceNum = sharedPreferences.getInt("alliance_number", 0);
-            final int nextTeamNumber = nextCursor.getInt(nextCursor.getColumnIndex(allianceColor.toLowerCase()+allianceNum));
-            Button next = (Button)findViewById(R.id.next_match);
+            Button next = (Button)findViewById(R.id.next_team);
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "next match pressed");
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
-                    builder.setTitle("Save match data?");
+                    Log.d(TAG, "next team pressed");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
+                    builder.setTitle("Save pit data?");
 
                     // Save option
                     builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
@@ -189,17 +160,13 @@ public class MatchScouting extends AppCompatActivity {
 
                             Log.d(TAG,"Saving values");
                             // Add the team and match numbers
-                            String eventId = sharedPreferences.getString("event_id","");
-                            MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                            data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                            data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
                             // Store values to the database
-                            matchScoutDB.updateMatch(data);
+                            pitScoutDB.updatePit(data);
 
                             // Go to the next match
-                            Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
+                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
                             intent.putExtra("team_number",nextTeamNumber);
-                            intent.putExtra("match_number",matchNumber+1);
                             startActivity(intent);
                         }
                     });
@@ -208,7 +175,7 @@ public class MatchScouting extends AppCompatActivity {
                     builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            // Dialogbox goes away
+                            // Dialog box goes away
                         }
                     });
 
@@ -217,9 +184,8 @@ public class MatchScouting extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // Go to the next match
-                            Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
+                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
                             intent.putExtra("team_number", nextTeamNumber);
-                            intent.putExtra("match_number", matchNumber + 1);
                             startActivity(intent);
                         }
                     });
@@ -227,5 +193,7 @@ public class MatchScouting extends AppCompatActivity {
                 }
             });
         }
+
     }
+
 }

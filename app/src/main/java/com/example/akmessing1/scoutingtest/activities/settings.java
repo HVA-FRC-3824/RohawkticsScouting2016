@@ -28,6 +28,44 @@ public class Settings extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences( "appData", Context.MODE_PRIVATE );
 
+        final Spinner colorSelector = (Spinner)findViewById(R.id.colorSelector);
+        String[] colors = new String[]{"Blue", "Red"};
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, colors);
+        colorSelector.setAdapter(adapter1);
+        colorSelector.setSelection(Arrays.asList(colors).indexOf(sharedPref.getString("alliance_color", "Blue")));
+        colorSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TextView tv = (TextView) findViewById(R.id.settingsSavedText);
+                tv.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                TextView tv = (TextView) findViewById(R.id.settingsSavedText);
+                tv.setVisibility(View.GONE);
+            }
+        });
+
+        final Spinner numSelector = (Spinner)findViewById(R.id.numSelector);
+        String[] numbers = new String[]{"1", "2", "3"};
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, numbers);
+        numSelector.setAdapter(adapter2);
+        numSelector.setSelection(Arrays.asList(numbers).indexOf(Integer.toString(sharedPref.getInt("alliance_number", 1))));
+        numSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                TextView tv = (TextView)findViewById(R.id.settingsSavedText);
+                tv.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                TextView tv = (TextView)findViewById(R.id.settingsSavedText);
+                tv.setVisibility(View.GONE);
+            }
+        });
+
         Spinner typeSelector = (Spinner)findViewById(R.id.typeSelector);
         String[] types = new String[]{"Match Scout", "Pit Scout", "Super Scout", "Drive Team", "Strategy", "Admin"};
         ArrayAdapter<String> adapter0 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
@@ -36,44 +74,21 @@ public class Settings extends AppCompatActivity {
         typeSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                TextView tv = (TextView)findViewById(R.id.settingsSavedText);
-                tv.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                TextView tv = (TextView)findViewById(R.id.settingsSavedText);
-                tv.setVisibility(View.GONE);
-            }
-        });
-
-        Spinner colorSelector = (Spinner)findViewById(R.id.colorSelector);
-        String[] colors = new String[]{"Blue", "Red"};
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, colors);
-        colorSelector.setAdapter(adapter1);
-        colorSelector.setSelection(Arrays.asList(colors).indexOf(sharedPref.getString("alliance_color", "Blue")));
-        colorSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                TextView tv = (TextView)findViewById(R.id.settingsSavedText);
-                tv.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                TextView tv = (TextView)findViewById(R.id.settingsSavedText);
-                tv.setVisibility(View.GONE);
-            }
-        });
-
-        Spinner numSelector = (Spinner)findViewById(R.id.numSelector);
-        String[] numbers = new String[]{"1", "2", "3"};
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, numbers);
-        numSelector.setAdapter(adapter2);
-        numSelector.setSelection(Arrays.asList(numbers).indexOf(Integer.toString(sharedPref.getInt("alliance_number", 1))));
-        numSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+                if(!selected.equals("Match Scout") && !selected.equals("Admin"))
+                {
+                    findViewById(R.id.textView3).setVisibility(View.GONE);
+                    findViewById(R.id.textView2).setVisibility(View.GONE);
+                    colorSelector.setVisibility(View.GONE);
+                    numSelector.setVisibility(View.GONE);
+                }
+                else
+                {
+                    findViewById(R.id.textView3).setVisibility(View.VISIBLE);
+                    findViewById(R.id.textView2).setVisibility(View.VISIBLE);
+                    colorSelector.setVisibility(View.VISIBLE);
+                    numSelector.setVisibility(View.VISIBLE);
+                }
                 TextView tv = (TextView)findViewById(R.id.settingsSavedText);
                 tv.setVisibility(View.GONE);
             }
@@ -123,8 +138,10 @@ public class Settings extends AppCompatActivity {
 
         SharedPreferences.Editor prefEditor = getSharedPreferences( "appData", Context.MODE_PRIVATE ).edit();
         prefEditor.putString("type", String.valueOf(typeSelector.getSelectedItem()));
-        prefEditor.putString("alliance_color", String.valueOf(colorSelector.getSelectedItem()));
-        prefEditor.putInt("alliance_number", Integer.parseInt(String.valueOf(numSelector.getSelectedItem())));
+        if(String.valueOf(typeSelector.getSelectedItem()).equals("Match Scout") || String.valueOf(typeSelector.getSelectedItem()).equals("Admin")) {
+            prefEditor.putString("alliance_color", String.valueOf(colorSelector.getSelectedItem()));
+            prefEditor.putInt("alliance_number", Integer.parseInt(String.valueOf(numSelector.getSelectedItem())));
+        }
         prefEditor.putString("event_id", String.valueOf(eventID.getText()));
         prefEditor.commit();
 

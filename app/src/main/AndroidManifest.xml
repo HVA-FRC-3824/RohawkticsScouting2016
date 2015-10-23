@@ -25,7 +25,13 @@
         </activity>
         <activity android:name=".activities.MatchSchedule" >
         </activity>
-        <activity android:name=".activities.MatchScouting">
+        <activity android:name=".activities.MatchScouting" >
+        </activity>
+        <activity
+            android:name=".activities.PitScouting" >
+        </activity>
+        <activity
+            android:name=".activities.PitList" >
         </activity>
     </application>
 

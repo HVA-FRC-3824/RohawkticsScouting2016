@@ -78,7 +78,8 @@ public class StartScreen extends AppCompatActivity {
 
     public void scout_pit(View view)
     {
-
+        Intent intent = new Intent(this, PitList.class);
+        startActivity(intent);
     }
 
     public void view_team(View view)

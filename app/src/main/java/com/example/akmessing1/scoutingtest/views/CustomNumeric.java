@@ -41,7 +41,13 @@ public class CustomNumeric extends CustomScoutView{
     @Override
     public void writeToMap(Map<String, ScoutValue> map)
     {
-        map.put(key, new ScoutValue(Float.valueOf(String.valueOf(numeric.getText()))));
+        if(String.valueOf(numeric.getText()).equals(""))
+        {
+            map.put(key, new ScoutValue(0.0f));
+        }
+        else {
+            map.put(key, new ScoutValue(Float.valueOf(String.valueOf(numeric.getText()))));
+        }
     }
 
     @Override

@@ -13,6 +13,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by akmessing1 on 10/17/15.
  */
@@ -34,8 +37,7 @@ public class ScheduleDB extends SQLiteOpenHelper
     public static final String KEY_RED2 = "red2";
     public static final String KEY_RED3 = "red3";
 
-    private static final String[] COLUMNS = {KEY_MATCH_NUMBER,KEY_BLUE1,KEY_BLUE2,KEY_BLUE3,KEY_RED1,KEY_RED2,KEY_RED3};
-
+    private static String[] COLUMNS = {KEY_MATCH_NUMBER,KEY_BLUE1,KEY_BLUE2,KEY_BLUE3,KEY_RED1,KEY_RED2,KEY_RED3};
     private String tableName;
 
     public ScheduleDB(Context context, String eventID)
@@ -51,7 +53,7 @@ public class ScheduleDB extends SQLiteOpenHelper
                 "( "+KEY_MATCH_NUMBER+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
                 " "+KEY_BLUE1+" INTEGER NOT NULL,"+
                 " "+KEY_BLUE2+" INTEGER NOT NULL,"+
-                " "+KEY_BLUE3+" INT NOT NULL,"+
+                " "+KEY_BLUE3+" INTEGER NOT NULL,"+
                 " "+KEY_RED1+" INTEGER NOT NULL,"+
                 " "+KEY_RED2+" INTEGER NOT NULL,"+
                 " "+KEY_RED3+" INTEGER NOT NULL);";
@@ -153,8 +155,8 @@ public class ScheduleDB extends SQLiteOpenHelper
         Cursor cursor =
                 db.query(tableName, // a. table
                         COLUMNS, // b. column names
-                        KEY_BLUE1 + " = ? or " + KEY_BLUE2 + " = ? or "+ KEY_BLUE3 + " = ? or "+ KEY_RED1 + " = ? or "+ KEY_RED2 + " = ? or "+ KEY_RED3 + " = ?", // c. selections
-                        new String[]{String.valueOf(teamNum),String.valueOf(teamNum),String.valueOf(teamNum),String.valueOf(teamNum),String.valueOf(teamNum),String.valueOf(teamNum)}, // d. selections args
+                        KEY_BLUE1 + " = ? or " + KEY_BLUE2 + " = ? or " + KEY_BLUE3 + " = ? or " + KEY_RED1 + " = ? or " + KEY_RED2 + " = ? or " + KEY_RED3 + " = ?", // c. selections
+                        new String[]{String.valueOf(teamNum), String.valueOf(teamNum), String.valueOf(teamNum), String.valueOf(teamNum), String.valueOf(teamNum), String.valueOf(teamNum)}, // d. selections args
                         null, // e. group by
                         null, // f. having
                         KEY_MATCH_NUMBER, // g. order by
@@ -169,6 +171,4 @@ public class ScheduleDB extends SQLiteOpenHelper
         SQLiteDatabase db = this.getReadableDatabase();
         return (int)DatabaseUtils.queryNumEntries(db, tableName);
     }
-
-
 }
