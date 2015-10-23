@@ -1,4 +1,4 @@
-package com.example.akmessing1.scoutingtest;
+package com.team3824.akmessing1.scoutingtest;
 
 import org.junit.Test;
 
