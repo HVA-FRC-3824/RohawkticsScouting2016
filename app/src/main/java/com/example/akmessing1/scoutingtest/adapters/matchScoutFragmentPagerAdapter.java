@@ -1,13 +1,12 @@
 package com.example.akmessing1.scoutingtest.adapters;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.akmessing1.scoutingtest.ScoutValue;
 import com.example.akmessing1.scoutingtest.fragments.MatchAuto;
-import com.example.akmessing1.scoutingtest.fragments.MatchFragment;
+import com.example.akmessing1.scoutingtest.fragments.ScoutFragment;
 import com.example.akmessing1.scoutingtest.fragments.MatchPost;
 import com.example.akmessing1.scoutingtest.fragments.MatchTeleop;
 
@@ -23,7 +22,7 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
     private String tabTitles[] = new String[] { "Autonomous", "Teleop","Post-Match" };
     //private String tabTitles[] = new String[] { "Autonomous", "Teleop", "Endgame", "Post-Match" };
 
-    private Map<Integer,WeakReference<MatchFragment>> fragments = new HashMap<>();
+    private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
     private Map<String,ScoutValue> valueMap = null;
 
@@ -43,7 +42,7 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        MatchFragment fragment;
+        ScoutFragment fragment;
         switch (position)
         {
             case 0:
@@ -77,9 +76,9 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
     // returns all the fragments
     // used to get all the values for saving
-    public List<MatchFragment> getAllFragments(){
-        List<MatchFragment> fragmentList = new ArrayList<>();
-        for(Map.Entry<Integer,WeakReference<MatchFragment>> entry: fragments.entrySet())
+    public List<ScoutFragment> getAllFragments(){
+        List<ScoutFragment> fragmentList = new ArrayList<>();
+        for(Map.Entry<Integer,WeakReference<ScoutFragment>> entry: fragments.entrySet())
         {
             fragmentList.add(entry.getValue().get());
         }

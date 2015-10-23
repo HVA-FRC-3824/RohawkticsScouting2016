@@ -21,7 +21,7 @@ import com.example.akmessing1.scoutingtest.R;
 import com.example.akmessing1.scoutingtest.ScheduleDB;
 import com.example.akmessing1.scoutingtest.ScoutValue;
 import com.example.akmessing1.scoutingtest.adapters.MatchScoutFragmentPagerAdapter;
-import com.example.akmessing1.scoutingtest.fragments.MatchFragment;
+import com.example.akmessing1.scoutingtest.fragments.ScoutFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -106,9 +106,9 @@ public class MatchScouting extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
 
                             // Collect values from all the custom elements
-                            List<MatchFragment> fragmentList = adapter.getAllFragments();
+                            List<ScoutFragment> fragmentList = adapter.getAllFragments();
                             Map<String, ScoutValue> data = new HashMap<>();
-                            for (MatchFragment fragment : fragmentList) {
+                            for (ScoutFragment fragment : fragmentList) {
                                 fragment.writeContentsToMap(data);
                             }
 
@@ -182,9 +182,9 @@ public class MatchScouting extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
 
                             // Collect values from all the custom elements
-                            List<MatchFragment> fragmentList = adapter.getAllFragments();
+                            List<ScoutFragment> fragmentList = adapter.getAllFragments();
                             Map<String, ScoutValue> data = new HashMap<>();
-                            for (MatchFragment fragment : fragmentList) {
+                            for (ScoutFragment fragment : fragmentList) {
                                 fragment.writeContentsToMap(data);
                             }
 

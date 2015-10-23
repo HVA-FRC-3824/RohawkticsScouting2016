@@ -12,12 +12,12 @@ import com.example.akmessing1.scoutingtest.views.CustomScoutView;
 import java.util.Map;
 
 // abstract base class for each of the match scouting fragments
-public abstract class MatchFragment  extends Fragment {
+public abstract class ScoutFragment extends Fragment {
 
-    private String TAG = "MatchFragment";
+    private String TAG = "ScoutFragment";
     protected Map<String, ScoutValue> valueMap;
 
-    public MatchFragment()
+    public ScoutFragment()
     {
     }
 
