@@ -40,6 +40,8 @@ public class ScheduleDB extends SQLiteOpenHelper
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         tableName = "schedule_"+eventID;
+        SQLiteDatabase db = this.getWritableDatabase();
+        onCreate(db);
     }
 
     @Override

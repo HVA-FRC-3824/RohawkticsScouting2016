@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Setup up page fragments for match scouting
+// Setup up page fragments for pit scouting
 public class PitScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
     private String tabTitles[] = new String[] { "Basic Info" };

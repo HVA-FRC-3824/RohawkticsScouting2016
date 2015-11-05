@@ -11,7 +11,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/volley" />
+            <option value="$PROJECT_DIR$/libraries" />
+            <option value="$PROJECT_DIR$/libraries/drag-sort-listview" />
+            <option value="$PROJECT_DIR$/libraries/drag-sort-listview/library" />
+            <option value="$PROJECT_DIR$/libraries/volley" />
           </set>
         </option>
       </GradleProjectSettings>

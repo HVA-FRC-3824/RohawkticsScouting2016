@@ -117,6 +117,7 @@ public class MatchScouting extends AppCompatActivity {
                             MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
                             data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
                             data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                            data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
                             // Store values to the database
                             matchScoutDB.updateMatch(data);
 

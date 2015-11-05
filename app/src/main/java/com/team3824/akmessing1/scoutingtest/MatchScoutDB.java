@@ -39,7 +39,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db)
     {
         String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,"+
+                "( "+KEY_ID+" TEXT PRIMARY KEY UNIQUE NOT NULL,"+
                 " "+KEY_MATCH_NUMBER+" INTEGER NOT NULL,"+
                 " "+KEY_TEAM_NUMBER+" INTEGER NOT NULL);";
         db.execSQL(queryString);
@@ -63,7 +63,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor =db.query(tableName, // a. table
+        Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
                 KEY_TEAM_NUMBER + " = ? AND " + KEY_MATCH_NUMBER + " = ?", // c. selections
                 new String[]{String.valueOf(map.get(KEY_TEAM_NUMBER).getInt()), String.valueOf(map.get(KEY_MATCH_NUMBER).getInt())}, // d. selections args
@@ -71,11 +71,6 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        if(cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            int id = cursor.getInt(0);
-            map.put(KEY_ID, new ScoutValue(id));
-        }
         String[] columnNames = cursor.getColumnNames();
 
         ContentValues cvs = new ContentValues();

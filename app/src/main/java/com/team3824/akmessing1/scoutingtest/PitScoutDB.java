@@ -25,8 +25,9 @@ public class PitScoutDB extends SQLiteOpenHelper {
     private String TAG = "PitScoutDB";
 
     // Initial Table Columns names
-    public static final String KEY_ID = "_id";
-    public static final String KEY_TEAM_NUMBER = "team_number";
+    public static final String KEY_ID = "_id"; // _id is needed for updating
+    // The team number is going to be the id, but another variable is set up for convenience
+    public static final String KEY_TEAM_NUMBER = "_id";
     public static final String KEY_NICKNAME = "nickname";
     public static final String KEY_COMPLETE = "complete";
 
@@ -45,8 +46,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db)
     {
         String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_ID+" INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,"+
-                " "+KEY_TEAM_NUMBER+" INTEGER UNIQUE NOT NULL,"+
+                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
                 " "+KEY_NICKNAME+" TEXT,"+
                 " "+KEY_COMPLETE+" INTEGER NOT NULL);";
         db.execSQL(queryString);
@@ -98,11 +98,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        if(cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            int id = cursor.getInt(0);
-            map.put(KEY_ID, new ScoutValue(id));
-        }
         map.put(KEY_COMPLETE,new ScoutValue(1));
         String[] columnNames = cursor.getColumnNames();
 
@@ -156,13 +151,12 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 null, // d. selections args
                 null, // e. group by
                 null, // f. having
-                null, // g. order by
+                KEY_TEAM_NUMBER, // g. order by
                 null); // h. limit
         if (cursor != null)
             cursor.moveToFirst();
         return cursor;
     }
-
 
     public Cursor getTeamInfo(int teamNum)
     {
