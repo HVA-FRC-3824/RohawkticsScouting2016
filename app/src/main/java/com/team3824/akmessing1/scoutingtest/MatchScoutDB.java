@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,13 +26,18 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public static final String KEY_ID = "_id";
     public static final String KEY_MATCH_NUMBER = "match_number";
     public static final String KEY_TEAM_NUMBER = "team_number";
+    public static final String KEY_LAST_UPDATED = "last_updated";
+
 
     private String tableName;
+    private static SimpleDateFormat dateFormat;
+
 
     public MatchScoutDB(Context context, String eventID)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         tableName = "matchScouting_"+eventID;
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
     }
@@ -41,7 +48,8 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
                 "( "+KEY_ID+" TEXT PRIMARY KEY UNIQUE NOT NULL,"+
                 " "+KEY_MATCH_NUMBER+" INTEGER NOT NULL,"+
-                " "+KEY_TEAM_NUMBER+" INTEGER NOT NULL);";
+                " "+KEY_TEAM_NUMBER+" INTEGER NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
 
@@ -74,6 +82,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         String[] columnNames = cursor.getColumnNames();
 
         ContentValues cvs = new ContentValues();
+        cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
         for(Map.Entry<String, ScoutValue> entry : map.entrySet())
         {
             String column = entry.getKey();

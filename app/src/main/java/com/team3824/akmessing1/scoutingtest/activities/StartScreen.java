@@ -19,29 +19,39 @@ public class StartScreen extends AppCompatActivity {
         setContentView(R.layout.activity_start_screen);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String type = sharedPreferences.getString("type", "Match Scout");
+        String type = sharedPreferences.getString("type", "");
         switch (type) {
             case "Match Scout": {
+                Button scheduleButton = (Button)findViewById(R.id.matchSchedule_button);
+                scheduleButton.setVisibility(View.VISIBLE);
                 Button button = (Button) findViewById(R.id.scoutMatch_button);
                 button.setVisibility(View.VISIBLE);
                 break;
             }
             case "Pit Scout": {
+                Button scheduleButton = (Button)findViewById(R.id.matchSchedule_button);
+                scheduleButton.setVisibility(View.VISIBLE);
                 Button button = (Button) findViewById(R.id.scoutPit_button);
                 button.setVisibility(View.VISIBLE);
                 break;
             }
             case "Super Scout": {
+                Button scheduleButton = (Button)findViewById(R.id.matchSchedule_button);
+                scheduleButton.setVisibility(View.VISIBLE);
                 Button button = (Button) findViewById(R.id.superScout_button);
                 button.setVisibility(View.VISIBLE);
                 break;
             }
             case "Drive Team": {
+                Button scheduleButton = (Button)findViewById(R.id.matchSchedule_button);
+                scheduleButton.setVisibility(View.VISIBLE);
                 Button button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
                 break;
             }
             case "Strategy": {
+                Button scheduleButton = (Button)findViewById(R.id.matchSchedule_button);
+                scheduleButton.setVisibility(View.VISIBLE);
                 Button button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewPicklist_button);
@@ -49,6 +59,8 @@ public class StartScreen extends AppCompatActivity {
                 break;
             }
             case "Admin": {
+                Button scheduleButton = (Button)findViewById(R.id.matchSchedule_button);
+                scheduleButton.setVisibility(View.VISIBLE);
                 Button button = (Button) findViewById(R.id.scoutMatch_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.scoutPit_button);
@@ -89,7 +101,8 @@ public class StartScreen extends AppCompatActivity {
 
     public void view_picklist(View view)
     {
-
+        Intent intent = new Intent(this, PickList.class);
+        startActivity(intent);
     }
 
     public void settings(View view)

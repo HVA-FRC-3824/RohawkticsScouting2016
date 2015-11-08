@@ -40,84 +40,12 @@ public class MatchSchedule extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
-
-        // Check if event ID is set and ask for one if it is not
-        if(eventID.equals(""))
-        {
-            Log.d(TAG, "No Event ID");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = getLayoutInflater();
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            final View view = inflater.inflate(R.layout.dialog_set_event_id, null);
-            builder.setView(view);
-
-            // Save button saves new event id
-            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            TextView textView = (TextView) view.findViewById(R.id.set_event_id);
-                            String eventId = String.valueOf(textView.getText());
-                            Log.d(TAG,"Event ID: "+eventId);
-                            if (!eventId.equals("")) {
-                                SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
-                                prefEditor.putString("event_id", eventId);
-                                prefEditor.commit();
-                            }
-                            Intent intent = new Intent(MatchSchedule.this,MatchSchedule.class);
-                            startActivity(intent);
-                        }
-                    });
-
-            // Back button goes back to the start screen
-            builder.setNeutralButton("Back", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Intent intent = new Intent(MatchSchedule.this, StartScreen.class);
-                    startActivity(intent);
-                }
-            });
-            builder.show();
-            return;
-        }
-        else {
-            Log.d(TAG, "Event ID found");
-            final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
-
-            // If schedule is empty then try to get one from the blue alliance
-            if (scheduleDB.getNumMatches() == 0) {
-                Log.d(TAG, "Table empty");
-                RequestQueue queue = Volley.newRequestQueue(this);
-                String url = "http://www.thebluealliance.com/api/v2/event/" + eventID + "/matches?X-TBA-App-Id=amessing:scoutingTest:v2";
-                Log.d(TAG, "url: " + url);
-                JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, "Schedule received");
-                        scheduleDB.createSchedule(response);
-                        displayListView(scheduleDB);
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //TODO: Schedule builder
-                        Log.d(TAG, "Error: " + error.getMessage());
-
-                    }
-                });
-
-                queue.add(jsonReq);
-
-            } else {
-                Log.d(TAG, "Table not empty");
-
-                displayListView(scheduleDB);
-            }
-        }
+        ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
+        displayListView(scheduleDB);
     }
 
-    // back button goes to home page
-    public void back(View view)
+    // home button goes to home page
+    public void home(View view)
     {
         Intent intent = new Intent(this, StartScreen.class);
         startActivity(intent);

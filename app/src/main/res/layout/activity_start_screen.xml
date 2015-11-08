@@ -38,6 +38,7 @@
                 android:layout_marginTop="50dp"
                 android:text="Match Schedule"
                 android:id="@+id/matchSchedule_button"
+                android:visibility="gone"
                 android:onClick="match_schedule"/>
 
             <Button

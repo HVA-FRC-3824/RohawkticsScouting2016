@@ -46,85 +46,9 @@ public class MatchList extends AppCompatActivity {
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
-        // If there is no Event ID stored then a dialog box will popup to set one
-        if (eventID.equals("")) {
-            Log.d(TAG, "No Event ID");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = getLayoutInflater();
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            final View view = inflater.inflate(R.layout.dialog_set_event_id, null);
-            builder.setView(view);
-            // Save button saves new event id
-            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    TextView textView = (TextView) view.findViewById(R.id.set_event_id);
-                    String eventId = String.valueOf(textView.getText());
-                    Log.d(TAG, "Event ID: " + eventId);
-                    if (!eventId.equals("")) {
-                        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
-                        prefEditor.putString("event_id", eventId);
-                        prefEditor.commit();
-                    }
-                    Intent intent = new Intent(MatchList.this, MatchList.class);
-                    startActivity(intent);
-                }
-            });
-            // Back button goes back to the start screen
-            builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Intent intent = new Intent(MatchList.this, StartScreen.class);
-                    startActivity(intent);
-                }
-            });
-            builder.show();
-            return;
-        }
-
-        // Back button will send user to the home screen
-        Button button = (Button)findViewById(R.id.match_list_back);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MatchList.this,StartScreen.class);
-                startActivity(intent);
-
-            }
-        });
 
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
-
-        // If there are no matches in the database pull from schedule the blue alliance
-        if (scheduleDB.getNumMatches() == 0) {
-            Log.d(TAG, "Table empty");
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://www.thebluealliance.com/api/v2/event/" + eventID + "/matches?X-TBA-App-Id=amessing:scoutingTest:v1";
-            Log.d(TAG, "url: " + url);
-
-            //Request schedule
-            JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    Log.d(TAG, "Schedule received");
-                    scheduleDB.createSchedule(response);
-                    //
-                    displayListView(scheduleDB, sharedPreferences);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //TODO: Allow schedule building
-                    Log.d(TAG, "Error: " + error.getMessage());
-                }
-            });
-            queue.add(jsonReq);
-        } else {
-            Log.d(TAG, "Table not empty");
-            displayListView(scheduleDB, sharedPreferences);
-        }
-
-
+        displayListView(scheduleDB, sharedPreferences);
     }
 
     // Setup list view with the schedule
@@ -136,53 +60,6 @@ public class MatchList extends AppCompatActivity {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_list);
             int alliance_number = sharedPreferences.getInt("alliance_number",0);
             String alliance_color = sharedPreferences.getString("alliance_color","");
-
-            // If no alliance color set, ask for one via dialog box
-            if(alliance_color.equals(""))
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Set Alliance Color");
-                String[] colors = new String[]{"Blue","Red"};
-                builder.setItems(colors, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
-                        switch (which) {
-                            case 0:
-                                prefEditor.putString("alliance_color", "Blue");
-                                break;
-                            case 1:
-                                prefEditor.putString("alliance_color", "Red");
-                                break;
-                        }
-                        prefEditor.commit();
-                        Intent intent = new Intent(MatchList.this, MatchList.class);
-                        startActivity(intent);
-                    }
-                });
-                builder.show();
-                return;
-            }
-
-            // if no alliance number set, ask for one via dialog box
-            if(alliance_number == 0)
-            {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Set Alliance Color");
-                String[] numbers = new String[]{"1","2", "3"};
-                builder.setItems(numbers, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
-                        prefEditor.putInt("alliance_number", which + 1);
-                        prefEditor.commit();
-                        Intent intent = new Intent(MatchList.this, MatchList.class);
-                        startActivity(intent);
-                    }
-                });
-                builder.show();
-                return;
-            }
 
             cursor.moveToFirst();
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -44,42 +44,6 @@ public class PitList extends AppCompatActivity {
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
-        // If there is no Event ID stored then a dialog box will popup to set one
-        if (eventID.equals("")) {
-            Log.d(TAG, "No Event ID");
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = getLayoutInflater();
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            final View view = inflater.inflate(R.layout.dialog_set_event_id, null);
-            builder.setView(view);
-            // Save button saves new event id
-            builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    TextView textView = (TextView) view.findViewById(R.id.set_event_id);
-                    String eventId = String.valueOf(textView.getText());
-                    Log.d(TAG, "Event ID: " + eventId);
-                    if (!eventId.equals("")) {
-                        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit();
-                        prefEditor.putString("event_id", eventId);
-                        prefEditor.commit();
-                    }
-                    Intent intent = new Intent(PitList.this, PitList.class);
-                    startActivity(intent);
-                }
-            });
-            // Back button goes back to the start screen
-            builder.setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Intent intent = new Intent(PitList.this, StartScreen.class);
-                    startActivity(intent);
-                }
-            });
-            builder.show();
-            return;
-        }
-
         // Back button will send user to the home screen
         Button button = (Button)findViewById(R.id.pit_list_back);
         button.setOnClickListener(new View.OnClickListener() {
@@ -91,41 +55,12 @@ public class PitList extends AppCompatActivity {
             }
         });
 
-        final PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);
-
-        // If there are no matches in the database pull from schedule the blue alliance
-        if (pitScoutDB.getNumTeams() == 0) {
-            Log.d(TAG, "Table empty");
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "http://www.thebluealliance.com/api/v2/event/" + eventID + "/teams?X-TBA-App-Id=amessing:scoutingTest:v1";
-            Log.d(TAG, "url: " + url);
-
-            //Request schedule
-            JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    Log.d(TAG, "Schedule received");
-                    pitScoutDB.createTeamList(response);
-                    //
-                    displayListView(pitScoutDB, sharedPreferences);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    //TODO: Allow team list building
-                    Log.d(TAG, "Error: " + error.getMessage());
-                }
-            });
-            queue.add(jsonReq);
-        } else {
-            Log.d(TAG, "Table not empty");
-            displayListView(pitScoutDB, sharedPreferences);
-        }
-
+        PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);
+        displayListView(pitScoutDB);
     }
 
     // Setup list view with the schedule
-    private void displayListView(PitScoutDB pitScoutDB, SharedPreferences sharedPreferences)
+    private void displayListView(PitScoutDB pitScoutDB)
     {
         Cursor cursor = pitScoutDB.getAllTeams();
 

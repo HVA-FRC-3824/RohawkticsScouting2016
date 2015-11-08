@@ -13,8 +13,10 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
-            android:onClick="back"/>
+            android:text="Home"
+            android:visibility="invisible"
+            android:onClick="home"
+            android:id="@+id/homeButton"/>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -46,6 +48,7 @@
 
         </LinearLayout>
 
+        <!-- TODO: make gone unless match scout/admin -->
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -76,6 +79,7 @@
 
         </LinearLayout>
 
+        <!-- TODO: make gone unless match scout/admin -->
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -136,17 +140,6 @@
             android:text="Save"
             android:id="@+id/button7"
             android:onClick="save_settings" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Saved"
-            android:id="@+id/settingsSavedText"
-            android:textColor="#0dff00"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
-            />
 
     </LinearLayout>
 </ScrollView>

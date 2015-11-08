@@ -12,6 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by akmessing1 on 10/17/15.
  */
@@ -32,14 +35,18 @@ public class ScheduleDB extends SQLiteOpenHelper
     public static final String KEY_RED1 = "red1";
     public static final String KEY_RED2 = "red2";
     public static final String KEY_RED3 = "red3";
+    public static final String KEY_LAST_UPDATED = "last_updated";
 
-    private static String[] COLUMNS = {KEY_MATCH_NUMBER,KEY_BLUE1,KEY_BLUE2,KEY_BLUE3,KEY_RED1,KEY_RED2,KEY_RED3};
+    private static String[] COLUMNS = {KEY_MATCH_NUMBER,KEY_BLUE1,KEY_BLUE2,KEY_BLUE3,KEY_RED1,KEY_RED2,KEY_RED3,KEY_LAST_UPDATED};
     private String tableName;
+    private static SimpleDateFormat dateFormat;
+
 
     public ScheduleDB(Context context, String eventID)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         tableName = "schedule_"+eventID;
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
     }
@@ -54,7 +61,8 @@ public class ScheduleDB extends SQLiteOpenHelper
                 " "+KEY_BLUE3+" INTEGER NOT NULL,"+
                 " "+KEY_RED1+" INTEGER NOT NULL,"+
                 " "+KEY_RED2+" INTEGER NOT NULL,"+
-                " "+KEY_RED3+" INTEGER NOT NULL);";
+                " "+KEY_RED3+" INTEGER NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
 
@@ -75,6 +83,7 @@ public class ScheduleDB extends SQLiteOpenHelper
         values.put(KEY_RED1, red1);
         values.put(KEY_RED2, red2);
         values.put(KEY_RED3, red3);
+        values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
         db.insert(tableName, null, values);
         db.close();
     }

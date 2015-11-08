@@ -23,7 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.team3824.akmessing1.scoutingtest.activities.MatchList" >
+        <activity android:name="com.team3824.akmessing1.scoutingtest.activities.MatchList"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name="com.team3824.akmessing1.scoutingtest.activities.Settings" >
         </activity>
@@ -35,8 +36,9 @@
         <activity android:name="com.team3824.akmessing1.scoutingtest.activities.PitScouting"
             android:screenOrientation="landscape">
         </activity>
-        <activity
-            android:name="com.team3824.akmessing1.scoutingtest.activities.PitList" >
+        <activity android:name="com.team3824.akmessing1.scoutingtest.activities.PitList"
+            android:screenOrientation="portrait">
+        </activity>
         </activity>
     </application>
 

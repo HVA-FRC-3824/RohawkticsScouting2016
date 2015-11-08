@@ -12,7 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,13 +32,16 @@ public class PitScoutDB extends SQLiteOpenHelper {
     public static final String KEY_TEAM_NUMBER = "_id";
     public static final String KEY_NICKNAME = "nickname";
     public static final String KEY_COMPLETE = "complete";
+    public static final String KEY_LAST_UPDATED = "last_updated";
 
     private String tableName;
+    private static SimpleDateFormat dateFormat;
 
     public PitScoutDB(Context context, String eventID)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         tableName = "pitScouting_"+eventID;
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
     }
@@ -48,7 +53,8 @@ public class PitScoutDB extends SQLiteOpenHelper {
         String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
                 "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
                 " "+KEY_NICKNAME+" TEXT,"+
-                " "+KEY_COMPLETE+" INTEGER NOT NULL);";
+                " "+KEY_COMPLETE+" INTEGER NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
 
@@ -68,6 +74,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
     public void createTeamList(JSONArray array)
     {
         SQLiteDatabase db = this.getWritableDatabase();
+
         for(int i = 0; i < array.length(); i++) {
             try {
                 JSONObject jsonObject = array.getJSONObject(i);
@@ -77,6 +84,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 values.put(KEY_TEAM_NUMBER,teamNumber);
                 values.put(KEY_NICKNAME,nickname);
                 values.put(KEY_COMPLETE, 0);
+                values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
                 db.insert(tableName,null,values);
             }catch (JSONException e) {
                 Log.d(TAG, "Exception: " + e.toString());
@@ -102,6 +110,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
         String[] columnNames = cursor.getColumnNames();
 
         ContentValues cvs = new ContentValues();
+        cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
         for(Map.Entry<String, ScoutValue> entry : map.entrySet())
         {
             String column = entry.getKey();
