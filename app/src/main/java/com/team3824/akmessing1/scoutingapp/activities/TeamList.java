@@ -18,25 +18,25 @@ import android.widget.TableLayout;
 import com.team3824.akmessing1.scoutingapp.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 
-public class PitList extends AppCompatActivity {
+public class TeamList extends AppCompatActivity {
 
-    private static final String TAG = "PitList";
+    private static final String TAG = "TeamList";
     private SimpleCursorAdapter dataAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pit_list);
+        setContentView(R.layout.activity_team_list);
 
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
         // Back button will send user to the home screen
-        Button button = (Button)findViewById(R.id.pit_list_home);
+        Button button = (Button)findViewById(R.id.team_list_home);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PitList.this,StartScreen.class);
+                Intent intent = new Intent(TeamList.this,StartScreen.class);
                 startActivity(intent);
 
             }
@@ -53,7 +53,7 @@ public class PitList extends AppCompatActivity {
 
         if(cursor != null && cursor.getCount() > 0)
         {
-            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.pit_list);
+            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.team_list);
 
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4,4,4,4);
@@ -71,25 +71,18 @@ public class PitList extends AppCompatActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(PitList.this, PitScouting.class);
+                        Intent intent = new Intent(TeamList.this, TeamView.class);
                         intent.putExtra("team_number", teamNumber);
                         startActivity(intent);
                     }
                 });
 
-                if(cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_COMPLETE)) != 0)
-                {
-                    button.setBackgroundColor(Color.GREEN);
-                }
-                else
-                {
-                    button.setBackgroundColor(Color.RED);
-                }
+                button.setBackgroundColor(Color.BLUE);
+
 
                 linearLayout.addView(button);
                 cursor.moveToNext();
             }while(!cursor.isAfterLast());
         }
     }
-
 }

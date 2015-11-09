@@ -96,7 +96,8 @@ public class StartScreen extends AppCompatActivity {
 
     public void view_team(View view)
     {
-
+        Intent intent = new Intent(this, TeamList.class);
+        startActivity(intent);
     }
 
     public void view_picklist(View view)

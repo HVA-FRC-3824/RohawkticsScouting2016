@@ -12,12 +12,12 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pit_list">
+        android:id="@+id/team_list">
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:id="@+id/pit_list_home"
+            android:id="@+id/team_list_home"
             android:text="Home" />
     </LinearLayout>
 </ScrollView>
