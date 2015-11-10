@@ -14,8 +14,6 @@ public class Team {
         this.nickname = nickname;
     }
 
-
-
     public int getTeamNumber()
     {
         return teamNumber;

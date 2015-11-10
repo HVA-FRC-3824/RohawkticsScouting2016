@@ -77,7 +77,8 @@ public class TeamList extends AppCompatActivity {
                     }
                 });
 
-                button.setBackgroundColor(Color.BLUE);
+                button.setBackgroundColor(Color.GRAY);
+                button.setTextColor(Color.WHITE);
 
 
                 linearLayout.addView(button);

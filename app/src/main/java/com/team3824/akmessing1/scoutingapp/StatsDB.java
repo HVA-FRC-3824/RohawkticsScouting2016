@@ -119,6 +119,24 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // g. order by
                 null); // h. limit
         String[] columnNames = cursor.getColumnNames();
+        if(cursor != null) {
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getColumnCount(); i++) {
+                if (!map.containsKey(cursor.getColumnName(i))) {
+                    switch (cursor.getType(i)) {
+                        case Cursor.FIELD_TYPE_INTEGER:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                            break;
+                        case Cursor.FIELD_TYPE_FLOAT:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                            break;
+                        case Cursor.FIELD_TYPE_STRING:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                            break;
+                    }
+                }
+            }
+        }
 
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));

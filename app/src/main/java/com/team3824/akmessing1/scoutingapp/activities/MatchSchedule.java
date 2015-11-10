@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -24,17 +25,19 @@ public class MatchSchedule extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_schedule);
 
+        Button button = (Button)findViewById(R.id.match_schedule_home);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MatchSchedule.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
+
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
         displayListView(scheduleDB);
-    }
-
-    // home button goes to home page
-    public void home(View view)
-    {
-        Intent intent = new Intent(this, StartScreen.class);
-        startActivity(intent);
     }
 
     // set up listview

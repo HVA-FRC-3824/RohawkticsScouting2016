@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -50,6 +51,8 @@ public class PitScouting extends AppCompatActivity {
         adapter = new PitScoutFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.pit_tab_layout);
+        tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
+        tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);

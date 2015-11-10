@@ -123,7 +123,7 @@ public class PitBasicInfo extends ScoutFragment{
         int targetW = 400;//mImageView.getWidth();
         int targetH = 600;//mImageView.getHeight();
 
-        String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() +"/"+ mCurrentPhotoPath;
+        String fullPath = getActivity().getFilesDir().getAbsolutePath() +"/"+ mCurrentPhotoPath;
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();

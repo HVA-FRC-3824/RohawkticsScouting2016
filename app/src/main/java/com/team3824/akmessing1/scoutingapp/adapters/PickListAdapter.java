@@ -22,9 +22,11 @@ public class PickListAdapter extends ArrayAdapter<Team> {
 
     private ArrayList<Team> teams;
     int pickNumber;
+    Context context;
 
     public PickListAdapter(Context context, int textViewResourceId, ArrayList<Team> teams, int pickNumber) {
         super(context, textViewResourceId, teams);
+        this.context = context;
         this.teams = teams;
         this.pickNumber = pickNumber;
     }
@@ -52,7 +54,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
             {
                 String imagePath = robotPicture.getString();
                 if(imagePath != "") {
-                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + imagePath),
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() +"/"+ imagePath),
                             64, 64);
                     imageView.setImageBitmap(thumbnail);
                 }

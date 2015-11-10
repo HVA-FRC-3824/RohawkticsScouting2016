@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -65,6 +66,8 @@ public class MatchScouting extends AppCompatActivity {
         adapter = new MatchScoutFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.match_tab_layout);
+        tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
+        tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
         // Restore any values from the database if this team/match combo has been scouted before

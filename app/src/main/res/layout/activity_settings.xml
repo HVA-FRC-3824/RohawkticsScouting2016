@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent">
+    android:layout_width="fill_parent" android:layout_height="fill_parent"
+    android:background="@color/columbia_blue">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -16,7 +17,9 @@
             android:text="Home"
             android:visibility="invisible"
             android:onClick="home"
-            android:id="@+id/homeButton"/>
+            android:id="@+id/homeButton"
+            android:textColor="@color/white"
+            android:background="@color/navy_blue" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -139,7 +142,9 @@
             android:layout_height="wrap_content"
             android:text="Save"
             android:id="@+id/button7"
-            android:onClick="save_settings" />
+            android:onClick="save_settings"
+            android:background="@color/navy_blue"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 </ScrollView>

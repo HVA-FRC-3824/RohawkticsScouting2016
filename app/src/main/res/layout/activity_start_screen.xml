@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:fitsSystemWindows="true"
-    tools:context=".StartScreen">
+    tools:context=".StartScreen"
+    android:background="@color/columbia_blue">
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
@@ -27,66 +28,88 @@
 
             <TextView android:text="RoHawktics \nScouting App" android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
                 android:id="@+id/textView"
                 android:textSize="@dimen/abc_text_size_display_3_material"
                 android:layout_gravity="right"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:textColor="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="10dp"
                 android:text="Match Schedule"
+                android:textColor="@color/white"
                 android:id="@+id/matchSchedule_button"
                 android:visibility="gone"
-                android:onClick="match_schedule"/>
+                android:onClick="match_schedule"
+                android:background="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Scout Match"
+                android:textColor="@color/white"
                 android:id="@+id/scoutMatch_button"
                 android:visibility="gone"
-                android:onClick="scout_match"/>
+                android:onClick="scout_match"
+                android:background="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Scout Pit"
+                android:textColor="@color/white"
                 android:id="@+id/scoutPit_button"
                 android:visibility="gone"
-                android:onClick="scout_pit"/>
+                android:onClick="scout_pit"
+                android:background="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Super Scout"
+                android:textColor="@color/white"
                 android:id="@+id/superScout_button"
                 android:visibility="gone"
-                android:onClick="super_scout"/>
+                android:onClick="super_scout"
+                android:background="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="View Team"
+                android:textColor="@color/white"
                 android:id="@+id/viewTeam_button"
                 android:visibility="gone"
-                android:onClick="view_team"/>
+                android:onClick="view_team"
+                android:background="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="View Picklist"
+                android:textColor="@color/white"
                 android:id="@+id/viewPicklist_button"
                 android:visibility="gone"
-                android:onClick="view_picklist"/>
+                android:onClick="view_picklist"
+                android:background="@color/navy_blue"/>
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Settings"
                 android:id="@+id/settings_button"
-                android:onClick="settings"/>
+                android:onClick="settings"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
 
         </LinearLayout>
     </ScrollView>

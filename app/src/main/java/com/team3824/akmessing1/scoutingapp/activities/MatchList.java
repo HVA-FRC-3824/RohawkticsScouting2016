@@ -32,6 +32,14 @@ public class MatchList extends AppCompatActivity {
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
+        Button button = (Button)findViewById(R.id.match_list_home);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MatchList.this,StartScreen.class);
+                startActivity(intent);
+            }
+        });
 
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
         displayListView(scheduleDB, sharedPreferences);
