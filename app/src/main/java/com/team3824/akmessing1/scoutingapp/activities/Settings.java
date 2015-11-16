@@ -1,5 +1,7 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +27,7 @@ import com.team3824.akmessing1.scoutingapp.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.StatsDB;
+import com.team3824.akmessing1.scoutingapp.services.Aggregate;
 
 import org.json.JSONArray;
 
@@ -151,33 +154,37 @@ public class Settings extends AppCompatActivity {
                 queue.add(jsonReq);
             }
 
+            final ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
+            // If schedule is empty then try to get one from the blue alliance
+            if (scheduleDB.getNumMatches() == 0) {
+                Log.d(TAG, "Table empty");
+                RequestQueue queue = Volley.newRequestQueue(this);
+                String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/matches?X-TBA-App-Id=amessing:scoutingTest:v2";
+                Log.d(TAG, "url: " + url);
+                JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG, "Schedule received");
+                        scheduleDB.createSchedule(response);
+                    }
+                }, new Response.ErrorListener() {
 
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //TODO: Schedule builder
+                        Log.d(TAG, "Error: " + error.getMessage());
+                        Toast.makeText(Settings.this, "Error: receiving schedule", Toast.LENGTH_LONG);
+                    }
+                });
+                queue.add(jsonReq);
 
-             final ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
-             // If schedule is empty then try to get one from the blue alliance
-             if (scheduleDB.getNumMatches() == 0) {
-                 Log.d(TAG, "Table empty");
-                 RequestQueue queue = Volley.newRequestQueue(this);
-                 String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/matches?X-TBA-App-Id=amessing:scoutingTest:v2";
-                 Log.d(TAG, "url: " + url);
-                 JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-                     @Override
-                     public void onResponse(JSONArray response) {
-                         Log.d(TAG, "Schedule received");
-                         scheduleDB.createSchedule(response);
-                     }
-                 }, new Response.ErrorListener() {
+            }
 
-                     @Override
-                     public void onErrorResponse(VolleyError error) {
-                         //TODO: Schedule builder
-                         Log.d(TAG, "Error: " + error.getMessage());
-                         Toast.makeText(Settings.this, "Error: receiving schedule", Toast.LENGTH_LONG);
-                     }
-                 });
-                 queue.add(jsonReq);
+            Intent intent = new Intent(this, Aggregate.class);
+            PendingIntent pIntent = PendingIntent.getService(this, 0, intent, 0);
+            AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,AlarmManager.INTERVAL_HALF_HOUR,AlarmManager.INTERVAL_HALF_HOUR,pIntent);
 
-             }
             Toast.makeText(this, "Saved", Toast.LENGTH_LONG);
 
         }

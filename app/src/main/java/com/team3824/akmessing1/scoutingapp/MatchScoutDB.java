@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -197,4 +198,30 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         }
         return map;
     }
+
+    public ArrayList<Integer> getTeamsUpdatedSince(String lastUpdated)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(true, // distinct
+                tableName, // a. table
+                new String[]{KEY_TEAM_NUMBER}, // b. column names
+                KEY_LAST_UPDATED+" > ?", // c. selections
+                new String[]{lastUpdated}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if(cursor == null)
+        {
+            return null;
+        }
+        cursor.moveToFirst();
+        ArrayList<Integer> teamNumbers = new ArrayList<>();
+        do{
+            teamNumbers.add(cursor.getInt(0));
+            cursor.moveToNext();
+        }while(!cursor.isAfterLast());
+        return teamNumbers;
+    }
+
 }

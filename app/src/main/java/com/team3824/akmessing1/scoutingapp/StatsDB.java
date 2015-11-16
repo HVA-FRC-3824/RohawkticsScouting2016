@@ -211,4 +211,44 @@ public class StatsDB extends SQLiteOpenHelper {
             cursor.moveToFirst();
         return cursor;
     }
+
+    public String getLastUpdatedTime()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                new String[]{KEY_LAST_UPDATED}, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                KEY_LAST_UPDATED+" DESC", // g. order by
+                "1"); // h. limit
+
+        if(cursor != null)
+            cursor.moveToFirst();
+        else
+            return null;
+
+        return cursor.getString(0);
+    }
+
+    public String getLastUpdatedTime(int teamNum)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                new String[]{KEY_LAST_UPDATED}, // b. column names
+                KEY_TEAM_NUMBER + " = ?", // c. selections
+                new String[]{String.valueOf(teamNum)}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                KEY_LAST_UPDATED+" DESC", // g. order by
+                "1"); // h. limit
+
+        if(cursor != null)
+            cursor.moveToFirst();
+        else
+            return null;
+
+        return cursor.getString(0);
+    }
 }
