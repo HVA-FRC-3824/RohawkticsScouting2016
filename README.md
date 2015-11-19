@@ -15,12 +15,15 @@ The only two things currently needed to work with this project are a git client 
 
 Git is a distributed version control system. Git uses a concept of repositories, branches, and commits to keep track of the history of a collection of files.
 
+
 ### Contribution guidelines ###
 
 At this time, we are planning to use a branch/pull request workflow. There is a nice guide to the flow [here](https://guides.github.com/introduction/flow/).
 
 When implementing a new feature, you should create a branch off of master. Once you have implemented the new feature, you should create a pull request. At this point, the code will enter an informal review process prior to merging into master.
 
+### Issue Tracking/Task board ###
+We will be using [Bitbucket Cards](http://www.bitbucketcards.com/amessing/scoutingtest) to keep track of bugs, improvements, and tasks that need to worked on. 
 ### Who do I talk to? ###
 
 This repository is current managed by Andrew Messing (akmessing1@yahoo.com).
