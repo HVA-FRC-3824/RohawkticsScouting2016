@@ -29,6 +29,16 @@ When implementing a new feature, you should create a branch off of master. Once 
 ### Issue Tracking/Task board ###
 We will be using [Bitbucket Cards](http://www.bitbucketcards.com/amessing/rohawkticsscouting) to keep track of bugs, improvements, and tasks that need to worked on. Any time you find a bug it needs to be added with an adequate description to the cards list, so that we can make sure to fix it. New improvement ideas should also be added, so we can remember them.
 
+
+###Dependencies###
+Currently this project has three dependencies: Volley, Drag Sort Listview, and MPAndroidChart.
+
+*All should work as submodule, so won't need to be cloned individually. If ever updated testing will need to be done to make sure all uses still work.
+
+####Volley####
+Used to make requests to websites. Specifically it is used to pull information from [The Blue Alliance](http://www.thebluealliance.com/) using their [API](http://www.thebluealliance.com/apidocs) such as match schedules and team lists.
+
+*Pull of information from The Blue Alliance is to be done before the regional/worlds as the devices will need wifi to do it and that may (read probably) not be available at an event.
  
 ### Who do I talk to? ###
 
