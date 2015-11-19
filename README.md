@@ -12,6 +12,8 @@ The only two things currently needed to work with this project are a git client 
 
 * The repository currently uses two git submodules and I am not perfectly sure that these will clone correctly. If they don't then contact me and we will figure it out. - Andrew
 
+* Also this application will be setup to run on Nexus 7 and Nexus 9 tablets
+
 
 ### What is git? ###
 
