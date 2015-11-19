@@ -13,6 +13,7 @@ import android.widget.SimpleCursorAdapter;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 
 public class MatchSchedule extends AppCompatActivity {
@@ -25,19 +26,14 @@ public class MatchSchedule extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_schedule);
 
-        Button button = (Button)findViewById(R.id.match_schedule_home);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MatchSchedule.this, StartScreen.class);
-                startActivity(intent);
-            }
-        });
+        CustomHeader header = (CustomHeader)findViewById(R.id.match_schedule_header);
+        header.removeHome();
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
         displayListView(scheduleDB);
+        scheduleDB.close();
     }
 
     // set up listview

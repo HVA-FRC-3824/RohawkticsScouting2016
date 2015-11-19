@@ -1,6 +1,7 @@
 package com.team3824.akmessing1.scoutingapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -9,12 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.Team;
+import com.team3824.akmessing1.scoutingapp.activities.TeamView;
 
 import java.util.ArrayList;
 
@@ -45,10 +49,21 @@ public class PickListAdapter extends ArrayAdapter<Team> {
             convertView = inflater.inflate(R.layout.list_item_pick, null);
         }
 
-        Team t = teams.get(position);
+        final Team t = teams.get(position);
         if(t != null)
         {
             ScoutValue robotPicture = t.getMapElement("robotPicture");
+
+            Button button = (Button)convertView.findViewById(R.id.pick_view_team);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), TeamView.class);
+                    intent.putExtra("team_number", t.getTeamNumber());
+                    getContext().startActivity(intent);
+                }
+            });
+
             ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView);
             if(robotPicture != null)
             {
@@ -77,9 +92,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 case 3:
                     bottomText.setText(t.getMapElement("third_pick_bottom_text").getString());
                     break;
-
             }
-
         }
 
         return convertView;

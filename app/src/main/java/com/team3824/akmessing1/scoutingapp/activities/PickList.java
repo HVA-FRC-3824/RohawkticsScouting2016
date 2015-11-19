@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.PickListFragmentPagerAdapter;
+import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 public class PickList extends AppCompatActivity {
     final private String TAG = "PickList";
@@ -27,6 +28,9 @@ public class PickList extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
+        CustomHeader header = (CustomHeader)findViewById(R.id.pick_list_header);
+        header.removeHome();
+
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.pick_list_view_pager);
         adapter = new PickListFragmentPagerAdapter(getSupportFragmentManager());
@@ -35,14 +39,5 @@ public class PickList extends AppCompatActivity {
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
-
-        Button button = (Button)findViewById(R.id.pick_list_home);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PickList.this, StartScreen.class);
-                startActivity(intent);
-            }
-        });
     }
 }

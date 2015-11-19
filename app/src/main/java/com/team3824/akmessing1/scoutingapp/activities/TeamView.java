@@ -104,6 +104,6 @@ public class TeamView extends AppCompatActivity {
                 }
             });
         }
-
+        pitScoutDB.close();
     }
 }

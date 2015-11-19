@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,75 +14,62 @@ import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 
-import com.team3824.akmessing1.scoutingapp.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
-public class PitList extends AppCompatActivity {
 
-    private static final String TAG = "PitList";
+public class MatchTeamsList extends AppCompatActivity {
+
+    private static final String TAG = "MatchTeamsList";
     private SimpleCursorAdapter dataAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pit_list);
-
-        CustomHeader header = (CustomHeader)findViewById(R.id.pit_list_header);
-        header.removeHome();
+        setContentView(R.layout.activity_match_teams_list);
 
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
-        PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);
-        displayListView(pitScoutDB);
-        pitScoutDB.close();
+        CustomHeader header = (CustomHeader)findViewById(R.id.match_teams_list_header);
+        header.removeHome();
+
+        final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
+        displayListView(scheduleDB, sharedPreferences);
+        scheduleDB.close();
     }
 
     // Setup list view with the schedule
-    private void displayListView(PitScoutDB pitScoutDB)
+    private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences)
     {
-        Cursor cursor = pitScoutDB.getAllTeams();
-
-        if(cursor != null && cursor.getCount() > 0)
+        Cursor cursor = scheduleDB.getSchedule();
+        if(cursor != null)
         {
-            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.pit_list);
+            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_teams_list);
 
+            cursor.moveToFirst();
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4,4,4,4);
 
             // Add buttons
-
             do{
-
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
-                final int teamNumber = cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER));
-                Log.d(TAG, "Adding Button for" + teamNumber);
-                button.setText(String.valueOf(teamNumber));
-
+                final int matchNumber = cursor.getInt(0);
+                button.setText("Match " + matchNumber);
+                button.setBackgroundColor(Color.GRAY);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(PitList.this, PitScouting.class);
-                        intent.putExtra("team_number", teamNumber);
+                        Intent intent = new Intent(MatchTeamsList.this, MatchView.class);
+                        intent.putExtra("match_number",matchNumber);
                         startActivity(intent);
                     }
                 });
-
-                if(cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_COMPLETE)) != 0)
-                {
-                    button.setBackgroundColor(Color.GREEN);
-                }
-                else
-                {
-                    button.setBackgroundColor(Color.RED);
-                }
-
                 linearLayout.addView(button);
                 cursor.moveToNext();
             }while(!cursor.isAfterLast());
         }
     }
-
 }

@@ -16,6 +16,7 @@ import android.widget.TableLayout;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 // Activity which displays each match and corresponding team based on the selected alliance color
 // and number as button which lead to match scouting
@@ -32,17 +33,12 @@ public class MatchList extends AppCompatActivity {
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
-        Button button = (Button)findViewById(R.id.match_list_home);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MatchList.this,StartScreen.class);
-                startActivity(intent);
-            }
-        });
+        CustomHeader header = (CustomHeader)findViewById(R.id.match_list_header);
+        header.removeHome();
 
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
         displayListView(scheduleDB, sharedPreferences);
+        scheduleDB.close();
     }
 
     // Setup list view with the schedule

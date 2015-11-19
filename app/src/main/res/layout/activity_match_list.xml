@@ -14,13 +14,9 @@
         android:orientation="vertical"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/match_list">
-        <Button
-            android:layout_width="match_parent"
+        <com.team3824.akmessing1.scoutingapp.views.CustomHeader
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:id="@+id/match_list_home"
-            android:text="Home"
-            android:background="@color/navy_blue"
-            android:textColor="@color/white" />
+            android:id="@+id/match_list_header"/>
     </LinearLayout>
 </ScrollView>

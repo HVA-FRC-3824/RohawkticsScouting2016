@@ -17,6 +17,7 @@ import android.widget.TableLayout;
 
 import com.team3824.akmessing1.scoutingapp.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 public class TeamList extends AppCompatActivity {
 
@@ -28,22 +29,15 @@ public class TeamList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_list);
 
+        CustomHeader header = (CustomHeader)findViewById(R.id.team_list_header);
+        header.removeHome();
+
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
-        // Back button will send user to the home screen
-        Button button = (Button)findViewById(R.id.team_list_home);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TeamList.this,StartScreen.class);
-                startActivity(intent);
-
-            }
-        });
-
         PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);
         displayListView(pitScoutDB);
+        pitScoutDB.close();
     }
 
     // Setup list view with the schedule

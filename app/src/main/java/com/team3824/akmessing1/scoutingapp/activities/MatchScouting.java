@@ -22,6 +22,7 @@ import com.team3824.akmessing1.scoutingapp.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.MatchScoutFragmentPagerAdapter;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +67,14 @@ public class MatchScouting extends AppCompatActivity {
         adapter = new MatchScoutFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.match_tab_layout);
+        if(allianceColor.equals("Blue"))
+        {
+            tabLayout.setBackgroundColor(Color.BLUE);
+        }
+        else
+        {
+            tabLayout.setBackgroundColor(Color.RED);
+        }
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);

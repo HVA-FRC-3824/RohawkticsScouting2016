@@ -80,7 +80,7 @@ public class PitBasicInfo extends ScoutFragment{
                         // Create the File where the photo should go
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "robotPicture_" + timeStamp+".jpg";
-                        File photoFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),imageFileName);
+                        File photoFile = new File(getActivity().getFilesDir().getAbsolutePath(),imageFileName);
                         try {
                             photoFile.getParentFile().mkdirs();
                             photoFile.createNewFile();
@@ -100,7 +100,7 @@ public class PitBasicInfo extends ScoutFragment{
                 }
                 // Removes the image from the file system
                 else if(text.equals("Remove Picture")){
-                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), mCurrentPhotoPath);
+                    File file = new File(getActivity().getFilesDir().getAbsolutePath(), mCurrentPhotoPath);
                     boolean deleted = file.delete();
                     Log.d(TAG,"deleted: " + deleted);
                     mButton.setText("Take Picture");
@@ -109,11 +109,7 @@ public class PitBasicInfo extends ScoutFragment{
             }
         };
 
-        int permission = verifyStoragePermissions(getActivity());
-        if(permission == PackageManager.PERMISSION_GRANTED)
-        {
-            mButton.setOnClickListener(buttonClick);
-        }
+        mButton.setOnClickListener(buttonClick);
 
         return view;
     }
@@ -158,40 +154,5 @@ public class PitBasicInfo extends ScoutFragment{
     {
         map.put("robotPicture",new ScoutValue(mCurrentPhotoPath));
         super.writeContentsToMap(map);
-    }
-
-    public int verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    2 /*REQUEST_EXTERNAL_STORAGE*/
-            );
-        }
-        return permission;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        if(requestCode == 2/*REQUEST_EXTERNAL_STORAGE*/)
-        {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-                Toast.makeText(getContext(),"Permission Granted",Toast.LENGTH_SHORT);
-                mButton.setOnClickListener(buttonClick);
-
-            } else {
-
-                Log.d(TAG,"Permission denied");
-            }
-            return;
-        }
     }
 }

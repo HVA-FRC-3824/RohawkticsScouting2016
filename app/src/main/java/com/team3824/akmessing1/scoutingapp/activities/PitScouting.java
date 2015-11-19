@@ -191,7 +191,6 @@ public class PitScouting extends AppCompatActivity {
                 }
             });
         }
-
     }
 
 }

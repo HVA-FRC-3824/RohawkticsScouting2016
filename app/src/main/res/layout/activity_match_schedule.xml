@@ -16,13 +16,10 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
         xmlns:android="http://schemas.android.com/apk/res/android">
-        <Button
-            android:layout_width="match_parent"
+        <com.team3824.akmessing1.scoutingapp.views.CustomHeader
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/match_schedule_home"
-            android:text="Home"
-            android:background="@color/navy_blue"
-            android:textColor="@color/white" />
+            android:id="@+id/match_schedule_header"/>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal" android:layout_width="match_parent"
         android:layout_height="wrap_content"
