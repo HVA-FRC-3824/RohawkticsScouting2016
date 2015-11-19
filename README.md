@@ -19,6 +19,11 @@ The only two things currently needed to work with this project are a git client 
 
 Git is a distributed version control system. Git uses a concept of repositories, branches, and commits to keep track of the history of a collection of files.
 
+For more information about git look at the following:
+
+* http://juristr.com/blog/2013/04/git-explained/
+
+* http://git-scm.com/book/en/v2/Getting-Started-Git-Basics
 
 ### Contribution guidelines ###
 
