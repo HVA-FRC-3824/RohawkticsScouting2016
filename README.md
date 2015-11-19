@@ -10,6 +10,8 @@ Version: alpha (pre-numbers)
 ### How do I get set up? ###
 The only two things currently needed to work with this project are a git client ([SourceTree](https://www.sourcetreeapp.com/) is recommended if you are unfamiliar with command line) and [Android Studio](https://developer.android.com/sdk/index.html). With Android Studio code can be tested using either an emulator or an android device connect via usb.
 
+* The repository currently uses two git submodules and I am not perfectly sure that these will clone correctly. If they don't then contact me and we will figure it out. - Andrew
+
 
 ### What is git? ###
 
