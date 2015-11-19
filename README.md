@@ -8,7 +8,7 @@ Version: alpha (pre-numbers)
 
 
 ### How do I get set up? ###
-The only two things currently needed to work with this project are a git client (SourceTree is recommended if you are unfamiliar with command line) and Android Studio. With Android Studio code can be tested using either an emulator or an android device connect via usb.
+The only two things currently needed to work with this project are a git client (SourceTree is recommended if you are unfamiliar with command line) and (Android Studio)[https://developer.android.com/sdk/index.html]. With Android Studio code can be tested using either an emulator or an android device connect via usb.
 
 
 ### What is git? ###
