@@ -23,7 +23,9 @@ At this time, we are planning to use a branch/pull request workflow. There is a 
 When implementing a new feature, you should create a branch off of master. Once you have implemented the new feature, you should create a pull request. At this point, the code will enter an informal review process prior to merging into master.
 
 ### Issue Tracking/Task board ###
-We will be using [Bitbucket Cards](http://www.bitbucketcards.com/amessing/scoutingtest) to keep track of bugs, improvements, and tasks that need to worked on. 
+We will be using [Bitbucket Cards](http://www.bitbucketcards.com/amessing/rohawkticsscouting) to keep track of bugs, improvements, and tasks that need to worked on. Any time you find a bug it needs to be added with an adequate description to the cards list, so that we can make sure to fix it. New improvement ideas should also be added, so we can remember them.
+
+ 
 ### Who do I talk to? ###
 
 This repository is current managed by Andrew Messing (akmessing1@yahoo.com).
