@@ -4,3 +4,6 @@
 [submodule "libraries/volley"]
 	path = libraries/volley
 	url = https://android.googlesource.com/platform/frameworks/volley
+[submodule "libraries/MPAndroidChart"]
+	path = libraries/MPAndroidChart
+	url = https://github.com/PhilJay/MPAndroidChart.git

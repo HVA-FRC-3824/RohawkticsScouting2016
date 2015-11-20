@@ -1,3 +1,4 @@
 include ':app'
 include ':libraries:volley'
 include ':libraries:drag-sort-listview:library'
+include ':libraries:MPAndroidChart:MPChartLib'

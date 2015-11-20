@@ -2,12 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ScoutingTest.iml" filepath="$PROJECT_DIR$/ScoutingTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/MPAndroidChart/MPAndroidChart.iml" filepath="$PROJECT_DIR$/libraries/MPAndroidChart/MPAndroidChart.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/MPAndroidChart/MPChartLib/MPChartLib.iml" filepath="$PROJECT_DIR$/libraries/MPAndroidChart/MPChartLib/MPChartLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RohawkticsScouting.iml" filepath="$PROJECT_DIR$/RohawkticsScouting.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/drag-sort-listview/drag-sort-listview.iml" filepath="$PROJECT_DIR$/libraries/drag-sort-listview/drag-sort-listview.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/libraries.iml" filepath="$PROJECT_DIR$/libraries/libraries.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/drag-sort-listview/library/library.iml" filepath="$PROJECT_DIR$/libraries/drag-sort-listview/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/volley/volley.iml" filepath="$PROJECT_DIR$/volley/volley.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/volley/volley.iml" filepath="$PROJECT_DIR$/libraries/volley/volley.iml" />
     </modules>
   </component>
 </project>
