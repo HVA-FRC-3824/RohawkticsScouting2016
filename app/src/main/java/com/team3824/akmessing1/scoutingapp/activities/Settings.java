@@ -132,7 +132,7 @@ public class Settings extends AppCompatActivity {
             if (pitScoutDB.getNumTeams() == 0) {
                 Log.d(TAG, "Table empty");
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/teams?X-TBA-App-Id=amessing:scoutingTest:v1";
+                String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/teams?X-TBA-App-Id=amessing:scoutingTest:v3";
                 Log.d(TAG, "url: " + url);
 
                 //Request schedule
@@ -159,7 +159,7 @@ public class Settings extends AppCompatActivity {
             if (scheduleDB.getNumMatches() == 0) {
                 Log.d(TAG, "Table empty");
                 RequestQueue queue = Volley.newRequestQueue(this);
-                String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/matches?X-TBA-App-Id=amessing:scoutingTest:v2";
+                String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/matches?X-TBA-App-Id=amessing:scoutingTest:v3";
                 Log.d(TAG, "url: " + url);
                 JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                     @Override

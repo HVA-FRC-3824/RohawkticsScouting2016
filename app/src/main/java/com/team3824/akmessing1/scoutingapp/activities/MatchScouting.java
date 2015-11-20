@@ -36,7 +36,6 @@ public class MatchScouting extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private MatchScoutFragmentPagerAdapter adapter;
-    //private Toolbar toolbar;
 
     private int teamNumber;
     private int matchNumber;
