@@ -45,6 +45,15 @@ public class CustomCheckbox extends CustomScoutView {
         });
     }
 
+    public boolean isChecked()
+    {
+        return checkbox.isChecked();
+    }
+
+    public void setChecked(boolean checked) {
+        checkbox.setChecked(checked);
+    }
+
     // Custom save
     @Override
     public void writeToMap(Map<String, ScoutValue> map)

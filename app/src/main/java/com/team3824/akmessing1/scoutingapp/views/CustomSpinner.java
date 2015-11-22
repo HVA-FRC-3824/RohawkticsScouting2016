@@ -34,7 +34,7 @@ public class CustomSpinner extends CustomScoutView{
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
         key = typedArray.getString(R.styleable.CustomScoutView_key);
         TypedArray typedArray1 = context.obtainStyledAttributes(attrs,R.styleable.CustomSpinner);
-        int spinnerValuesId = typedArray1.getResourceId(R.styleable.CustomSpinner_values, 0);
+        int spinnerValuesId = typedArray1.getResourceId(R.styleable.CustomSpinner_spinner_values, 0);
         // Store a local copy of resource strings
         CharSequence[] strings = context.getResources().getTextArray(spinnerValuesId);
 

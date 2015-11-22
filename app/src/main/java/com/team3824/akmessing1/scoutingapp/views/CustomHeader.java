@@ -50,4 +50,9 @@ public class CustomHeader extends RelativeLayout {
         home.setOnClickListener(null);
     }
 
+    public void setBackOnClickListener(OnClickListener onClickListener)
+    {
+        back.setOnClickListener(onClickListener);
+    }
+
 }

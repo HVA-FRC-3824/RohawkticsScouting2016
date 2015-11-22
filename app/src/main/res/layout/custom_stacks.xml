@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Stacks"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="30sp" />
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/stack_num">
+    </RadioGroup>
+
+    <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/totes_stacked"
+        app:label="Totes"
+        app:key="totes_stacked"/>
+
+    <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/preexisting_totes"
+        app:label="Preexisting Totes"
+        app:key="preexisting_totes"/>
+
+    <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/can"
+        app:label="Can added"
+        app:key="can"/>
+    <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/noodle"
+        app:label="Noodle added"
+        app:key="noodle"/>
+
+    <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/can_dropped"
+        app:label="Can dropped"
+        app:key="can_dropped"/>
+
+    <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:id="@+id/stack_dropped"
+        app:label="Stack dropped"
+        app:key="stack_dropped"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Finish Stack"
+        android:textColor="#000000"
+        android:id="@+id/finish_stack"/>
+
+</LinearLayout>

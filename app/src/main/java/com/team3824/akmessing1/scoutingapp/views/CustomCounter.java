@@ -65,6 +65,18 @@ public class CustomCounter extends CustomScoutView{
         });
     }
 
+    public int getCount()
+    {
+        return count;
+    }
+
+    public void setCount(int count)
+    {
+        this.count = count;
+        countView.setText(Integer.toString(count));
+    }
+
+
     // Custom save
     @Override
     public void writeToMap(Map<String, ScoutValue> map)
