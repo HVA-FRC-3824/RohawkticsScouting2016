@@ -15,8 +15,12 @@
     </declare-styleable>
 
     <declare-styleable name="CustomSpinner">
-        <attr name="values" format="reference"/>
-        <attr name="defaultValue" format="string"/>
+        <attr name="spinner_values" format="reference"/>
+        <attr name="spinner_defaultValue" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="CustomRadioButtons">
+        <attr name="radio_values" format="reference"/>
+        <attr name="radio_defaultValue" format="string"/>
+    </declare-styleable>
 </resources>

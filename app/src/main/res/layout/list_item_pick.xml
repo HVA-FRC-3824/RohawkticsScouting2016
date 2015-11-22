@@ -32,10 +32,20 @@
         android:layout_alignLeft="@+id/topText"
         android:id="@+id/bottomText" />
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Picked"
+        android:layout_alignParentRight="true"
+        android:id="@+id/team_picked"
+        android:background="#ff0000" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Team"
-        android:layout_alignParentRight="true"
-        android:id="@+id/pick_view_team"/>
+        android:layout_toLeftOf="@id/team_picked"
+        android:id="@+id/pick_view_team" />
+
 </RelativeLayout>
