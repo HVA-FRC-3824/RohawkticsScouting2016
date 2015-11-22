@@ -46,6 +46,16 @@ public class MatchScouting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_scouting);
 
+        CustomHeader header = (CustomHeader)findViewById(R.id.match_header);
+        header.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MatchScouting.this, MatchList.class);
+                intent.putExtra("scouting", true);
+                startActivity(intent);
+            }
+        });
+
         // Get Match Number and Team Number from the intent
         Bundle extras = getIntent().getExtras();
         teamNumber = extras.getInt("team_number");
@@ -63,7 +73,7 @@ public class MatchScouting extends AppCompatActivity {
         // Set up tabs and pages for different fragments of a match
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.match_view_pager);
-        adapter = new MatchScoutFragmentPagerAdapter(getSupportFragmentManager());
+        adapter = new MatchScoutFragmentPagerAdapter(getFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.match_tab_layout);
         if(allianceColor.equals("Blue"))
@@ -89,21 +99,19 @@ public class MatchScouting extends AppCompatActivity {
 
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
         // First match doesn't need a previous button
+        Button previous = (Button)findViewById(R.id.previous_match);
         if(matchNumber == 1)
         {
-            Button previous = (Button)findViewById(R.id.previous_match);
             previous.setVisibility(View.INVISIBLE);
         }
-        // TODO: Set up previous button to ask about saving like the next button does
         // Setup dialog box for going to the previous match
         else
         {
-            Cursor prevCursor = scheduleDB.getMatch(matchNumber-1);
+            Cursor prevCursor = scheduleDB.getMatch(matchNumber - 1);
             int allianceNum = sharedPreferences.getInt("alliance_number", 0);
             Log.d(TAG,allianceColor.toLowerCase() + allianceNum+"->"+prevCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
             final int prevTeamNumber = prevCursor.getInt(prevCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
-            Button prev = (Button)findViewById(R.id.previous_match);
-            prev.setOnClickListener(new View.OnClickListener() {
+            previous.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG,"previous match pressed");
@@ -168,9 +176,9 @@ public class MatchScouting extends AppCompatActivity {
         Cursor nextCursor = scheduleDB.getMatch(matchNumber + 1);
 
         //Last match doesn't need a next button
+        Button next = (Button)findViewById(R.id.next_match);
         if(nextCursor == null)
         {
-            Button next = (Button)findViewById(R.id.next_match);
             next.setVisibility(View.INVISIBLE);
         }
         // Otherwise setup dialog box for moving to the next match that checks about saving
@@ -178,7 +186,6 @@ public class MatchScouting extends AppCompatActivity {
         {
             int allianceNum = sharedPreferences.getInt("alliance_number", 0);
             final int nextTeamNumber = nextCursor.getInt(nextCursor.getColumnIndex(allianceColor.toLowerCase()+allianceNum));
-            Button next = (Button)findViewById(R.id.next_match);
             next.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -205,6 +212,7 @@ public class MatchScouting extends AppCompatActivity {
                             MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
                             data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
                             data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                            data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
                             // Store values to the database
                             matchScoutDB.updateMatch(data);
 

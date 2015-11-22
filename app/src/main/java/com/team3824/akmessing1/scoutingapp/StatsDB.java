@@ -37,6 +37,7 @@ public class StatsDB extends SQLiteOpenHelper {
     public static final String KEY_FIRST_PICK_RANK = "first_pick_rank";
     public static final String KEY_SECOND_PICK_RANK = "second_pick_rank";
     public static final String KEY_THIRD_PICK_RANK = "third_pick_rank";
+    public static final String KEY_PICKED = "picked";
     public static final String KEY_LAST_UPDATED = "last_updated";
 
 
@@ -64,6 +65,7 @@ public class StatsDB extends SQLiteOpenHelper {
                 " "+KEY_FIRST_PICK_RANK+" INTEGER NOT NULL,"+
                 " "+KEY_SECOND_PICK_RANK+" INTEGER NOT NULL,"+
                 " "+KEY_THIRD_PICK_RANK+" INTEGER NOT NULL,"+
+                " "+KEY_PICKED+" INTEGER NOT NULL,"+
                 " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
@@ -97,6 +99,7 @@ public class StatsDB extends SQLiteOpenHelper {
                 values.put(KEY_FIRST_PICK_RANK,i+1);
                 values.put(KEY_SECOND_PICK_RANK,i+1);
                 values.put(KEY_THIRD_PICK_RANK,i+1);
+                values.put(KEY_PICKED, 0);
                 values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
                 db.insert(tableName,null,values);
             }catch (JSONException e) {

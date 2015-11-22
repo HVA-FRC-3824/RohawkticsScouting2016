@@ -50,7 +50,7 @@ public class TeamView extends AppCompatActivity {
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.team_view_view_pager);
-        adapter = new TeamViewFragmentPagerAdapter(getSupportFragmentManager(),teamNumber);
+        adapter = new TeamViewFragmentPagerAdapter(getFragmentManager(),teamNumber);
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.team_view_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);

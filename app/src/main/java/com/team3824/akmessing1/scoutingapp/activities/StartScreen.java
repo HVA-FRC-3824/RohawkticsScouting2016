@@ -91,6 +91,7 @@ public class StartScreen extends AppCompatActivity {
     public void scout_match(View view)
     {
         Intent intent = new Intent(this, MatchList.class);
+        intent.putExtra("scouting",true);
         startActivity(intent);
     }
 
@@ -102,7 +103,8 @@ public class StartScreen extends AppCompatActivity {
 
     public void view_match(View view)
     {
-        Intent intent = new Intent(this, MatchTeamsList.class);
+        Intent intent = new Intent(this, MatchList.class);
+        intent.putExtra("scouting",false);
         startActivity(intent);
     }
 

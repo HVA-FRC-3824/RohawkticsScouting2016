@@ -6,7 +6,7 @@ android {
     useLibrary "org.apache.http.legacy"
     defaultConfig {
         applicationId "com.team3824.akmessing1.scoutingapp"
-        minSdkVersion 15
+        minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -27,5 +27,5 @@ dependencies {
     compile project(':libraries:volley')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
-    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:support-v13:+'
 }

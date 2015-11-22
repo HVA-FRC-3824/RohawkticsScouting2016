@@ -30,27 +30,40 @@ public class MatchList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_list);
 
+        Bundle extras = getIntent().getExtras();
+        boolean scouting = extras.getBoolean("scouting");
+
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 
         CustomHeader header = (CustomHeader)findViewById(R.id.match_list_header);
         header.removeHome();
+        header.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MatchList.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
 
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
-        displayListView(scheduleDB, sharedPreferences);
+        displayListView(scheduleDB, sharedPreferences, scouting);
         scheduleDB.close();
     }
 
     // Setup list view with the schedule
-    private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences)
+    private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences, final boolean scouting)
     {
         Cursor cursor = scheduleDB.getSchedule();
         if(cursor != null)
         {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_list);
-            int alliance_number = sharedPreferences.getInt("alliance_number",0);
-            String alliance_color = sharedPreferences.getString("alliance_color","");
-
+            int alliance_number = -1;
+            String alliance_color = "";
+            if(scouting) {
+                alliance_number = sharedPreferences.getInt("alliance_number", 0);
+                alliance_color = sharedPreferences.getString("alliance_color", "");
+            }
             cursor.moveToFirst();
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4,4,4,4);
@@ -60,8 +73,15 @@ public class MatchList extends AppCompatActivity {
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
                 final int matchNumber = cursor.getInt(0);
-                final int teamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
-                button.setText("Match " + matchNumber + ": " + teamNumber);
+                int tempTeamNumber = -1; // fixes issue with final and possible noninitialization
+                if(scouting) {
+                    tempTeamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
+                    button.setText("Match " + matchNumber + ": " + tempTeamNumber);
+                }
+                else {
+                    button.setText("Match " + matchNumber);
+                }
+                final int teamNumber = tempTeamNumber; // fixes issue with final and possible noninitialization
                 switch (alliance_color.toLowerCase())
                 {
                     case "blue":
@@ -74,8 +94,17 @@ public class MatchList extends AppCompatActivity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(MatchList.this, MatchScouting.class);
-                        intent.putExtra("team_number",teamNumber);
+                        Intent intent = null;
+
+                        if(scouting)
+                        {
+                            intent = new Intent(MatchList.this, MatchScouting.class);
+                            intent.putExtra("team_number", teamNumber);
+                        }
+                        else
+                        {
+                            intent = new Intent(MatchList.this, MatchView.class);
+                        }
                         intent.putExtra("match_number",matchNumber);
                         startActivity(intent);
                     }

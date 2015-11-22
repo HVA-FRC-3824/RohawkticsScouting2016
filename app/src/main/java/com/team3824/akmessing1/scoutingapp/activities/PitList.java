@@ -31,7 +31,13 @@ public class PitList extends AppCompatActivity {
 
         CustomHeader header = (CustomHeader)findViewById(R.id.pit_list_header);
         header.removeHome();
-
+        header.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PitList.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -17,10 +18,13 @@ import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.StatsDB;
 import com.team3824.akmessing1.scoutingapp.Team;
 import com.team3824.akmessing1.scoutingapp.activities.TeamView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class PickListAdapter extends ArrayAdapter<Team> {
 
@@ -52,6 +56,15 @@ public class PickListAdapter extends ArrayAdapter<Team> {
         final Team t = teams.get(position);
         if(t != null)
         {
+            if(t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+            {
+                convertView.setBackgroundColor(Color.RED);
+            }
+            else
+            {
+                convertView.setBackgroundColor(Color.GREEN);
+            }
+
             ScoutValue robotPicture = t.getMapElement("robotPicture");
 
             Button button = (Button)convertView.findViewById(R.id.pick_view_team);
@@ -61,6 +74,59 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                     Intent intent = new Intent(getContext(), TeamView.class);
                     intent.putExtra("team_number", t.getTeamNumber());
                     getContext().startActivity(intent);
+                }
+            });
+
+            final Comparator<Team> compare = new Comparator<Team>(){
+                public int compare(Team a, Team b)
+                {
+                    int rankA = a.getMapElement(StatsDB.KEY_FIRST_PICK_RANK).getInt();
+                    int rankB = b.getMapElement(StatsDB.KEY_FIRST_PICK_RANK).getInt();
+                    if(a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 && b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                    {
+                        return rankA - rankB;
+                    }
+                    else if( a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 )
+                    {
+                        return 1;
+                    }
+                    else if(b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                    {
+                        return -1;
+                    }
+                    else {
+                        return rankA - rankB;
+                    }
+                }
+            };
+
+            button = (Button)convertView.findViewById(R.id.team_picked);
+            if(t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+            {
+                button.setText("Unpicked");
+                button.setBackgroundColor(Color.GREEN);
+            }
+            else
+            {
+                button.setText("Picked");
+                button.setBackgroundColor(Color.RED);
+            }
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Button b = (Button)v;
+                    String text = String.valueOf(b.getText());
+                    if(text.equals("Picked")) {
+                        t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(1));
+                        teams.remove(t);
+                        teams.add(t);
+                    }
+                    else
+                    {
+                        t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(0));
+                        Collections.sort(teams,compare);
+                    }
+                    notifyDataSetChanged();
                 }
             });
 

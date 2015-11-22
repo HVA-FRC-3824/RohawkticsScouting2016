@@ -46,7 +46,21 @@ public class SecondPick extends ScoutFragment{
             {
                 int rankA = a.getMapElement(StatsDB.KEY_SECOND_PICK_RANK).getInt();
                 int rankB = b.getMapElement(StatsDB.KEY_SECOND_PICK_RANK).getInt();
-                return rankA - rankB;
+                if(a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 && b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                {
+                    return rankA - rankB;
+                }
+                else if( a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 )
+                {
+                    return 1;
+                }
+                else if(b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                {
+                    return -1;
+                }
+                else {
+                    return rankA - rankB;
+                }
             }
         };
 
@@ -70,8 +84,10 @@ public class SecondPick extends ScoutFragment{
 
             int secondRank = statsCursor.getInt(statsCursor.getColumnIndex(StatsDB.KEY_SECOND_PICK_RANK));
             int computedSecondPickRank = statsCursor.getInt(statsCursor.getColumnIndex(StatsDB.KEY_COMPUTED_SECOND_PICK_RANK));
+            int picked = statsCursor.getInt(statsCursor.getColumnIndex(StatsDB.KEY_PICKED));
             map.put(StatsDB.KEY_SECOND_PICK_RANK, new ScoutValue(secondRank));
             map.put(StatsDB.KEY_COMPUTED_SECOND_PICK_RANK,new ScoutValue(computedSecondPickRank));
+            map.put(StatsDB.KEY_PICKED, new ScoutValue(picked));
 
             String bottomText = "Pick Rank: "+String.valueOf(map.get(StatsDB.KEY_SECOND_PICK_RANK).getInt())+" Computed Pick Rank: "+String.valueOf(map.get(StatsDB.KEY_COMPUTED_SECOND_PICK_RANK).getInt());
             map.put("second_pick_bottom_text", new ScoutValue(bottomText));
@@ -108,7 +124,7 @@ public class SecondPick extends ScoutFragment{
                         team = adapter.getItem(i);
                         team.setMapElement(StatsDB.KEY_SECOND_PICK_RANK, new ScoutValue(i + 1));
                         teamNumber = team.getTeamNumber();
-                        secondPick = i+1;
+                        secondPick = i + 1;
                         computedSecondPick = team.getMapElement(StatsDB.KEY_COMPUTED_SECOND_PICK_RANK).getInt();
                         bottomText = "Pick Rank: " + String.valueOf(secondPick) + " Computed Pick Rank: " + String.valueOf(computedSecondPick);
                         team.setMapElement("second_pick_bottom_text", new ScoutValue(bottomText));
@@ -121,7 +137,7 @@ public class SecondPick extends ScoutFragment{
                     HashMap<String, ScoutValue> map = new HashMap<String, ScoutValue>();
                     Team team = adapter.getItem(from);
                     int teamNumber = team.getTeamNumber();
-                    int secondPick = to+1;
+                    int secondPick = to + 1;
                     int computedSecondPick = team.getMapElement(StatsDB.KEY_COMPUTED_SECOND_PICK_RANK).getInt();
                     team.setMapElement(StatsDB.KEY_SECOND_PICK_RANK, new ScoutValue(to + 1));
                     String bottomText = "Pick Rank: " + String.valueOf(secondPick) + " Computed Pick Rank: " + String.valueOf(computedSecondPick);
@@ -132,13 +148,14 @@ public class SecondPick extends ScoutFragment{
                     map.put(StatsDB.KEY_SECOND_PICK_RANK, new ScoutValue(secondPick));
                     map.put(StatsDB.KEY_COMPUTED_SECOND_PICK_RANK, new ScoutValue(computedSecondPick));
                     statsDB.updateStats(map);
-                    for (int i = to+1; i <= from; i++) {
+                    for (int i = to + 1; i <= from; i++) {
                         team = adapter.getItem(i);
                         team.setMapElement(StatsDB.KEY_SECOND_PICK_RANK, new ScoutValue(i + 1));
                         teamNumber = team.getTeamNumber();
-                        secondPick = i+1;
+                        secondPick = i + 1;
                         computedSecondPick = team.getMapElement(StatsDB.KEY_COMPUTED_SECOND_PICK_RANK).getInt();
-                        bottomText = "Pick Rank: " + String.valueOf(secondPick) + " Computed Pick Rank: " + String.valueOf(computedSecondPick);                        team.setMapElement("second_pick_bottom_text", new ScoutValue(bottomText));
+                        bottomText = "Pick Rank: " + String.valueOf(secondPick) + " Computed Pick Rank: " + String.valueOf(computedSecondPick);
+                        team.setMapElement("second_pick_bottom_text", new ScoutValue(bottomText));
                         team.setMapElement("second_pick_bottom_text", new ScoutValue(bottomText));
                         map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
                         map.put(StatsDB.KEY_SECOND_PICK_RANK, new ScoutValue(secondPick));
@@ -151,7 +168,7 @@ public class SecondPick extends ScoutFragment{
 
             }
         });
-        
+
         
         return view;
     }

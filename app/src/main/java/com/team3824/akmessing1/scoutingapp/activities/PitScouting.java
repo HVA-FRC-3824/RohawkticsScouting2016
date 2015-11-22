@@ -20,6 +20,7 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.PitScoutFragmentPagerAdapter;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,15 @@ public class PitScouting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pit_scouting);
 
+        CustomHeader header = (CustomHeader)findViewById(R.id.pit_header);
+        header.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PitScouting.this, PitList.class);
+                startActivity(intent);
+            }
+        });
+
         Bundle extras = getIntent().getExtras();
         teamNumber = extras.getInt("team_number");
 
@@ -48,7 +58,7 @@ public class PitScouting extends AppCompatActivity {
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
-        adapter = new PitScoutFragmentPagerAdapter(getSupportFragmentManager());
+        adapter = new PitScoutFragmentPagerAdapter(getFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.pit_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
