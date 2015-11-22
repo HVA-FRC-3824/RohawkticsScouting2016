@@ -1,28 +1,27 @@
 package com.team3824.akmessing1.scoutingapp.fragments;
 
-import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,31 +75,54 @@ public class PitBasicInfo extends ScoutFragment{
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     // Ensure that there's a camera activity to handle the intent
                     if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-
+                        Context context = getContext();
                         // Create the File where the photo should go
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "robotPicture_" + timeStamp+".jpg";
-                        File photoFile = new File(getActivity().getFilesDir().getAbsolutePath(),imageFileName);
+                        mCurrentPhotoPath = imageFileName;
+                        //Remove if exists, the file MUST be created using the lines below
+                        File f = new File(context.getFilesDir(), imageFileName);
+                        f.delete();
+                        //Create new file
+                        FileOutputStream fos = null;
                         try {
-                            photoFile.getParentFile().mkdirs();
-                            photoFile.createNewFile();
-                            // Continue only if the File was successfully created
-                            if (photoFile != null) {
-                                mCurrentPhotoPath = imageFileName;
-                                Log.d(TAG,mCurrentPhotoPath);
-                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                                        Uri.fromFile(photoFile));
-                                startActivityForResult(takePictureIntent, 1/*REQUEST_IMAGE_CAPTURE*/);
-                            }
-                        } catch (IOException ex) {
-                            // Error occurred while creating the File
-                            ex.printStackTrace();
+                            fos = context.openFileOutput(imageFileName, Context.MODE_WORLD_WRITEABLE);
+                            fos.close();
+
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+                        //Get reference to the file
+                        f = new File(context.getFilesDir(), imageFileName);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                                    Uri.fromFile(f));
+                        startActivityForResult(takePictureIntent, 1/*REQUEST_IMAGE_CAPTURE*/);
+
+                        //Log.d(TAG,getActivity().getFilesDir().getAbsolutePath());
+
+                     //   File photoFile = new File(getContext().getFilesDir(),imageFileName);
+
+                    //    try {
+                    //        photoFile.getParentFile().mkdirs();
+                    //        photoFile.createNewFile();
+                    //        // Continue only if the File was successfully created
+                    //        if (photoFile != null) {
+                    //            mCurrentPhotoPath = imageFileName;
+                    //            Log.d(TAG,mCurrentPhotoPath);
+                    //
+                    //        }
+                    //    } catch (IOException ex) {
+                    //        // Error occurred while creating the File
+                    //        ex.printStackTrace();
+                    //    }
                     }
                 }
                 // Removes the image from the file system
                 else if(text.equals("Remove Picture")){
-                    File file = new File(getActivity().getFilesDir().getAbsolutePath(), mCurrentPhotoPath);
+                    File file = new File(getContext().getFilesDir(), mCurrentPhotoPath);
                     boolean deleted = file.delete();
                     Log.d(TAG,"deleted: " + deleted);
                     mButton.setText("Take Picture");
@@ -118,8 +140,9 @@ public class PitBasicInfo extends ScoutFragment{
         // Get the dimensions of the View
         int targetW = 400;//mImageView.getWidth();
         int targetH = 600;//mImageView.getHeight();
-
-        String fullPath = getActivity().getFilesDir().getAbsolutePath() +"/"+ mCurrentPhotoPath;
+        //ContextWrapper cw = new ContextWrapper(getContext().getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        String fullPath = getContext().getFilesDir().getAbsolutePath() +"/"+ mCurrentPhotoPath;
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
