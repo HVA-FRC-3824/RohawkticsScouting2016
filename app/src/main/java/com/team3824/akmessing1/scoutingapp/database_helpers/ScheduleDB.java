@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp;
+package com.team3824.akmessing1.scoutingapp.database_helpers;
 
 import android.content.ContentValues;
 import android.content.Context;

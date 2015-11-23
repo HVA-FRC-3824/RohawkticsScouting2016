@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp;
+package com.team3824.akmessing1.scoutingapp.database_helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.team3824.akmessing1.scoutingapp.ScoutValue;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,18 +17,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 // Database helper for match scouting data
-public class MatchScoutDB extends SQLiteOpenHelper {
+public class SuperScoutDB extends SQLiteOpenHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "RohawkticsDB";
-    private String TAG = "MatchScoutDB";
+    private String TAG = "SuperScoutDB";
 
     // Initial Table Columns names
     public static final String KEY_ID = "_id";
-    public static final String KEY_MATCH_NUMBER = "match_number";
-    public static final String KEY_TEAM_NUMBER = "team_number";
+    public static final String KEY_MATCH_NUMBER = "_id";
+    public static final String KEY_BLUE1 = "blue1";
+    public static final String KEY_BLUE2 = "blue2";
+    public static final String KEY_BLUE3 = "blue3";
+    public static final String KEY_RED1 = "red1";
+    public static final String KEY_RED2 = "red2";
+    public static final String KEY_RED3 = "red3";
     public static final String KEY_LAST_UPDATED = "last_updated";
 
 
@@ -34,7 +41,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     private static SimpleDateFormat dateFormat;
 
 
-    public MatchScoutDB(Context context, String eventID)
+    public SuperScoutDB(Context context, String eventID)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         tableName = "matchScouting_"+eventID;
@@ -47,9 +54,13 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db)
     {
         String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_ID+" TEXT PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_MATCH_NUMBER+" INTEGER NOT NULL,"+
-                " "+KEY_TEAM_NUMBER+" INTEGER NOT NULL,"+
+                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_BLUE1+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE2+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE3+" INTEGER NOT NULL,"+
+                " "+KEY_RED1+" INTEGER NOT NULL,"+
+                " "+KEY_RED2+" INTEGER NOT NULL,"+
+                " "+KEY_RED3+" INTEGER NOT NULL,"+
                 " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
@@ -74,8 +85,8 @@ public class MatchScoutDB extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
-                KEY_TEAM_NUMBER + " = ? AND " + KEY_MATCH_NUMBER + " = ?", // c. selections
-                new String[]{String.valueOf(map.get(KEY_TEAM_NUMBER).getInt()), String.valueOf(map.get(KEY_MATCH_NUMBER).getInt())}, // d. selections args
+                KEY_MATCH_NUMBER + " = ?", // c. selections
+                new String[]{String.valueOf(map.get(KEY_MATCH_NUMBER).getInt())}, // d. selections args
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
@@ -125,7 +136,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     }
 
     // Get all the scouting information about a specific match
-    public Cursor getMatchInfo(int matchNum)
+    public Map<String, ScoutValue> getMatchInfo(int matchNum)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
@@ -136,49 +147,12 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        if (cursor != null)
-            cursor.moveToFirst();
-        return cursor;
-    }
-
-    public Cursor getTeamInfo(int teamNum)
-    {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(tableName, // a. table
-                null, // b. column names
-                KEY_TEAM_NUMBER + " = ?", // c. selections
-                new String[]{String.valueOf(teamNum)}, // d. selections args
-                null, // e. group by
-                null, // f. having
-                null, // g. order by
-                null); // h. limit
-        if (cursor != null)
-            cursor.moveToFirst();
-        return cursor;
-    }
-
-    // Function for getting the scouting information about a specific team in a specific match
-    // Used in restoring field values
-    public Map<String, ScoutValue> getTeamMatchInfo(int teamNum, int matchNum)
-    {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(tableName, // a. table
-                null, // b. column names
-                KEY_TEAM_NUMBER + " = ? AND " + KEY_MATCH_NUMBER + " = ?", // c. selections
-                new String[]{String.valueOf(teamNum),String.valueOf(matchNum)}, // d. selections args
-                null, // e. group by
-                null, // f. having
-                null, // g. order by
-                null); // h. limit
-        // First time for a match and team number combination
-        if (cursor == null || cursor.getCount() == 0) {
-            Log.d(TAG,"No rows came back");
+        if (cursor == null || cursor.getCount() == 0)
             return null;
-        }
 
+        cursor.moveToFirst();
         // Setup map
         Map<String, ScoutValue> map = new HashMap<>();
-        cursor.moveToFirst();
         for(int i = 1; i < cursor.getColumnCount(); i++)
         {
             switch(cursor.getType(i)) {
@@ -199,12 +173,14 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         return map;
     }
 
-    public ArrayList<Integer> getTeamsUpdatedSince(String lastUpdated)
+
+
+    public ArrayList<Integer> getMatchesUpdatedSince(String lastUpdated)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(true, // distinct
                 tableName, // a. table
-                new String[]{KEY_TEAM_NUMBER}, // b. column names
+                new String[]{KEY_MATCH_NUMBER}, // b. column names
                 KEY_LAST_UPDATED+" > ?", // c. selections
                 new String[]{lastUpdated}, // d. selections args
                 null, // e. group by
@@ -216,12 +192,12 @@ public class MatchScoutDB extends SQLiteOpenHelper {
             return null;
         }
         cursor.moveToFirst();
-        ArrayList<Integer> teamNumbers = new ArrayList<>();
+        ArrayList<Integer> matchNumbers = new ArrayList<>();
         do{
-            teamNumbers.add(cursor.getInt(0));
+            matchNumbers.add(cursor.getInt(0));
             cursor.moveToNext();
         }while(!cursor.isAfterLast());
-        return teamNumbers;
+        return matchNumbers;
     }
 
 }
