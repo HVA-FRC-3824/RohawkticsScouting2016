@@ -8,12 +8,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Basic Info Fragment"
-            android:gravity="center_horizontal" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -34,5 +28,47 @@
             android:text="Take Picture"
             android:id="@+id/take_picture"
             android:layout_gravity="center_horizontal" />
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/robotWidth"
+            app:label="Robot Width (in)"
+            app:key="robotWidth"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/robotLength"
+            app:label="Robot Length (in)"
+            app:key="robotLength"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/robotHeight"
+            app:label="Robot Height (in)"
+            app:key="robotHeight"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/robotWeight"
+            app:label="Robot Weight (lbs)"
+            app:key="robotWeight"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/canBurgular"
+            app:label="Has can burgulars?"
+            app:key="canBurgular"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cheesecake"
+            app:label="Willing to be cheesecaked?"
+            app:key="cheesecake"/>
     </LinearLayout>
 </ScrollView>

@@ -2,15 +2,46 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Post Fragment"/>
-</RelativeLayout>
-    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/post_dq"
+            app:label="DQed"
+            app:key="dq" />
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/post_stoppedMoving"
+            app:label="Stopped Moving"
+            app:key="post_stoppedMoving" />
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/post_didntShowedUp"
+            app:label="Didn't Show Up"
+            app:key="post_didntShowedUp" />
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/post_fouls"
+            app:label="Fouls"
+            app:key="post_fouls" />
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/post_notes"
+            app:label="Notes"
+            app:key="post_notes" />
+
+    </LinearLayout>
+</ScrollView>

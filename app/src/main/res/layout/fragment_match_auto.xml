@@ -1,53 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_weight="1"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Autonomous Fragment"
-            android:layout_centerInParent="true"
-            android:textColor="#000000" />
         <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/test_checkbox"
-            app:label="Test Checkbox"
-            app:key="test_checkbox"/>
+            android:id="@+id/auto_moved"
+            app:label="Moved in Auto"
+            app:key="auto_moved"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomCounter
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/test_counter"
-            app:label="Test Counter"
-            app:key="test_counter"/>
+            android:id="@+id/auto_totesMoved"
+            app:label="Totes moved to center"
+            app:key="auto_totesMoved"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/test_edittext"
-            app:label="Test Edittext"
-            app:key="test_edittext"/>
+            android:id="@+id/auto_threeToteStack"
+            app:label="Three totes stacked"
+            app:key="auto_threeToteStack"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/test_spinner"
-            app:label="Test Spinner"
-            app:key="test_spinner"
-            app:values="@array/test_array"/>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/auto_cansMoved"
+                app:label="Cans moved to center"
+                app:key="auto_cansMoved"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/test_numeric"
-            app:label="Test Numeric"
-            app:key="test_numeric"/>
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/auto_stepCans"
+                app:label="Cans taken from step"
+                app:key="auto_stepCans"/>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="test_array">
-        <item>Test 1</item>
-        <item>Test 2</item>
-        <item>Test 3</item>
+    <string-array name="play_style">
+        <item>Landfill</item>
+        <item>HP Feeder</item>
+        <item>Neither</item>
+        <item>Both</item>
     </string-array>
 </resources>
