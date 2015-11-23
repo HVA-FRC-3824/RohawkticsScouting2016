@@ -16,9 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.team3824.akmessing1.scoutingapp.MatchScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.MatchScoutFragmentPagerAdapter;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
@@ -51,7 +51,7 @@ public class MatchScouting extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MatchScouting.this, MatchList.class);
-                intent.putExtra("scouting", true);
+                intent.putExtra("nextPage", "match_scouting");
                 startActivity(intent);
             }
         });

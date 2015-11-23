@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mobeta.android.dslv.DragSortListView;
-import com.team3824.akmessing1.scoutingapp.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.StatsDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.Team;
 import com.team3824.akmessing1.scoutingapp.adapters.PickListAdapter;
 

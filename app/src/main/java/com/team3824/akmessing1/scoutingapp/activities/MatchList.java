@@ -15,7 +15,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 // Activity which displays each match and corresponding team based on the selected alliance color
@@ -31,7 +31,7 @@ public class MatchList extends AppCompatActivity {
         setContentView(R.layout.activity_match_list);
 
         Bundle extras = getIntent().getExtras();
-        boolean scouting = extras.getBoolean("scouting");
+        String nextPage = extras.getString("nextPage");
 
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
@@ -47,12 +47,12 @@ public class MatchList extends AppCompatActivity {
         });
 
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
-        displayListView(scheduleDB, sharedPreferences, scouting);
+        displayListView(scheduleDB, sharedPreferences, nextPage);
         scheduleDB.close();
     }
 
     // Setup list view with the schedule
-    private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences, final boolean scouting)
+    private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences, final String nextPage)
     {
         Cursor cursor = scheduleDB.getSchedule();
         if(cursor != null)
@@ -60,13 +60,13 @@ public class MatchList extends AppCompatActivity {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_list);
             int alliance_number = -1;
             String alliance_color = "";
-            if(scouting) {
+            if(nextPage.equals("match_scouting")) {
                 alliance_number = sharedPreferences.getInt("alliance_number", 0);
                 alliance_color = sharedPreferences.getString("alliance_color", "");
             }
             cursor.moveToFirst();
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(4,4,4,4);
+            lp.setMargins(4, 4, 4, 4);
 
             // Add buttons
             do{
@@ -74,7 +74,7 @@ public class MatchList extends AppCompatActivity {
                 button.setLayoutParams(lp);
                 final int matchNumber = cursor.getInt(0);
                 int tempTeamNumber = -1; // fixes issue with final and possible noninitialization
-                if(scouting) {
+                if(nextPage.equals("match_scouting")) {
                     tempTeamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
                     button.setText("Match " + matchNumber + ": " + tempTeamNumber);
                 }
@@ -96,12 +96,16 @@ public class MatchList extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = null;
 
-                        if(scouting)
+                        if(nextPage.equals("match_scouting"))
                         {
                             intent = new Intent(MatchList.this, MatchScouting.class);
                             intent.putExtra("team_number", teamNumber);
                         }
-                        else
+                        else if(nextPage.equals("super_scouting"))
+                        {
+                            intent = new Intent(MatchList.this, SuperScouting.class);
+                        }
+                        else if(nextPage.equals("match_viewing"))
                         {
                             intent = new Intent(MatchList.this, MatchView.class);
                         }

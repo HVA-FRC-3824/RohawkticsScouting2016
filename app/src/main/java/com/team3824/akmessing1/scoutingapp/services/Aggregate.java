@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 
-import com.team3824.akmessing1.scoutingapp.MatchScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.StatsDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 
 import java.util.ArrayList;
 import java.util.HashMap;

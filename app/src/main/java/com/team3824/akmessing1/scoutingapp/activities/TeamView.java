@@ -1,8 +1,6 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,16 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.team3824.akmessing1.scoutingapp.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.adapters.PitScoutFragmentPagerAdapter;
 import com.team3824.akmessing1.scoutingapp.adapters.TeamViewFragmentPagerAdapter;
-import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class TeamView extends AppCompatActivity {

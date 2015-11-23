@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
@@ -36,7 +36,7 @@ public class MatchView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MatchView.this, MatchList.class);
-                intent.putExtra("scouting",false);
+                intent.putExtra("nextPage","match_viewing");
                 startActivity(intent);
             }
         });

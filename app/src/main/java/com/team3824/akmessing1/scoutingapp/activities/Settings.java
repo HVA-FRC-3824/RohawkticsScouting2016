@@ -23,10 +23,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.team3824.akmessing1.scoutingapp.JsonUTF8Request;
-import com.team3824.akmessing1.scoutingapp.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScheduleDB;
-import com.team3824.akmessing1.scoutingapp.StatsDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.services.Aggregate;
 
 import org.json.JSONArray;

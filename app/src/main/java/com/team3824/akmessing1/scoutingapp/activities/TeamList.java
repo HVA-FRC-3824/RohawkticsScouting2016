@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 
-import com.team3824.akmessing1.scoutingapp.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
