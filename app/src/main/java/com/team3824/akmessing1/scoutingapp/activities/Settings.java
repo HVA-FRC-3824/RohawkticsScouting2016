@@ -32,10 +32,13 @@ import com.team3824.akmessing1.scoutingapp.services.Aggregate;
 import org.json.JSONArray;
 
 import java.util.Arrays;
+import java.util.Calendar;
 
 public class Settings extends AppCompatActivity {
 
     private String TAG = "Settings";
+
+    PendingIntent aggregatePIntent = null;
 
     // Populate the settings fields with their respective values
     @Override
@@ -180,11 +183,33 @@ public class Settings extends AppCompatActivity {
 
             }
 
-            Intent intent = new Intent(this, Aggregate.class);
-            PendingIntent pIntent = PendingIntent.getService(this, 0, intent, 0);
-            AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,AlarmManager.INTERVAL_HALF_HOUR,AlarmManager.INTERVAL_HALF_HOUR,pIntent);
+            if(type.equals("Drive Team") || type.equals("Strategy") || type.equals("Admin")) {
+                if (aggregatePIntent == null) {
+                    Log.d(TAG,"Creating Aggregate Service");
+                    Intent intent = new Intent(this, Aggregate.class);
+                    aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
+                    AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
+                    //Run once in 10 seconds
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(System.currentTimeMillis());
+                    calendar.add(Calendar.SECOND, 10);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), aggregatePIntent);
+
+                    // Run every 30 minutes afterward
+                    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, aggregatePIntent);
+                }
+            }
+            else
+            {
+                if (aggregatePIntent != null)
+                {
+                    Log.d(TAG,"Removing Aggregate Service");
+                    AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.cancel(aggregatePIntent);
+                    aggregatePIntent = null;
+                }
+            }
             Toast.makeText(this, "Saved", Toast.LENGTH_LONG);
 
         }

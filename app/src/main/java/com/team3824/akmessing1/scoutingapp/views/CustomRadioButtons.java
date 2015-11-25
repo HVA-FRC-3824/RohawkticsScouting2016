@@ -61,6 +61,10 @@ public class CustomRadioButtons extends CustomScoutView {
         if(radios.getCheckedRadioButtonId() != -1) {
             map.put(key, new ScoutValue(resourceStrings[radios.getCheckedRadioButtonId()]));
         }
+        else
+        {
+            map.put(key, new ScoutValue(""));
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -201,7 +202,7 @@ public class StatsDB extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getTeamStats(int teamNum)
+    public Map<String, ScoutValue> getTeamStats(int teamNum)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
@@ -212,9 +213,31 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        if (cursor != null)
-            cursor.moveToFirst();
-        return cursor;
+        if (cursor == null)
+        {
+            return null;
+        }
+        Map<String, ScoutValue> map = new HashMap<>();
+        cursor.moveToFirst();
+        if(cursor.getCount() > 0) {
+            for (int i = 1; i < cursor.getColumnCount(); i++) {
+                switch (cursor.getType(i)) {
+                    case Cursor.FIELD_TYPE_FLOAT:
+                        Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getFloat(i));
+                        map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                        break;
+                    case Cursor.FIELD_TYPE_INTEGER:
+                        Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getInt(i));
+                        map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                        break;
+                    case Cursor.FIELD_TYPE_STRING:
+                        Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
+                        map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                        break;
+                }
+            }
+        }
+        return map;
     }
 
     public String getLastUpdatedTime()
@@ -229,10 +252,11 @@ public class StatsDB extends SQLiteOpenHelper {
                 KEY_LAST_UPDATED+" DESC", // g. order by
                 "1"); // h. limit
 
-        if(cursor != null)
-            cursor.moveToFirst();
-        else
+        if(cursor == null || cursor.getCount() == 0)
             return null;
+
+
+        cursor.moveToFirst();
 
         return cursor.getString(0);
     }

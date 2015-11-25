@@ -69,7 +69,7 @@ public class PitScouting extends AppCompatActivity {
         String eventId = sharedPreferences.getString("event_id", "");
         final PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
         Map<String, ScoutValue> map = pitScoutDB.getTeamMap(teamNumber);
-        if(map.get(PitScoutDB.KEY_COMPLETE).getInt() != 0)
+        if(map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0)
         {
             adapter.setValueMap(map);
         }

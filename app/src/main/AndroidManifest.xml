@@ -32,9 +32,11 @@
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchSchedule"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchScouting"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.PitScouting"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.PitList"
@@ -53,8 +55,10 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.SuperScouting"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <service android:name=".services.Aggregate"/>
     </application>
 
 </manifest>

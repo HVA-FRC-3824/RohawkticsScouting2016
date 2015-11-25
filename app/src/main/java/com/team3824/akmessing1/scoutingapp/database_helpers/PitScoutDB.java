@@ -240,10 +240,15 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        // First time for a match and team number combination
-        if (cursor == null || cursor.getCount() == 0) {
+
+        if (cursor == null) {
             Log.d(TAG,"No rows came back");
             return null;
+        }
+        if(cursor.getCount() == 0)
+        {
+            Log.d(TAG,"No rows came back");
+            return new HashMap<>();
         }
 
         // Setup map
@@ -273,5 +278,33 @@ public class PitScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getReadableDatabase();
         return (int) DatabaseUtils.queryNumEntries(db, tableName);
+    }
+
+    public Integer[] getTeamNumbers()
+    {
+        int numTeams = getNumTeams();
+        Integer[] teamNumbers = new Integer[numTeams];
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                new String[]{KEY_TEAM_NUMBER}, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if (cursor == null || cursor.getCount() == 0) {
+            Log.d(TAG,"No rows came back");
+            return null;
+        }
+        cursor.moveToFirst();
+
+        for(int i = 0; i < numTeams; i++)
+        {
+            teamNumbers[i] = cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER));
+            cursor.moveToNext();
+        }
+
+        return teamNumbers;
     }
 }

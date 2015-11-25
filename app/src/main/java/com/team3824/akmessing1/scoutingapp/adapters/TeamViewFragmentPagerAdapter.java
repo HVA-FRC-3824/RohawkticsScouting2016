@@ -64,7 +64,7 @@ public class TeamViewFragmentPagerAdapter extends FragmentPagerAdapter {
                 break;
         }
         Bundle args = new Bundle();
-        args.putInt("teamNumber",teamNumber);
+        args.putInt("teamNumber", teamNumber);
         fragment.setArguments(args);
         fragments.put(position,new WeakReference<>(fragment));
         return fragment;

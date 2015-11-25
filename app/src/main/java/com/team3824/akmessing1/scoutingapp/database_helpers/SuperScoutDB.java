@@ -200,4 +200,21 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         return matchNumbers;
     }
 
+    public Cursor getAllMatches()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        return cursor;
+    }
+
 }

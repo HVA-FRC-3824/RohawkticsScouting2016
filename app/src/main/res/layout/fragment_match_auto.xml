@@ -7,33 +7,33 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal">
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/auto_moved"
-            app:label="Moved in Auto"
-            app:key="auto_moved"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/auto_moved"
+                app:label="Moved in Auto"
+                app:key="auto_moved"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/auto_totesMoved"
-            app:label="Totes moved to center"
-            app:key="auto_totesMoved"/>
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/auto_totesMoved"
+                app:label="Totes moved to center"
+                app:key="auto_totesMoved"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/auto_threeToteStack"
-            app:label="Three totes stacked"
-            app:key="auto_threeToteStack"/>
+            <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/auto_threeToteStack"
+                app:label="Three totes stacked"
+                app:key="auto_threeToteStack"/>
 
-    </LinearLayout>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"

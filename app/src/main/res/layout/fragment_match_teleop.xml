@@ -22,41 +22,41 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_knockedOverStacks"
-            app:label="Knocked over stacks"
-            app:key="teleop_knockedOverStacks"/>
+                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/teleop_knockedOverStacks"
+                    app:label="Knocked over stacks"
+                    app:key="teleop_knockedOverStacks"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_coopTotes"
-            app:label="Coop Totes"
-            app:key="teleop_coopTotes"/>
+                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/teleop_coopTotes"
+                    app:label="Coop Totes"
+                    app:key="teleop_coopTotes"/>
             </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_preexistingCoopTotes"
-            app:label="Pre-existing Coop Totes"
-            app:key="teleop_preexistingCoopTotes"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/teleop_preexistingCoopTotes"
+                    app:label="Pre-existing Coop Totes"
+                    app:key="teleop_preexistingCoopTotes"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_stepCans"
-            app:label="Cans taken from the step"
-            app:key="teleop_stepCans"/>
+                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/teleop_stepCans"
+                    app:label="Cans taken from the step"
+                    app:key="teleop_stepCans"/>
 
-                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
         <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

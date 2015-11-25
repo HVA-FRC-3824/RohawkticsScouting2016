@@ -226,4 +226,21 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         return teamNumbers;
     }
 
+    public Cursor getTeamInfoSince(int teamNumber, String since)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(true, // distinct
+                tableName, // a. table
+                null, // b. column names
+                KEY_LAST_UPDATED+" > ?", // c. selections
+                new String[]{since}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if(cursor != null)
+            cursor.moveToFirst();
+        return cursor;
+    }
+
 }
