@@ -1,10 +1,13 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -25,11 +28,26 @@ public class MatchSchedule extends AppCompatActivity {
 
         CustomHeader header = (CustomHeader)findViewById(R.id.match_schedule_header);
         header.removeHome();
+        header.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MatchSchedule.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString("event_id", "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
         displayListView(scheduleDB);
+        Button button = (Button)findViewById(R.id.edit);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MatchSchedule.this, ScheduleBuilder.class);
+                startActivity(intent);
+            }
+        });
         scheduleDB.close();
     }
 

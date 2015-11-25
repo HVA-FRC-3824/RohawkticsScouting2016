@@ -84,8 +84,14 @@ public class ScheduleDB extends SQLiteOpenHelper
         values.put(KEY_RED2, red2);
         values.put(KEY_RED3, red3);
         values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-        db.insert(tableName, null, values);
+        db.replace(tableName, null, values);
         db.close();
+    }
+
+    public void removeMatch(int matchNum)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName,KEY_MATCH_NUMBER+" = ?",new String[]{String.valueOf(matchNum)});
     }
 
     public Cursor getMatch(int matchNum)
@@ -147,7 +153,7 @@ public class ScheduleDB extends SQLiteOpenHelper
                         null, // d. selections args
                         null, // e. group by
                         null, // f. having
-                        null, // g. order by
+                        KEY_MATCH_NUMBER, // g. order by
                         null); // h. limit
         if (cursor != null)
             cursor.moveToFirst();

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/columbia_blue"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:id="@+id/schedule">
+        <com.team3824.akmessing1.scoutingapp.views.CustomHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/match_schedule_header"/>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#000000">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Match #"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Blue 1"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#5c72ff"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Blue 2"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#5c72ff"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Blue 3"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#5c72ff"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Red 1"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fe4a4a"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Red 2"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fe4a4a"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Red 3"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fe4a4a"
+                android:textColor="#000000"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/save"
+            android:text="Save"/>
+    </LinearLayout>
+</ScrollView>
