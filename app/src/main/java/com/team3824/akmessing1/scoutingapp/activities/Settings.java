@@ -168,6 +168,7 @@ public class Settings extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Schedule received");
+
                         scheduleDB.createSchedule(response);
                     }
                 }, new Response.ErrorListener() {
@@ -187,15 +188,9 @@ public class Settings extends AppCompatActivity {
                 if (aggregatePIntent == null) {
                     Log.d(TAG,"Creating Aggregate Service");
                     Intent intent = new Intent(this, Aggregate.class);
+                    startService(intent);
                     aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-
-                    //Run once in 10 seconds
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(System.currentTimeMillis());
-                    calendar.add(Calendar.SECOND, 10);
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), aggregatePIntent);
-
                     // Run every 30 minutes afterward
                     alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, aggregatePIntent);
                 }
@@ -210,7 +205,8 @@ public class Settings extends AppCompatActivity {
                     aggregatePIntent = null;
                 }
             }
-            Toast.makeText(this, "Saved", Toast.LENGTH_LONG);
+            Toast toast =Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
+            toast.show();
 
         }
         else

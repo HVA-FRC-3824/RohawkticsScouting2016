@@ -219,10 +219,12 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         }
         cursor.moveToFirst();
         ArrayList<Integer> teamNumbers = new ArrayList<>();
-        do{
-            teamNumbers.add(cursor.getInt(0));
-            cursor.moveToNext();
-        }while(!cursor.isAfterLast());
+        if(cursor.getCount() > 0) {
+            do {
+                teamNumbers.add(cursor.getInt(0));
+                cursor.moveToNext();
+            } while (!cursor.isAfterLast());
+        }
         return teamNumbers;
     }
 

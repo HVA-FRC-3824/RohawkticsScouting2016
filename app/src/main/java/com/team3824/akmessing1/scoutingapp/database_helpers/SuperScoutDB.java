@@ -44,7 +44,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
     public SuperScoutDB(Context context, String eventID)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        tableName = "matchScouting_"+eventID;
+        tableName = "superScouting_"+eventID;
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
