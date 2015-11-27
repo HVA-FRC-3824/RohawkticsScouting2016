@@ -98,6 +98,10 @@ public class TeamViewFragment extends Fragment {
             textView = (TextView)view.findViewById(R.id.coop_totes_placed);
             int totalCoopTotes = statsMap.get("total_coop_totes").getInt();
             textView.setText(String.valueOf(totalCoopTotes));
+
+            textView = (TextView)view.findViewById(R.id.driver_ability);
+            String ranking = statsMap.get("super_drive_ability_ranking").getString();
+            textView.setText(ranking);
         }
         else
         {

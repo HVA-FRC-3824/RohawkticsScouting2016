@@ -107,6 +107,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Driver Ability:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Coop totes placed:"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -208,6 +216,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Auto step cans:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Driver Ability:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />

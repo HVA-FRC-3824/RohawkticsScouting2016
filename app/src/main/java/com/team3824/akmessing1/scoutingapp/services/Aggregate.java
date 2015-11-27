@@ -77,7 +77,7 @@ public class Aggregate extends IntentService {
                     map = new HashMap<>();
                     map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers[i]));
                     //map.put("super_defense",new ScoutValue(defenseRanking.indexOf(teamNumbers[i])+1));
-                    map.put("super_drive_ability", new ScoutValue(driveAbilityRanking[i]));
+                    map.put("super_drive_ability_ranking", new ScoutValue(driveAbilityRanking[i]));
                     statsDB.updateStats(map);
                 }
             }

@@ -36,6 +36,7 @@ public class CustomStacksDisplay extends View {
 
         textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(40.0f);
         existingTotesPaint = new Paint();
         existingTotesPaint.setColor(Color.LTGRAY);
         newTotesPaint = new Paint();
@@ -98,11 +99,11 @@ public class CustomStacksDisplay extends View {
     public void onDraw(Canvas c)
     {
         Log.d(TAG,"New drawing");
-        if(matches.length() == 0)
+        if(matches == null || matches.length() == 0)
         {
             c.drawText("No data exists for this team.", 100, 100, textPaint);
+            return;
         }
-
 
 
         // First, compute the dimensions of our drawn items so that they're scaled properly

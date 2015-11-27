@@ -31,6 +31,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchSchedule"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.ScheduleBuilder"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchScouting"
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="landscape"
