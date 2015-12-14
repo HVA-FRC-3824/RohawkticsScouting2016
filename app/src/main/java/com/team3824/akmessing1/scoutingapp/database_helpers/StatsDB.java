@@ -84,6 +84,7 @@ public class StatsDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        db.close();
     }
 
     public void createTeamList(JSONArray array)
@@ -237,6 +238,7 @@ public class StatsDB extends SQLiteOpenHelper {
                 }
             }
         }
+        db.close();
         return map;
     }
 
@@ -251,7 +253,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // f. having
                 KEY_LAST_UPDATED+" DESC", // g. order by
                 "1"); // h. limit
-
         if(cursor == null || cursor.getCount() == 0)
             return null;
 
@@ -272,7 +273,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // f. having
                 KEY_LAST_UPDATED+" DESC", // g. order by
                 "1"); // h. limit
-
         if(cursor != null)
             cursor.moveToFirst();
         else

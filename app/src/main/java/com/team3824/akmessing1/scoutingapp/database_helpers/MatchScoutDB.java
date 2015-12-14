@@ -67,6 +67,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        db.close();
     }
 
     // Store data in the database for a specific match and team
@@ -122,7 +123,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                     break;
             }
         }
-        db.replace(tableName,null,cvs);
+        db.replace(tableName, null, cvs);
         db.close();
     }
 
@@ -198,6 +199,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                     break;
             }
         }
+        db.close();
         return map;
     }
 
@@ -225,6 +227,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 cursor.moveToNext();
             } while (!cursor.isAfterLast());
         }
+        db.close();
         return teamNumbers;
     }
 
@@ -234,8 +237,42 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         Cursor cursor = db.query(true, // distinct
                 tableName, // a. table
                 null, // b. column names
+                KEY_LAST_UPDATED+" > ? and "+KEY_TEAM_NUMBER+" = ?", // c. selections
+                new String[]{since,String.valueOf(teamNumber)}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if(cursor != null)
+            cursor.moveToFirst();
+        return cursor;
+    }
+
+    public Cursor getInfoSince(String since)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(true, // distinct
+                tableName, // a. table
+                null, // b. column names
                 KEY_LAST_UPDATED+" > ?", // c. selections
                 new String[]{since}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if(cursor != null)
+            cursor.moveToFirst();
+        return cursor;
+    }
+
+    public Cursor getAllInfo()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(true, // distinct
+                tableName, // a. table
+                null, // b. column names
+                null, // c. selections
+                null, // d. selections args
                 null, // e. group by
                 null, // f. having
                 null, // g. order by

@@ -217,6 +217,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 KEY_TEAM_NUMBER, // g. order by
                 null); // h. limit
+
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToLast();
             return cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER));
@@ -240,7 +241,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-
         if (cursor == null) {
             Log.d(TAG,"No rows came back");
             return null;
@@ -306,5 +306,41 @@ public class PitScoutDB extends SQLiteOpenHelper {
         }
 
         return teamNumbers;
+    }
+
+    public Cursor getAllTeamInfo()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if (cursor == null) {
+            return null;
+        }
+        cursor.moveToFirst();
+        return cursor;
+    }
+
+    public Cursor getAllTeamInfoSince(String since)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                KEY_LAST_UPDATED+" > ?", // c. selections
+                new String[]{since}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if (cursor == null || cursor.getCount() == 0) {
+            return null;
+        }
+        cursor.moveToFirst();
+        return cursor;
     }
 }

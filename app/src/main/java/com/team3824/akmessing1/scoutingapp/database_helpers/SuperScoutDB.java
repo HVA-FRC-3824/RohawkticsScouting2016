@@ -170,6 +170,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                     break;
             }
         }
+        db.close();
         return map;
     }
 
@@ -197,6 +198,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
             matchNumbers.add(cursor.getInt(0));
             cursor.moveToNext();
         }while(!cursor.isAfterLast());
+        db.close();
         return matchNumbers;
     }
 
@@ -213,7 +215,22 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null); // h. limit
         if (cursor != null)
             cursor.moveToFirst();
+        return cursor;
+    }
 
+    public Cursor getAllMatchesSince(String since)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                KEY_LAST_UPDATED+" > ?", // c. selections
+                new String[]{since}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if (cursor != null)
+            cursor.moveToFirst();
         return cursor;
     }
 
