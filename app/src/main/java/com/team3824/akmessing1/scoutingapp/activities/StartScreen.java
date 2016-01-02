@@ -9,6 +9,9 @@ import android.content.Intent;
 import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.services.Aggregate;
+import com.team3824.akmessing1.scoutingapp.services.Sync;
+import com.team3824.akmessing1.scoutingapp.services.SyncService;
 
 public class StartScreen extends AppCompatActivity {
 
@@ -40,6 +43,8 @@ public class StartScreen extends AppCompatActivity {
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.superScout_button);
                 button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.sync_button);
+                button.setVisibility(View.VISIBLE);
                 break;
             }
             case "Drive Team": {
@@ -48,6 +53,10 @@ public class StartScreen extends AppCompatActivity {
                 button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewMatch_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.sync_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.aggregate_button);
                 button.setVisibility(View.VISIBLE);
                 break;
             }
@@ -59,6 +68,10 @@ public class StartScreen extends AppCompatActivity {
                 button = (Button) findViewById(R.id.viewMatch_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewPicklist_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.sync_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.aggregate_button);
                 button.setVisibility(View.VISIBLE);
                 break;
             }
@@ -76,6 +89,10 @@ public class StartScreen extends AppCompatActivity {
                 button = (Button) findViewById(R.id.viewMatch_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewPicklist_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.sync_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.aggregate_button);
                 button.setVisibility(View.VISIBLE);
                 break;
             }
@@ -131,5 +148,17 @@ public class StartScreen extends AppCompatActivity {
     {
         Intent intent = new Intent(this, Settings.class);
         startActivity(intent);
+    }
+
+    public void sync(View view)
+    {
+        Intent intent = new Intent(this, SyncService.class);
+        startService(intent);
+    }
+
+    public void aggregate(View view)
+    {
+        Intent intent = new Intent(this, Aggregate.class);
+        startService(intent);
     }
 }

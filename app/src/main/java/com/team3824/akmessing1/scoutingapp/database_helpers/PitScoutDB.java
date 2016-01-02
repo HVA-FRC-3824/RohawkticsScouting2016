@@ -111,6 +111,9 @@ public class PitScoutDB extends SQLiteOpenHelper {
         map.put(KEY_COMPLETE,new ScoutValue(1));
         String[] columnNames = cursor.getColumnNames();
 
+        // Make sure the last updated time gets updated
+        map.remove(KEY_LAST_UPDATED);
+
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
         for(Map.Entry<String, ScoutValue> entry : map.entrySet())

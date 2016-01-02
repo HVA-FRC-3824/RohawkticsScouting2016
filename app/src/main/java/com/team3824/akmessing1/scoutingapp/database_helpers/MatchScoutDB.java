@@ -67,7 +67,6 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
-        db.close();
     }
 
     // Store data in the database for a specific match and team
@@ -84,6 +83,9 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 null, // g. order by
                 null); // h. limit
         String[] columnNames = cursor.getColumnNames();
+
+        // Make sure the last updated time gets updated
+        map.remove(KEY_LAST_UPDATED);
 
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
@@ -124,7 +126,6 @@ public class MatchScoutDB extends SQLiteOpenHelper {
             }
         }
         db.replace(tableName, null, cvs);
-        db.close();
     }
 
     // Get all the scouting information about a specific match
@@ -199,22 +200,37 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                     break;
             }
         }
-        db.close();
         return map;
     }
 
     public ArrayList<Integer> getTeamsUpdatedSince(String lastUpdated)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(true, // distinct
-                tableName, // a. table
-                new String[]{KEY_TEAM_NUMBER}, // b. column names
-                KEY_LAST_UPDATED+" > ?", // c. selections
-                new String[]{lastUpdated}, // d. selections args
-                null, // e. group by
-                null, // f. having
-                null, // g. order by
-                null); // h. limit
+        Cursor cursor;
+        if(lastUpdated == null || lastUpdated == "")
+        {
+            cursor = db.query(true, // distinct
+                    tableName, // a. table
+                    new String[]{KEY_TEAM_NUMBER}, // b. column names
+                    null, // c. selections
+                    null, // d. selections args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
+        else
+        {
+            cursor = db.query(true, // distinct
+                    tableName, // a. table
+                    new String[]{KEY_TEAM_NUMBER}, // b. column names
+                    KEY_LAST_UPDATED+" > ?", // c. selections
+                    new String[]{lastUpdated}, // d. selections args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
         if(cursor == null)
         {
             return null;
@@ -227,7 +243,6 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 cursor.moveToNext();
             } while (!cursor.isAfterLast());
         }
-        db.close();
         return teamNumbers;
     }
 

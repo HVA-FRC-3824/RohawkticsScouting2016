@@ -87,6 +87,12 @@ public class TeamPitData extends Fragment{
             }
         }
 
+        textView = (TextView)view.findViewById(R.id.view_notes);
+        if(pitMap.containsKey("notes"))
+        {
+            textView.setText(pitMap.get("notes").getString());
+        }
+
         return view;
     }
 

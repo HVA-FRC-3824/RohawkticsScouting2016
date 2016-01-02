@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.views.CustomScoutView;
 
+import java.util.HashMap;
 import java.util.Map;
 
 // abstract base class for each of the match scouting fragments
@@ -18,6 +19,7 @@ public abstract class ScoutFragment extends Fragment {
 
     public ScoutFragment()
     {
+        valueMap = new HashMap<>();
     }
 
     public void setValuesMap(Map<String, ScoutValue> map)
@@ -34,6 +36,7 @@ public abstract class ScoutFragment extends Fragment {
             Log.d(TAG,"Null view");
             // If the view has been destroyed, state should already be saved
             // to parent activity
+            map.putAll(valueMap);
             return;
         }
         int childCount = vg.getChildCount();
@@ -91,5 +94,13 @@ public abstract class ScoutFragment extends Fragment {
                 restoreContentsFromMap(map, (ViewGroup) view);
             }
         }
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        valueMap.clear();
+        writeContentsToMap(valueMap);
+        super.onDestroyView();
     }
 }

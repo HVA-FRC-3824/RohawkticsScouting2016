@@ -9,6 +9,7 @@ import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.fragments.PitBasicInfo;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamMatchData;
+import com.team3824.akmessing1.scoutingapp.fragments.TeamNotes;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamPitData;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamVisuals;
 
@@ -18,12 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by akmessing1 on 11/10/15.
- */
 public class TeamViewFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "Visuals","Pit Data", "Match Data" };
+    private String tabTitles[] = new String[] { "Visuals","Pit Data", "Match Data", "Notes" };
 
     private Map<Integer,WeakReference<Fragment>> fragments = new HashMap<>();
 
@@ -58,6 +56,9 @@ public class TeamViewFragmentPagerAdapter extends FragmentPagerAdapter {
                 break;
             case 2:
                 fragment = new TeamMatchData();
+                break;
+            case 3:
+                fragment = new TeamNotes();
                 break;
             default:
                 fragment = null; // There has been a problem!

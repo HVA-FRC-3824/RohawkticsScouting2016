@@ -19,9 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by akmessing1 on 11/8/15.
- */
 public class StatsDB extends SQLiteOpenHelper {
 
     // Database Version
@@ -84,7 +81,6 @@ public class StatsDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
-        db.close();
     }
 
     public void createTeamList(JSONArray array)
@@ -110,7 +106,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 Log.d(TAG, "Exception: " + e.toString());
             }
         }
-        db.close();
     }
 
     public void updateStats(Map<String, ScoutValue> map)
@@ -124,9 +119,9 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
-                null); // h. limit
+                "1"); // h. limit
         String[] columnNames = cursor.getColumnNames();
-        if(cursor != null) {
+        if(cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 if (!map.containsKey(cursor.getColumnName(i))) {
@@ -138,15 +133,19 @@ public class StatsDB extends SQLiteOpenHelper {
                             map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
                             break;
                         case Cursor.FIELD_TYPE_STRING:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                                map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
                             break;
                     }
                 }
             }
         }
 
+        // Make sure the last updated time gets updated
+        map.remove(KEY_LAST_UPDATED);
+
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+        Log.d(TAG,dateFormat.format(new Date()));
         for(Map.Entry<String, ScoutValue> entry : map.entrySet())
         {
             String column = entry.getKey();
@@ -184,7 +183,6 @@ public class StatsDB extends SQLiteOpenHelper {
             }
         }
         db.replace(tableName,null,cvs);
-        db.close();
     }
 
     public Cursor getStats()
@@ -238,7 +236,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 }
             }
         }
-        db.close();
         return map;
     }
 
@@ -253,9 +250,11 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // f. having
                 KEY_LAST_UPDATED+" DESC", // g. order by
                 "1"); // h. limit
-        if(cursor == null || cursor.getCount() == 0)
+        if(cursor == null )
             return null;
 
+        if(cursor.getCount() == 0)
+            return "";
 
         cursor.moveToFirst();
 

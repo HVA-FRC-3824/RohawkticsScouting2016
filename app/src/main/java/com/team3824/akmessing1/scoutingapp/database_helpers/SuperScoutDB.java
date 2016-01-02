@@ -93,6 +93,9 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null); // h. limit
         String[] columnNames = cursor.getColumnNames();
 
+        // Make sure the last updated time gets updated
+        map.remove(KEY_LAST_UPDATED);
+
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
         for(Map.Entry<String, ScoutValue> entry : map.entrySet())
@@ -192,6 +195,12 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         {
             return null;
         }
+
+        if(cursor.getCount() == 0)
+        {
+            return new ArrayList<Integer>();
+        }
+
         cursor.moveToFirst();
         ArrayList<Integer> matchNumbers = new ArrayList<>();
         do{

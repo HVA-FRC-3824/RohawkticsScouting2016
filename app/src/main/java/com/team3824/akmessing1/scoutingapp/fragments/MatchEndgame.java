@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.team3824.akmessing1.scoutingapp.HideKeyboard;
 import com.team3824.akmessing1.scoutingapp.R;
 
 public class MatchEndgame extends ScoutFragment {
@@ -25,6 +26,7 @@ public class MatchEndgame extends ScoutFragment {
         if(valueMap != null) {
             restoreContentsFromMap(valueMap, (ViewGroup) view);
         }
+        HideKeyboard.setupUI(getActivity(), view);
         return view;
     }
 }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.team3824.akmessing1.scoutingapp.HideKeyboard;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 
@@ -100,24 +101,6 @@ public class PitBasicInfo extends ScoutFragment{
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                                                     Uri.fromFile(f));
                         startActivityForResult(takePictureIntent, 1/*REQUEST_IMAGE_CAPTURE*/);
-
-                        //Log.d(TAG,getActivity().getFilesDir().getAbsolutePath());
-
-                     //   File photoFile = new File(getContext().getFilesDir(),imageFileName);
-
-                    //    try {
-                    //        photoFile.getParentFile().mkdirs();
-                    //        photoFile.createNewFile();
-                    //        // Continue only if the File was successfully created
-                    //        if (photoFile != null) {
-                    //            mCurrentPhotoPath = imageFileName;
-                    //            Log.d(TAG,mCurrentPhotoPath);
-                    //
-                    //        }
-                    //    } catch (IOException ex) {
-                    //        // Error occurred while creating the File
-                    //        ex.printStackTrace();
-                    //    }
                     }
                 }
                 // Removes the image from the file system
@@ -132,6 +115,8 @@ public class PitBasicInfo extends ScoutFragment{
         };
 
         mButton.setOnClickListener(buttonClick);
+
+        HideKeyboard.setupUI(getActivity(),view);
 
         return view;
     }

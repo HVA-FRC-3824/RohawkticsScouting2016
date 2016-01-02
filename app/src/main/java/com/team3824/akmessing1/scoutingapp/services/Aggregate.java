@@ -54,20 +54,26 @@ public class Aggregate extends IntentService {
         StatsDB statsDB = new StatsDB(context, eventID);
 
         String lastUpdated = statsDB.getLastUpdatedTime();
-
+        Log.d(TAG, "Last Time Updated: "+lastUpdated);
         ArrayList<Integer> matchesUpdated;
-        if(lastUpdated == null)
+        if(lastUpdated == null || lastUpdated == "")
         {
             matchesUpdated = null;
         }
         else {
             matchesUpdated = superScoutDB.getMatchesUpdatedSince(lastUpdated);
+            Log.d(TAG,String.valueOf(matchesUpdated.size()));
         }
-
 
         if(matchesUpdated == null || matchesUpdated.size() > 0)
         {
-            Cursor matchCursor = superScoutDB.getAllMatches();
+            Cursor matchCursor;
+
+            if(matchesUpdated == null)
+                matchCursor = superScoutDB.getAllMatches();
+            else
+                matchCursor = superScoutDB.getAllMatchesSince(lastUpdated);
+
             Integer[] teamNumbers = pitScoutDB.getTeamNumbers();
             if(matchCursor.getCount() > 0) {
                 //String[] defenseRanking = CardinalRankCalc(teamNumbers, matchCursor, "super_defense");
@@ -76,7 +82,6 @@ public class Aggregate extends IntentService {
                 for (int i = 0; i < teamNumbers.length; i++) {
                     map = new HashMap<>();
                     map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers[i]));
-                    //map.put("super_defense",new ScoutValue(defenseRanking.indexOf(teamNumbers[i])+1));
                     map.put("super_drive_ability_ranking", new ScoutValue(driveAbilityRanking[i]));
                     statsDB.updateStats(map);
                 }
@@ -196,7 +201,8 @@ public class Aggregate extends IntentService {
                 totalMatches = teamStats.get("total_matches").getInt();
             }
 
-            do{
+            while(!teamCursor.isAfterLast())
+            {
                 totalMatches++;
                 //Auto
                 totalAutoTotes += teamCursor.getInt(teamCursor.getColumnIndex("auto_totesMoved"));
@@ -205,7 +211,7 @@ public class Aggregate extends IntentService {
                 totalAuto3ToteStacks += teamCursor.getInt(teamCursor.getColumnIndex("auto_threeToteStack"));
 
                 // Individual cans or totes in auto can be ignored...
-                totalPoints += teamCursor.getInt(teamCursor.getColumnIndex("auto_threeToteStack"));
+                totalPoints += 20 * teamCursor.getInt(teamCursor.getColumnIndex("auto_threeToteStack"));
 
                 //Teleop
                 String matchStacks = teamCursor.getString(teamCursor.getColumnIndex("teleop_stacks"));
@@ -261,7 +267,7 @@ public class Aggregate extends IntentService {
                 totalFouls += teamCursor.getInt(teamCursor.getColumnIndex("post_fouls"));
 
                 teamCursor.moveToNext();
-            }while(!teamCursor.isAfterLast());
+            }
 
             teamMap.put("total_auto_totes",new ScoutValue(totalAutoTotes));
             teamMap.put("total_auto_cans",new ScoutValue(totalAutoCans));

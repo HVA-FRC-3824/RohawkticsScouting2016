@@ -100,8 +100,22 @@ public class TeamViewFragment extends Fragment {
             textView.setText(String.valueOf(totalCoopTotes));
 
             textView = (TextView)view.findViewById(R.id.driver_ability);
-            String ranking = statsMap.get("super_drive_ability_ranking").getString();
-            textView.setText(ranking);
+            if(statsMap.containsKey("super_drive_ability_ranking")) {
+                String ranking = statsMap.get("super_drive_ability_ranking").getString();
+                if(ranking.charAt(ranking.length()-1) == '1')
+                    ranking += "st";
+                else if(ranking.charAt(ranking.length()-1) == '2')
+                    ranking += "nd";
+                else if(ranking.charAt(ranking.length()-1) == '3')
+                    ranking += "rd";
+                else
+                    ranking += "th";
+                textView.setText(ranking);
+            }
+            else
+            {
+                textView.setText("N/A");
+            }
         }
         else
         {

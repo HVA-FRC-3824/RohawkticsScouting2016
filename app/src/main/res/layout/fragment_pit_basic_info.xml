@@ -70,5 +70,12 @@
             android:id="@+id/cheesecake"
             app:label="Willing to be cheesecaked?"
             app:key="cheesecake"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/notes"
+            app:label="Pit notes:"
+            app:key="notes"/>
     </LinearLayout>
 </ScrollView>

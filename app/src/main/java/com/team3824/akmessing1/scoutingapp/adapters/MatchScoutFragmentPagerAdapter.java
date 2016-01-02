@@ -20,6 +20,10 @@ import java.util.Map;
 public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
     private String tabTitles[] = new String[] { "Autonomous", "Teleop","Post-Match" };
+    private MatchAuto matchAuto;
+    private MatchTeleop matchTeleop;
+    private MatchPost matchPost;
+
     //private String tabTitles[] = new String[] { "Autonomous", "Teleop", "Endgame", "Post-Match" };
 
     private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
@@ -28,6 +32,9 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
     public MatchScoutFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
+        matchAuto = new MatchAuto();
+        matchTeleop = new MatchTeleop();
+        matchPost = new MatchPost();
     }
 
     @Override
@@ -46,13 +53,13 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
         switch (position)
         {
             case 0:
-                fragment = new MatchAuto();
+                fragment = matchAuto;
                 break;
             case 1:
-                fragment = new MatchTeleop();
+                fragment = matchTeleop;
                 break;
             case 2:
-                fragment = new MatchPost();
+                fragment = matchPost;
                 break;
             //case 3: return new MatchEndgame();
             default:
@@ -64,7 +71,6 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
         if(valueMap != null) {
             fragment.setValuesMap(valueMap);
         }
-        fragments.put(position,new WeakReference<>(fragment));
         return fragment;
     }
 
@@ -78,10 +84,9 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
     // used to get all the values for saving
     public List<ScoutFragment> getAllFragments(){
         List<ScoutFragment> fragmentList = new ArrayList<>();
-        for(Map.Entry<Integer,WeakReference<ScoutFragment>> entry: fragments.entrySet())
-        {
-            fragmentList.add(entry.getValue().get());
-        }
+        fragmentList.add(matchAuto);
+        fragmentList.add(matchTeleop);
+        fragmentList.add(matchPost);
         return fragmentList;
     }
 
