@@ -2,6 +2,7 @@ package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,13 +33,12 @@ import com.team3824.akmessing1.scoutingapp.services.Aggregate;
 import org.json.JSONArray;
 
 import java.util.Arrays;
-import java.util.Calendar;
 
 public class Settings extends AppCompatActivity {
 
     private String TAG = "Settings";
 
-    PendingIntent aggregatePIntent = null;
+    static PendingIntent aggregatePIntent = null;
 
     // Populate the settings fields with their respective values
     @Override
@@ -205,6 +205,16 @@ public class Settings extends AppCompatActivity {
                     aggregatePIntent = null;
                 }
             }
+
+            // Should request access to bluetooth
+//            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//            if (!mBluetoothAdapter.isEnabled()) {
+//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                startActivityForResult(enableBtIntent, 1);
+//            }
+
+            // Should wait for acknowledgement of bluetooth being enabled, but we are going to assume it is turned on
+
             Toast toast =Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
             toast.show();
 

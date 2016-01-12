@@ -340,7 +340,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        if (cursor == null || cursor.getCount() == 0) {
+        if (cursor == null) {
             return null;
         }
         cursor.moveToFirst();
