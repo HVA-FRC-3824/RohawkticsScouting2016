@@ -419,20 +419,20 @@ public class BluetoothSync {
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
-            byte[] buffer = new byte[1024];
-            int bytes;
+            String inBuffer = "";
             while (true) {
                 try {
-                    bytes = mmInStream.read(buffer);
-                    mHandler.obtainMessage(Constants.MESSAGE_READ, bytes, -1,
-                            buffer).sendToTarget();
+                    int inChar = mmInStream.read();
+                    if(inChar == '\0' || inChar == -1)
+                        break;
+                    inBuffer += (char)inChar;
                 } catch (IOException e) {
                     connectionLost();
                     BluetoothSync.this.start();
                     break;
                 }
             }
-
+            mHandler.obtainMessage(Constants.MESSAGE_READ,inBuffer.getBytes()).sendToTarget();
         }
 
         /**
@@ -446,8 +446,6 @@ public class BluetoothSync {
             tempBuffer[buffer.length] = '\0'; // null character to symbolize end of message
             try {
                 mmOutStream.write(tempBuffer);
-                mHandler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1,
-                        tempBuffer).sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }

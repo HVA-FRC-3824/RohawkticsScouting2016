@@ -34,7 +34,7 @@ public class SyncActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg)
         {
-            String message = ((byte[])msg.obj).toString();
+            String message = new String((byte[])msg.obj);
             Log.d(TAG,"Received: "+message);
             textView.setText(message);
         }
@@ -66,7 +66,7 @@ public class SyncActivity extends AppCompatActivity {
                 pairedDevicesArrayAdapter.add(((BluetoothDevice)pairedDevices[i]).getName() + "\n" + ((BluetoothDevice)pairedDevices[i]).getAddress());
             }
         }
-
+        handler = new SyncHandler();
         bluetoothSync = new BluetoothSync(handler, false);
 
         textView = (TextView)findViewById(R.id.sync_log);
