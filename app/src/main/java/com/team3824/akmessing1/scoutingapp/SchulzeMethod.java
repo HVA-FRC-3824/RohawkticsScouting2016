@@ -6,6 +6,8 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,9 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by akmessing1 on 11/26/15.
- */
 public class SchulzeMethod {
 
     private String TAG = "SchulzeMethod";
@@ -37,6 +36,7 @@ public class SchulzeMethod {
         for (int[] line : matrix) {
             Arrays.fill(line, 0);
         }
+
         strongestPathMatrix = new int[teamNumbers.size()][teamNumbers.size()];
         for (int[] line : strongestPathMatrix) {
             Arrays.fill(line, 0);

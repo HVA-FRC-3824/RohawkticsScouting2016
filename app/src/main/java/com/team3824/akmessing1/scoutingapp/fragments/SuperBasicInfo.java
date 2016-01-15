@@ -32,7 +32,7 @@ public class SuperBasicInfo extends ScoutFragment {
         if(valueMap != null) {
             restoreContentsFromMap(valueMap, (ViewGroup) view);
         }
-        HideKeyboard.setupUI(getActivity(), view);
+        //HideKeyboard.setupUI(getActivity(), view);
         return view;
     }
 

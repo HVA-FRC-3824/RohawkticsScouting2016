@@ -7,6 +7,8 @@
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <application
         android:allowBackup="true"
@@ -59,6 +61,8 @@
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.SuperScouting"
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.SyncActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <service android:name=".services.Aggregate"/>
     </application>

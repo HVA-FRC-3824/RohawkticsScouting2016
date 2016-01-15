@@ -10,10 +10,9 @@ import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.services.Aggregate;
-import com.team3824.akmessing1.scoutingapp.services.Sync;
-import com.team3824.akmessing1.scoutingapp.services.SyncService;
 
 public class StartScreen extends AppCompatActivity {
+    private static String TAG = "StartScreen";
 
     // Buttons become visible based on the role
     @Override
@@ -152,8 +151,8 @@ public class StartScreen extends AppCompatActivity {
 
     public void sync(View view)
     {
-        Intent intent = new Intent(this, SyncService.class);
-        startService(intent);
+        Intent intent = new Intent(this, SyncActivity.class);
+        startActivity(intent);
     }
 
     public void aggregate(View view)

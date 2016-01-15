@@ -3,6 +3,7 @@ package com.team3824.akmessing1.scoutingapp.database_helpers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -74,6 +75,22 @@ public class StatsDB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+tableName);
         this.onCreate(db);
+    }
+
+    // Check if column exists
+    public boolean hasColumn(String columnName)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor =db.query(tableName, // a. table
+                null, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                "1"); // h. limit
+        return cursor.getColumnIndex(columnName) != -1;
     }
 
     // Add column to table
