@@ -8,62 +8,90 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomStacks
+        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/teleop_defense_1"
+            app:label="Defense 1:"
+            app:key="teleop_defense_1"/>
+
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/teleop_stacks"
-            app:key="teleop_stacks"/>
+            android:id="@+id/teleop_defense_2"
+            app:label="Defense 2:"
+            app:key="teleop_defense_2"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/teleop_defense_3"
+            app:label="Defense 3:"
+            app:key="teleop_defense_3"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/teleop_defense_4"
+            app:label="Defense 4:"
+            app:key="teleop_defense_4"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/teleop_defense_5"
+            app:label="Defense 5:"
+            app:key="teleop_defense_5"/>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-            <LinearLayout
+
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/teleop_knockedOverStacks"
-                    app:label="Knocked over stacks"
-                    app:key="teleop_knockedOverStacks"/>
+                android:id="@+id/teleop_high_score"
+                app:label="High Goal Hit:"
+                app:key="teleop_high_score"/>
 
-                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/teleop_coopTotes"
-                    app:label="Coop Totes"
-                    app:key="teleop_coopTotes"/>
-            </LinearLayout>
-            <LinearLayout
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
-                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/teleop_preexistingCoopTotes"
-                    app:label="Pre-existing Coop Totes"
-                    app:key="teleop_preexistingCoopTotes"/>
+                android:id="@+id/teleop_high_missed"
+                app:label="Missed:"
+                app:key="teleop_high_missed"/>
 
-                <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/teleop_stepCans"
-                    app:label="Cans taken from the step"
-                    app:key="teleop_stepCans"/>
 
-            </LinearLayout>
         </LinearLayout>
-        <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_landfillFeederNeither"
-            app:label="Play style"
-            app:key="teleop_landfillFeederNeither"
-            app:radio_values="@array/play_style"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
 
+            android:orientation="horizontal">
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/teleop_low_score"
+                app:label="Low Goal Hit:"
+                app:key="teleop_low_score"/>
+
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/teleop_low_missed"
+                app:label="Missed:"
+                app:key=" teleop_low_missed"/>
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

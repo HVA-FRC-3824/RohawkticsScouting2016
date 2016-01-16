@@ -6,6 +6,8 @@ import android.support.v13.app.FragmentPagerAdapter;
 
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchAuto;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchEndgame;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchFouls;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchPost;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchTeleop;
@@ -19,12 +21,13 @@ import java.util.Map;
 // Setup up page fragments for match scouting
 public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "Autonomous", "Teleop","Post-Match" };
+    private String tabTitles[] = new String[] { "Autonomous", "Teleop","Post-Match","EndGame","Fouls" };
     private MatchAuto matchAuto;
     private MatchTeleop matchTeleop;
     private MatchPost matchPost;
+    private MatchFouls matchFouls;
+    private MatchEndgame matchEndgame;
 
-    //private String tabTitles[] = new String[] { "Autonomous", "Teleop", "Endgame", "Post-Match" };
 
     private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
@@ -35,6 +38,8 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
         matchAuto = new MatchAuto();
         matchTeleop = new MatchTeleop();
         matchPost = new MatchPost();
+        matchEndgame = new MatchEndgame();
+        matchFouls = new MatchFouls();
     }
 
     @Override
@@ -61,7 +66,12 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
             case 2:
                 fragment = matchPost;
                 break;
-            //case 3: return new MatchEndgame();
+            case 3:
+                fragment = matchEndgame;
+                break;
+            case 4:
+                fragment = matchFouls;
+                break;
             default:
                 fragment = null; // There has been a problem!
                 break;
@@ -87,6 +97,8 @@ public class MatchScoutFragmentPagerAdapter extends FragmentPagerAdapter{
         fragmentList.add(matchAuto);
         fragmentList.add(matchTeleop);
         fragmentList.add(matchPost);
+        fragmentList.add(matchEndgame);
+        fragmentList.add(matchFouls);
         return fragmentList;
     }
 
