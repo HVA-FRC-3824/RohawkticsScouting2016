@@ -3,7 +3,7 @@
 	url = https://github.com/JayH5/drag-sort-listview.git
 [submodule "libraries/volley"]
 	path = libraries/volley
-	url = https://android.googlesource.com/platform/frameworks/volley
+	url = https://github.com/mcxiaoke/android-volley.git
 [submodule "libraries/MPAndroidChart"]
 	path = libraries/MPAndroidChart
 	url = https://github.com/PhilJay/MPAndroidChart.git
