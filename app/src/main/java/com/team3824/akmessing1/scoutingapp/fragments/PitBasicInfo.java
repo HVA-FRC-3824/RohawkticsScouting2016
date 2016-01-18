@@ -2,7 +2,6 @@ package com.team3824.akmessing1.scoutingapp.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.team3824.akmessing1.scoutingapp.HideKeyboard;
+import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 
@@ -34,6 +33,7 @@ public class PitBasicInfo extends ScoutFragment{
     private ImageView mImageView;
     private Button mButton;
     View.OnClickListener buttonClick;
+    Context context;
 
     public PitBasicInfo() {
         // Required empty public constructor
@@ -49,7 +49,7 @@ public class PitBasicInfo extends ScoutFragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pit_basic_info, container, false);
 
-
+        context = getContext();
         mImageView = (ImageView)view.findViewById(R.id.robotPicture);
         mButton = (Button)view.findViewById(R.id.take_picture);
 
@@ -76,7 +76,7 @@ public class PitBasicInfo extends ScoutFragment{
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     // Ensure that there's a camera activity to handle the intent
                     if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                        Context context = getContext();
+
                         // Create the File where the photo should go
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "robotPicture_" + timeStamp+".jpg";
@@ -89,8 +89,6 @@ public class PitBasicInfo extends ScoutFragment{
                         try {
                             fos = context.openFileOutput(imageFileName, Context.MODE_WORLD_WRITEABLE);
                             fos.close();
-
-
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -116,17 +114,16 @@ public class PitBasicInfo extends ScoutFragment{
 
         mButton.setOnClickListener(buttonClick);
 
-        HideKeyboard.setupUI(getActivity(),view);
+        Utilities.setupUI(getActivity(), view);
 
         return view;
     }
 
     private void setPic() {
         // Get the dimensions of the View
-        int targetW = 400;//mImageView.getWidth();
-        int targetH = 600;//mImageView.getHeight();
-        //ContextWrapper cw = new ContextWrapper(getContext().getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
+        int targetW = 400;
+        int targetH = 600;
+
         String fullPath = getContext().getFilesDir().getAbsolutePath() +"/"+ mCurrentPhotoPath;
 
         // Get the dimensions of the bitmap
@@ -145,6 +142,15 @@ public class PitBasicInfo extends ScoutFragment{
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(fullPath, bmOptions);
+        try {
+            FileOutputStream fos = context.openFileOutput(mCurrentPhotoPath, Context.MODE_WORLD_WRITEABLE);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.e(TAG,e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG,e.getMessage());
+        }
         mImageView.setImageBitmap(bitmap);
     }
 

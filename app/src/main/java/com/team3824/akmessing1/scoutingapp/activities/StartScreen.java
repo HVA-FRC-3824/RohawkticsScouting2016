@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.services.Aggregate;
+import com.team3824.akmessing1.scoutingapp.services.AggregateService;
 
 public class StartScreen extends AppCompatActivity {
     private static String TAG = "StartScreen";
@@ -157,7 +157,7 @@ public class StartScreen extends AppCompatActivity {
 
     public void aggregate(View view)
     {
-        Intent intent = new Intent(this, Aggregate.class);
+        Intent intent = new Intent(this, AggregateService.class);
         startService(intent);
     }
 }
