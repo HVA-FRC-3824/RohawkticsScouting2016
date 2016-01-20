@@ -28,6 +28,7 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.services.AggregateService;
+import com.team3824.akmessing1.scoutingapp.services.SyncService;
 
 import org.json.JSONArray;
 
@@ -38,6 +39,7 @@ public class Settings extends AppCompatActivity {
     private String TAG = "Settings";
 
     static PendingIntent aggregatePIntent = null;
+    static PendingIntent syncPIntent = null;
 
     // Populate the settings fields with their respective values
     @Override
@@ -205,14 +207,15 @@ public class Settings extends AppCompatActivity {
                 }
             }
 
-            // Should request access to bluetooth
-//            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//            if (!mBluetoothAdapter.isEnabled()) {
-//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                startActivityForResult(enableBtIntent, 1);
-//            }
-
-            // Should wait for acknowledgement of bluetooth being enabled, but we are going to assume it is turned on
+            if(syncPIntent == null)
+            {
+                Log.d(TAG, "Creating SyncService Service");
+                Intent intent = new Intent(this, SyncService.class);
+                startService(intent);
+                syncPIntent = PendingIntent.getService(this,0,intent,0);
+                AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,AlarmManager.INTERVAL_HALF_HOUR,AlarmManager.INTERVAL_HALF_HOUR,syncPIntent);
+            }
 
             Toast toast =Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
             toast.show();

@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-public class SyncService extends IntentService{
+public class SyncService extends NonStopIntentService{
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothSync bluetoothSync;
     private SyncHandler handler;
@@ -218,41 +218,41 @@ public class SyncService extends IntentService{
         super("SyncService");
         handler = new SyncHandler();
         bluetoothSync = new BluetoothSync(handler,false);
+        bluetoothSync.start();
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString("event_id", "");
         matchScoutDB = new MatchScoutDB(this, eventID);
-        pitScoutDB = new PitScoutDB(this,eventID);
-        superScoutDB = new SuperScoutDB(this,eventID);
-        syncDB = new SyncDB(this,eventID);
+        pitScoutDB = new PitScoutDB(this, eventID);
+        superScoutDB = new SuperScoutDB(this, eventID);
+        syncDB = new SyncDB(this, eventID);
 
-        while(bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED || bluetoothSync.getState() == BluetoothSync.STATE_CONNECTING);
+        while (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED
+                || bluetoothSync.getState() == BluetoothSync.STATE_CONNECTING);
 
-        for(BluetoothDevice device: devices)
-        {
-            bluetoothSync.connect(device,false);
-            while(bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED);
+        for (BluetoothDevice device : devices) {
+            bluetoothSync.connect(device, false);
+            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
             String connectedAddress = bluetoothSync.getConnectedAddress();
             String lastUpdated = syncDB.getLastUpdated(connectedAddress);
             syncDB.updateSync(connectedAddress);
             String matchUpdatedText = "M" + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
             bluetoothSync.write(matchUpdatedText.getBytes());
-            Toast.makeText(this,"Match Data Sent",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Match Data Sent", Toast.LENGTH_SHORT).show();
             String pitUpdatedText = "P" + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
             bluetoothSync.write(pitUpdatedText.getBytes());
-            Toast.makeText(this,"Pit Data Sent",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
             String superUpdatedText = "S" + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
             bluetoothSync.write(superUpdatedText.getBytes());
             bluetoothSync.write(("R").getBytes());
             recieved = false;
-            while(!recieved);
+            while (!recieved) ;
         }
-
+        bluetoothSync.start();
     }
 }
