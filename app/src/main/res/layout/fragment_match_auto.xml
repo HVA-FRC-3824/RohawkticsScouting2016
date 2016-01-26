@@ -87,7 +87,6 @@
                 android:id="@+id/auto_shoot_low_missed"
                 app:label="Missed:"
                 app:key="auto_shoot_low_missed"/>
-
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

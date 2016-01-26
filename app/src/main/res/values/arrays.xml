@@ -24,7 +24,7 @@
     -->
     <!-- Dropdown Values -->
     <string-array name="auto_start_position_dropdown">
-        <item>Defense 1</item>
+        <item>Defense 1 (Low bar)</item>
         <item>Defense 2</item>
         <item>Defense 3</item>
         <item>Defense 4</item>

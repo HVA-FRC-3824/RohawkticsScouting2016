@@ -9,7 +9,7 @@
         android:orientation="vertical">
 
         <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/foul_standard"
@@ -17,34 +17,25 @@
             app:key="foul_standard"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/foul_tech"
             app:label="Tech Foul:"
             app:key="foul_tech"/>
 
-
-        <LinearLayout
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:id="@+id/foul_yellow_card"
+            app:label="Yellow card:"
+            app:key="foul_yellow_card"/>
 
-            <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/foul_yellow_card"
-                app:label="Yellow card:"
-                app:key="foul_yellow_card"/>
-
-            <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/foul_red_card"
-                app:label="Red Card:"
-                app:key="foul_red_card"/>
-        </LinearLayout>
+        <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/foul_red_card"
+            app:label="Red Card:"
+            app:key="foul_red_card"/>
     </LinearLayout>
 </ScrollView>

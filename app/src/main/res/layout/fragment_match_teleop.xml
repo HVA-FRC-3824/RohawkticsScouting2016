@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/teleop_defense_1"
-            app:label="Defense 1:"
+            app:label="Defense 1 (Low bar):"
             app:key="teleop_defense_1"/>
 
 
@@ -53,12 +53,22 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="High Goal"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/teleop_high_score"
-                app:label="High Goal Hit:"
+                app:label="Hit:"
                 app:key="teleop_high_score"/>
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
@@ -72,16 +82,26 @@
 
         </LinearLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Low Goal"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/teleop_low_score"
-                app:label="Low Goal Hit:"
+                app:label="Hit:"
                 app:key="teleop_low_score"/>
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
@@ -90,8 +110,7 @@
                 android:layout_weight="1"
                 android:id="@+id/teleop_low_missed"
                 app:label="Missed:"
-                app:key=" teleop_low_missed"/>
-
+                app:key="teleop_low_missed"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
