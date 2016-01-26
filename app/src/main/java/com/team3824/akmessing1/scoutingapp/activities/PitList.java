@@ -65,7 +65,6 @@ public class PitList extends AppCompatActivity {
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
                 final int teamNumber = cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER));
-                Log.d(TAG, "Adding Button for" + teamNumber);
                 button.setText(String.valueOf(teamNumber));
 
                 button.setOnClickListener(new View.OnClickListener() {
