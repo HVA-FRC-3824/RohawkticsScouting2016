@@ -20,22 +20,33 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/auto_reach_cross"
-            app:label="Nothing, Reached, or Cross Defenses"
+            app:label="Defenses"
             app:key="auto_reach_cross"
-            app:radio_values="@array/auto_reach_cross_radio"/>
-
+            app:radio_values="@array/auto_reach_cross_radio"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="High Goal"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/auto_shoot_high_scored"
-                app:label="High Goal Hit:"
+                app:label="Hit:"
                 app:key="auto_shoot_high_scored"/>
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
@@ -47,16 +58,26 @@
                 app:key="auto_shoot_high_missed"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Low Goal"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/auto_shoot_low_scored"
-                app:label="Low Goal Hit:"
+                app:label="Hit:"
                 app:key="auto_shoot_low_scored"/>
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
