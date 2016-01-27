@@ -12,6 +12,7 @@ import com.team3824.akmessing1.scoutingapp.SchulzeMethod;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 
@@ -37,6 +38,8 @@ import java.util.Set;
 public class Aggregate extends IntentService {
     private String TAG ="Aggregate";
     static Map<String, SchulzeMethod> rankingCalcs;
+    private String[] defenses = {"low_bar","portcullis","cheval_de_frise","moat","ramparts",
+            "drawbridge","sally_port","rock_wall","rough_terrain"};
 
     public Aggregate()
     {
@@ -54,6 +57,7 @@ public class Aggregate extends IntentService {
         PitScoutDB pitScoutDB = new PitScoutDB(context,eventID);
         SuperScoutDB superScoutDB = new SuperScoutDB(context, eventID);
         MatchScoutDB matchScoutDB = new MatchScoutDB(context, eventID);
+        ScheduleDB scheduleDB = new ScheduleDB(context,eventID);
         StatsDB statsDB = new StatsDB(context, eventID);
 
         String lastUpdated = statsDB.getLastUpdatedTime();
@@ -79,7 +83,6 @@ public class Aggregate extends IntentService {
 
             Integer[] teamNumbers = pitScoutDB.getTeamNumbers();
             if(matchCursor.getCount() > 0) {
-                //String[] defenseRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, "super_defense");
 
                 // Normal updateStats method does not seem to give the table enough time to update
                 // the columns for the following loop
@@ -95,7 +98,23 @@ public class Aggregate extends IntentService {
                     map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers[i]));
                     map.put("super_drive_ability_ranking", new ScoutValue(driveAbilityRanking[i]));
                     statsDB.updateStats(map);
-                    //map.clear();
+                }
+
+                matchCursor.moveToFirst();
+
+                // Normal updateStats method does not seem to give the table enough time to update
+                // the columns for the following loop
+                if(!statsDB.hasColumn("super_defense_ability_ranking"))
+                {
+                    statsDB.addColumn("super_defense_ability_ranking","TEXT");
+                }
+
+                String[] defenseAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, "super_defense_ability");
+                for (int i = 0; i < teamNumbers.length; i++) {
+                    map = new HashMap<>();
+                    map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers[i]));
+                    map.put("super_defense_ability_ranking", new ScoutValue(defenseAbilityRanking[i]));
+                    statsDB.updateStats(map);
                 }
             }
         }
@@ -110,201 +129,108 @@ public class Aggregate extends IntentService {
 
             // Calculate metrics and insert in map
 
+            int totalPoints = 0;
+
             //Auto
-            int totalAutoTotes = 0;
-            if(teamStats.containsKey("total_auto_totes"))
-            {
-                totalAutoTotes = teamStats.get("total_auto_totes").getInt();
-            }
-            int totalAutoCans = 0;
-            if(teamStats.containsKey("total_auto_cans"))
-            {
-                totalAutoCans = teamStats.get("total_auto_cans").getInt();
-            }
-            int totalAutoStepCans = 0;
-            if(teamStats.containsKey("total_auto_step_cans"))
-            {
-                totalAutoStepCans = teamStats.get("total_auto_step_cans").getInt();
-            }
-            int totalAuto3ToteStacks = 0;
-            if(teamStats.containsKey("total_auto_three_tote_stack"))
-            {
-                totalAuto3ToteStacks = teamStats.get("total_auto_three_tote_stack").getInt();
-            }
+            int[] totalStartPosition = set_start_array(teamStats,"start");
+            int[] totalDefenseReaches = set_start_array(teamStats,"reaches");
+            int[] totalDefenseCrosses = set_start_array(teamStats,"crosses");
+            int totalAutoHighGoalHit = set_start(teamStats,"total_auto_high_hit");
+            int totalAutoHighGoalMiss = set_start(teamStats,"total_auto_high_miss");
+            int totalAutoLowGoalHit = set_start(teamStats,"total_auto_low_hit");
+            int totalAutoLowGoalMiss = set_start(teamStats,"total_auto_low_miss");
+
 
             //Teleop
-            int totalPoints = 0;
-            if(teamStats.containsKey("total_points"))
-            {
-                totalPoints = teamStats.get("total_points").getInt();
-            }
-            int totalTotes = 0;
-            if(teamStats.containsKey("total_totes"))
-            {
-                totalTotes = teamStats.get("total_totes").getInt();
-            }
-            int totalCans = 0;
-            if(teamStats.containsKey("total_cans"))
-            {
-                totalCans = teamStats.get("total_cans").getInt();
-            }
-            int totalNoodles = 0;
-            if(teamStats.containsKey("total_noodles"))
-            {
-                totalNoodles = teamStats.get("total_noodles").getInt();
-            }
-            int totalDroppedStacks = 0;
-            if(teamStats.containsKey("total_dropped_stacks"))
-            {
-                totalDroppedStacks = teamStats.get("total_dropped_stacks").getInt();
-            }
-            int totalCoopTotes = 0;
-            if(teamStats.containsKey("total_coop_totes"))
-            {
-                totalCoopTotes = teamStats.get("total_coop_totes").getInt();
-            }
-            int totalStepCans = 0;
-            if(teamStats.containsKey("total_step_cans"))
-            {
-                totalStepCans = teamStats.get("total_step_cans").getInt();
-            }
-            int totalKnockedOverStacks = 0;
-            if(teamStats.containsKey("total_knocked_over_stacks"))
-            {
-                totalStepCans = teamStats.get("total_knocked_over_stacks").getInt();
-            }
+            int[] totalTeleopDefenses = set_start_array(teamStats,"teleop");
+            int[] totalDefensesSeen = set_start_array(teamStats, "seen");
+            int totalTeleopHighGoalHit = set_start(teamStats,"total_teleop_high_hit");
+            int totalTeleopHighGoalMiss = set_start(teamStats,"total_teleop_high_miss");
+            int totalTeleopLowGoalHit = set_start(teamStats,"total_teleop_low_hit");
+            int totalTeleopLowGoalMiss = set_start(teamStats,"total_teleop_low_miss");
 
-            int totalLandfill = 0;
-            if(teamStats.containsKey("total_landfill"))
-            {
-                totalLandfill = teamStats.get("total_landfill").getInt();
-            }
-            int totalHPFeeder = 0;
-            if(teamStats.containsKey("total_hp_feeder"))
-            {
-                totalHPFeeder = teamStats.get("total_hp_feeder").getInt();
-            }
+            //Endgame
+            int totalChallenge = set_start(teamStats,"total_endgame_challenge");
+            int totalScale = set_start(teamStats,"total_endgame_scale");
 
             //Post
-            int totalDQs = 0;
-            if(teamStats.containsKey("total_dqs"))
-            {
-                totalDQs = teamStats.get("total_dqs").getInt();
-            }
-            int totalStoppedMoving = 0;
-            if(teamStats.containsKey("total_stopped_moving"))
-            {
-                totalStoppedMoving = teamStats.get("total_stopped_moving").getInt();
-            }
-            int totalDidntShowUp = 0;
-            if(teamStats.containsKey("total_didnt_show_up"))
-            {
-                totalDidntShowUp = teamStats.get("total_didnt_show_up").getInt();
-            }
-            int totalFouls = 0;
-            if(teamStats.containsKey("total_fouls"))
-            {
-                totalFouls = teamStats.get("total_fouls").getInt();
-            }
+            int totalDQ = set_start(teamStats,"total_post_dq");
+            int totalStopped = set_start(teamStats,"total_post_stopped");
+            int totalDidntShowUp = set_start(teamMap,"total_post_didnt_show_up");
 
-            int totalMatches = 0;
-            if(teamStats.containsKey("total_matches"))
-            {
-                totalMatches = teamStats.get("total_matches").getInt();
-            }
+            //Fouls
+            int totalFouls = set_start(teamStats,"total_fouls");
+            int totalTechFouls = set_start(teamStats,"total_tech_fouls");
+            int totalYellowCards = set_start(teamStats,"total_yellow_cards");
+            int totalRedCards = set_start(teamStats,"total_red_cards");
+
+
+            int totalMatches = set_start(teamStats,"total_matches");
 
             while(!teamCursor.isAfterLast())
             {
                 totalMatches++;
-                //Auto
-                totalAutoTotes += teamCursor.getInt(teamCursor.getColumnIndex("auto_totesMoved"));
-                totalAutoCans += teamCursor.getInt(teamCursor.getColumnIndex("auto_cansMoved"));
-                totalAutoStepCans += teamCursor.getInt(teamCursor.getColumnIndex("auto_stepCans"));
-                totalAuto3ToteStacks += teamCursor.getInt(teamCursor.getColumnIndex("auto_threeToteStack"));
 
-                // Individual cans or totes in auto can be ignored...
-                totalPoints += 20 * teamCursor.getInt(teamCursor.getColumnIndex("auto_threeToteStack"));
+                int matchNumber = teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER));
+                Map<String, ScoutValue> superMatch = superScoutDB.getMatchInfo(matchNumber);
+                Cursor match = scheduleDB.getMatch(matchNumber);
+
+                String defense2, defense3, defense4, defense5;
+                defense3 = superMatch.get("defense3").getString();
+                if(match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE1)) == teamsUpdated.get(i) ||
+                        match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE2)) == teamsUpdated.get(i) ||
+                        match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE3)) == teamsUpdated.get(i))
+                {
+                    defense2 = superMatch.get("blue_defense2").getString();
+                    defense4 = superMatch.get("blue_defense4").getString();
+                    defense5 = superMatch.get("blue_defense5").getString();
+                }
+                else
+                {
+                    defense2 = superMatch.get("red_defense2").getString();
+                    defense4 = superMatch.get("red_defense4").getString();
+                    defense5 = superMatch.get("red_defense5").getString();
+                }
+
+                increment_array(teamCursor,totalDefensesSeen,defense2, defense3,defense4, defense5,"seen");
+
+                //Auto
+                increment_array(teamCursor,totalStartPosition,defense2, defense3,defense4, defense5,"start");
+                increment_array(teamCursor,totalDefenseReaches,defense2, defense3,defense4, defense5,"reach");
+                increment_array(teamCursor,totalDefenseCrosses,defense2, defense3,defense4, defense5,"cross");
+                totalAutoHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex("auto_shoot_high_scored"));
+                totalAutoHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex("auto_shoot_high_missed"));
+                totalAutoLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex("auto_shoot_low_scored"));
+                totalAutoLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex("auto_shoot_low_missed"));
 
                 //Teleop
-                String matchStacks = teamCursor.getString(teamCursor.getColumnIndex("teleop_stacks"));
-                try {
-                    JSONArray jsonArray = new JSONArray(matchStacks);
-                    for(int j = 0; j < jsonArray.length(); j++)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(j);
-                        int numTotes = jsonObject.getInt("toteCount");
-                        int preexistingTotes = jsonObject.getInt("preexistingToteCount");
-                        boolean isCanned = jsonObject.getBoolean("isCanned");
-                        boolean isNoodled = jsonObject.getBoolean("isNoodled");
-                        boolean isStackDropped = jsonObject.getBoolean("isStackDropped");
-                        if(!isStackDropped) {
-                            totalTotes += numTotes;
-                            totalCans += isCanned ? 1 : 0;
-                            totalNoodles += isNoodled ? 1 : 0;
-                            totalPoints += numTotes * 2;
-                            // Giving half credit for preexisting totes for can points
-                            totalPoints += (isCanned ? 1 : 0) * 4 * (numTotes + preexistingTotes / 2);
-                        }
-                        else
-                        {
-                            totalDroppedStacks++;
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                increment_array(teamCursor,totalTeleopDefenses,defense2, defense3,defense4, defense5,"teleop");
+                totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex("teleop_high_score"));
+                totalTeleopHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex("teleop_high_missed"));
+                totalTeleopLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex("teleop__low_score"));
+                totalTeleopLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex("teleop_low_missed"));
 
-                totalCoopTotes += teamCursor.getInt(teamCursor.getColumnIndex("teleop_coopTotes"));
-                totalStepCans += teamCursor.getInt(teamCursor.getColumnIndex("teleop_stepCans"));
-                totalKnockedOverStacks += teamCursor.getInt(teamCursor.getColumnIndex("teleop_knockedOverStacks"));
-                String position = teamCursor.getString(teamCursor.getColumnIndex("teleop_landfillFeederNeither"));
-                if(position.equals("Both"))
-                {
-                    totalLandfill++;
-                    totalHPFeeder++;
-                }
-                else if(position.equals("Landfill"))
-                {
-                    totalLandfill++;
-                }
-                else if(position.equals("HP Feeder"))
-                {
-                    totalHPFeeder++;
-                }
+                //Endgame
+                totalChallenge += (teamCursor.getString(teamCursor.getColumnIndex("endGame_challenge_scale")).equals("Challenge"))?1:0;
+                totalScale += (teamCursor.getString(teamCursor.getColumnIndex("endGame_challenge_scale")).equals("Scale"))?1:0;
 
                 //Post
-                totalDQs += teamCursor.getInt(teamCursor.getColumnIndex("post_dq"));
-                totalStoppedMoving += teamCursor.getInt(teamCursor.getColumnIndex("post_stoppedMoving"));
+                totalDQ += teamCursor.getInt(teamCursor.getColumnIndex("post_dq"));
+                totalStopped += teamCursor.getInt(teamCursor.getColumnIndex("post_stoppedMoving"));
                 totalDidntShowUp += teamCursor.getInt(teamCursor.getColumnIndex("post_didntShowedUp"));
-                totalFouls += teamCursor.getInt(teamCursor.getColumnIndex("post_fouls"));
+
+                //Fouls
+                totalFouls += teamCursor.getInt(teamCursor.getColumnIndex("foul_standard"));
+                totalTechFouls += teamCursor.getInt(teamCursor.getColumnIndex("foul_tech"));
+                totalYellowCards += teamCursor.getInt(teamCursor.getColumnIndex("foul_yellow_card"));
+                totalRedCards += teamCursor.getInt(teamCursor.getColumnIndex("foul_red_card"));
 
                 teamCursor.moveToNext();
             }
 
-            teamMap.put("total_auto_totes",new ScoutValue(totalAutoTotes));
-            teamMap.put("total_auto_cans",new ScoutValue(totalAutoCans));
-            teamMap.put("total_auto_step_cans",new ScoutValue(totalAutoStepCans));
-            teamMap.put("total_auto_three_tote_stack",new ScoutValue(totalAuto3ToteStacks));
+            teamMap.put("total_matches", new ScoutValue(totalMatches));
 
-            teamMap.put("total_points",new ScoutValue(totalPoints));
-            teamMap.put("total_totes",new ScoutValue(totalTotes));
-            teamMap.put("total_cans",new ScoutValue(totalCans));
-            teamMap.put("total_step_cans",new ScoutValue(totalStepCans));
-            teamMap.put("total_noodles",new ScoutValue(totalNoodles));
-            teamMap.put("total_dropped_stacks",new ScoutValue(totalDroppedStacks));
-            teamMap.put("total_knocked_over_stacks",new ScoutValue(totalKnockedOverStacks));
-            teamMap.put("total_coop_totes",new ScoutValue(totalCoopTotes));
-            teamMap.put("total_landfill",new ScoutValue(totalLandfill));
-            teamMap.put("total_hp_feeder",new ScoutValue(totalHPFeeder));
-
-            teamMap.put("total_dqs",new ScoutValue(totalDQs));
-            teamMap.put("total_didnt_show_up",new ScoutValue(totalDidntShowUp));
-            teamMap.put("total_fouls",new ScoutValue(totalFouls));
-            teamMap.put("total_stopped_moving",new ScoutValue(totalStoppedMoving));
-
-            teamMap.put("total_matches",new ScoutValue(totalMatches));
-
-            teamMap.put(StatsDB.KEY_TEAM_NUMBER,new ScoutValue(teamsUpdated.get(i)));
+            teamMap.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamsUpdated.get(i)));
 
             statsDB.updateStats(teamMap);
         }
@@ -544,5 +470,172 @@ public class Aggregate extends IntentService {
         }
 
         return output;
+    }
+
+
+    private int set_start(Map<String, ScoutValue> teamStats, String key)
+    {
+        if(teamStats.containsKey(key))
+            return teamStats.get(key).getInt();
+        else
+            return 0;
+    }
+
+    private int[] set_start_array(Map<String, ScoutValue> teamStats, String type)
+    {
+        int[] array;
+        if(type.equals("start"))
+            array = new int[11];
+        else
+            array = new int[9];
+        for(int i = 0; i < 9; i++)
+        {
+            switch(type)
+            {
+                case "start":
+                    array[i] = set_start(teamStats,"total_start_"+defenses[i]);
+                    break;
+                case "reach":
+                    array[i] = set_start(teamStats,"total_reach_"+defenses[i]);
+                    break;
+                case "cross":
+                    array[i] = set_start(teamStats,"total_cross_"+defenses[i]);
+                    break;
+                case "teleop":
+                    array[i] = set_start(teamStats,"total_teleop_"+defenses[i]);
+                    break;
+                case "seen":
+                    array[i] = set_start(teamStats,"total_seen_"+defenses[i]);
+                    break;
+            }
+        }
+        if(type.equals("start"))
+        {
+            array[9] = set_start(teamStats,"total_start_spy");
+            array[10] = set_start(teamStats,"total_start_secret_passage");
+        }
+        return array;
+    }
+
+    private void increment_array(Cursor cursor, int[] array, String defense2, String defense3, String defense4, String defense5, String type)
+    {
+        List defensesList = Arrays.asList(defenses);
+
+        int index;
+
+        switch(type)
+        {
+            case "start":
+                switch(cursor.getString(cursor.getColumnIndex("auto_start_position")))
+                {
+                    case "Defense 1 (Low bar)":
+                        index = defensesList.indexOf("low_bar");
+                        array[index]++;
+                        break;
+                    case "Defense 2":
+                        index = defensesList.indexOf(defense2);
+                        array[index]++;
+                        break;
+                    case "Defense 3":
+                        index = defensesList.indexOf(defense3);
+                        array[index]++;
+                        break;
+                    case "Defense 4":
+                        index = defensesList.indexOf(defense4);
+                        array[index]++;
+                        break;
+                    case "Defense 5":
+                        index = defensesList.indexOf(defense5);
+                        array[index]++;
+                        break;
+                    case "Spybox":
+                        array[9]++;
+                        break;
+                    case "Secret Passage":
+                        array[10]++;
+                        break;
+                }
+                break;
+            case "reach":
+                if(cursor.getString(cursor.getColumnIndex("auto_reach_cross")).equals("Reach"))
+                {
+                    switch(cursor.getString(cursor.getColumnIndex("auto_start_position")))
+                    {
+                        case "Defense 1 (Low bar)":
+                            index = defensesList.indexOf("low_bar");
+                            array[index]++;
+                            break;
+                        case "Defense 2":
+                            index = defensesList.indexOf(defense2);
+                            array[index]++;
+                            break;
+                        case "Defense 3":
+                            index = defensesList.indexOf(defense3);
+                            array[index]++;
+                            break;
+                        case "Defense 4":
+                            index = defensesList.indexOf(defense4);
+                            array[index]++;
+                            break;
+                        case "Defense 5":
+                            index = defensesList.indexOf(defense5);
+                            array[index]++;
+                            break;
+                    }
+                }
+                break;
+            case "cross":
+                if(cursor.getString(cursor.getColumnIndex("auto_reach_cross")).equals("Cross"))
+                {
+                    switch(cursor.getString(cursor.getColumnIndex("auto_start_position")))
+                    {
+                        case "Defense 1 (Low bar)":
+                            index = defensesList.indexOf("low_bar");
+                            array[index]++;
+                            break;
+                        case "Defense 2":
+                            index = defensesList.indexOf(defense2);
+                            array[index]++;
+                            break;
+                        case "Defense 3":
+                            index = defensesList.indexOf(defense3);
+                            array[index]++;
+                            break;
+                        case "Defense 4":
+                            index = defensesList.indexOf(defense4);
+                            array[index]++;
+                            break;
+                        case "Defense 5":
+                            index = defensesList.indexOf(defense5);
+                            array[index]++;
+                            break;
+                    }
+                }
+                break;
+            case "teleop":
+                index = defensesList.indexOf(defense2);
+                array[index] += cursor.getInt(cursor.getColumnIndex("teleop_defense_2"));
+                index = defensesList.indexOf(defense3);
+                array[index] += cursor.getInt(cursor.getColumnIndex("teleop_defense_3"));
+                index = defensesList.indexOf(defense4);
+                array[index] += cursor.getInt(cursor.getColumnIndex("teleop_defense_4"));
+                index = defensesList.indexOf(defense5);
+                array[index] += cursor.getInt(cursor.getColumnIndex("teleop_defense_5"));
+                index = defensesList.indexOf("low_bar");
+                array[index] += cursor.getInt(cursor.getColumnIndex("teleop_defense_1"));
+                break;
+            case "seen":
+                index = defensesList.indexOf(defense2);
+                array[index] ++;
+                index = defensesList.indexOf(defense3);
+                array[index] ++;
+                index = defensesList.indexOf(defense4);
+                array[index] ++;
+                index = defensesList.indexOf(defense5);
+                array[index] ++;
+                index = defensesList.indexOf("low_bar");
+                array[index] ++;
+                break;
+        }
     }
 }
