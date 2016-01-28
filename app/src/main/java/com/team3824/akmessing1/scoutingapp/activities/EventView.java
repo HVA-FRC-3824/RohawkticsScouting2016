@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,15 +14,19 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_Ability;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_Auto;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_Defenses;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_Endgame;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_Foul;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_IndividualDefense;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_Points;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_Shot;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Ability;
 import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Auto;
 import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Defenses;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Endgame;
 import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Fouls;
 import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_IndividualDefense;
 import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Points;
@@ -113,8 +118,10 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 goal(cursor,"low");
                 break;
             case 13: // Driver Ability
+                ability(cursor,"driver");
                 break;
             case 14: // Defense Ability
+                ability(cursor,"defense");
                 break;
             case 15: // Auto
                 auto(cursor);
@@ -495,9 +502,117 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         listView.setAdapter(ela_Auto);
     }
 
+    private void ability(Cursor cursor, String ability)
+    {
+        ArrayList<ELI_Ability> teams = new ArrayList<>();
+
+        while(!cursor.isAfterLast())
+        {
+            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
+            ELI_Ability team = new ELI_Ability(teamNumber);
+
+            float totalMatches = cursor.getColumnIndex("total_matches");
+
+            if (totalMatches > 0) {
+                team.mRank = cursor.getString(cursor.getColumnIndex("super_"+ability+"_ability_ranking"));
+            }
+            else
+            {
+                team.mRank = "N/A";
+            }
+            teams.add(team);
+            cursor.moveToNext();
+        }
+
+        Collections.sort(teams, new Comparator<ELI_Ability>() {
+            @Override
+            public int compare(ELI_Ability lhs, ELI_Ability rhs) {
+
+                if(lhs.mRank.equals("N/A") && rhs.mRank.equals("N/A"))
+                {
+                    return 0;
+                }
+                else if(lhs.mRank.equals("N/A"))
+                {
+                    return -1;
+                }
+                else if(rhs.mRank.equals("N/A"))
+                {
+                    return 1;
+                }
+
+                int l_rank = (lhs.mRank.charAt(0) == 'T')? Integer.parseInt(lhs.mRank.substring(1)):Integer.parseInt(lhs.mRank);
+                int r_rank = (rhs.mRank.charAt(0) == 'T')? Integer.parseInt(rhs.mRank.substring(1)):Integer.parseInt(rhs.mRank);
+                return l_rank - r_rank;
+            }
+        });
+        teams.add(0, new ELI_Ability(-1));
+        ELA_Ability ela_Ability = new ELA_Ability(this, R.layout.list_item_event_ability, teams);
+        listView.setAdapter(ela_Ability);
+    }
+
     private void endgame(Cursor cursor)
     {
+        ArrayList<ELI_Endgame> teams = new ArrayList<>();
 
+        while(!cursor.isAfterLast())
+        {
+            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
+            ELI_Endgame team = new ELI_Endgame(teamNumber);
+
+            float totalMatches = cursor.getColumnIndex("total_matches");
+
+            if (totalMatches > 0) {
+                team.mTotalMatches = cursor.getInt(cursor.getColumnIndex("total_matches"));
+                team.mChallenge = cursor.getInt(cursor.getColumnIndex("total_challenge"));
+                team.mScale = cursor.getInt(cursor.getColumnIndex("total_scale"));
+            }
+            teams.add(team);
+            cursor.moveToNext();
+        }
+
+        Collections.sort(teams, new Comparator<ELI_Endgame>() {
+            @Override
+            public int compare(ELI_Endgame lhs, ELI_Endgame rhs) {
+                if(lhs.mTotalMatches == 0 && rhs.mTotalMatches == 0)
+                {
+                    return 0;
+                }
+                else if(lhs.mTotalMatches == 0)
+                {
+                    if(rhs.mChallenge > 0 || rhs.mScale > 0)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else if(rhs.mTotalMatches == 0)
+                {
+                    if(lhs.mChallenge > 0 || lhs.mScale > 0)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+
+                float delta = ((lhs.mScale*15 + lhs.mChallenge*5)/(float)lhs.mTotalMatches) - ((rhs.mScale*15 + rhs.mChallenge*5)/(float)rhs.mTotalMatches);
+                if(delta < 0)
+                    return 1;
+                else if(delta > 0)
+                    return -1;
+                else
+                    return 0;
+            }
+        });
+        teams.add(0, new ELI_Endgame(-1));
+        ELA_Endgame ela_Endgame = new ELA_Endgame(this, R.layout.list_item_event_endgame, teams);
+        listView.setAdapter(ela_Endgame);
     }
 
     private void fouls(Cursor cursor)
@@ -529,7 +644,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         });
 
         teams.add(0, new ELI_Fouls(-1));
-        ELA_Foul eventFoulListAdapter = new ELA_Foul(this, R.layout.list_item_event_shot, teams);
+        ELA_Foul eventFoulListAdapter = new ELA_Foul(this, R.layout.list_item_event_fouls, teams);
         listView.setAdapter(eventFoulListAdapter);
     }
 
