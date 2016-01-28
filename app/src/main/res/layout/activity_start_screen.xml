@@ -105,6 +105,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="View Event"
+                android:textColor="@color/white"
+                android:id="@+id/viewEvent_button"
+                android:visibility="gone"
+                android:onClick="view_event"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="View Picklist"
                 android:textColor="@color/white"
                 android:id="@+id/viewPicklist_button"

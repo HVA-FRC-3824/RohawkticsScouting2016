@@ -32,4 +32,25 @@
         <item>Spybox</item>
         <item>Secret Passage</item>
     </string-array>
+
+    <string-array name="event_view_options">
+        <item>Points</item>
+        <item>Defenses</item>
+        <item>Low Bar</item>
+        <item>Portcullis</item>
+        <item>Cheval de Frise</item>
+        <item>Moat</item>
+        <item>Ramparts</item>
+        <item>Drawbridge</item>
+        <item>Sally Port</item>
+        <item>Rock Wall</item>
+        <item>Rough Terrain</item>
+        <item>High Goal</item>
+        <item>Low Goal</item>
+        <item>Driver Ability</item>
+        <item>Defense Ability</item>
+        <item>Auto</item>
+        <item>Endgame</item>
+        <item>Fouls</item>
+    </string-array>
 </resources>

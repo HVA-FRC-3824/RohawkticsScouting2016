@@ -129,8 +129,6 @@ public class Aggregate extends IntentService {
 
             // Calculate metrics and insert in map
 
-            int totalPoints = 0;
-
             //Auto
             int[] totalStartPosition = set_start_array(teamStats,"start");
             int[] totalDefenseReaches = set_start_array(teamStats,"reaches");
@@ -227,6 +225,39 @@ public class Aggregate extends IntentService {
 
                 teamCursor.moveToNext();
             }
+
+            for(int j = 0; j < 9; j++)
+            {
+                teamMap.put("total_start_"+defenses[j],new ScoutValue(totalStartPosition[j]));
+                teamMap.put("total_seen_"+defenses[j],new ScoutValue(totalDefensesSeen[j]));
+                teamMap.put("total_auto_"+defenses[j]+"_reach",new ScoutValue(totalDefenseReaches[j]));
+                teamMap.put("total_auto_"+defenses[j]+"_cross",new ScoutValue(totalDefenseCrosses[j]));
+                teamMap.put("total_teleop_"+defenses[j],new ScoutValue(totalTeleopDefenses[j]));
+            }
+            teamMap.put("total_start_spybox",new ScoutValue(totalStartPosition[9]));
+            teamMap.put("total_start_secret_passage",new ScoutValue(totalStartPosition[10]));
+
+            teamMap.put("total_auto_high_hit",new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put("total_auto_high_miss",new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put("total_auto_low_hit",new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put("total_auto_low_miss",new ScoutValue(totalAutoHighGoalHit));
+
+            teamMap.put("total_teleop_high_hit",new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put("total_teleop_high_miss",new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put("total_teleop_low_hit",new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put("total_teleop_low_miss",new ScoutValue(totalAutoHighGoalHit));
+
+            teamMap.put("total_challenge",new ScoutValue(totalChallenge));
+            teamMap.put("total_scale", new ScoutValue(totalScale));
+
+            teamMap.put("total_dq",new ScoutValue(totalDQ));
+            teamMap.put("total_stopped",new ScoutValue(totalStopped));
+            teamMap.put("total_didnt_show_up",new ScoutValue(totalDidntShowUp));
+
+            teamMap.put("total_fouls",new ScoutValue(totalFouls));
+            teamMap.put("total_tech_fouls",new ScoutValue(totalTechFouls));
+            teamMap.put("total_yellow_cards",new ScoutValue(totalYellowCards));
+            teamMap.put("total_red_cards",new ScoutValue(totalRedCards));
 
             teamMap.put("total_matches", new ScoutValue(totalMatches));
 

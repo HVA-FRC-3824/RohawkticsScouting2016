@@ -53,6 +53,8 @@ public class StartScreen extends AppCompatActivity {
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewMatch_button);
                 button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.viewEvent_button);
+                button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.sync_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.aggregate_button);
@@ -65,6 +67,8 @@ public class StartScreen extends AppCompatActivity {
                 button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewMatch_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.viewEvent_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewPicklist_button);
                 button.setVisibility(View.VISIBLE);
@@ -86,6 +90,8 @@ public class StartScreen extends AppCompatActivity {
                 button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewMatch_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.viewEvent_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewPicklist_button);
                 button.setVisibility(View.VISIBLE);
@@ -134,6 +140,12 @@ public class StartScreen extends AppCompatActivity {
     public void view_team(View view)
     {
         Intent intent = new Intent(this, TeamList.class);
+        startActivity(intent);
+    }
+
+    public void view_event(View view)
+    {
+        Intent intent = new Intent(this, EventView.class);
         startActivity(intent);
     }
 
