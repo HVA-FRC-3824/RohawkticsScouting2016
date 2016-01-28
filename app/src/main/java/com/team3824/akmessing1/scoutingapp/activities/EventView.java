@@ -14,12 +14,16 @@ import android.widget.Spinner;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.EventDefensesListAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.EventFoulListAdapter;
 import com.team3824.akmessing1.scoutingapp.adapters.EventIndividualDefenseListAdapter;
 import com.team3824.akmessing1.scoutingapp.adapters.EventPointsListAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.EventShotListAdapter;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemDefenses;
+import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemFouls;
 import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemIndividualDefense;
 import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemPoints;
+import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemShots;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.ArrayList;
@@ -103,18 +107,23 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 individual_defense(cursor,"rough_terrain");
                 break;
             case 11: // High Goal
+                goal(cursor,"high");
                 break;
             case 12: // Low Goal
+                goal(cursor,"low");
                 break;
             case 13: // Driver Ability
                 break;
             case 14: // Defense Ability
                 break;
             case 15: // Auto
+                auto(cursor);
                 break;
             case 16: // Endgame
+                endgame(cursor);
                 break;
             case 17: // Fouls
+                fouls(cursor);
                 break;
         }
     }
@@ -208,9 +217,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public int compare(EventListItemPoints lhs, EventListItemPoints rhs) {
                 float delta = lhs.mAvgPoints - rhs.mAvgPoints;
-                if (delta > 0)
+                if (delta < 0)
                     return 1;
-                else if (delta < 0)
+                else if (delta > 0)
                     return -1;
                 else
                     return 0;
@@ -274,9 +283,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             public int compare(EventListItemDefenses lhs, EventListItemDefenses rhs) {
                 // tertiary statement make the values 0 if the team has been in no matches
                 float delta = ((lhs.sLowBar == 0)?0:(lhs.totalCrosses/(float)lhs.sLowBar)) - ((rhs.sLowBar == 0)?0:(rhs.totalCrosses/(float)rhs.sLowBar));
-                if(delta > 0)
+                if(delta < 0)
                     return 1;
-                else if(delta < 0)
+                else if(delta > 0)
                     return -1;
                 else
                     return 0;
@@ -314,9 +323,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             public int compare(EventListItemIndividualDefense lhs, EventListItemIndividualDefense rhs) {
                 // tertiary statement make the values 0 if the team has been in no matches
                 float delta = ((lhs.mSeen == 0)?0:((float)(lhs.mAutoCross+lhs.mTeleopCross)/(float)lhs.mSeen)) - ((rhs.mSeen == 0)?0:((float)(rhs.mAutoCross+rhs.mTeleopCross)/(float)rhs.mSeen));
-                if(delta > 0)
+                if(delta < 0)
                     return 1;
-                else if(delta < 0)
+                else if(delta > 0)
                     return -1;
                 else
                     return 0;
@@ -326,6 +335,111 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         teams.add(0, new EventListItemIndividualDefense(-1));
         EventIndividualDefenseListAdapter eventIndividualDefenseListAdapter = new EventIndividualDefenseListAdapter(this, R.layout.list_item_event_individual_defense, teams);
         listView.setAdapter(eventIndividualDefenseListAdapter);
+    }
+
+    private void goal(Cursor cursor, String goal)
+    {
+        ArrayList<EventListItemShots> teams = new ArrayList<>();
+
+        while(!cursor.isAfterLast()) {
+            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
+            EventListItemShots team = new EventListItemShots(teamNumber);
+
+            float totalMatches = cursor.getColumnIndex("total_matches");
+
+            if (totalMatches > 0) {
+                team.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_"+goal+"_hit"));
+                team.mAutoTaken = cursor.getInt(cursor.getColumnIndex("total_auto_"+goal+"_miss")) + team.mAutoMade;
+                team.mAutoPercentage = (team.mAutoTaken == 0)?0:(float)team.mAutoMade/(float)team.mAutoTaken * 100.0f;
+
+                team.mTeleopMade = cursor.getInt(cursor.getColumnIndex("total_teleop_"+goal+"_hit"));
+                team.mTeleopTaken = cursor.getInt(cursor.getColumnIndex("total_teleop_"+goal+"_miss")) + team.mTeleopMade;
+                team.mTeleopPercentage = (team.mTeleopTaken == 0)?0:(float)team.mTeleopMade/(float)team.mTeleopTaken * 100.0f;
+            }
+            teams.add(team);
+            cursor.moveToNext();
+        }
+
+
+        Collections.sort(teams, new Comparator<EventListItemShots>() {
+            @Override
+            public int compare(EventListItemShots lhs, EventListItemShots rhs) {
+
+                if(lhs.mTeleopTaken > 10 && rhs.mTeleopTaken > 10)
+                {
+                    if(lhs.mTeleopPercentage > rhs.mTeleopPercentage)
+                    {
+                        return -1;
+                    }
+                    else if(rhs.mTeleopPercentage > lhs.mTeleopPercentage)
+                    {
+                        return 1;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+                else if(lhs.mTeleopTaken > 10)
+                {
+                    return -1;
+                }
+                else if(rhs.mTeleopTaken > 10)
+                {
+                    return -1;
+                }
+                else
+                {
+                    return rhs.mTeleopMade - lhs.mTeleopMade;
+                }
+            }
+        });
+
+        teams.add(0, new EventListItemShots(-1));
+        EventShotListAdapter eventShotListAdapter = new EventShotListAdapter(this, R.layout.list_item_event_shot, teams);
+        listView.setAdapter(eventShotListAdapter);
+    }
+
+    private void auto(Cursor cursor)
+    {
+
+    }
+
+    private void endgame(Cursor cursor)
+    {
+
+    }
+
+    private void fouls(Cursor cursor)
+    {
+        ArrayList<EventListItemFouls> teams = new ArrayList<>();
+
+        while(!cursor.isAfterLast()) {
+            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
+            EventListItemFouls team = new EventListItemFouls(teamNumber);
+
+            float totalMatches = cursor.getColumnIndex("total_matches");
+
+            if (totalMatches > 0) {
+                team.mFouls = cursor.getInt(cursor.getColumnIndex("total_fouls"));
+                team.mTechFouls = cursor.getInt(cursor.getColumnIndex("total_tech_fouls"));
+                team.mYellowCards = cursor.getInt(cursor.getColumnIndex("total_yellow_cards"));
+                team.mRedCards = cursor.getInt(cursor.getColumnIndex("total_red_cards"));
+            }
+            teams.add(team);
+            cursor.moveToNext();
+        }
+
+
+        Collections.sort(teams, new Comparator<EventListItemFouls>() {
+            @Override
+            public int compare(EventListItemFouls lhs, EventListItemFouls rhs) {
+                return (lhs.mRedCards*4 + lhs.mYellowCards*3 + lhs.mTechFouls*2 + lhs.mFouls) - (rhs.mRedCards*4 + rhs.mYellowCards*3 + rhs.mTechFouls*2 + rhs.mFouls);
+            }
+        });
+
+        teams.add(0, new EventListItemFouls(-1));
+        EventFoulListAdapter eventFoulListAdapter = new EventFoulListAdapter(this, R.layout.list_item_event_shot, teams);
+        listView.setAdapter(eventFoulListAdapter);
     }
 
 
