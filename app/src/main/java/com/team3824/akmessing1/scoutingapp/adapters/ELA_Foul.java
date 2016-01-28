@@ -8,16 +8,16 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemFouls;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Fouls;
 
 import java.util.ArrayList;
 
-public class EventFoulListAdapter extends ArrayAdapter<EventListItemFouls> {
+public class ELA_Foul extends ArrayAdapter<ELI_Fouls> {
 
-    ArrayList<EventListItemFouls> mTeams;
+    ArrayList<ELI_Fouls> mTeams;
     Context mContext;
 
-    public EventFoulListAdapter(Context context, int textViewResourceId, ArrayList<EventListItemFouls> teams)
+    public ELA_Foul(Context context, int textViewResourceId, ArrayList<ELI_Fouls> teams)
     {
         super(context, textViewResourceId,teams);
         mTeams = teams;
@@ -31,7 +31,7 @@ public class EventFoulListAdapter extends ArrayAdapter<EventListItemFouls> {
             convertView = inflater.inflate(R.layout.list_item_event_fouls, null);
         }
 
-        EventListItemFouls team = mTeams.get(position);
+        ELI_Fouls team = mTeams.get(position);
 
         team.mRank = position;
         TextView textView;

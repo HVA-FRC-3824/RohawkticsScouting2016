@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TeamViewFragmentPagerAdapter extends FragmentPagerAdapter {
+public class FPA_TeamView extends FragmentPagerAdapter {
 
     private String tabTitles[] = new String[] { "Visuals","Pit Data", "Match Data", "Notes" };
 
@@ -27,7 +27,7 @@ public class TeamViewFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private int teamNumber;
 
-    public TeamViewFragmentPagerAdapter(FragmentManager fm, int teamNumber) {
+    public FPA_TeamView(FragmentManager fm, int teamNumber) {
 
         super(fm);
         this.teamNumber = teamNumber;

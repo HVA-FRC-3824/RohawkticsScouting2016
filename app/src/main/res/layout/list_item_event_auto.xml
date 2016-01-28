@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_rank"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_teamNum"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Low_Bar"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Portcullis"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Cheval_de_Frise"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Moat"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Ramparts"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Drawbridge"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Sally_Port"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Rock_Wall"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Rough_Terrain"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_High"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_Low"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+</LinearLayout>

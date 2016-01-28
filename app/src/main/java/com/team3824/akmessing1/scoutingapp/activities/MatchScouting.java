@@ -15,17 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.adapters.MatchScoutFragmentPagerAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.FPA_MatchScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +34,7 @@ public class MatchScouting extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private MatchScoutFragmentPagerAdapter adapter;
+    private FPA_MatchScout adapter;
 
     private int teamNumber;
     private int matchNumber;
@@ -68,7 +64,7 @@ public class MatchScouting extends AppCompatActivity {
         // Set up tabs and pages for different fragments of a match
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.match_view_pager);
-        adapter = new MatchScoutFragmentPagerAdapter(getFragmentManager());
+        adapter = new FPA_MatchScout(getFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.match_tab_layout);
         if(allianceColor.equals("Blue"))

@@ -1,11 +1,11 @@
 package com.team3824.akmessing1.scoutingapp.event_list_items;
 
-public class EventListItemPoints{
+public class ELI_Points {
     public int mRank, mTeamNumber, mTotalPoints, mDefensePoints, mHighPoints, mLowPoints, mAutoPoints,
             mTeleopPoints, mEndgamePoints, mFoulPoints;
     public float mAvgPoints;
 
-    public EventListItemPoints(int teamNumber)
+    public ELI_Points(int teamNumber)
     {
         mTeamNumber = teamNumber;
         mTotalPoints = 0;
@@ -19,9 +19,9 @@ public class EventListItemPoints{
         mAvgPoints = 0.0f;
     }
 
-    public EventListItemPoints(int teamNumber, int totalPoints, int defensePoints, int highPoints,
-                        int lowPoints, int autoPoints, int teleopPoints, int endgamePoints,
-                        int foulPoints, float avgPoints)
+    public ELI_Points(int teamNumber, int totalPoints, int defensePoints, int highPoints,
+                      int lowPoints, int autoPoints, int teleopPoints, int endgamePoints,
+                      int foulPoints, float avgPoints)
     {
         mTeamNumber = teamNumber;
         mTotalPoints = totalPoints;

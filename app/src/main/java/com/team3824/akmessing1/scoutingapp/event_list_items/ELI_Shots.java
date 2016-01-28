@@ -1,11 +1,11 @@
 package com.team3824.akmessing1.scoutingapp.event_list_items;
 
-public class EventListItemShots {
+public class ELI_Shots {
 
     public int mRank, mTeamNumber, mAutoMade, mAutoTaken, mTeleopMade, mTeleopTaken;
     public float mAutoPercentage, mTeleopPercentage;
 
-    public EventListItemShots(int teamNumber)
+    public ELI_Shots(int teamNumber)
     {
         mTeamNumber = teamNumber;
         mAutoMade = 0;

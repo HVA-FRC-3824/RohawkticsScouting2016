@@ -3,8 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/columbia_blue"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -16,7 +16,10 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/event_view_spinner" />
+        android:id="@+id/event_view_spinner"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/white" />
 
     <ListView
         android:layout_width="match_parent"

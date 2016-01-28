@@ -13,24 +13,24 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.EventDefensesListAdapter;
-import com.team3824.akmessing1.scoutingapp.adapters.EventFoulListAdapter;
-import com.team3824.akmessing1.scoutingapp.adapters.EventIndividualDefenseListAdapter;
-import com.team3824.akmessing1.scoutingapp.adapters.EventPointsListAdapter;
-import com.team3824.akmessing1.scoutingapp.adapters.EventShotListAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_Auto;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_Defenses;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_Foul;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_IndividualDefense;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_Points;
+import com.team3824.akmessing1.scoutingapp.adapters.ELA_Shot;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemDefenses;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemFouls;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemIndividualDefense;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemPoints;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemShots;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Auto;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Defenses;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Fouls;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_IndividualDefense;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Points;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Shots;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 
 public class EventView extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -132,11 +132,11 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
     private void points(Cursor cursor)
     {
-        ArrayList<EventListItemPoints> teams = new ArrayList<>();
+        ArrayList<ELI_Points> teams = new ArrayList<>();
         while(!cursor.isAfterLast())
         {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-            EventListItemPoints team = new EventListItemPoints(teamNumber);
+            ELI_Points team = new ELI_Points(teamNumber);
 
             float totalMatches = cursor.getColumnIndex("total_matches");
 
@@ -213,9 +213,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
             cursor.moveToNext();
         }
-        Collections.sort(teams, new Comparator<EventListItemPoints>() {
+        Collections.sort(teams, new Comparator<ELI_Points>() {
             @Override
-            public int compare(EventListItemPoints lhs, EventListItemPoints rhs) {
+            public int compare(ELI_Points lhs, ELI_Points rhs) {
                 float delta = lhs.mAvgPoints - rhs.mAvgPoints;
                 if (delta < 0)
                     return 1;
@@ -225,23 +225,22 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                     return 0;
             }
         });
-        teams.add(0, new EventListItemPoints(-1));
-        EventPointsListAdapter eventPointsListAdapter = new EventPointsListAdapter(this, R.layout.list_item_event_points, teams);
+        teams.add(0, new ELI_Points(-1));
+        ELA_Points eventPointsListAdapter = new ELA_Points(this, R.layout.list_item_event_points, teams);
         listView.setAdapter(eventPointsListAdapter);
     }
 
     private void defenses(Cursor cursor)
     {
-        ArrayList<EventListItemDefenses> teams = new ArrayList<>();
+        ArrayList<ELI_Defenses> teams = new ArrayList<>();
 
         while(!cursor.isAfterLast()) {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-            EventListItemDefenses team = new EventListItemDefenses(teamNumber);
+            ELI_Defenses team = new ELI_Defenses(teamNumber);
 
             float totalMatches = cursor.getColumnIndex("total_matches");
 
             if (totalMatches > 0) {
-                totalMatches = cursor.getInt(cursor.getColumnIndex("total_matches"));
                 team.cPortcullis = cursor.getInt(cursor.getColumnIndex("total_teleop_portcullis")) +
                         cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_cross"));
                 team.sPortcullis = cursor.getInt(cursor.getColumnIndex("total_seen_portcullis"));
@@ -255,19 +254,19 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                         cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_cross"));
                 team.sRamparts = cursor.getInt(cursor.getColumnIndex("total_seen_ramparts"));
                 team.cDrawbridge = cursor.getInt(cursor.getColumnIndex("total_teleop_drawbridge")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_cross"));;
+                        cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_cross"));
                 team.sDrawbridge = cursor.getInt(cursor.getColumnIndex("total_seen_drawbridge"));
                 team.cSallyPort = cursor.getInt(cursor.getColumnIndex("total_teleop_sally_port")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_cross"));;
+                        cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_cross"));
                 team.sSallyPort = cursor.getInt(cursor.getColumnIndex("total_seen_sally_port"));
                 team.cRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_teleop_rough_terrain")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_cross"));;
+                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_cross"));
                 team.sRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_seen_rough_terrain"));
                 team.cRockWall = cursor.getInt(cursor.getColumnIndex("total_teleop_rock_wall")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_cross"));;
+                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_cross"));
                 team.sRockWall = cursor.getInt(cursor.getColumnIndex("total_seen_rock_wall"));
                 team.cLowBar = cursor.getInt(cursor.getColumnIndex("total_teleop_low_bar")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_low_bar_cross"));;
+                        cursor.getInt(cursor.getColumnIndex("total_auto_low_bar_cross"));
                 team.sLowBar = cursor.getInt(cursor.getColumnIndex("total_seen_low_bar"));
                 team.totalCrosses = team.cPortcullis + team.cChevalDeFrise + team.cMoat +
                         team.cRamparts + team.cDrawbridge + team.cSallyPort + team.cRoughTerrain +
@@ -278,9 +277,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         }
 
         // Compares based on average total crosses
-        Collections.sort(teams, new Comparator<EventListItemDefenses>() {
+        Collections.sort(teams, new Comparator<ELI_Defenses>() {
             @Override
-            public int compare(EventListItemDefenses lhs, EventListItemDefenses rhs) {
+            public int compare(ELI_Defenses lhs, ELI_Defenses rhs) {
                 // tertiary statement make the values 0 if the team has been in no matches
                 float delta = ((lhs.sLowBar == 0)?0:(lhs.totalCrosses/(float)lhs.sLowBar)) - ((rhs.sLowBar == 0)?0:(rhs.totalCrosses/(float)rhs.sLowBar));
                 if(delta < 0)
@@ -291,18 +290,18 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                     return 0;
             }
         });
-        teams.add(0, new EventListItemDefenses(-1));
-        EventDefensesListAdapter eventDefensesListAdapter = new EventDefensesListAdapter(this, R.layout.list_item_event_defenses, teams);
-        listView.setAdapter(eventDefensesListAdapter);
+        teams.add(0, new ELI_Defenses(-1));
+        ELA_Defenses ela_Defenses = new ELA_Defenses(this, R.layout.list_item_event_defenses, teams);
+        listView.setAdapter(ela_Defenses);
     }
 
     private void individual_defense(Cursor cursor, String defense)
     {
-        ArrayList<EventListItemIndividualDefense> teams = new ArrayList<>();
+        ArrayList<ELI_IndividualDefense> teams = new ArrayList<>();
 
         while(!cursor.isAfterLast()) {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-            EventListItemIndividualDefense team = new EventListItemIndividualDefense(teamNumber);
+            ELI_IndividualDefense team = new ELI_IndividualDefense(teamNumber);
 
             float totalMatches = cursor.getColumnIndex("total_matches");
 
@@ -318,9 +317,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         }
 
 
-        Collections.sort(teams, new Comparator<EventListItemIndividualDefense>() {
+        Collections.sort(teams, new Comparator<ELI_IndividualDefense>() {
             @Override
-            public int compare(EventListItemIndividualDefense lhs, EventListItemIndividualDefense rhs) {
+            public int compare(ELI_IndividualDefense lhs, ELI_IndividualDefense rhs) {
                 // tertiary statement make the values 0 if the team has been in no matches
                 float delta = ((lhs.mSeen == 0)?0:((float)(lhs.mAutoCross+lhs.mTeleopCross)/(float)lhs.mSeen)) - ((rhs.mSeen == 0)?0:((float)(rhs.mAutoCross+rhs.mTeleopCross)/(float)rhs.mSeen));
                 if(delta < 0)
@@ -332,18 +331,18 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
 
-        teams.add(0, new EventListItemIndividualDefense(-1));
-        EventIndividualDefenseListAdapter eventIndividualDefenseListAdapter = new EventIndividualDefenseListAdapter(this, R.layout.list_item_event_individual_defense, teams);
+        teams.add(0, new ELI_IndividualDefense(-1));
+        ELA_IndividualDefense eventIndividualDefenseListAdapter = new ELA_IndividualDefense(this, R.layout.list_item_event_individual_defense, teams);
         listView.setAdapter(eventIndividualDefenseListAdapter);
     }
 
     private void goal(Cursor cursor, String goal)
     {
-        ArrayList<EventListItemShots> teams = new ArrayList<>();
+        ArrayList<ELI_Shots> teams = new ArrayList<>();
 
         while(!cursor.isAfterLast()) {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-            EventListItemShots team = new EventListItemShots(teamNumber);
+            ELI_Shots team = new ELI_Shots(teamNumber);
 
             float totalMatches = cursor.getColumnIndex("total_matches");
 
@@ -361,9 +360,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         }
 
 
-        Collections.sort(teams, new Comparator<EventListItemShots>() {
+        Collections.sort(teams, new Comparator<ELI_Shots>() {
             @Override
-            public int compare(EventListItemShots lhs, EventListItemShots rhs) {
+            public int compare(ELI_Shots lhs, ELI_Shots rhs) {
 
                 if(lhs.mTeleopTaken > 10 && rhs.mTeleopTaken > 10)
                 {
@@ -394,14 +393,106 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
 
-        teams.add(0, new EventListItemShots(-1));
-        EventShotListAdapter eventShotListAdapter = new EventShotListAdapter(this, R.layout.list_item_event_shot, teams);
+        teams.add(0, new ELI_Shots(-1));
+        ELA_Shot eventShotListAdapter = new ELA_Shot(this, R.layout.list_item_event_shot, teams);
         listView.setAdapter(eventShotListAdapter);
     }
 
     private void auto(Cursor cursor)
     {
+        ArrayList<ELI_Auto> teams = new ArrayList<>();
 
+        while(!cursor.isAfterLast()) {
+            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
+            ELI_Auto team = new ELI_Auto(teamNumber);
+
+            float totalMatches = cursor.getColumnIndex("total_matches");
+
+            if (totalMatches > 0) {
+                team.mDefenses.cPortcullis = cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_cross"));
+                team.mDefenses.sPortcullis = cursor.getInt(cursor.getColumnIndex("total_seen_portcullis"));
+                team.mDefenses.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex("total_auto_cheval_de_frise_cross"));
+                team.mDefenses.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex("total_seen_cheval_de_frise"));
+                team.mDefenses.cMoat = cursor.getInt(cursor.getColumnIndex("total_auto_moat_cross"));
+                team.mDefenses.sMoat = cursor.getInt(cursor.getColumnIndex("total_seen_moat"));
+                team.mDefenses.cRamparts = cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_cross"));
+                team.mDefenses.sRamparts = cursor.getInt(cursor.getColumnIndex("total_seen_ramparts"));
+                team.mDefenses.cDrawbridge = cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_cross"));
+                team.mDefenses.sDrawbridge = cursor.getInt(cursor.getColumnIndex("total_seen_drawbridge"));
+                team.mDefenses.cSallyPort = cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_cross"));
+                team.mDefenses.sSallyPort = cursor.getInt(cursor.getColumnIndex("total_seen_sally_port"));
+                team.mDefenses.cRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_teleop_rough_terrain")) +
+                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_cross"));
+                team.mDefenses.sRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_seen_rough_terrain"));
+                team.mDefenses.cRockWall = cursor.getInt(cursor.getColumnIndex("total_teleop_rock_wall")) +
+                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_cross"));
+                team.mDefenses.sRockWall = cursor.getInt(cursor.getColumnIndex("total_seen_rock_wall"));
+                team.mDefenses.cLowBar = cursor.getInt(cursor.getColumnIndex("total_teleop_low_bar")) +
+                        cursor.getInt(cursor.getColumnIndex("total_auto_low_bar_cross"));
+                team.mDefenses.sLowBar = cursor.getInt(cursor.getColumnIndex("total_seen_low_bar"));
+                team.mDefenses.totalCrosses = team.mDefenses.cPortcullis + team.mDefenses.cChevalDeFrise + team.mDefenses.cMoat +
+                        team.mDefenses.cRamparts + team.mDefenses.cDrawbridge + team.mDefenses.cSallyPort + team.mDefenses.cRoughTerrain +
+                        team.mDefenses.cRockWall + team.mDefenses.cLowBar;
+
+                team.mHigh.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_high_hit"));
+                team.mHigh.mAutoTaken = cursor.getInt(cursor.getColumnIndex("total_auto_high_miss")) + team.mHigh.mAutoMade;
+                team.mHigh.mAutoPercentage = (team.mHigh.mAutoTaken == 0)?0:(float)team.mHigh.mAutoMade/(float)team.mHigh.mAutoTaken * 100.0f;
+
+                team.mLow.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_low_hit"));
+                team.mLow.mAutoTaken = cursor.getInt(cursor.getColumnIndex("total_auto_low_miss")) + team.mLow.mAutoMade;
+                team.mLow.mAutoPercentage = (team.mLow.mAutoTaken == 0)?0:(float)team.mLow.mAutoMade/(float)team.mLow.mAutoTaken * 100.0f;
+
+            }
+            teams.add(team);
+            cursor.moveToNext();
+        }
+
+        // Compares based on average total crosses
+        Collections.sort(teams, new Comparator<ELI_Auto>() {
+            @Override
+            public int compare(ELI_Auto lhs, ELI_Auto rhs) {
+                // tertiary statement make the values 0 if the team has been in no matches
+                if(lhs.mDefenses.sLowBar == 0 && rhs.mDefenses.sLowBar == 0) {
+                    return 0;
+                }
+                else if(lhs.mDefenses.sLowBar == 0)
+                {
+                    if(rhs.mDefenses.totalCrosses > 0 || rhs.mLow.mAutoMade > 0 || rhs.mHigh.mAutoMade > 0)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else if(rhs.mDefenses.sLowBar == 0)
+                {
+                    if(lhs.mDefenses.totalCrosses > 0 || lhs.mLow.mAutoMade > 0 || lhs.mHigh.mAutoMade > 0)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    float delta = ((rhs.mDefenses.totalCrosses*10.0f + rhs.mHigh.mAutoMade * 10.0f + rhs.mLow.mAutoMade * 5.0f) / (float)rhs.mDefenses.sLowBar) -
+                            ((lhs.mDefenses.totalCrosses*10.0f + lhs.mHigh.mAutoMade * 10.0f + lhs.mLow.mAutoMade * 5.0f) / (float)lhs.mDefenses.sLowBar);
+                    if(delta < 0)
+                        return 1;
+                    else if(delta > 0)
+                        return -1;
+                    else
+                        return 0;
+                }
+            }
+        });
+        teams.add(0, new ELI_Auto(-1));
+        ELA_Auto ela_Auto = new ELA_Auto(this, R.layout.list_item_event_auto, teams);
+        listView.setAdapter(ela_Auto);
     }
 
     private void endgame(Cursor cursor)
@@ -411,11 +502,11 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
     private void fouls(Cursor cursor)
     {
-        ArrayList<EventListItemFouls> teams = new ArrayList<>();
+        ArrayList<ELI_Fouls> teams = new ArrayList<>();
 
         while(!cursor.isAfterLast()) {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-            EventListItemFouls team = new EventListItemFouls(teamNumber);
+            ELI_Fouls team = new ELI_Fouls(teamNumber);
 
             float totalMatches = cursor.getColumnIndex("total_matches");
 
@@ -430,15 +521,15 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         }
 
 
-        Collections.sort(teams, new Comparator<EventListItemFouls>() {
+        Collections.sort(teams, new Comparator<ELI_Fouls>() {
             @Override
-            public int compare(EventListItemFouls lhs, EventListItemFouls rhs) {
+            public int compare(ELI_Fouls lhs, ELI_Fouls rhs) {
                 return (lhs.mRedCards*4 + lhs.mYellowCards*3 + lhs.mTechFouls*2 + lhs.mFouls) - (rhs.mRedCards*4 + rhs.mYellowCards*3 + rhs.mTechFouls*2 + rhs.mFouls);
             }
         });
 
-        teams.add(0, new EventListItemFouls(-1));
-        EventFoulListAdapter eventFoulListAdapter = new EventFoulListAdapter(this, R.layout.list_item_event_shot, teams);
+        teams.add(0, new ELI_Fouls(-1));
+        ELA_Foul eventFoulListAdapter = new ELA_Foul(this, R.layout.list_item_event_shot, teams);
         listView.setAdapter(eventFoulListAdapter);
     }
 

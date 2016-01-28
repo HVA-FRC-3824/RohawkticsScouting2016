@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.TeamViewFragmentPagerAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.FPA_TeamView;
 
 
 public class TeamView extends AppCompatActivity {
@@ -24,7 +24,7 @@ public class TeamView extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TeamViewFragmentPagerAdapter adapter;
+    private FPA_TeamView adapter;
 
     private int teamNumber;
 
@@ -41,7 +41,7 @@ public class TeamView extends AppCompatActivity {
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.team_view_view_pager);
-        adapter = new TeamViewFragmentPagerAdapter(getFragmentManager(),teamNumber);
+        adapter = new FPA_TeamView(getFragmentManager(),teamNumber);
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.team_view_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);

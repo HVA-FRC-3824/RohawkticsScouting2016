@@ -8,18 +8,16 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemIndividualDefense;
-
-import org.w3c.dom.Text;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_IndividualDefense;
 
 import java.util.ArrayList;
 
-public class EventIndividualDefenseListAdapter extends ArrayAdapter<EventListItemIndividualDefense>{
+public class ELA_IndividualDefense extends ArrayAdapter<ELI_IndividualDefense>{
 
-    ArrayList<EventListItemIndividualDefense> mTeams;
+    ArrayList<ELI_IndividualDefense> mTeams;
     Context mContext;
 
-    public EventIndividualDefenseListAdapter(Context context, int textViewResourceId, ArrayList<EventListItemIndividualDefense> teams)
+    public ELA_IndividualDefense(Context context, int textViewResourceId, ArrayList<ELI_IndividualDefense> teams)
     {
         super(context, textViewResourceId,teams);
         mTeams = teams;
@@ -33,7 +31,7 @@ public class EventIndividualDefenseListAdapter extends ArrayAdapter<EventListIte
             convertView = inflater.inflate(R.layout.list_item_event_individual_defense, null);
         }
 
-        EventListItemIndividualDefense team = mTeams.get(position);
+        ELI_IndividualDefense team = mTeams.get(position);
 
         team.mRank = position;
         TextView textView;

@@ -8,21 +8,17 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemDefenses;
-import com.team3824.akmessing1.scoutingapp.event_list_items.EventListItemPoints;
-
-import org.w3c.dom.Text;
+import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Auto;
 
 import java.util.ArrayList;
 
-public class EventDefensesListAdapter extends ArrayAdapter<EventListItemDefenses>{
-
-    ArrayList<EventListItemDefenses> mTeams;
+public class ELA_Auto extends ArrayAdapter<ELI_Auto> {
+    ArrayList<ELI_Auto> mTeams;
     Context mContext;
 
-    public EventDefensesListAdapter(Context context, int textViewResourceId, ArrayList<EventListItemDefenses> teams)
+    public ELA_Auto(Context context, int textViewResourceId, ArrayList<ELI_Auto> teams)
     {
-        super(context, textViewResourceId,teams);
+        super(context,textViewResourceId,teams);
         mTeams = teams;
         mContext = context;
     }
@@ -31,10 +27,10 @@ public class EventDefensesListAdapter extends ArrayAdapter<EventListItemDefenses
     public View getView(int position, View convertView, ViewGroup parentView) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_event_defenses, null);
+            convertView = inflater.inflate(R.layout.list_item_event_auto, null);
         }
 
-        EventListItemDefenses team = mTeams.get(position);
+        ELI_Auto team = mTeams.get(position);
 
         team.mRank = position;
         TextView textView;
@@ -62,6 +58,10 @@ public class EventDefensesListAdapter extends ArrayAdapter<EventListItemDefenses
             textView.setText("Rock Wall");
             textView = (TextView)convertView.findViewById(R.id.event_Low_Bar);
             textView.setText("Low Bar");
+            textView = (TextView)convertView.findViewById(R.id.event_High);
+            textView.setText("High Goal");
+            textView = (TextView)convertView.findViewById(R.id.event_Low);
+            textView.setText("Low Goal");
         }
         else
         {
@@ -70,23 +70,27 @@ public class EventDefensesListAdapter extends ArrayAdapter<EventListItemDefenses
             textView = (TextView)convertView.findViewById(R.id.event_teamNum);
             textView.setText(String.valueOf(team.mTeamNumber));
             textView = (TextView)convertView.findViewById(R.id.event_Portcullis);
-            textView.setText(create_text(team.cPortcullis,team.sPortcullis));
+            textView.setText(create_text(team.mDefenses.cPortcullis, team.mDefenses.sPortcullis));
             textView = (TextView)convertView.findViewById(R.id.event_Cheval_de_Frise);
-            textView.setText(create_text(team.cChevalDeFrise,team.sChevalDeFrise));
+            textView.setText(create_text(team.mDefenses.cChevalDeFrise,team.mDefenses.sChevalDeFrise));
             textView = (TextView)convertView.findViewById(R.id.event_Moat);
-            textView.setText(create_text(team.cMoat,team.sMoat));
+            textView.setText(create_text(team.mDefenses.cMoat,team.mDefenses.sMoat));
             textView = (TextView)convertView.findViewById(R.id.event_Ramparts);
-            textView.setText(create_text(team.cRamparts,team.sRamparts));
+            textView.setText(create_text(team.mDefenses.cRamparts,team.mDefenses.sRamparts));
             textView = (TextView)convertView.findViewById(R.id.event_Drawbridge);
-            textView.setText(create_text(team.cDrawbridge,team.sDrawbridge));
+            textView.setText(create_text(team.mDefenses.cDrawbridge,team.mDefenses.sDrawbridge));
             textView = (TextView)convertView.findViewById(R.id.event_Sally_Port);
-            textView.setText(create_text(team.cSallyPort,team.sSallyPort));
+            textView.setText(create_text(team.mDefenses.cSallyPort,team.mDefenses.sSallyPort));
             textView = (TextView)convertView.findViewById(R.id.event_Rough_Terrain);
-            textView.setText(create_text(team.cRoughTerrain,team.sRoughTerrain));
+            textView.setText(create_text(team.mDefenses.cRoughTerrain,team.mDefenses.sRoughTerrain));
             textView = (TextView)convertView.findViewById(R.id.event_Rock_Wall);
-            textView.setText(create_text(team.cRockWall,team.sRockWall));
+            textView.setText(create_text(team.mDefenses.cRockWall,team.mDefenses.sRockWall));
             textView = (TextView)convertView.findViewById(R.id.event_Low_Bar);
-            textView.setText(create_text(team.cLowBar,team.sLowBar));
+            textView.setText(create_text(team.mDefenses.cLowBar,team.mDefenses.sLowBar));
+            textView = (TextView)convertView.findViewById(R.id.event_High);
+            textView.setText(create_text(team.mHigh.mAutoMade,team.mHigh.mAutoTaken));
+            textView = (TextView)convertView.findViewById(R.id.event_Low);
+            textView.setText(create_text(team.mLow.mAutoTaken,team.mLow.mAutoTaken));
         }
 
         return convertView;

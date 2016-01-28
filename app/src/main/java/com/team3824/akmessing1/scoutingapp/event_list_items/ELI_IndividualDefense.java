@@ -1,11 +1,11 @@
 package com.team3824.akmessing1.scoutingapp.event_list_items;
 
-public class EventListItemIndividualDefense {
+public class ELI_IndividualDefense {
 
     public int mRank, mTeamNumber, mAutoReach, mAutoCross, mSeen, mTeleopCross;
     public float mAvg;
 
-    public EventListItemIndividualDefense(int teamNumber)
+    public ELI_IndividualDefense(int teamNumber)
     {
         mTeamNumber = teamNumber;
         mAutoReach = 0;
