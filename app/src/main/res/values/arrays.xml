@@ -32,4 +32,18 @@
         <item>Spybox</item>
         <item>Secret Passage</item>
     </string-array>
+
+    <string-array name="defence_type_dropdown">
+        <item>Drawbridge</item>
+        <item>Portcullis</item>
+        <item>Cheval de Frise</item>
+        <item>Moat</item>
+        <item>Ramparts</item>
+        <item>Drawbridge</item>
+        <item>Sally Port</item>
+        <item>Rock Wall</item>
+        <item>Rough Terrian</item>
+    </string-array>
+
+
 </resources>
