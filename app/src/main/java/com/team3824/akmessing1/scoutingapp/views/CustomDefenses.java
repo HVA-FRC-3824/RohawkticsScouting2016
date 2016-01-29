@@ -15,6 +15,6 @@ public class CustomDefenses extends RelativeLayout{
         super(context, attrs);
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.custom_defences, this);
+        inflater.inflate(R.layout.custom_defenses, this);
     }
 }
