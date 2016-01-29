@@ -8,58 +8,56 @@
         <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/blue_defence_2"
+            android:id="@+id/blue_defense2"
             app:label="Blue Def. 2"
-            app:key="blue_defence_2"
-            app:spinner_values="@array/defence_type_dropdown"/>
+            app:key="blue_defense2"
+            app:spinner_values="@array/defense_type_dropdown"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/red_defence_2"
+            android:id="@+id/red_defense2"
             app:label="Red  Def. 2"
-            app:key="red_defence_2"
-            app:spinner_values="@array/defence_type_dropdown"/>
+            app:key="red_defense2"
+            app:spinner_values="@array/defense_type_dropdown"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/blue_defence_3"
+            android:id="@+id/defense3"
             app:label="Both Def. 3"
-            app:key="blue_defence_3"
-            app:spinner_values="@array/defence_type_dropdown"/>
+            app:key="defense3"
+            app:spinner_values="@array/defense_type_dropdown"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/blue_defence_4"
+            android:id="@+id/blue_defense4"
             app:label="Blue Def. 4"
-            app:key="blue_defence_4"
-            app:spinner_values="@array/defence_type_dropdown"/>
+            app:key="blue_defense4"
+            app:spinner_values="@array/defense_type_dropdown"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/red_defence_4"
+            android:id="@+id/red_defense4"
             app:label="Red  Def. 4"
-            app:key="red_defence_4"
-            app:spinner_values="@array/defence_type_dropdown"/>
+            app:key="red_defense4"
+            app:spinner_values="@array/defense_type_dropdown"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/blue_defence_5"
+            android:id="@+id/blue_defense5"
             app:label="Blue Def. 5"
-            app:key="blue_defence_5"
-            app:spinner_values="@array/defence_type_dropdown"/>
+            app:key="blue_defense5"
+            app:spinner_values="@array/defense_type_dropdown"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/red_defence_5"
+            android:id="@+id/red_defense5"
             app:label="Red  Def. 5"
-            app:key="red_defence_5"
-            app:spinner_values="@array/defence_type_dropdown"/>
-
-
+            app:key="red_defense5"
+            app:spinner_values="@array/defense_type_dropdown"/>
 </LinearLayout>

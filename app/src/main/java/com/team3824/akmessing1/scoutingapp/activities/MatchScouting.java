@@ -66,6 +66,7 @@ public class MatchScouting extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.match_view_pager);
         adapter = new FPA_MatchScout(getFragmentManager());
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(5);
         tabLayout = (TabLayout)findViewById(R.id.match_tab_layout);
         if(allianceColor.equals("Blue"))
         {

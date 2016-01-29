@@ -56,7 +56,7 @@
     </string-array>
 
 
-    <string-array name="defence_type_dropdown">
+    <string-array name="defense_type_dropdown">
         <item>Portcullis</item>
         <item>Cheval de Frise</item>
         <item>Moat</item>

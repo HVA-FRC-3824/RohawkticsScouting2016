@@ -6,19 +6,95 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/robotPicture"
             android:layout_gravity="center_horizontal" />
-        <com.team3824.akmessing1.scoutingapp.views.CustomStacksDisplay
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <com.github.mikephil.charting.charts.RadarChart
+                android:id="@+id/radar_chart"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_margin="10dp"
+                android:padding="10dp" />
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/seen"
+                    android:text="Seen" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/started"
+                    android:text="Started in front of" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/reach"
+                    android:text="Reached" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/auto"
+                    android:text="Auto Crossed" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/teleop"
+                    android:text="Teleop Crossed" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/speed"
+                    android:text="Speed" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/stacks_display"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp" />
+            android:text="Auto Shooting"
+            android:id="@+id/textView6"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:gravity="center_horizontal" />
 
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/auto_chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teleop Shooting"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:textColor="#000000" />
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/teleop_chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            />
     </LinearLayout>
 </ScrollView>

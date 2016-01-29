@@ -45,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/auto_shoot_high_scored"
+                android:id="@+id/auto_high_hit"
                 app:label="Hit:"
                 app:key="auto_shoot_high_scored"/>
 
@@ -53,7 +53,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/auto_shoot_high_missed"
+                android:id="@+id/auto_high_miss"
                 app:label="Missed:"
                 app:key="auto_shoot_high_missed"/>
         </LinearLayout>
@@ -76,7 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/auto_shoot_low_scored"
+                android:id="@+id/auto_low_hit"
                 app:label="Hit:"
                 app:key="auto_shoot_low_scored"/>
 
@@ -84,7 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/auto_shoot_low_missed"
+                android:id="@+id/auto_low_miss"
                 app:label="Missed:"
                 app:key="auto_shoot_low_missed"/>
         </LinearLayout>

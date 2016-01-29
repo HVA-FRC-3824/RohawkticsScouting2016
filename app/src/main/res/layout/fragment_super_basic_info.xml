@@ -16,9 +16,9 @@
             <com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/super_defense"
+                android:id="@+id/super_defense_ability"
                 app:label="Defense:"
-                app:key="super_defense"/>
+                app:key="super_defense_ability"/>
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6
                 android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
                     app:label="Notes:"
                     app:key="super_notes"/>
 
-                <com.team3824.akmessing1.scoutingapp.views.CustomDefense
+                <com.team3824.akmessing1.scoutingapp.views.CustomDefenses
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>

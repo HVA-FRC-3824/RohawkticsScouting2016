@@ -32,52 +32,44 @@
         <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/robot_width"
+            android:id="@+id/pit_robot_width"
             app:label="Robot Width (in):"
-            app:key="robot_width"/>
+            app:key="pit_robot_width"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/robot_length"
+            android:id="@+id/pit_robot_length"
             app:label="Robot Length (in):"
-            app:key="robot_length"/>
+            app:key="pit_robot_length"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/robot_height"
+            android:id="@+id/pit_robot_height"
             app:label="Robot Height (in):"
-            app:key="robot_height"/>
+            app:key="pit_robot_height"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/robot_weight"
+            android:id="@+id/pit_robot_weight"
             app:label="Robot Weight (lbs):"
-            app:key="robot_weight"/>
+            app:key="pit_robot_weight"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/notes"
+            android:id="@+id/pit_notes"
             app:label="Pit Notes:"
-            app:key="notes"/>
+            app:key="pit_notes"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pit_loading"
-            app:label="Pit Loading:"
-            app:key="pit_loading"/>
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pit_drivetrain"
             app:label="Pit Drivetrain:"
-            app:key="pit_drivetrain"
-            app:spinner_values="@array/pit_drivetrain_radio"/>
+            app:key="pit_drivetrain"/>
 
         <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
             android:layout_width="wrap_content"
