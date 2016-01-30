@@ -23,18 +23,21 @@ import com.team3824.akmessing1.scoutingapp.activities.TeamView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class PickListAdapter extends ArrayAdapter<Team> {
 
     private ArrayList<Team> teams;
     int pickNumber;
     Context context;
+    StatsDB statsDB;
 
-    public PickListAdapter(Context context, int textViewResourceId, ArrayList<Team> teams, int pickNumber) {
+    public PickListAdapter(Context context, int textViewResourceId, ArrayList<Team> teams, int pickNumber, StatsDB statsDB) {
         super(context, textViewResourceId, teams);
         this.context = context;
         this.teams = teams;
         this.pickNumber = pickNumber;
+        this.statsDB = statsDB;
     }
 
     public void add(int to, Team team)
@@ -118,11 +121,19 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(1));
                         teams.remove(t);
                         teams.add(t);
+                        HashMap<String, ScoutValue> map = new HashMap<>();
+                        map.put(StatsDB.KEY_TEAM_NUMBER,new ScoutValue(t.getTeamNumber()));
+                        map.put(StatsDB.KEY_PICKED,new ScoutValue(1));
+                        statsDB.updateStats(map);
                     }
                     else
                     {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(0));
                         Collections.sort(teams,compare);
+                        HashMap<String, ScoutValue> map = new HashMap<>();
+                        map.put(StatsDB.KEY_TEAM_NUMBER,new ScoutValue(t.getTeamNumber()));
+                        map.put(StatsDB.KEY_PICKED, new ScoutValue(0));
+                        statsDB.updateStats(map);
                     }
                     notifyDataSetChanged();
                 }

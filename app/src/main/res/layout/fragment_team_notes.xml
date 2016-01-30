@@ -16,4 +16,17 @@
         android:textSize="20sp"
         android:textColor="#000000"
         android:id="@+id/notes"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Super Scout Notes:"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#000000" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:id="@+id/super_notes"/>
 </LinearLayout>

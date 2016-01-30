@@ -99,7 +99,7 @@ public class SecondPick extends ScoutFragment{
         }while(!statsCursor.isAfterLast());
         Collections.sort(teams, compare);
 
-        adapter = new PickListAdapter(getContext(),R.id.second_pick_list,teams,2);
+        adapter = new PickListAdapter(getContext(),R.id.second_pick_list,teams,2,statsDB);
         list.setAdapter(adapter);
 
         list.setDropListener(new DragSortListView.DropListener() {

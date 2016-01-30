@@ -150,6 +150,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
             if(totalMatches > 0) {
                 totalMatches = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_MATCHES));
+
                 team.mHighPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_HIGH_HIT)) * 5 +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_HIT)) * 10;
 
@@ -158,6 +159,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
                 team.mEndgamePoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_CHALLENGE)) * 5 +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_SCALE)) * 15;
+
                 for(int i = 0; i < 9; i++) {
                     team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]))*2;
                     team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]))*10;
@@ -181,7 +183,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
                 team.mFoulPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_FOULS)) * -5 +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TECH_FOULS)) * -5;
-                team.mTotalPoints = team.mEndgamePoints + team.mTeleopPoints + team.mAutoPoints;
+
+                team.mTotalPoints = team.mEndgamePoints + team.mTeleopPoints + team.mAutoPoints + team.mFoulPoints;
+
                 team.mAvgPoints = (totalMatches == 0.0f) ? 0.0f : (float) team.mTotalPoints / totalMatches;
             }
             teams.add(team);

@@ -292,6 +292,8 @@ public class TeamVisuals extends Fragment {
         mBarChart = (BarChart)view.findViewById(R.id.bar_chart);
         mBarChart.setDescription("");
         mBarChart.getAxisRight().setEnabled(false);
+        mBarChart.getLegend().setEnabled(false);
+        mBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 
         generate_bar_data(matchCursor);
         mBarChart.setData(new BarData(mMatches,mEndgame));
