@@ -1,35 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:layout_height="match_parent">
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:orientation="vertical">
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/super_defense"
-            app:label="Defense:"
-            app:key="super_defense"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/super_drive_ability"
-            app:label="Driver ability:"
-            app:key="super_drive_ability"/>
+            <com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/super_defense_ability"
+                app:label="Defense:"
+                app:key="super_defense_ability"/>
 
+            <com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/super_drive_ability"
+                app:label="Driver ability:"
+                app:key="super_drive_ability"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/super_notes"
-            app:label="Notes:"
-            app:key="super_notes"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/super_notes"
+                    app:label="Notes:"
+                    app:key="super_notes"/>
+
+                <com.team3824.akmessing1.scoutingapp.views.CustomDefenses
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

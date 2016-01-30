@@ -53,7 +53,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.TeamView"
-            android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchView"
             android:screenOrientation="landscape"
@@ -63,6 +62,8 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.SyncActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.EventView"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <service android:name=".services.Aggregate"/>
     </application>

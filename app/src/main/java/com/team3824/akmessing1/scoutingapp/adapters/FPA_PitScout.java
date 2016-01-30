@@ -4,10 +4,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
-import com.team3824.akmessing1.scoutingapp.fragments.FirstPick;
+import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.fragments.PitBasicInfo;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-import com.team3824.akmessing1.scoutingapp.fragments.SecondPick;
-import com.team3824.akmessing1.scoutingapp.fragments.ThirdPick;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -15,14 +14,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Setup up page fragments for pick list
-public class PickListFragmentPagerAdapter extends FragmentPagerAdapter{
+// Setup up page fragments for pit scouting
+public class FPA_PitScout extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "1st Pick", "2nd Pick" };
+    private String tabTitles[] = new String[] { "Basic Info" };
 
     private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
-    public PickListFragmentPagerAdapter(FragmentManager fm) {
+    private Map<String,ScoutValue> valueMap = null;
+
+    public FPA_PitScout(FragmentManager fm) {
         super(fm);
     }
 
@@ -42,21 +43,25 @@ public class PickListFragmentPagerAdapter extends FragmentPagerAdapter{
         switch (position)
         {
             case 0:
-                fragment = new FirstPick();
-                break;
-            case 1:
-                fragment = new SecondPick();
-                break;
-            case 2:
-                fragment = new ThirdPick();
+                fragment = new PitBasicInfo();
                 break;
             default:
-                fragment = null;
+                fragment = null; // There has been a problem!
                 break;
         }
 
+        // sets the value map for restoring values
+        if(valueMap != null) {
+            fragment.setValuesMap(valueMap);
+        }
         fragments.put(position,new WeakReference<>(fragment));
         return fragment;
+    }
+
+    // sets the value map for restoring values
+    public void setValueMap(Map<String, ScoutValue> map)
+    {
+        valueMap = map;
     }
 
     // returns all the fragments

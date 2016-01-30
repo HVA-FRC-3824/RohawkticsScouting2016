@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_rank"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_teamNum"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_avg_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_defense_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_high_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_low_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_auto_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_teleop_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_endgame_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_foul_points"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+</LinearLayout>

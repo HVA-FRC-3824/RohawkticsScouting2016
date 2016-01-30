@@ -14,16 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.adapters.PitScoutFragmentPagerAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.FPA_PitScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +31,7 @@ public class PitScouting extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private PitScoutFragmentPagerAdapter adapter;
+    private FPA_PitScout adapter;
 
     private int teamNumber;
 
@@ -57,7 +53,7 @@ public class PitScouting extends AppCompatActivity {
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
-        adapter = new PitScoutFragmentPagerAdapter(getFragmentManager());
+        adapter = new FPA_PitScout(getFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.pit_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);

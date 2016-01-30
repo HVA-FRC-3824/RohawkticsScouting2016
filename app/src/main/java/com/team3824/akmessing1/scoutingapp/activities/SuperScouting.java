@@ -15,17 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
-import com.team3824.akmessing1.scoutingapp.adapters.SuperScoutFragmentPagerAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.FPA_SuperScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +34,7 @@ public class SuperScouting extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private SuperScoutFragmentPagerAdapter adapter;
+    private FPA_SuperScout adapter;
 
     private int matchNumber;
 
@@ -76,7 +72,7 @@ public class SuperScouting extends AppCompatActivity {
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.super_view_pager);
-        adapter = new SuperScoutFragmentPagerAdapter(getFragmentManager(), arrayList);
+        adapter = new FPA_SuperScout(getFragmentManager(), arrayList);
         viewPager.setAdapter(adapter);
         tabLayout = (TabLayout)findViewById(R.id.super_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);

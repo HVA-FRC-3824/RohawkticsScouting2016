@@ -5,8 +5,12 @@ import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.fragments.PitBasicInfo;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchAuto;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchEndgame;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchFouls;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchPost;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchTeleop;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -14,17 +18,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Setup up page fragments for pit scouting
-public class PitScoutFragmentPagerAdapter extends FragmentPagerAdapter{
+// Setup up page fragments for match scouting
+public class FPA_MatchScout extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "Basic Info" };
+    private String tabTitles[] = new String[] { "Autonomous", "Teleop","Post-Match","EndGame","Fouls" };
+    private MatchAuto matchAuto;
+    private MatchTeleop matchTeleop;
+    private MatchPost matchPost;
+    private MatchFouls matchFouls;
+    private MatchEndgame matchEndgame;
+
 
     private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
     private Map<String,ScoutValue> valueMap = null;
 
-    public PitScoutFragmentPagerAdapter(FragmentManager fm) {
+    public FPA_MatchScout(FragmentManager fm) {
         super(fm);
+        matchAuto = new MatchAuto();
+        matchTeleop = new MatchTeleop();
+        matchPost = new MatchPost();
+        matchEndgame = new MatchEndgame();
+        matchFouls = new MatchFouls();
     }
 
     @Override
@@ -43,7 +58,19 @@ public class PitScoutFragmentPagerAdapter extends FragmentPagerAdapter{
         switch (position)
         {
             case 0:
-                fragment = new PitBasicInfo();
+                fragment = matchAuto;
+                break;
+            case 1:
+                fragment = matchTeleop;
+                break;
+            case 2:
+                fragment = matchPost;
+                break;
+            case 3:
+                fragment = matchEndgame;
+                break;
+            case 4:
+                fragment = matchFouls;
                 break;
             default:
                 fragment = null; // There has been a problem!
@@ -54,7 +81,6 @@ public class PitScoutFragmentPagerAdapter extends FragmentPagerAdapter{
         if(valueMap != null) {
             fragment.setValuesMap(valueMap);
         }
-        fragments.put(position,new WeakReference<>(fragment));
         return fragment;
     }
 
@@ -68,10 +94,11 @@ public class PitScoutFragmentPagerAdapter extends FragmentPagerAdapter{
     // used to get all the values for saving
     public List<ScoutFragment> getAllFragments(){
         List<ScoutFragment> fragmentList = new ArrayList<>();
-        for(Map.Entry<Integer,WeakReference<ScoutFragment>> entry: fragments.entrySet())
-        {
-            fragmentList.add(entry.getValue().get());
-        }
+        fragmentList.add(matchAuto);
+        fragmentList.add(matchTeleop);
+        fragmentList.add(matchPost);
+        fragmentList.add(matchEndgame);
+        fragmentList.add(matchFouls);
         return fragmentList;
     }
 
