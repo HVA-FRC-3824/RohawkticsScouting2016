@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.android.volley.toolbox.StringRequest;
 import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.SchulzeMethod;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
@@ -19,13 +18,8 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -89,8 +83,12 @@ public class Aggregate extends IntentService {
                 {
                     statsDB.addColumn(Constants.DRIVE_ABILITY_RANKING,"TEXT");
                 }
+                if(!statsDB.hasColumn(Constants.DEFENSE_ABILITY_RANKING))
+                {
+                    statsDB.addColumn(Constants.DEFENSE_ABILITY_RANKING,"TEXT");
+                }
 
-                String[] driveAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DRIVER_ABILITY);
+                String[] driveAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DRIVE_ABILITY);
                 HashMap<String, ScoutValue> map;
                 for (int i = 0; i < teamNumbers.length; i++) {
                     map = new HashMap<>();
@@ -100,13 +98,6 @@ public class Aggregate extends IntentService {
                 }
 
                 matchCursor.moveToFirst();
-
-                // Normal updateStats method does not seem to give the table enough time to update
-                // the columns for the following loop
-                if(!statsDB.hasColumn(Constants.DEFENSE_ABILITY_RANKING))
-                {
-                    statsDB.addColumn(Constants.DEFENSE_ABILITY_RANKING,"TEXT");
-                }
 
                 String[] defenseAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DEFENSE_ABILITY);
                 for (int i = 0; i < teamNumbers.length; i++) {
@@ -174,20 +165,20 @@ public class Aggregate extends IntentService {
                 Cursor match = scheduleDB.getMatch(matchNumber);
 
                 String defense2, defense3, defense4, defense5;
-                defense3 = superMatch.get("defense3").getString().toLowerCase().replace(" ","_");
+                defense3 = superMatch.get(Constants.DEFENSE_3).getString().toLowerCase().replace(" ", "_");
                 if(match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE1)) == teamsUpdated.get(i) ||
                         match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE2)) == teamsUpdated.get(i) ||
                         match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE3)) == teamsUpdated.get(i))
                 {
-                    defense2 = superMatch.get("blue_defense2").getString().toLowerCase().replace(" ", "_");
-                    defense4 = superMatch.get("blue_defense4").getString().toLowerCase().replace(" ", "_");
-                    defense5 = superMatch.get("blue_defense5").getString().toLowerCase().replace(" ", "_");
+                    defense2 = superMatch.get(Constants.BLUE_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
+                    defense4 = superMatch.get(Constants.BLUE_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
+                    defense5 = superMatch.get(Constants.BLUE_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
                 }
                 else
                 {
-                    defense2 = superMatch.get("red_defense2").getString().toLowerCase().replace(" ", "_");
-                    defense4 = superMatch.get("red_defense4").getString().toLowerCase().replace(" ", "_");
-                    defense5 = superMatch.get("red_defense5").getString().toLowerCase().replace(" ", "_");
+                    defense2 = superMatch.get(Constants.RED_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
+                    defense4 = superMatch.get(Constants.RED_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
+                    defense5 = superMatch.get(Constants.RED_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
                 }
 
                 increment_array(teamCursor,totalDefensesSeen,defense2, defense3,defense4, defense5,"seen");
@@ -209,8 +200,8 @@ public class Aggregate extends IntentService {
                 totalTeleopLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_MISS));
 
                 //Endgame
-                totalChallenge += (teamCursor.getString(teamCursor.getColumnIndex("endGame_challenge_scale")).equals("Challenge"))?1:0;
-                totalScale += (teamCursor.getString(teamCursor.getColumnIndex("endGame_challenge_scale")).equals("Scale"))?1:0;
+                totalChallenge += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Challenge"))?1:0;
+                totalScale += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Scale"))?1:0;
 
                 //Post
                 totalDQ += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_DQ));
@@ -238,14 +229,14 @@ public class Aggregate extends IntentService {
             teamMap.put("total_start_secret_passage",new ScoutValue(totalStartPosition[10]));
 
             teamMap.put(Constants.TOTAL_AUTO_HIGH_HIT,new ScoutValue(totalAutoHighGoalHit));
-            teamMap.put(Constants.TOTAL_AUTO_HIGH_MISS,new ScoutValue(totalAutoHighGoalHit));
-            teamMap.put(Constants.TOTAL_AUTO_LOW_HIT,new ScoutValue(totalAutoHighGoalHit));
-            teamMap.put(Constants.TOTAL_AUTO_LOW_MISS,new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put(Constants.TOTAL_AUTO_HIGH_MISS,new ScoutValue(totalAutoHighGoalMiss));
+            teamMap.put(Constants.TOTAL_AUTO_LOW_HIT,new ScoutValue(totalAutoLowGoalHit));
+            teamMap.put(Constants.TOTAL_AUTO_LOW_MISS,new ScoutValue(totalAutoLowGoalMiss));
 
             teamMap.put(Constants.TOTAL_TELEOP_HIGH_HIT, new ScoutValue(totalAutoHighGoalHit));
-            teamMap.put(Constants.TOTAL_TELEOP_HIGH_MISS, new ScoutValue(totalAutoHighGoalHit));
-            teamMap.put(Constants.TOTAL_AUTO_HIGH_HIT, new ScoutValue(totalAutoHighGoalHit));
-            teamMap.put(Constants.TOTAL_TELEOP_LOW_MISS, new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put(Constants.TOTAL_TELEOP_HIGH_MISS, new ScoutValue(totalTeleopHighGoalMiss));
+            teamMap.put(Constants.TOTAL_TELEOP_LOW_HIT, new ScoutValue(totalTeleopLowGoalHit));
+            teamMap.put(Constants.TOTAL_TELEOP_LOW_MISS, new ScoutValue(totalTeleopLowGoalMiss));
 
             teamMap.put(Constants.TOTAL_CHALLENGE,new ScoutValue(totalChallenge));
             teamMap.put(Constants.TOTAL_SCALE, new ScoutValue(totalScale));

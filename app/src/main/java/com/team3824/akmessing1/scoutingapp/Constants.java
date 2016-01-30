@@ -54,7 +54,7 @@ public interface Constants {
 
     // Super
     public static final String SUPER_DEFENSE_ABILITY = "super_defense_ability";
-    public static final String SUPER_DRIVER_ABILITY = "super_drive_ability";
+    public static final String SUPER_DRIVE_ABILITY = "super_drive_ability";
     public static final String SUPER_NOTES = "super_notes";
 
     public static final String RED_DEFENSE_2 = "red_defense2";
@@ -65,11 +65,21 @@ public interface Constants {
     public static final String BLUE_DEFENSE_4 = "blue_defense4";
     public static final String BLUE_DEFENSE_5 = "blue_defense5";
 
-    public static final String DEFENSE_2 = "defense3";
+    public static final String DEFENSE_3 = "defense3";
 
     // Defense Arrays
     public static final String[] DEFENSES = {"low_bar","portcullis","cheval_de_frise","moat","ramparts",
             "drawbridge","sally_port","rock_wall","rough_terrain"};
+
+    public static final int LOW_BAR_INDEX = 0;
+    public static final int PORTCULLIS_INDEX = 1;
+    public static final int CHEVAL_DE_FRISE_INDEX = 2;
+    public static final int MOAT_INDEX = 3;
+    public static final int RAMPARTS_INDEX = 4;
+    public static final int DRAWBRIDGE_INDEX = 5;
+    public static final int SALLY_PORT_INDEX = 6;
+    public static final int ROCK_WALL_INDEX = 7;
+    public static final int ROUGH_TERRAIN_INDEX = 8;
 
 
     // Ability Rankings

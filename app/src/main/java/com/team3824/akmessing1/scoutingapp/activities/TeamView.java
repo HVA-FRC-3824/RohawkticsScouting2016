@@ -8,11 +8,12 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.FPA_TeamView;
@@ -27,17 +28,19 @@ public class TeamView extends AppCompatActivity {
     private FPA_TeamView adapter;
 
     private int teamNumber;
+    private int previousTeamNumber, nextTeamNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_view);
 
+        Toolbar toolbar = (Toolbar)findViewById(R.id.team_view_toolbar);
+        setSupportActionBar(toolbar);
+
         Bundle extras = getIntent().getExtras();
         teamNumber = extras.getInt("team_number");
-
-        TextView tv = (TextView)findViewById(R.id.team_view_team_num);
-        tv.setText("Team Number: " + teamNumber);
+        setTitle("Team Number: " + teamNumber);
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
         viewPager = (ViewPager) findViewById(R.id.team_view_view_pager);
@@ -48,53 +51,60 @@ public class TeamView extends AppCompatActivity {
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString("event_id", "");
-        final PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
+        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
 
-        final int previousTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
-        if(previousTeamNumber == -1)
-        {
-            Button previous = (Button)findViewById(R.id.team_view_previous_team);
-            previous.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            Button prev = (Button)findViewById(R.id.team_view_previous_team);
-            prev.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "previous team pressed");
-                    // Go to the next match
-                    Intent intent = new Intent(TeamView.this, TeamView.class);
-                    intent.putExtra("team_number", previousTeamNumber);
-                    startActivity(intent);
-                }
-            });
-        }
+        previousTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
+        nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
 
-        final int nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
-        if(nextTeamNumber == -1)
-        {
-            Button next = (Button)findViewById(R.id.team_view_next_team);
-            next.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            Button next = (Button)findViewById(R.id.team_view_next_team);
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "next team pressed");
-
-                    // Go to the next match
-                    Intent intent = new Intent(TeamView.this, TeamView.class);
-                    intent.putExtra("team_number", nextTeamNumber);
-                    startActivity(intent);
-
-                }
-            });
-        }
         pitScoutDB.close();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.team_view_overflow, menu);
+        if(previousTeamNumber == -1) {
+            menu.removeItem(R.id.team_view_previous);
+        }
+        if(nextTeamNumber == -1) {
+            menu.removeItem(R.id.team_view_next);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.team_view_home:
+                intent = new Intent(this, StartScreen.class);
+                startActivity(intent);
+                break;
+            case R.id.team_view_back:
+                intent = new Intent(this, TeamList.class);
+                startActivity(intent);
+                break;
+            case R.id.team_view_previous:
+                Log.d(TAG, "previous team pressed");
+                // Go to the next match
+                intent = new Intent(TeamView.this, TeamView.class);
+                intent.putExtra("team_number", previousTeamNumber);
+                startActivity(intent);
+                break;
+            case R.id.team_view_next:
+                Log.d(TAG, "next team pressed");
+
+                // Go to the next match
+                intent = new Intent(TeamView.this, TeamView.class);
+                intent.putExtra("team_number", nextTeamNumber);
+                startActivity(intent);
+                break;
+            // Shouldn't be one
+            default:
+                super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
 }

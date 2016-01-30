@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_Ability;
 import com.team3824.akmessing1.scoutingapp.adapters.ELA_Auto;
@@ -68,7 +69,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         listView = (ListView)findViewById(R.id.event_view_list);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventID = sharedPreferences.getString("event_id", "");
+        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         statsDB = new StatsDB(this,eventID);
 
@@ -85,31 +86,31 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 defenses(cursor);
                 break;
             case 2: // Low Bar
-                individual_defense(cursor,"low_bar");
+                individual_defense(cursor,Constants.LOW_BAR_INDEX);
                 break;
             case 3: // Portcullis
-                individual_defense(cursor,"portcullis");
+                individual_defense(cursor,Constants.PORTCULLIS_INDEX);
                 break;
             case 4: // Cheval de Frise
-                individual_defense(cursor,"cheval_de_frise");
+                individual_defense(cursor,Constants.CHEVAL_DE_FRISE_INDEX);
                 break;
             case 5: // Moat
-                individual_defense(cursor,"moat");
+                individual_defense(cursor,Constants.MOAT_INDEX);
                 break;
             case 6: // Ramparts
-                individual_defense(cursor,"ramparts");
+                individual_defense(cursor,Constants.RAMPARTS_INDEX);
                 break;
             case 7: // Drawbridge
-                individual_defense(cursor,"drawbridge");
+                individual_defense(cursor,Constants.DRAWBRIDGE_INDEX);
                 break;
             case 8: // Sally Port
-                individual_defense(cursor,"sally_port");
+                individual_defense(cursor,Constants.SALLY_PORT_INDEX);
                 break;
             case 9: // Rock Wall
-                individual_defense(cursor,"rock_wall");
+                individual_defense(cursor,Constants.ROCK_WALL_INDEX);
                 break;
             case 10: // Rough Terrain
-                individual_defense(cursor,"rough_terrain");
+                individual_defense(cursor,Constants.ROUGH_TERRAIN_INDEX);
                 break;
             case 11: // High Goal
                 goal(cursor,"high");
@@ -118,10 +119,10 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 goal(cursor,"low");
                 break;
             case 13: // Driver Ability
-                ability(cursor,"driver");
+                ability(cursor,Constants.DRIVE_ABILITY_RANKING);
                 break;
             case 14: // Defense Ability
-                ability(cursor,"defense");
+                ability(cursor,Constants.DEFENSE_ABILITY_RANKING);
                 break;
             case 15: // Auto
                 auto(cursor);
@@ -145,74 +146,41 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Points team = new ELI_Points(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if(totalMatches > 0) {
-                totalMatches = cursor.getInt(cursor.getColumnIndex("total_matches"));
-                team.mHighPoints = cursor.getInt(cursor.getColumnIndex("total_teleop_high_hit")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_high_hit")) * 10;
-                team.mLowPoints = cursor.getInt(cursor.getColumnIndex("total_teleop_low_hit")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_low_hit")) * 5;
-                team.mEndgamePoints = cursor.getInt(cursor.getColumnIndex("total_challenge")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_scale")) * 15;
-                team.mDefensePoints = cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_cheval_de_frise_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_moat_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_cheval_de_frise_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_moat_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_portcullis")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_cheval_de_frise")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_moat")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_ramparts")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_drawbridge")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_sally_port")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_rough_terrain")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_telop_rock_wall")) * 5;
+                totalMatches = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_MATCHES));
+                team.mHighPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_HIGH_HIT)) * 5 +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_HIT)) * 10;
 
-                team.mTeleopPoints = cursor.getInt(cursor.getColumnIndex("total_teleop_high_hit")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_low_hit")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_portcullis")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_cheval_de_frise")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_moat")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_ramparts")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_drawbridge")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_sally_port")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_teleop_rough_terrain")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_telop_rock_wall")) * 5;
+                team.mLowPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_LOW_HIT)) * 2 +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_LOW_HIT)) * 5;
 
-                team.mAutoPoints = cursor.getInt(cursor.getColumnIndex("total_auto_high_hit")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_low_hit")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_low_bar")) * 5 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_cheval_de_frise_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_moat_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_reach")) * 2 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_cheval_de_frise_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_moat_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_cross")) * 10 +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_cross")) * 10;
+                team.mEndgamePoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_CHALLENGE)) * 5 +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_SCALE)) * 15;
+                for(int i = 0; i < 9; i++) {
+                    team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]))*2;
+                    team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]))*10;
+                    team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]))*5;
+                }
 
-                team.mFoulPoints = cursor.getInt(cursor.getColumnIndex("total_fouls")) * -5 +
-                        cursor.getInt(cursor.getColumnIndex("total_tech_fouls")) * -5;
+                team.mTeleopPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_HIGH_HIT)) * 5 +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_LOW_HIT)) * 2;
+                for(int i = 0; i < 9; i++) {
+                    team.mTeleopPoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i])) * 5;
+                }
+
+                team.mAutoPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_HIT)) * 10 +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_LOW_HIT)) * 5;
+                for(int i = 0; i < 9; i++)
+                {
+                    team.mAutoPoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]))*2;
+                    team.mAutoPoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]))*10;
+                }
+
+
+                team.mFoulPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_FOULS)) * -5 +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TECH_FOULS)) * -5;
                 team.mTotalPoints = team.mEndgamePoints + team.mTeleopPoints + team.mAutoPoints;
                 team.mAvgPoints = (totalMatches == 0.0f) ? 0.0f : (float) team.mTotalPoints / totalMatches;
             }
@@ -245,36 +213,45 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Defenses team = new ELI_Defenses(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if (totalMatches > 0) {
-                team.cPortcullis = cursor.getInt(cursor.getColumnIndex("total_teleop_portcullis")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_cross"));
-                team.sPortcullis = cursor.getInt(cursor.getColumnIndex("total_seen_portcullis"));
-                team.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex("total_teleop_cheval_de_frise")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_cheval_de_frise_cross"));
-                team.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex("total_seen_cheval_de_frise"));
-                team.cMoat = cursor.getInt(cursor.getColumnIndex("total_teleop_moat")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_moat_cross"));
-                team.sMoat = cursor.getInt(cursor.getColumnIndex("total_seen_moat"));
-                team.cRamparts = cursor.getInt(cursor.getColumnIndex("total_teleop_ramparts")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_cross"));
-                team.sRamparts = cursor.getInt(cursor.getColumnIndex("total_seen_ramparts"));
-                team.cDrawbridge = cursor.getInt(cursor.getColumnIndex("total_teleop_drawbridge")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_cross"));
-                team.sDrawbridge = cursor.getInt(cursor.getColumnIndex("total_seen_drawbridge"));
-                team.cSallyPort = cursor.getInt(cursor.getColumnIndex("total_teleop_sally_port")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_cross"));
-                team.sSallyPort = cursor.getInt(cursor.getColumnIndex("total_seen_sally_port"));
-                team.cRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_teleop_rough_terrain")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_cross"));
-                team.sRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_seen_rough_terrain"));
-                team.cRockWall = cursor.getInt(cursor.getColumnIndex("total_teleop_rock_wall")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_cross"));
-                team.sRockWall = cursor.getInt(cursor.getColumnIndex("total_seen_rock_wall"));
-                team.cLowBar = cursor.getInt(cursor.getColumnIndex("total_teleop_low_bar")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_low_bar_cross"));
-                team.sLowBar = cursor.getInt(cursor.getColumnIndex("total_seen_low_bar"));
+                team.cPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.PORTCULLIS_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.PORTCULLIS_INDEX]));
+                team.sPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.PORTCULLIS_INDEX]));
+
+                team.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX]));
+                team.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.CHEVAL_DE_FRISE_INDEX]));
+
+                team.cMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.MOAT_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.MOAT_INDEX]));
+                team.sMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.MOAT_INDEX]));
+
+                team.cRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.RAMPARTS_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.RAMPARTS_INDEX]));
+                team.sRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.RAMPARTS_INDEX]));
+
+                team.cDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.DRAWBRIDGE_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.DRAWBRIDGE_INDEX]));
+                team.sDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.DRAWBRIDGE_INDEX]));
+
+                team.cSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.SALLY_PORT_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.SALLY_PORT_INDEX]));
+                team.sSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.SALLY_PORT_INDEX]));
+
+                team.cRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.ROUGH_TERRAIN_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROUGH_TERRAIN_INDEX]));
+                team.sRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROUGH_TERRAIN_INDEX]));
+
+                team.cRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.ROCK_WALL_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROCK_WALL_INDEX]));
+                team.sRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROCK_WALL_INDEX]));
+
+                team.cLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.LOW_BAR_INDEX])) +
+                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.LOW_BAR_INDEX]));
+                team.sLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.LOW_BAR_INDEX]));
+
                 team.totalCrosses = team.cPortcullis + team.cChevalDeFrise + team.cMoat +
                         team.cRamparts + team.cDrawbridge + team.cSallyPort + team.cRoughTerrain +
                         team.cRockWall + team.cLowBar;
@@ -302,7 +279,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         listView.setAdapter(ela_Defenses);
     }
 
-    private void individual_defense(Cursor cursor, String defense)
+    private void individual_defense(Cursor cursor, int defense_index)
     {
         ArrayList<ELI_IndividualDefense> teams = new ArrayList<>();
 
@@ -310,13 +287,13 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_IndividualDefense team = new ELI_IndividualDefense(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if (totalMatches > 0) {
-                team.mTeleopCross = cursor.getInt(cursor.getColumnIndex("total_teleop_"+defense));
-                team.mAutoCross = cursor.getInt(cursor.getColumnIndex("total_auto_"+defense+"_cross"));
-                team.mAutoReach = cursor.getInt(cursor.getColumnIndex("total_auto_"+defense+"_reach"));
-                team.mSeen = cursor.getInt(cursor.getColumnIndex("total_seen_"+defense));
+                team.mTeleopCross = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]));
+                team.mAutoCross = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]));
+                team.mAutoReach = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[defense_index]));
+                team.mSeen = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[defense_index]));
                 team.mAvg = (team.mSeen == 0)?0.0f:(float)(team.mAutoCross+team.mTeleopCross)/(team.mSeen);
             }
             teams.add(team);
@@ -351,7 +328,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Shots team = new ELI_Shots(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if (totalMatches > 0) {
                 team.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_"+goal+"_hit"));
@@ -413,40 +390,47 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Auto team = new ELI_Auto(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
+
 
             if (totalMatches > 0) {
-                team.mDefenses.cPortcullis = cursor.getInt(cursor.getColumnIndex("total_auto_portcullis_cross"));
-                team.mDefenses.sPortcullis = cursor.getInt(cursor.getColumnIndex("total_seen_portcullis"));
-                team.mDefenses.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex("total_auto_cheval_de_frise_cross"));
-                team.mDefenses.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex("total_seen_cheval_de_frise"));
-                team.mDefenses.cMoat = cursor.getInt(cursor.getColumnIndex("total_auto_moat_cross"));
-                team.mDefenses.sMoat = cursor.getInt(cursor.getColumnIndex("total_seen_moat"));
-                team.mDefenses.cRamparts = cursor.getInt(cursor.getColumnIndex("total_auto_ramparts_cross"));
-                team.mDefenses.sRamparts = cursor.getInt(cursor.getColumnIndex("total_seen_ramparts"));
-                team.mDefenses.cDrawbridge = cursor.getInt(cursor.getColumnIndex("total_auto_drawbridge_cross"));
-                team.mDefenses.sDrawbridge = cursor.getInt(cursor.getColumnIndex("total_seen_drawbridge"));
-                team.mDefenses.cSallyPort = cursor.getInt(cursor.getColumnIndex("total_auto_sally_port_cross"));
-                team.mDefenses.sSallyPort = cursor.getInt(cursor.getColumnIndex("total_seen_sally_port"));
-                team.mDefenses.cRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_teleop_rough_terrain")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rough_terrain_cross"));
-                team.mDefenses.sRoughTerrain = cursor.getInt(cursor.getColumnIndex("total_seen_rough_terrain"));
-                team.mDefenses.cRockWall = cursor.getInt(cursor.getColumnIndex("total_teleop_rock_wall")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_rock_wall_cross"));
-                team.mDefenses.sRockWall = cursor.getInt(cursor.getColumnIndex("total_seen_rock_wall"));
-                team.mDefenses.cLowBar = cursor.getInt(cursor.getColumnIndex("total_teleop_low_bar")) +
-                        cursor.getInt(cursor.getColumnIndex("total_auto_low_bar_cross"));
-                team.mDefenses.sLowBar = cursor.getInt(cursor.getColumnIndex("total_seen_low_bar"));
+                team.mDefenses.cPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.PORTCULLIS_INDEX]));
+                team.mDefenses.sPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.PORTCULLIS_INDEX]));
+
+                team.mDefenses.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX]));
+                team.mDefenses.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.CHEVAL_DE_FRISE_INDEX]));
+
+                team.mDefenses.cMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.MOAT_INDEX]));
+                team.mDefenses.sMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.MOAT_INDEX]));
+
+                team.mDefenses.cRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.RAMPARTS_INDEX]));
+                team.mDefenses.sRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.RAMPARTS_INDEX]));
+
+                team.mDefenses.cDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.DRAWBRIDGE_INDEX]));
+                team.mDefenses.sDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.DRAWBRIDGE_INDEX]));
+
+                team.mDefenses.cSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.SALLY_PORT_INDEX]));
+                team.mDefenses.sSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.SALLY_PORT_INDEX]));
+
+                team.mDefenses.cRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROUGH_TERRAIN_INDEX]));
+                team.mDefenses.sRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROUGH_TERRAIN_INDEX]));
+
+                team.mDefenses.cRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROCK_WALL_INDEX]));
+                team.mDefenses.sRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROCK_WALL_INDEX]));
+
+                team.mDefenses.cLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.LOW_BAR_INDEX]));
+                team.mDefenses.sLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.LOW_BAR_INDEX]));
+
                 team.mDefenses.totalCrosses = team.mDefenses.cPortcullis + team.mDefenses.cChevalDeFrise + team.mDefenses.cMoat +
                         team.mDefenses.cRamparts + team.mDefenses.cDrawbridge + team.mDefenses.cSallyPort + team.mDefenses.cRoughTerrain +
                         team.mDefenses.cRockWall + team.mDefenses.cLowBar;
 
-                team.mHigh.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_high_hit"));
-                team.mHigh.mAutoTaken = cursor.getInt(cursor.getColumnIndex("total_auto_high_miss")) + team.mHigh.mAutoMade;
+                team.mHigh.mAutoMade = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_HIT));
+                team.mHigh.mAutoTaken = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_MISS)) + team.mHigh.mAutoMade;
                 team.mHigh.mAutoPercentage = (team.mHigh.mAutoTaken == 0)?0:(float)team.mHigh.mAutoMade/(float)team.mHigh.mAutoTaken * 100.0f;
 
-                team.mLow.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_low_hit"));
-                team.mLow.mAutoTaken = cursor.getInt(cursor.getColumnIndex("total_auto_low_miss")) + team.mLow.mAutoMade;
+                team.mLow.mAutoMade = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_HIT));
+                team.mLow.mAutoTaken = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_LOW_MISS)) + team.mLow.mAutoMade;
                 team.mLow.mAutoPercentage = (team.mLow.mAutoTaken == 0)?0:(float)team.mLow.mAutoMade/(float)team.mLow.mAutoTaken * 100.0f;
 
             }
@@ -466,7 +450,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 {
                     if(rhs.mDefenses.totalCrosses > 0 || rhs.mLow.mAutoMade > 0 || rhs.mHigh.mAutoMade > 0)
                     {
-                        return -1;
+                        return 1;
                     }
                     else
                     {
@@ -477,7 +461,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 {
                     if(lhs.mDefenses.totalCrosses > 0 || lhs.mLow.mAutoMade > 0 || lhs.mHigh.mAutoMade > 0)
                     {
-                        return 1;
+                        return -1;
                     }
                     else
                     {
@@ -511,10 +495,10 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Ability team = new ELI_Ability(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if (totalMatches > 0) {
-                team.mRank = cursor.getString(cursor.getColumnIndex("super_"+ability+"_ability_ranking"));
+                team.mRank = cursor.getString(cursor.getColumnIndex(ability));
             }
             else
             {
@@ -560,12 +544,12 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Endgame team = new ELI_Endgame(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if (totalMatches > 0) {
-                team.mTotalMatches = cursor.getInt(cursor.getColumnIndex("total_matches"));
-                team.mChallenge = cursor.getInt(cursor.getColumnIndex("total_challenge"));
-                team.mScale = cursor.getInt(cursor.getColumnIndex("total_scale"));
+                team.mTotalMatches = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_MATCHES));
+                team.mChallenge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_CHALLENGE));
+                team.mScale = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_SCALE));
             }
             teams.add(team);
             cursor.moveToNext();
@@ -623,13 +607,13 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Fouls team = new ELI_Fouls(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex("total_matches");
+            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if (totalMatches > 0) {
-                team.mFouls = cursor.getInt(cursor.getColumnIndex("total_fouls"));
-                team.mTechFouls = cursor.getInt(cursor.getColumnIndex("total_tech_fouls"));
-                team.mYellowCards = cursor.getInt(cursor.getColumnIndex("total_yellow_cards"));
-                team.mRedCards = cursor.getInt(cursor.getColumnIndex("total_red_cards"));
+                team.mFouls = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_FOULS));
+                team.mTechFouls = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TECH_FOULS));
+                team.mYellowCards = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_YELLOW_CARDS));
+                team.mRedCards = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_RED_CARDS));
             }
             teams.add(team);
             cursor.moveToNext();
