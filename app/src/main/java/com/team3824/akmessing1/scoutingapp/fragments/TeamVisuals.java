@@ -53,6 +53,9 @@ public class TeamVisuals extends Fragment {
     LineDataSet mAutoHighMade, mAutoHighPercent, mAutoLowMade, mAutoLowPercent, mTeleopHighMade,
             mTeleopHighPercent, mTeleopLowMade, mTeleopLowPercent;
 
+    BarChart mBarChart;
+    BarDataSet mEndgame;
+
     ArrayList<String> mMatches;
 
     public TeamVisuals()
@@ -286,6 +289,12 @@ public class TeamVisuals extends Fragment {
             }
         });
 
+        mBarChart = (BarChart)view.findViewById(R.id.bar_chart);
+        mBarChart.setDescription("");
+        mBarChart.getAxisRight().setEnabled(false);
+
+        generate_bar_data(matchCursor);
+        mBarChart.setData(new BarData(mMatches,mEndgame));
 
         return view;
     }
@@ -408,6 +417,30 @@ public class TeamVisuals extends Fragment {
         mTeleopLowPercent = new LineDataSet(teleopLowPercentEntries,"Teleop Low Percent");
         mTeleopLowPercent.setColor(Color.RED);
         mTeleopLowPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+    }
+
+    private void generate_bar_data(Cursor cursor)
+    {
+        cursor.moveToFirst();
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        for(int i = 0; i < cursor.getCount(); i++)
+        {
+            int value = 0;
+            if(cursor.getString(cursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Challenge"))
+            {
+                value = 5;
+            }
+            else if(cursor.getString(cursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Scale"))
+            {
+                value = 15;
+            }
+            entries.add(new BarEntry(value,i));
+
+            cursor.moveToNext();
+        }
+        mEndgame = new BarDataSet(entries,"Endgame");
+        mEndgame.setColor(Color.RED);
+        mEndgame.setAxisDependency(YAxis.AxisDependency.LEFT);
     }
 
 
