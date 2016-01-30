@@ -49,6 +49,7 @@ public interface Constants {
     public static final String PIT_ROBOT_HEIGHT = "pit_robot_height";
     public static final String PIT_ROBOT_WEIGHT = "pit_robot_weight";
     public static final String PIT_NOTES = "pit_notes";
+    public static final String PIT_LOADING = "pit_loading";
     public static final String PIT_DRIVETRAIN = "pit_drivetrain";
     public static final String PIT_NUMBER_OF_CIMS = "pit_number_cims";
 

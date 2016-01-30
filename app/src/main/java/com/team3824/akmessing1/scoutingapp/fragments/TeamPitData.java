@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
@@ -39,58 +40,54 @@ public class TeamPitData extends Fragment{
         PitScoutDB pitScoutDB = new PitScoutDB(activity,eventID);
         Map<String, ScoutValue> pitMap = pitScoutDB.getTeamMap(teamNumber);
 
-        TextView textView = (TextView)view.findViewById(R.id.view_robotWidth);
-        if(pitMap.containsKey("robotWidth"))
+        TextView textView = (TextView)view.findViewById(R.id.pit_robot_width);
+        if(pitMap.containsKey(Constants.PIT_ROBOT_WIDTH))
         {
-            textView.setText(String.valueOf(pitMap.get("robotWidth").getFloat()));
+            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_WIDTH).getFloat()));
         }
 
-        textView = (TextView)view.findViewById(R.id.view_robotLength);
-        if(pitMap.containsKey("robotLength"))
+        textView = (TextView)view.findViewById(R.id.pit_robot_length);
+        if(pitMap.containsKey(Constants.PIT_ROBOT_LENGTH))
         {
-            textView.setText(String.valueOf(pitMap.get("robotLength").getFloat()));
+            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_LENGTH).getFloat()));
         }
 
-        textView = (TextView)view.findViewById(R.id.view_robotHeight);
-        if(pitMap.containsKey("robotHeight"))
+        textView = (TextView)view.findViewById(R.id.pit_robot_height);
+        if(pitMap.containsKey(Constants.PIT_ROBOT_HEIGHT))
         {
-            textView.setText(String.valueOf(pitMap.get("robotHeight").getFloat()));
+            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_HEIGHT).getFloat()));
         }
 
-        textView = (TextView)view.findViewById(R.id.view_robotWeight);
-        if(pitMap.containsKey("robotWeight"))
+        textView = (TextView)view.findViewById(R.id.pit_robot_weight);
+        if(pitMap.containsKey(Constants.PIT_ROBOT_WEIGHT))
         {
-            textView.setText(String.valueOf(pitMap.get("robotWeight").getFloat()));
+            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_WEIGHT).getFloat()));
         }
 
-        textView = (TextView)view.findViewById(R.id.view_canBurgular);
-        if(pitMap.containsKey("canBurgular"))
+        textView = (TextView)view.findViewById(R.id.pit_loading);
+        if(pitMap.containsKey(Constants.PIT_LOADING))
         {
-            if(pitMap.get("canBurgular").getInt() > 0) {
-                textView.setText("Yes");
-            }
-            else
-            {
-                textView.setText("No");
-            }
+            textView.setText(pitMap.get(Constants.PIT_LOADING).getString());
         }
 
-        textView = (TextView)view.findViewById(R.id.view_cheesecake);
-        if(pitMap.containsKey("cheesecake"))
+        textView = (TextView)view.findViewById(R.id.pit_number_cims);
+        if(pitMap.containsKey(Constants.PIT_NUMBER_OF_CIMS))
         {
-            if(pitMap.get("cheesecake").getInt() > 0) {
-                textView.setText("Yes");
-            }
-            else
-            {
-                textView.setText("No");
-            }
+            textView.setText(pitMap.get(Constants.PIT_NUMBER_OF_CIMS).getString());
         }
 
-        textView = (TextView)view.findViewById(R.id.view_notes);
-        if(pitMap.containsKey("notes"))
+        textView = (TextView)view.findViewById(R.id.pit_drivetrain);
+        if(pitMap.containsKey(Constants.PIT_DRIVETRAIN))
         {
-            textView.setText(pitMap.get("notes").getString());
+            textView.setText(pitMap.get(Constants.PIT_DRIVETRAIN).getString());
+        }
+
+
+
+        textView = (TextView)view.findViewById(R.id.pit_notes);
+        if(pitMap.containsKey(Constants.PIT_NOTES))
+        {
+            textView.setText(pitMap.get(Constants.PIT_NOTES).getString());
         }
 
         return view;
