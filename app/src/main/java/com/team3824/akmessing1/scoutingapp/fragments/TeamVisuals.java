@@ -186,6 +186,7 @@ public class TeamVisuals extends Fragment {
         xAxis.setAvoidFirstLastClipping(true);
         mLineChart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         mLineChart.getAxisRight().setEnabled(false);
+        mLineChart.setExtraLeftOffset(15);
 
         generate_line_data(matchCursor);
 
