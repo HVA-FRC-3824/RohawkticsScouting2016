@@ -54,7 +54,7 @@ public interface Constants {
 
     // Super
     public static final String SUPER_DEFENSE_ABILITY = "super_defense_ability";
-    public static final String SUPER_DRIVER_ABILITY = "super_driver_ability";
+    public static final String SUPER_DRIVER_ABILITY = "super_drive_ability";
     public static final String SUPER_NOTES = "super_notes";
 
     public static final String RED_DEFENSE_2 = "red_defense2";

@@ -228,7 +228,7 @@ public class Aggregate extends IntentService {
 
             for(int j = 0; j < 9; j++)
             {
-                teamMap.put(Constants.TOTAL_DEFENSES_SEEN[j], new ScoutValue(totalStartPosition[j]));
+                teamMap.put(Constants.TOTAL_DEFENSES_STARTED[j], new ScoutValue(totalStartPosition[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_SEEN[j], new ScoutValue(totalDefensesSeen[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_REACHED[j],new ScoutValue(totalDefenseReaches[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_CROSSED[j],new ScoutValue(totalDefenseCrosses[j]));

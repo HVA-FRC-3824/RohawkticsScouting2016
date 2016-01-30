@@ -49,9 +49,11 @@ public class TeamVisuals extends Fragment {
     RadarChart mRadarChart;
     RadarDataSet mSeen, mStarted, mReached, mAutoCross, mTeleopCross, mSpeed;
 
-    CombinedChart mAutoChart;
-    CombinedChart mTeleopChart;
-    BarChart mBarChart;
+    LineChart mLineChart;
+    LineDataSet mAutoHighMade, mAutoHighPercent, mAutoLowMade, mAutoLowPercent, mTeleopHighMade,
+            mTeleopHighPercent, mTeleopLowMade, mTeleopLowPercent;
+
+    ArrayList<String> mMatches;
 
     public TeamVisuals()
     {
@@ -116,12 +118,12 @@ public class TeamVisuals extends Fragment {
 
         generate_radar_data(statsMap);
 
-        final String[] defenses = {"Low Bar", "Portcullis", "Cheval de Frise","Moat","Ramparts","Drawbridge","Sally Port","Rough Terrain","Rock Wall"};
         RadioButton radioButton = (RadioButton)view.findViewById(R.id.seen);
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(defenses, mSeen));
+                mRadarChart.setData(new RadarData(Constants.DEFENSES, mSeen));
+                mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
@@ -130,7 +132,8 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(defenses,mStarted));
+                mRadarChart.setData(new RadarData(Constants.DEFENSES,mStarted));
+                mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
@@ -139,7 +142,8 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(defenses,mSpeed));
+                mRadarChart.setData(new RadarData(Constants.DEFENSES,mSpeed));
+                mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
@@ -148,7 +152,8 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(defenses,mAutoCross));
+                mRadarChart.setData(new RadarData(Constants.DEFENSES,mAutoCross));
+                mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
@@ -157,7 +162,8 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(defenses,mTeleopCross));
+                mRadarChart.setData(new RadarData(Constants.DEFENSES,mTeleopCross));
+                mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
@@ -166,15 +172,119 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(defenses,mReached));
+                mRadarChart.setData(new RadarData(Constants.DEFENSES, mReached));
+                mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
-
-        mAutoChart = (CombinedChart)view.findViewById(R.id.auto_chart);
-        mAutoChart.setDrawOrder(new CombinedChart.DrawOrder[]{CombinedChart.DrawOrder.BAR,CombinedChart.DrawOrder.LINE});
-        mAutoChart.setDescription("");
         
+        mLineChart = (LineChart)view.findViewById(R.id.line_chart);
+        mLineChart.getLegend().setEnabled(false);
+        mLineChart.setDescription("");
+        XAxis xAxis = mLineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setAvoidFirstLastClipping(true);
+        mLineChart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        mLineChart.getAxisRight().setEnabled(false);
+
+        generate_line_data(matchCursor);
+
+        radioButton = (RadioButton)view.findViewById(R.id.auto_high_made);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().resetAxisMaxValue();
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoHighMade));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
+        radioButton = (RadioButton)view.findViewById(R.id.auto_low_made);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().resetAxisMaxValue();
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoLowMade));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
+        radioButton = (RadioButton)view.findViewById(R.id.teleop_high_made);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().resetAxisMaxValue();
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mTeleopHighMade));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
+        radioButton = (RadioButton)view.findViewById(R.id.teleop_low_made);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().resetAxisMaxValue();
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mTeleopLowMade));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
+        radioButton = (RadioButton)view.findViewById(R.id.auto_high_percent);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoHighPercent));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
+        radioButton = (RadioButton)view.findViewById(R.id.auto_low_percent);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoLowPercent));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
+        radioButton = (RadioButton)view.findViewById(R.id.teleop_high_percent);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mTeleopHighPercent));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
+        radioButton = (RadioButton)view.findViewById(R.id.teleop_low_percent);
+        radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches,mTeleopLowPercent));
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+            }
+        });
+
 
         return view;
     }
@@ -218,6 +328,86 @@ public class TeamVisuals extends Fragment {
         mTeleopCross.setColor(Color.RED);
     }
 
+    private void generate_line_data(Cursor cursor)
+    {
+        ArrayList<Entry> autoHighMadeEntries = new ArrayList<>();
+        ArrayList<Entry> autoLowMadeEntries = new ArrayList<>();
+        ArrayList<Entry> teleopHighMadeEntries = new ArrayList<>();
+        ArrayList<Entry> teleopLowMadeEntries = new ArrayList<>();
+        ArrayList<Entry> autoHighPercentEntries = new ArrayList<>();
+        ArrayList<Entry> autoLowPercentEntries = new ArrayList<>();
+        ArrayList<Entry> teleopHighPercentEntries = new ArrayList<>();
+        ArrayList<Entry> teleopLowPercentEntries = new ArrayList<>();
+        mMatches = new ArrayList<>();
+        cursor.moveToFirst();
+        float percent;
+        for(int i = 0; i < cursor.getCount(); i++)
+        {
+            int autoHighHit = cursor.getInt(cursor.getColumnIndex(Constants.AUTO_HIGH_HIT));
+            int autoHighMiss = cursor.getInt(cursor.getColumnIndex(Constants.AUTO_HIGH_MISS));
+
+            int autoLowHit = cursor.getInt(cursor.getColumnIndex(Constants.AUTO_LOW_HIT));
+            int autoLowMiss = cursor.getInt(cursor.getColumnIndex(Constants.AUTO_LOW_MISS));
+
+            int teleopHighHit = cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
+            int teleopHighMiss = cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_HIGH_MISS));
+
+            int teleopLowHit = cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_LOW_HIT));
+            int teleopLowMiss = cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_LOW_MISS));
+
+            autoHighMadeEntries.add(new Entry(autoHighHit, i));
+            autoLowMadeEntries.add(new Entry(autoLowHit, i));
+            teleopHighMadeEntries.add(new Entry(teleopHighHit, i));
+            teleopLowMadeEntries.add(new Entry(teleopLowHit,i));
+
+            percent = ((autoHighHit+autoHighMiss) == 0) ? 0 : autoHighHit / (float)(autoHighHit + autoHighMiss) * 100.0f;
+            autoHighPercentEntries.add(new Entry(percent,i));
+
+            percent = ((autoLowHit + autoLowMiss) == 0) ? 0 : autoLowHit / (float)(autoLowHit + autoLowMiss) * 100.0f;
+            autoLowPercentEntries.add(new Entry(percent,i));
+
+            percent = ((teleopHighHit + teleopHighMiss) == 0) ? 0 : teleopHighHit / (float)(teleopHighHit + teleopHighMiss) * 100.0f;
+            teleopHighPercentEntries.add(new Entry(percent,i));
+            
+            percent = ((teleopLowHit + teleopLowMiss) == 0) ? 0 : teleopLowHit / (float)(teleopLowHit + teleopLowMiss) * 100.0f;
+            teleopLowPercentEntries.add(new Entry(percent,i));
+
+            mMatches.add("M"+String.valueOf(cursor.getInt(cursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))));
+
+            cursor.moveToNext();
+        }
+        mAutoHighMade = new LineDataSet(autoHighMadeEntries,"Auto High Made");
+        mAutoHighMade.setColor(Color.RED);
+        mAutoHighMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mAutoLowMade = new LineDataSet(autoLowMadeEntries,"Auto Low Made");
+        mAutoLowMade.setColor(Color.RED);
+        mAutoLowMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mTeleopHighMade = new LineDataSet(teleopHighMadeEntries,"Teleop High Made");
+        mTeleopHighMade.setColor(Color.RED);
+        mTeleopHighMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mTeleopLowMade = new LineDataSet(teleopLowMadeEntries,"Teleop Low Made");
+        mTeleopLowMade.setColor(Color.RED);
+        mTeleopLowMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mAutoHighPercent = new LineDataSet(autoHighPercentEntries,"Auto High Percent");
+        mAutoHighPercent.setColor(Color.RED);
+        mAutoHighPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mAutoLowPercent = new LineDataSet(autoLowPercentEntries,"Auto Low Percent");
+        mAutoLowPercent.setColor(Color.RED);
+        mAutoLowPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mTeleopHighPercent = new LineDataSet(teleopHighPercentEntries,"Teleop High Percent");
+        mTeleopHighPercent.setColor(Color.RED);
+        mTeleopHighPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+        mTeleopLowPercent = new LineDataSet(teleopLowPercentEntries,"Teleop Low Percent");
+        mTeleopLowPercent.setColor(Color.RED);
+        mTeleopLowPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+    }
 
 
 }

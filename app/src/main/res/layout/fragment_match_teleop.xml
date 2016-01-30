@@ -69,7 +69,7 @@
                 android:layout_weight="1"
                 android:id="@+id/teleop_high_hit"
                 app:label="Hit:"
-                app:key="teleop_high_score"/>
+                app:key="teleop_high_hit"/>
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
@@ -77,7 +77,7 @@
                 android:layout_weight="1"
                 android:id="@+id/teleop_high_miss"
                 app:label="Missed:"
-                app:key="teleop_high_missed"/>
+                app:key="teleop_high_miss"/>
 
 
         </LinearLayout>
@@ -102,7 +102,7 @@
                 android:layout_weight="1"
                 android:id="@+id/teleop_low_hit"
                 app:label="Hit:"
-                app:key="teleop_low_score"/>
+                app:key="teleop_low_hit"/>
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
@@ -110,7 +110,7 @@
                 android:layout_weight="1"
                 android:id="@+id/teleop_low_miss"
                 app:label="Missed:"
-                app:key="teleop_low_missed"/>
+                app:key="teleop_low_miss"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -66,35 +66,73 @@
             </RadioGroup>
         </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Auto Shooting"
-            android:id="@+id/textView6"
-            android:textSize="20sp"
-            android:textColor="#000000"
-            android:gravity="center_horizontal" />
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/line_chart"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_weight=".8"
+                android:layout_margin="10dp"
+                android:padding="10dp" />
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".2"
+                android:orientation="vertical">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/auto_high_made"
+                    android:text="Auto High Made" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/auto_high_percent"
+                    android:text="Auto High Percentage" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/auto_low_made"
+                    android:text="Auto Low Made" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/auto_low_percent"
+                    android:text="Auto Low Percent" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/teleop_high_made"
+                    android:text="Teleop High Made" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/teleop_high_percent"
+                    android:text="Teleop High Percentage" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/teleop_low_made"
+                    android:text="Teleop Low Made" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:id="@+id/teleop_low_percent"
+                    android:text="Teleop Low Percent" />
+            </RadioGroup>
+        </LinearLayout>
 
-        <com.github.mikephil.charting.charts.CombinedChart
-            android:id="@+id/auto_chart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Teleop Shooting"
-            android:gravity="center_horizontal"
-            android:textSize="20sp"
-            android:textColor="#000000" />
-        <com.github.mikephil.charting.charts.CombinedChart
-            android:id="@+id/teleop_chart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            />
     </LinearLayout>
 </ScrollView>
