@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.team3824.akmessing1.scoutingapp.HideKeyboard;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6;
 
@@ -32,7 +31,7 @@ public class SuperBasicInfo extends ScoutFragment {
         if(valueMap != null) {
             restoreContentsFromMap(valueMap, (ViewGroup) view);
         }
-        //HideKeyboard.setupUI(getActivity(), view);
+        //Utilities.setupUI(getActivity(), view);
         return view;
     }
 

@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.services.Aggregate;
 
 public class AggregateActivity extends AppCompatActivity {
     private String TAG = "AggregateActivity";

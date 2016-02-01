@@ -4,6 +4,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
@@ -15,10 +18,32 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
+import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class SyncActivity extends AppCompatActivity {
@@ -28,15 +53,172 @@ public class SyncActivity extends AppCompatActivity {
     private TextView textView;
     private BluetoothSync bluetoothSync;
     private SyncHandler handler;
+    private String selectedAddress;
+
+    MatchScoutDB matchScoutDB;
+    PitScoutDB pitScoutDB;
+    SuperScoutDB superScoutDB;
+    SyncDB syncDB;
 
     private class SyncHandler extends android.os.Handler
     {
+        String filename = "";
+
         @Override
         public void handleMessage(Message msg)
         {
             String message = new String((byte[])msg.obj);
-            Log.d(TAG,"Received: "+message);
+            Log.d(TAG, "Received: " + message);
             textView.setText(message);
+            if(message.length() == 0)
+                return;
+            switch(message.charAt(0))
+            {
+                case 'M':
+                    filename = "";
+                    try {
+                        JSONArray jsonArray = new JSONArray(message.substring(1));
+                        for(int i = 0; i < jsonArray.length(); i++)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            HashMap<String, ScoutValue> map = new HashMap<>();
+                            Iterator<String> iter = jsonObject.keys();
+                            while (iter.hasNext()) {
+                                String key = iter.next();
+                                try {
+                                    Object value = jsonObject.get(key);
+                                    if(value instanceof Integer)
+                                    {
+                                        map.put(key,new ScoutValue((int)value));
+                                    }
+                                    else if(value instanceof Float)
+                                    {
+                                        map.put(key,new ScoutValue((float)value));
+                                    }
+                                    else if(value instanceof String)
+                                    {
+                                        map.put(key,new ScoutValue((String)value));
+                                    }
+                                } catch (JSONException e) {
+                                    // Something went wrong!
+                                }
+                            }
+                            SyncActivity.this.matchScoutDB.updateMatch(map);
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG,e.getMessage());
+                    }
+                    Toast.makeText(SyncActivity.this,"Match Data Received",Toast.LENGTH_SHORT).show();
+                    break;
+                case 'P':
+                    filename = "";
+                    try{
+                        JSONArray jsonArray = new JSONArray(message.substring(1));
+                        for(int i = 0; i < jsonArray.length(); i++)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            HashMap<String, ScoutValue> map = new HashMap<>();
+                            Iterator<String> iter = jsonObject.keys();
+                            while (iter.hasNext()) {
+                                String key = iter.next();
+                                try {
+                                    Object value = jsonObject.get(key);
+                                    if(value instanceof Integer)
+                                    {
+                                        map.put(key,new ScoutValue((int)value));
+                                    }
+                                    else if(value instanceof Float)
+                                    {
+                                        map.put(key,new ScoutValue((float)value));
+                                    }
+                                    else if(value instanceof String)
+                                    {
+                                        map.put(key,new ScoutValue((String)value));
+                                    }
+                                } catch (JSONException e) {
+                                    // Something went wrong!
+                                }
+                            }
+                            SyncActivity.this.pitScoutDB.updatePit(map);
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG,e.getMessage());
+                    }
+                    Toast.makeText(SyncActivity.this,"Pit Data Received",Toast.LENGTH_SHORT).show();
+                    break;
+                case 'S':
+                    filename = "";
+                    try{
+                        JSONArray jsonArray = new JSONArray(message.substring(1));
+                        for(int i = 0; i < jsonArray.length(); i++)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            HashMap<String, ScoutValue> map = new HashMap<>();
+                            Iterator<String> iter = jsonObject.keys();
+                            while (iter.hasNext()) {
+                                String key = iter.next();
+                                try {
+                                    Object value = jsonObject.get(key);
+                                    if(value instanceof Integer)
+                                    {
+                                        map.put(key,new ScoutValue((int)value));
+                                    }
+                                    else if(value instanceof Float)
+                                    {
+                                        map.put(key,new ScoutValue((float)value));
+                                    }
+                                    else if(value instanceof String)
+                                    {
+                                        map.put(key,new ScoutValue((String)value));
+                                    }
+                                } catch (JSONException e) {
+                                    // Something went wrong!
+                                }
+                            }
+                            SyncActivity.this.superScoutDB.updateMatch(map);
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG,e.getMessage());
+                    }
+                    Toast.makeText(SyncActivity.this, "Super Data Received", Toast.LENGTH_SHORT).show();
+                    break;
+                case 'F':
+                    filename = message.substring(1);
+                    break;
+                case 'R':
+                    filename = "";
+                    selectedAddress = bluetoothSync.getConnectedAddress();
+                    String lastUpdated = syncDB.getLastUpdated(selectedAddress);
+                    syncDB.updateSync(selectedAddress);
+                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncActivity.this.matchScoutDB.getInfoSince(lastUpdated));
+                    bluetoothSync.write(matchUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this,"Match Data Sent",Toast.LENGTH_SHORT).show();
+                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncActivity.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                    bluetoothSync.write(pitUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this,"Pit Data Sent",Toast.LENGTH_SHORT).show();
+                    String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncActivity.this.superScoutDB.getAllMatchesSince(lastUpdated));
+                    bluetoothSync.write(superUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this,"Super Data Sent",Toast.LENGTH_SHORT).show();
+                    break;
+                case 'f':
+                    if(message.startsWith("file:") && message.endsWith(":end")) {
+                        String messageWOPrefix = message.substring(5);
+                        String messageWOSuffix = message.substring(0,messageWOPrefix.length()-4);
+                        File f = new File(SyncActivity.this.getFilesDir(), filename);
+                        FileOutputStream fileOutputStream = null;
+                        try {
+                            fileOutputStream = new FileOutputStream(f);
+                            fileOutputStream.write(messageWOSuffix.getBytes());
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                        Toast.makeText(SyncActivity.this,"File Received",Toast.LENGTH_SHORT).show();
+
+                    }
+                    break;
+            }
         }
     }
 
@@ -71,18 +253,59 @@ public class SyncActivity extends AppCompatActivity {
 
         textView = (TextView)findViewById(R.id.sync_log);
 
+        matchScoutDB = new MatchScoutDB(this,eventID);
+        pitScoutDB = new PitScoutDB(this,eventID);
+        superScoutDB = new SuperScoutDB(this, eventID);
+        syncDB = new SyncDB(this,eventID);
+
         Button sync_send = (Button)findViewById(R.id.sync_send);
         sync_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = "Hello World";
                 Log.d(TAG, "Sending");
-                if(bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    Log.d(TAG,"Connected");
-                    bluetoothSync.write(text.getBytes());
+                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
+                    Log.d(TAG, "Connected");
+                    String lastUpdated = syncDB.getLastUpdated(selectedAddress);
+                    syncDB.updateSync(selectedAddress);
+                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncActivity.this.matchScoutDB.getInfoSince(lastUpdated));
+                    bluetoothSync.write(matchUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this,"Match Data Sent",Toast.LENGTH_SHORT).show();
+                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncActivity.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                    bluetoothSync.write(pitUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this,"Pit Data Sent",Toast.LENGTH_SHORT).show();
+                    String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncActivity.this.superScoutDB.getAllMatchesSince(lastUpdated));
+                    bluetoothSync.write(superUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this,"Super Data Sent",Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        Button sync_picture_send = (Button)findViewById(R.id.sync_picture_send);
+        sync_picture_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> filenames = getImageFiles(SyncActivity.this.pitScoutDB.getAllTeamInfo());
+                for(int i = 0; i < filenames.size(); i++)
+                {
+                    bluetoothSync.write(("F"+filenames.get(i)).getBytes());
+                    File file = new File(SyncActivity.this.getFilesDir(),filenames.get(i));
+                    bluetoothSync.writeFile(file);
+                    Toast.makeText(SyncActivity.this,"Picture "+String.valueOf(i+1)+" of "+String.valueOf(filenames.size())+" Sent",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Button sync_receive = (Button)findViewById(R.id.sync_receive);
+        sync_receive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED)
+                {
+                    bluetoothSync.write(("R").getBytes());
+                }
+            }
+        });
+
         bluetoothSync.start();
     }
 
@@ -94,7 +317,7 @@ public class SyncActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> av, View v, int position, long arg3) {
             // Get the device MAC address, which is the last 17 chars in the View
             String info = ((TextView) v).getText().toString();
-            String address = info.substring(info.length() - 17);
+            selectedAddress = info.substring(info.length() - 17);
             for(int i = 0; i < av.getChildCount(); i++) {
                 ((TextView)av.getChildAt(i)).setTextColor(Color.BLACK);
                 ((TextView)av.getChildAt(i)).setBackgroundColor(Color.WHITE);
@@ -104,6 +327,24 @@ public class SyncActivity extends AppCompatActivity {
             bluetoothSync.connect(((BluetoothDevice)pairedDevices[position]), false);
         }
     };
+
+    ArrayList<String> getImageFiles(Cursor cursor)
+    {
+        ArrayList<String> filenames = new ArrayList<>();
+        int i = 0;
+        while(!cursor.isAfterLast())
+        {
+            if(cursor.getColumnIndex("robotPicture") != -1) {
+                if(cursor.getType(cursor.getColumnIndex("robotPicture")) == Cursor.FIELD_TYPE_STRING) {
+                    String filename = cursor.getString(cursor.getColumnIndex("robotPicture"));
+                    Log.d(TAG, filename);
+                    filenames.add(filename);
+                }
+            }
+            cursor.moveToNext();
+        }
+        return filenames;
+    }
 
 
 }

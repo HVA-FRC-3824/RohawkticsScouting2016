@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.services.Aggregate;
 
 public class StartScreen extends AppCompatActivity {
     private static String TAG = "StartScreen";

@@ -2,7 +2,6 @@ package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,12 +22,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.team3824.akmessing1.scoutingapp.JsonUTF8Request;
+import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
-import com.team3824.akmessing1.scoutingapp.services.Aggregate;
+import com.team3824.akmessing1.scoutingapp.services.AggregateService;
+import com.team3824.akmessing1.scoutingapp.services.SyncService;
 
 import org.json.JSONArray;
 
@@ -39,6 +39,7 @@ public class Settings extends AppCompatActivity {
     private String TAG = "Settings";
 
     static PendingIntent aggregatePIntent = null;
+    static PendingIntent syncPIntent = null;
 
     // Populate the settings fields with their respective values
     @Override
@@ -139,7 +140,7 @@ public class Settings extends AppCompatActivity {
                 Log.d(TAG, "url: " + url);
 
                 //Request schedule
-                JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                JsonRequest jsonReq = new Utilities.JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Team List received");
@@ -164,7 +165,7 @@ public class Settings extends AppCompatActivity {
                 RequestQueue queue = Volley.newRequestQueue(this);
                 String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/matches?X-TBA-App-Id=amessing:scoutingTest:v3";
                 Log.d(TAG, "url: " + url);
-                JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                JsonRequest jsonReq = new Utilities.JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Schedule received");
@@ -186,8 +187,8 @@ public class Settings extends AppCompatActivity {
 
             if(type.equals("Drive Team") || type.equals("Strategy") || type.equals("Admin")) {
                 if (aggregatePIntent == null) {
-                    Log.d(TAG,"Creating Aggregate Service");
-                    Intent intent = new Intent(this, Aggregate.class);
+                    Log.d(TAG,"Creating AggregateService Service");
+                    Intent intent = new Intent(this, AggregateService.class);
                     intent.putExtra("update",true);
                     startService(intent);
                     aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
@@ -200,14 +201,22 @@ public class Settings extends AppCompatActivity {
             {
                 if (aggregatePIntent != null)
                 {
-                    Log.d(TAG,"Removing Aggregate Service");
+                    Log.d(TAG,"Removing AggregateService Service");
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
                     alarmManager.cancel(aggregatePIntent);
                     aggregatePIntent = null;
                 }
             }
 
-            // Should wait for acknowledgement of bluetooth being enabled, but we are going to assume it is turned on
+            if(syncPIntent == null)
+            {
+                Log.d(TAG, "Creating SyncService Service");
+                Intent intent = new Intent(this, SyncService.class);
+                startService(intent);
+                syncPIntent = PendingIntent.getService(this,0,intent,0);
+                AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+                alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,AlarmManager.INTERVAL_HALF_HOUR,AlarmManager.INTERVAL_HALF_HOUR,syncPIntent);
+            }
 
             Toast toast =Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
             toast.show();

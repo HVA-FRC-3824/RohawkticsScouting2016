@@ -10,6 +10,9 @@ import android.util.Log;
 import com.team3824.akmessing1.scoutingapp.Constants;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,6 +41,8 @@ public class BluetoothSync {
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
+
+    public String connectedAddress = "";
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -68,6 +73,19 @@ public class BluetoothSync {
     }
 
     /**
+     * Return the device id of the connected device
+     */
+    public synchronized String getConnectedAddress()
+    {
+        if(mState == STATE_CONNECTED)
+        {
+            return connectedAddress;
+        }
+        return "";
+    }
+
+
+    /**
      * Start the chat service. Specifically start AcceptThread to begin a
      * session in listening (server) mode. Called by the Activity onResume()
      */
@@ -93,6 +111,8 @@ public class BluetoothSync {
             mAcceptThread = new AcceptThread(mSecure);
             mAcceptThread.start();
         }
+
+        connectedAddress = "";
     }
 
     /**
@@ -121,6 +141,8 @@ public class BluetoothSync {
         mConnectThread = new ConnectThread(device, secure);
         mConnectThread.start();
         setState(STATE_CONNECTING);
+
+        connectedAddress = "";
     }
 
     /**
@@ -156,6 +178,7 @@ public class BluetoothSync {
         mConnectedThread.start();
 
         setState(STATE_CONNECTED);
+        connectedAddress = device.getAddress();
     }
 
     /**
@@ -203,10 +226,10 @@ public class BluetoothSync {
     /**
      * Write a file to the ConnectedThread in an unsynchronized manner
      *
-     * @param bis The buffered input file to write
-     * @see ConnectedThread#writeFile(BufferedInputStream)
+     * @param file The buffered input file to write
+     * @see ConnectedThread#writeFile(File)
      */
-    public void writeFile(BufferedInputStream bis) {
+    public void writeFile(File file) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -215,7 +238,7 @@ public class BluetoothSync {
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
-        r.writeFile(bis);
+        r.writeFile(file);
     }
 
     /**
@@ -421,18 +444,36 @@ public class BluetoothSync {
             Log.i(TAG, "BEGIN mConnectedThread");
             String inBuffer = "";
             while (true) {
+                //Log.d(TAG,inBuffer);
                 try {
                     int inChar = mmInStream.read();
-                    if(inChar == '\0' || inChar == -1)
-                        break;
-                    inBuffer += (char)inChar;
+                    if(inBuffer.length() > 5 && inBuffer.startsWith("file:"))
+                    {
+                        if(inBuffer.endsWith(":end"))
+                        {
+                            mHandler.obtainMessage(Constants.MESSAGE_READ, inBuffer.getBytes()).sendToTarget();
+                            inBuffer = "";
+                        }
+                        else
+                        {
+                            inBuffer += (char) inChar;
+                        }
+                    }
+                    else {
+                        if (inChar == '\0') {
+                            mHandler.obtainMessage(Constants.MESSAGE_READ, inBuffer.getBytes()).sendToTarget();
+                            inBuffer = "";
+                        } else {
+                            inBuffer += (char) inChar;
+                        }
+                    }
                 } catch (IOException e) {
                     connectionLost();
                     BluetoothSync.this.start();
                     break;
                 }
             }
-            mHandler.obtainMessage(Constants.MESSAGE_READ,inBuffer.getBytes()).sendToTarget();
+
         }
 
         /**
@@ -441,11 +482,13 @@ public class BluetoothSync {
          * @param buffer The bytes to write
          */
         public void write(byte[] buffer) {
+            Log.d(TAG,"Sending: "+new String(buffer));
             byte[] tempBuffer = new byte[buffer.length+1];
             System.arraycopy(buffer,0,tempBuffer,0,buffer.length);
             tempBuffer[buffer.length] = '\0'; // null character to symbolize end of message
             try {
                 mmOutStream.write(tempBuffer);
+                mmOutStream.flush();
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }
@@ -454,41 +497,46 @@ public class BluetoothSync {
         /**
          * Write a file to the connect OutStream.
          *
-         * @param bis The buffered input stream from the file to write
+         * @param file The buffered input stream from the file to write
          */
-        public void writeFile(BufferedInputStream bis)
+        public void writeFile(File file)
         {
-            boolean endCharacter = false;
-            try
-            {
-                int bufferSize = 1024;
-                byte[] buffer = new byte[bufferSize];
-
-                // we need to know how may bytes were read to write them to the byteBuffer
-                int len = 0;
-                while ((len = bis.read(buffer)) != -1) {
-                    if(len == 1024) {
-                        mmOutStream.write(buffer, 0, len);
-                    }
-                    else
-                    {
-                        byte[] tempBuffer = new byte[len+1];
-                        System.arraycopy(buffer,0,tempBuffer,0,tempBuffer.length);
-                        tempBuffer[len+1] = '\0'; // null character to symbolize end of message
-                        mmOutStream.write(tempBuffer,0,len+1);
-                        endCharacter = true;
-                    }
-                }
-                if(!endCharacter)
+            Log.d(TAG,"Sending file...");
+            byte[] bytes = new byte[1024];
+            BufferedInputStream bis;
+            int len;
+            try{
+                bis = new BufferedInputStream(new FileInputStream(file));
+                mmOutStream.write(("file:").getBytes());
+                Log.d(TAG, "file");
+                Log.d(TAG,String.valueOf(bis.available()));
+                while(bis.available()>0)
                 {
-                    byte[] tempBuffer = new byte[1];
-                    tempBuffer[0] = '\0';
-                    mmOutStream.write(tempBuffer,0,1);
+                    len = bis.read(bytes,0,bytes.length);
+                    if(len <= 0)
+                        break;
+                    if(len == bytes.length) {
+                        mmOutStream.write(bytes);
+                    }
+                    else {
+                        mmOutStream.write(bytes,0,len);
+                        break;
+                    }
+                    Log.d(TAG,String.valueOf(bis.available()));
                 }
+                bis.close();
+                Log.d(TAG,"data");
+                mmOutStream.write((":end").getBytes());
+                Log.d(TAG,"end");
+                mmOutStream.flush();
             }
-            catch(IOException e)
+            catch (FileNotFoundException e)
             {
-                Log.e(TAG,"Exception during write file", e);
+                Log.e(TAG,e.getMessage());
+            }
+            catch (IOException e2)
+            {
+                Log.e(TAG,e2.getMessage());
             }
         }
 
