@@ -387,49 +387,60 @@ public class TeamVisuals extends Fragment {
     private void generate_radar_data(Map<String, ScoutValue> map)
     {
         ArrayList<Entry> entries = new ArrayList<>();
-        for(int i = 0; i < 9; i++) {
-            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt(), i));
+        if(map.containsKey(Constants.TOTAL_DEFENSES_SEEN[0])) {
+            for (int i = 0; i < 9; i++) {
+                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt(), i));
+            }
         }
         mSeen = new RadarDataSet(entries,"Seen");
         mSeen.setColor(Color.RED);
         mSeen.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
-        for(int i = 0; i < 9; i++)
-        {
-            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_STARTED[i]).getInt(), i));
+        if(map.containsKey(Constants.TOTAL_DEFENSES_STARTED[0])) {
+            for (int i = 0; i < 9; i++) {
+                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_STARTED[i]).getInt(), i));
+            }
         }
         mStarted = new RadarDataSet(entries,"Started in front of");
         mStarted.setColor(Color.RED);
         mStarted.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
-        for(int i = 0; i < 9; i++ ) {
-            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt(), i));
+        if(map.containsKey(Constants.TOTAL_DEFENSES_AUTO_REACHED[0])) {
+            for (int i = 0; i < 9; i++) {
+                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt(), i));
+            }
         }
         mReached = new RadarDataSet(entries,"Auto Reach");
         mReached.setColor(Color.RED);
         mReached.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
-        for(int i = 0; i < 9; i++) {
-            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt(), i));
+        if(map.containsKey(Constants.TOTAL_DEFENSES_AUTO_CROSSED[0])) {
+            for (int i = 0; i < 9; i++) {
+                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt(), i));
+            }
         }
         mAutoCross = new RadarDataSet(entries,"Auto Cross");
         mAutoCross.setColor(Color.RED);
         mAutoCross.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
-        for(int i = 0; i < 9; i++) {
-            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt(), i));
+        if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[0])) {
+            for (int i = 0; i < 9; i++) {
+                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt(), i));
+            }
         }
         mTeleopCross = new RadarDataSet(entries,"Teleop Cross");
         mTeleopCross.setColor(Color.RED);
         mTeleopCross.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
-        for(int i = 0; i < 9; i++){
-            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt() / map.get(Constants.TOTAL_MATCHES).getInt(),i));
+        if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_TIME[0])) {
+            for (int i = 0; i < 9; i++) {
+                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt() / map.get(Constants.TOTAL_MATCHES).getInt(), i));
+            }
         }
         mTime = new RadarDataSet(entries,"Time");
         mTime.setColor(Color.RED);

@@ -2,6 +2,7 @@ package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -209,16 +210,16 @@ public class Settings extends AppCompatActivity {
                 }
             }
 
-            if(syncPIntent == null)
-            {
-                Log.d(TAG, "Creating Sync Service");
-                Intent intent = new Intent(this, SyncService.class);
-                startService(intent);
-                syncPIntent = PendingIntent.getService(this,0,intent,0);
-                AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-                alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,AlarmManager.INTERVAL_HALF_HOUR,AlarmManager.INTERVAL_HALF_HOUR,syncPIntent);
+            if(BluetoothAdapter.getDefaultAdapter() != null) {
+                if (syncPIntent == null) {
+                    Log.d(TAG, "Creating Sync Service");
+                    Intent intent = new Intent(this, SyncService.class);
+                    startService(intent);
+                    syncPIntent = PendingIntent.getService(this, 0, intent, 0);
+                    AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, syncPIntent);
+                }
             }
-
             Toast toast =Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
             toast.show();
 

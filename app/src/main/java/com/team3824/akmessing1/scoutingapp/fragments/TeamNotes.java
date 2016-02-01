@@ -58,15 +58,15 @@ public class TeamNotes extends Fragment {
         notes = "";
         SuperScoutDB superScoutDB = new SuperScoutDB(activity,eventID);
         cursor = superScoutDB.getTeamNotes(teamNumber);
-        while(!cursor.isAfterLast())
-        {
-            if(cursor.getColumnIndex(Constants.SUPER_NOTES) != -1 && !cursor.getString(cursor.getColumnIndex(Constants.SUPER_NOTES)).equals(""))
-            {
-                notes += "Match " + String.valueOf(cursor.getInt(cursor.getColumnIndex(SuperScoutDB.KEY_MATCH_NUMBER))) + ": ";
-                notes += cursor.getString(cursor.getColumnIndex(Constants.SUPER_NOTES));
-                notes += "\n";
+        if(cursor != null) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getColumnIndex(Constants.SUPER_NOTES) != -1 && !cursor.getString(cursor.getColumnIndex(Constants.SUPER_NOTES)).equals("")) {
+                    notes += "Match " + String.valueOf(cursor.getInt(cursor.getColumnIndex(SuperScoutDB.KEY_MATCH_NUMBER))) + ": ";
+                    notes += cursor.getString(cursor.getColumnIndex(Constants.SUPER_NOTES));
+                    notes += "\n";
+                }
+                cursor.moveToNext();
             }
-            cursor.moveToNext();
         }
         if(notes.equals(""))
         {

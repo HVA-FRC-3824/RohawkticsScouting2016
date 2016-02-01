@@ -78,6 +78,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
     // When a category is selected calculate all the values needed for the columns and display
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        findViewById(R.id.key1).setVisibility(View.GONE);
+        findViewById(R.id.key2).setVisibility(View.GONE);
+        findViewById(R.id.key3).setVisibility(View.GONE);
         Cursor cursor = statsDB.getStats();
         switch(pos)
         {
@@ -86,6 +89,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
             case 1: // Defenses
                 defenses(cursor);
+                findViewById(R.id.key1).setVisibility(View.VISIBLE);
                 break;
             case 2: // Low Bar
                 individual_defense(cursor,Constants.LOW_BAR_INDEX);
@@ -128,6 +132,8 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 break;
             case 15: // Auto
                 auto(cursor);
+                findViewById(R.id.key2).setVisibility(View.VISIBLE);
+                findViewById(R.id.key3).setVisibility(View.VISIBLE);
                 break;
             case 16: // Endgame
                 endgame(cursor);

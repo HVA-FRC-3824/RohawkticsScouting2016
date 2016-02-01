@@ -246,16 +246,31 @@ public class SuperScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
-                new String[]{KEY_MATCH_NUMBER, Constants.SUPER_NOTES}, // b. column names
-                KEY_BLUE1+" = ? or "+KEY_BLUE2+" = ? or "+KEY_BLUE3+" = ? or "+KEY_RED1+" = ? or "+
-                        KEY_RED2+" = ? or "+KEY_RED3+" = ?", // c. selections
-                new String[]{String.valueOf(teamNumber),String.valueOf(teamNumber),
-                        String.valueOf(teamNumber),String.valueOf(teamNumber),
-                        String.valueOf(teamNumber),String.valueOf(teamNumber)}, // d. selection args
+                null, // b. column names
+                null, // c. selections
+                null, // d. selections args
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
-                null); // h. limit
+                "1"); // h. limit
+
+        if( cursor.getColumnIndex(Constants.SUPER_NOTES) != -1) {
+            cursor = db.query(tableName, // a. table
+                    new String[]{KEY_MATCH_NUMBER, Constants.SUPER_NOTES}, // b. column names
+                    KEY_BLUE1 + " = ? or " + KEY_BLUE2 + " = ? or " + KEY_BLUE3 + " = ? or " + KEY_RED1 + " = ? or " +
+                            KEY_RED2 + " = ? or " + KEY_RED3 + " = ?", // c. selections
+                    new String[]{String.valueOf(teamNumber), String.valueOf(teamNumber),
+                            String.valueOf(teamNumber), String.valueOf(teamNumber),
+                            String.valueOf(teamNumber), String.valueOf(teamNumber)}, // d. selection args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
+        else
+        {
+            return null;
+        }
         if(cursor != null)
             cursor.moveToFirst();
         return cursor;

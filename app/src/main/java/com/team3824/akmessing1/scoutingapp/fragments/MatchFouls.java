@@ -5,12 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.team3824.akmessing1.scoutingapp.HideKeyboard;
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.Utilities;
 
-/**
- * Created by tym on 1/16/2016.
- */
 public class MatchFouls extends ScoutFragment{
     public MatchFouls() {
         // Required empty public constructor
@@ -28,7 +25,7 @@ public class MatchFouls extends ScoutFragment{
         if(valueMap != null) {
             restoreContentsFromMap(valueMap, (ViewGroup) view);
         }
-        HideKeyboard.setupUI(getActivity(), view);
+        Utilities.setupUI(getActivity(), view);
         return view;
     }
 }

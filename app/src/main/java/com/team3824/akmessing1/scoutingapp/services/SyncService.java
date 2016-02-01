@@ -269,7 +269,7 @@ public class SyncService extends NonStopIntentService{
                     }
                     break;
                 case Constants.SUPER_SCOUT:
-                    if(connectedName.equals("3824_DriveTeam") || connectedName.equals("3824_STRATEGY") || connectedName.equals("3824_ADMIN"))
+                    if(connectedName.equals("3824_DriveTeam") || connectedName.equals("3824_Strategy") || connectedName.equals("3824_Admin"))
                     {
                         bluetoothSync.connect(device, false);
                         while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
