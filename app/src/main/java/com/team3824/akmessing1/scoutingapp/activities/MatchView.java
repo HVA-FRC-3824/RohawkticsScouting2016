@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment;
@@ -29,7 +30,7 @@ public class MatchView extends AppCompatActivity {
         final int matchNumber = extras.getInt("match_number");
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString("event_id", "");
+        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         CustomHeader header = (CustomHeader)findViewById(R.id.match_view_header);
         header.setBackOnClickListener(new View.OnClickListener() {

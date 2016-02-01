@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
@@ -58,7 +59,7 @@ public class SuperScouting extends AppCompatActivity {
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        eventId = sharedPreferences.getString("event_id", "");
+        eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
 
         Cursor cursor = scheduleDB.getMatch(matchNumber);

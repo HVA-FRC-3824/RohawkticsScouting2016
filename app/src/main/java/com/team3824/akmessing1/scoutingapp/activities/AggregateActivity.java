@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.services.AggregateService;
 
 public class AggregateActivity extends AppCompatActivity {
     private String TAG = "AggregateActivity";
@@ -27,23 +28,23 @@ public class AggregateActivity extends AppCompatActivity {
             }
         });
 
-        // Aggregate Update starts the aggregate service with the update option
+        // AggregateService Update starts the aggregate service with the update option
         button = (Button)findViewById(R.id.aggregate_update);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AggregateActivity.this, Aggregate.class);
+                Intent intent = new Intent(AggregateActivity.this, AggregateService.class);
                 intent.putExtra("update",true);
                 startService(intent);
             }
         });
 
-        // Aggregate Reset starts the aggregate service with the update option off
+        // AggregateService Reset starts the aggregate service with the update option off
         button = (Button)findViewById(R.id.aggregate_reset);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AggregateActivity.this,Aggregate.class);
+                Intent intent = new Intent(AggregateActivity.this,AggregateService.class);
                 intent.putExtra("update",false);
                 startService(intent);
             }

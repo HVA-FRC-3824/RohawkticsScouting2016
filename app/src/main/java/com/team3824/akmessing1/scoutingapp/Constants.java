@@ -6,7 +6,23 @@ public interface Constants {
     public static final int MESSAGE_READ=0;
     public static final int MESSAGE_WRITE=1;
 
+    // Settings
     public static final String EVENT_ID = "event_id";
+    public static final String USER_TYPE = "user_type";
+    public static final String ALLIANCE_COLOR = "alliance_color";
+    public static final String ALLIANCE_NUMBER = "alliance_number";
+
+    //User Types
+    public static final String MATCH_SCOUT = "Match Scout";
+    public static final String PIT_SCOUT = "Pit Scout";
+    public static final String SUPER_SCOUT = "Super Scout";
+    public static final String DRIVE_TEAM = "Drive Team";
+    public static final String STRATEGY = "Strategy";
+    public static final String ADMIN = "Admin";
+
+    //Alliance Colors
+    public static final String BLUE = "Blue";
+    public static final String RED = "Red";
 
     // Auto
     public static final String AUTO_START_POSITION = "auto_start_position";

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
@@ -61,7 +62,7 @@ public class PitScouting extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        eventId = sharedPreferences.getString("event_id", "");
+        eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
         Map<String, ScoutValue> map = pitScoutDB.getTeamMap(teamNumber);
         if(map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0)

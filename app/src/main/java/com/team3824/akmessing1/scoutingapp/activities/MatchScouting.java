@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
@@ -59,7 +60,7 @@ public class MatchScouting extends AppCompatActivity {
         setTitle("Match Number: " + matchNumber + " Team Number: " + teamNumber);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        allianceColor = sharedPreferences.getString("alliance_color", "");
+        allianceColor = sharedPreferences.getString(Constants.ALLIANCE_COLOR, "");
 
         // Set up tabs and pages for different fragments of a match
         findViewById(android.R.id.content).setKeepScreenOn(true);
@@ -68,7 +69,7 @@ public class MatchScouting extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(5);
         tabLayout = (TabLayout)findViewById(R.id.match_tab_layout);
-        if(allianceColor.equals("Blue"))
+        if(allianceColor.equals(Constants.BLUE))
         {
             tabLayout.setBackgroundColor(Color.BLUE);
         }
@@ -82,7 +83,7 @@ public class MatchScouting extends AppCompatActivity {
 
         // Restore any values from the database if this team/match combo has been scouted before
         // (basically if updating)
-        eventId = sharedPreferences.getString("event_id","");
+        eventId = sharedPreferences.getString(Constants.EVENT_ID,"");
         MatchScoutDB matchScoutDB = new MatchScoutDB(this,eventId);
         Map<String, ScoutValue> map = matchScoutDB.getTeamMatchInfo(teamNumber, matchNumber);
         if(map != null) {
@@ -94,7 +95,7 @@ public class MatchScouting extends AppCompatActivity {
         if(matchNumber != 1)
         {
             Cursor prevCursor = scheduleDB.getMatch(matchNumber - 1);
-            int allianceNum = sharedPreferences.getInt("alliance_number", 0);
+            int allianceNum = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
             prevTeamNumber = prevCursor.getInt(prevCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
             Log.d(TAG,"Prev Team: "+prevTeamNumber);
         }
@@ -109,7 +110,7 @@ public class MatchScouting extends AppCompatActivity {
         //Last match doesn't need a next button
         if(nextCursor != null)
         {
-            int allianceNum = sharedPreferences.getInt("alliance_number", 0);
+            int allianceNum = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
             nextTeamNumber = nextCursor.getInt(nextCursor.getColumnIndex(allianceColor.toLowerCase()+allianceNum));
             Log.d(TAG,"Next Team: "+nextTeamNumber);
         }

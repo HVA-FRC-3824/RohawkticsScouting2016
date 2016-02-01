@@ -41,7 +41,7 @@ public class TeamMatchData extends Fragment {
         String eventID = sharedPreferences.getString("event_id", "");
         StatsDB statsDB = new StatsDB(activity,eventID);
         Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
-
+/*
 
         if(statsMap.containsKey("total_matches"))
         {
@@ -149,6 +149,7 @@ public class TeamMatchData extends Fragment {
                 textView.setText("N/A");
             }
         }
+        */
         statsDB.close();
         return view;
     }

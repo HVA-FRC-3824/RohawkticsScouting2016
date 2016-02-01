@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
@@ -29,7 +30,7 @@ public class ScheduleBuilder extends AppCompatActivity {
         setContentView(R.layout.activity_schedule_builder);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString("event_id", "");
+        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
 
         layout = (LinearLayout)findViewById(R.id.schedule);

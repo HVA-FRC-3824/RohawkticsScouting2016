@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
@@ -37,7 +38,7 @@ public class MatchSchedule extends AppCompatActivity {
         });
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString("event_id", "");
+        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
         displayListView(scheduleDB);
         Button button = (Button)findViewById(R.id.edit);
