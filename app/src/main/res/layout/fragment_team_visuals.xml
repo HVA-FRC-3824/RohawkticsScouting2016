@@ -64,8 +64,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:id="@+id/speed"
-                    android:text="Speed" />
+                    android:id="@+id/time"
+                    android:text="Time" />
             </RadioGroup>
         </LinearLayout>
 

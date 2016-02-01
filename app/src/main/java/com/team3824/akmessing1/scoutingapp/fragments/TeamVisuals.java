@@ -16,9 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
-import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -26,7 +24,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -49,7 +46,7 @@ public class TeamVisuals extends Fragment {
     private String TAG = "TeamVisuals";
 
     RadarChart mRadarChart;
-    RadarDataSet mSeen, mStarted, mReached, mAutoCross, mTeleopCross, mSpeed;
+    RadarDataSet mSeen, mStarted, mReached, mAutoCross, mTeleopCross, mTime;
 
     LineChart mLineChart;
     YAxis mLineY;
@@ -183,12 +180,12 @@ public class TeamVisuals extends Fragment {
             }
         });
 
-        radioButton = (RadioButton)view.findViewById(R.id.speed);
+        radioButton = (RadioButton)view.findViewById(R.id.time);
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.DEFENSES, mSpeed));
-                switch((int)mSpeed.getYMax())
+                mRadarChart.setData(new RadarData(Constants.DEFENSES, mTime));
+                switch((int) mTime.getYMax())
                 {
                     case 30:
                         mRadarChart.getYAxis().setAxisMaxValue(30);
@@ -410,7 +407,7 @@ public class TeamVisuals extends Fragment {
         for(int i = 0; i < 9; i++ ) {
             entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt(), i));
         }
-        mReached = new RadarDataSet(entries,"Started in front of");
+        mReached = new RadarDataSet(entries,"Auto Reach");
         mReached.setColor(Color.RED);
         mReached.setValueFormatter(intVF);
 
@@ -432,14 +429,14 @@ public class TeamVisuals extends Fragment {
 
         entries = new ArrayList<>();
         for(int i = 0; i < 9; i++){
-            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_SPEED[i]).getInt() / map.get(Constants.TOTAL_MATCHES).getInt(),i));
+            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt() / map.get(Constants.TOTAL_MATCHES).getInt(),i));
         }
-        mSpeed = new RadarDataSet(entries,"Teleop Speed");
-        mSpeed.setColor(Color.RED);
-        mSpeed.setValueFormatter(new ValueFormatter() {
+        mTime = new RadarDataSet(entries,"Time");
+        mTime.setColor(Color.RED);
+        mTime.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return "<"+String.valueOf(value);
+                return "<" + String.valueOf(value);
             }
         });
     }

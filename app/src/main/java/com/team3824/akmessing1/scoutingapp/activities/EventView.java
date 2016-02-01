@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -49,6 +48,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_view);
 
+        // Add the custom header and have the back button take the user to the start screen
         CustomHeader customHeader = (CustomHeader)findViewById(R.id.event_view_header);
         customHeader.removeHome();
         customHeader.setBackOnClickListener(new View.OnClickListener() {
@@ -59,6 +59,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
 
+        // Set up the dropdown menu for all the comparison categories
         Spinner spinner = (Spinner)findViewById(R.id.event_view_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_view_options, android.R.layout.simple_spinner_item);
@@ -75,6 +76,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
+    // When a category is selected calculate all the values needed for the columns and display
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         Cursor cursor = statsDB.getStats();
         switch(pos)
@@ -136,8 +138,10 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
+    // Not possible for nothing to be selected ...
     public void onNothingSelected(AdapterView<?> parent) {}
 
+    // Calculate all the different types of points for each team and then sort the teams
     private void points(Cursor cursor)
     {
         ArrayList<ELI_Points> teams = new ArrayList<>();
@@ -192,6 +196,8 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
             cursor.moveToNext();
         }
+
+        // Sorting is based on average points
         Collections.sort(teams, new Comparator<ELI_Points>() {
             @Override
             public int compare(ELI_Points lhs, ELI_Points rhs) {
@@ -204,11 +210,14 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                     return 0;
             }
         });
+
+        // Header row hack
         teams.add(0, new ELI_Points(-1));
         ELA_Points eventPointsListAdapter = new ELA_Points(this, R.layout.list_item_event_points, teams);
         listView.setAdapter(eventPointsListAdapter);
     }
 
+    // Calculate all the values for the defenses
     private void defenses(Cursor cursor)
     {
         ArrayList<ELI_Defenses> teams = new ArrayList<>();
@@ -223,38 +232,47 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 team.cPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.PORTCULLIS_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.PORTCULLIS_INDEX]));
                 team.sPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.PORTCULLIS_INDEX]));
+                team.tPortcullis = (team.sPortcullis == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.PORTCULLIS_INDEX])) / (float)team.sPortcullis;
 
                 team.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX]));
                 team.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.CHEVAL_DE_FRISE_INDEX]));
+                team.tChevalDeFrise = (team.sChevalDeFrise == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.CHEVAL_DE_FRISE_INDEX])) / (float)team.sChevalDeFrise;
 
                 team.cMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.MOAT_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.MOAT_INDEX]));
                 team.sMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.MOAT_INDEX]));
+                team.tMoat = (team.sMoat == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.MOAT_INDEX])) / (float)team.sMoat;
 
                 team.cRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.RAMPARTS_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.RAMPARTS_INDEX]));
                 team.sRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.RAMPARTS_INDEX]));
+                team.tRamparts = (team.sRamparts == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.RAMPARTS_INDEX])) / (float)team.sRamparts;
 
                 team.cDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.DRAWBRIDGE_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.DRAWBRIDGE_INDEX]));
                 team.sDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.DRAWBRIDGE_INDEX]));
+                team.tDrawbridge = (team.sDrawbridge == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.DRAWBRIDGE_INDEX])) / (float)team.sDrawbridge;
 
                 team.cSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.SALLY_PORT_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.SALLY_PORT_INDEX]));
                 team.sSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.SALLY_PORT_INDEX]));
+                team.tSallyPort = (team.sSallyPort == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.SALLY_PORT_INDEX])) / (float)team.sSallyPort;
 
                 team.cRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.ROUGH_TERRAIN_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROUGH_TERRAIN_INDEX]));
                 team.sRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROUGH_TERRAIN_INDEX]));
+                team.tRoughTerrain = (team.sRoughTerrain == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.ROUGH_TERRAIN_INDEX])) / (float)team.sRoughTerrain;
 
                 team.cRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.ROCK_WALL_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROCK_WALL_INDEX]));
                 team.sRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROCK_WALL_INDEX]));
+                team.tRockWall = (team.sRockWall == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.ROCK_WALL_INDEX])) / (float)team.sRockWall;
 
                 team.cLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.LOW_BAR_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.LOW_BAR_INDEX]));
                 team.sLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.LOW_BAR_INDEX]));
+                team.tLowBar = (team.sLowBar == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.LOW_BAR_INDEX])) / (float)team.sLowBar;
 
                 team.totalCrosses = team.cPortcullis + team.cChevalDeFrise + team.cMoat +
                         team.cRamparts + team.cDrawbridge + team.cSallyPort + team.cRoughTerrain +
@@ -264,7 +282,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             cursor.moveToNext();
         }
 
-        // Compares based on average total crosses
+        // Compares based on average total number of crosses
         Collections.sort(teams, new Comparator<ELI_Defenses>() {
             @Override
             public int compare(ELI_Defenses lhs, ELI_Defenses rhs) {
@@ -278,11 +296,14 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                     return 0;
             }
         });
+
+        // Header row hack
         teams.add(0, new ELI_Defenses(-1));
         ELA_Defenses ela_Defenses = new ELA_Defenses(this, R.layout.list_item_event_defenses, teams);
         listView.setAdapter(ela_Defenses);
     }
 
+    // Calculates all the values for an individual defense
     private void individual_defense(Cursor cursor, int defense_index)
     {
         ArrayList<ELI_IndividualDefense> teams = new ArrayList<>();
@@ -298,24 +319,44 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 team.mAutoCross = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]));
                 team.mAutoReach = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[defense_index]));
                 team.mSeen = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[defense_index]));
-                team.mAvg = (team.mSeen == 0)?0.0f:(float)(team.mAutoCross+team.mTeleopCross)/(team.mSeen);
+                team.mTime = (team.mSeen == 0)?-1:(float)cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[defense_index]))/(float)team.mSeen;
             }
             teams.add(team);
             cursor.moveToNext();
         }
 
-
+        // Sorts based on the total number of times cross (auto and teleop) / the number of times seen
         Collections.sort(teams, new Comparator<ELI_IndividualDefense>() {
             @Override
             public int compare(ELI_IndividualDefense lhs, ELI_IndividualDefense rhs) {
                 // tertiary statement make the values 0 if the team has been in no matches
-                float delta = ((lhs.mSeen == 0)?0:((float)(lhs.mAutoCross+lhs.mTeleopCross)/(float)lhs.mSeen)) - ((rhs.mSeen == 0)?0:((float)(rhs.mAutoCross+rhs.mTeleopCross)/(float)rhs.mSeen));
-                if(delta < 0)
-                    return 1;
-                else if(delta > 0)
-                    return -1;
-                else
+                if(lhs.mAutoCross == 0 && lhs.mTeleopCross == 0 && rhs.mAutoCross == 0 && rhs.mTeleopCross == 0)
+                {
                     return 0;
+                }
+                else if(lhs.mAutoCross == 0 && lhs.mTeleopCross == 0)
+                {
+                    return 1;
+                }
+                else if(rhs.mAutoCross == 0 && rhs.mTeleopCross == 0)
+                {
+                    return -1;
+                }
+                else
+                {
+                    if(lhs.mTime < rhs.mTime)
+                    {
+                        return -1;
+                    }
+                    else if(lhs.mTime > rhs.mTime)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
             }
         });
 
@@ -324,6 +365,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         listView.setAdapter(eventIndividualDefenseListAdapter);
     }
 
+    // Calculates all the values for shooting for a goal
     private void goal(Cursor cursor, String goal)
     {
         ArrayList<ELI_Shots> teams = new ArrayList<>();
@@ -347,7 +389,8 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             cursor.moveToNext();
         }
 
-
+        // Sorted based on percentage if more than 10 shots taken or
+        // number of shots made if less than 10
         Collections.sort(teams, new Comparator<ELI_Shots>() {
             @Override
             public int compare(ELI_Shots lhs, ELI_Shots rhs) {
@@ -386,6 +429,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         listView.setAdapter(eventShotListAdapter);
     }
 
+    // Calculates values for auto
     private void auto(Cursor cursor)
     {
         ArrayList<ELI_Auto> teams = new ArrayList<>();
@@ -442,11 +486,10 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             cursor.moveToNext();
         }
 
-        // Compares based on average total crosses
+        // Compares based on average auto points
         Collections.sort(teams, new Comparator<ELI_Auto>() {
             @Override
             public int compare(ELI_Auto lhs, ELI_Auto rhs) {
-                // tertiary statement make the values 0 if the team has been in no matches
                 if(lhs.mDefenses.sLowBar == 0 && rhs.mDefenses.sLowBar == 0) {
                     return 0;
                 }
@@ -477,9 +520,9 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                     float delta = ((rhs.mDefenses.totalCrosses*10.0f + rhs.mHigh.mAutoMade * 10.0f + rhs.mLow.mAutoMade * 5.0f) / (float)rhs.mDefenses.sLowBar) -
                             ((lhs.mDefenses.totalCrosses*10.0f + lhs.mHigh.mAutoMade * 10.0f + lhs.mLow.mAutoMade * 5.0f) / (float)lhs.mDefenses.sLowBar);
                     if(delta < 0)
-                        return 1;
-                    else if(delta > 0)
                         return -1;
+                    else if(delta > 0)
+                        return 1;
                     else
                         return 0;
                 }
@@ -490,6 +533,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         listView.setAdapter(ela_Auto);
     }
 
+    // Grabs ability rankings
     private void ability(Cursor cursor, String ability)
     {
         ArrayList<ELI_Ability> teams = new ArrayList<>();
@@ -522,11 +566,11 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 }
                 else if(lhs.mRank.equals("N/A"))
                 {
-                    return -1;
+                    return 1;
                 }
                 else if(rhs.mRank.equals("N/A"))
                 {
-                    return 1;
+                    return -1;
                 }
 
                 int l_rank = (lhs.mRank.charAt(0) == 'T')? Integer.parseInt(lhs.mRank.substring(1)):Integer.parseInt(lhs.mRank);
@@ -539,6 +583,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         listView.setAdapter(ela_Ability);
     }
 
+    // Calculates values for comparing endgames
     private void endgame(Cursor cursor)
     {
         ArrayList<ELI_Endgame> teams = new ArrayList<>();
@@ -559,6 +604,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             cursor.moveToNext();
         }
 
+        // Sorts based on average endgame points
         Collections.sort(teams, new Comparator<ELI_Endgame>() {
             @Override
             public int compare(ELI_Endgame lhs, ELI_Endgame rhs) {

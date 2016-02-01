@@ -95,6 +95,10 @@ public class SyncActivity extends AppCompatActivity {
             // Get the device MAC address, which is the last 17 chars in the View
             String info = ((TextView) v).getText().toString();
             String address = info.substring(info.length() - 17);
+            for(int i = 0; i < av.getChildCount(); i++) {
+                ((TextView)av.getChildAt(i)).setTextColor(Color.BLACK);
+                ((TextView)av.getChildAt(i)).setBackgroundColor(Color.WHITE);
+            }
             v.setBackgroundColor(Color.BLUE);
             ((TextView) v).setTextColor(Color.WHITE);
             bluetoothSync.connect(((BluetoothDevice)pairedDevices[position]), false);

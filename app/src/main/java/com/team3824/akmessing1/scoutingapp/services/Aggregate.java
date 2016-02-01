@@ -130,7 +130,7 @@ public class Aggregate extends IntentService {
             //Teleop
             int[] totalTeleopDefenses = set_start_array(teamStats, "teleop");
             int[] totalDefensesSeen = set_start_array(teamStats, "seen");
-            int[] totalDefensesSpeed = set_start_array(teamStats, "speed");
+            int[] totalDefensesTime = set_start_array(teamStats, "time");
             int totalTeleopHighGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_HIT);
             int totalTeleopHighGoalMiss = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_MISS);
             int totalTeleopLowGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_LOW_HIT);
@@ -192,7 +192,7 @@ public class Aggregate extends IntentService {
 
                 //Teleop
                 increment_array(teamCursor, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
-                increment_array(teamCursor, totalDefensesSpeed, defense2, defense3, defense4, defense5, "speed");
+                increment_array(teamCursor, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
                 totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
                 totalTeleopHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_MISS));
                 totalTeleopLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_HIT));
@@ -223,7 +223,7 @@ public class Aggregate extends IntentService {
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_REACHED[j],new ScoutValue(totalDefenseReaches[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_CROSSED[j],new ScoutValue(totalDefenseCrosses[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[j],new ScoutValue(totalTeleopDefenses[j]));
-                teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_SPEED[j], new ScoutValue(totalDefensesSpeed[j]));
+                teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_TIME[j], new ScoutValue(totalDefensesTime[j]));
             }
             teamMap.put("total_start_spybox",new ScoutValue(totalStartPosition[9]));
             teamMap.put("total_start_secret_passage",new ScoutValue(totalStartPosition[10]));
@@ -529,8 +529,8 @@ public class Aggregate extends IntentService {
                 case "seen":
                     array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_SEEN[i]);
                     break;
-                case "speed":
-                    array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_TELEOP_SPEED[i]);
+                case "time":
+                    array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_TELEOP_TIME[i]);
                     break;
             }
         }
@@ -661,22 +661,22 @@ public class Aggregate extends IntentService {
                 index = defensesList.indexOf("low_bar");
                 array[index] ++;
                 break;
-            case "speed":
+            case "time":
                 index = defensesList.indexOf(defense2);
-                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_2)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_2)));
                 index = defensesList.indexOf(defense3);
-                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_3)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_3)));
                 index = defensesList.indexOf(defense4);
-                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_4)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_4)));
                 index = defensesList.indexOf(defense5);
-                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_5)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_5)));
                 index = defensesList.indexOf("low_bar");
-                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_1)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_1)));
                 break;
         }
     }
 
-    private int stringToSpeed(String string)
+    private int stringToTime(String string)
     {
         switch (string)
         {

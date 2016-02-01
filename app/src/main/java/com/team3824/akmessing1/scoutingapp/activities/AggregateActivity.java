@@ -18,6 +18,7 @@ public class AggregateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aggregate);
 
+        // Back button takes the user back to the start screen
         Button button = (Button)findViewById(R.id.back);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,6 +28,7 @@ public class AggregateActivity extends AppCompatActivity {
             }
         });
 
+        // Aggregate Update starts the aggregate service with the update option
         button = (Button)findViewById(R.id.aggregate_update);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +39,7 @@ public class AggregateActivity extends AppCompatActivity {
             }
         });
 
+        // Aggregate Reset starts the aggregate service with the update option off
         button = (Button)findViewById(R.id.aggregate_reset);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

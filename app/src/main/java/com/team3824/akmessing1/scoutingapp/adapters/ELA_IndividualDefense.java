@@ -49,8 +49,8 @@ public class ELA_IndividualDefense extends ArrayAdapter<ELI_IndividualDefense>{
             textView.setText("Seen");
             textView = (TextView)convertView.findViewById(R.id.event_teleop_cross);
             textView.setText("Teleop Cross");
-            textView = (TextView)convertView.findViewById(R.id.event_avg);
-            textView.setText("Avg");
+            textView = (TextView)convertView.findViewById(R.id.event_time);
+            textView.setText("Time (s)");
         }
         else
         {
@@ -66,8 +66,8 @@ public class ELA_IndividualDefense extends ArrayAdapter<ELI_IndividualDefense>{
             textView.setText(String.valueOf(team.mSeen));
             textView = (TextView)convertView.findViewById(R.id.event_teleop_cross);
             textView.setText(String.valueOf(team.mTeleopCross));
-            textView = (TextView)convertView.findViewById(R.id.event_avg);
-            textView.setText(String.valueOf(team.mAvg));
+            textView = (TextView)convertView.findViewById(R.id.event_time);
+            textView.setText(String.valueOf(team.mTime));
         }
 
         return convertView;
