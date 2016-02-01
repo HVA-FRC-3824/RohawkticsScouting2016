@@ -6,34 +6,10 @@
         <item>Reach</item>
         <item>Cross</item>
     </string-array>
-    <string-array name="teleop_defense_time_1">
-        <item>5 seconds</item>
-        <item>10 seconds</item>
-        <item>15 seonds</item>
-        <item>Stuck</item>
-    </string-array>
-    <string-array name="teleop_defense_time_2">
-        <item>5 seconds</item>
-        <item>10 seconds</item>
-        <item>15 seonds</item>
-        <item>Stuck</item>
-    </string-array>
-    <string-array name="teleop_defense_time_3">
-        <item>5 seconds</item>
-        <item>10 seconds</item>
-        <item>15 seonds</item>
-        <item>Stuck</item>
-    </string-array>
-    <string-array name="teleop_defense_time_4">
-        <item>5 seconds</item>
-        <item>10 seconds</item>
-        <item>15 seonds</item>
-        <item>Stuck</item>
-    </string-array>
-    <string-array name="teleop_defense_time_5">
-        <item>5 seconds</item>
-        <item>10 seconds</item>
-        <item>15 seonds</item>
+    <string-array name="teleop_defense_time">
+        <item>&lt;5 seconds</item>
+        <item>&lt;10 seconds</item>
+        <item>&lt;15 seconds</item>
         <item>Stuck</item>
     </string-array>
     <string-array name="endGame_challenge_scale_radio">

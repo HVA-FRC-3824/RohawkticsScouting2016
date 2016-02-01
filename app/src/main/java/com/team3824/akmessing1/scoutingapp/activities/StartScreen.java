@@ -169,7 +169,7 @@ public class StartScreen extends AppCompatActivity {
 
     public void aggregate(View view)
     {
-        Intent intent = new Intent(this, Aggregate.class);
-        startService(intent);
+        Intent intent = new Intent(this, AggregateActivity.class);
+        startActivity(intent);
     }
 }

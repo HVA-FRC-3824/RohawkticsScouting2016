@@ -18,10 +18,15 @@ public interface Constants {
 
     // Teleop
     public static final String TELEOP_DEFENSE_1 = "teleop_defense_1";
+    public static final String TELEOP_DEFENSE_TIME_1 = "teleop_defense_time_1";
     public static final String TELEOP_DEFENSE_2 = "teleop_defense_2";
+    public static final String TELEOP_DEFENSE_TIME_2 = "teleop_defense_time_2";
     public static final String TELEOP_DEFENSE_3 = "teleop_defense_3";
+    public static final String TELEOP_DEFENSE_TIME_3 = "teleop_defense_time_3";
     public static final String TELEOP_DEFENSE_4 = "teleop_defense_4";
+    public static final String TELEOP_DEFENSE_TIME_4 = "teleop_defense_time_4";
     public static final String TELEOP_DEFENSE_5 = "teleop_defense_5";
+    public static final String TELEOP_DEFENSE_TIME_5 = "teleop_defense_time_5";
     public static final String TELEOP_HIGH_HIT = "teleop_high_hit";
     public static final String TELEOP_HIGH_MISS = "teleop_high_miss";
     public static final String TELEOP_LOW_HIT = "teleop_low_hit";
@@ -104,6 +109,9 @@ public interface Constants {
     public static final String[] TOTAL_DEFENSES_TELEOP_CROSSED = {"total_teleop_low_bar", "total_teleop_portcullis",
             "total_teleop_cheval_de_frise","total_teleop_moat","total_teleop_ramparts","total_teleop_drawbridge",
             "total_teleop_sally_port","total_teleop_rock_wall","total_teleop_rough_terrain"};
+    public static final String[] TOTAL_DEFENSES_TELEOP_SPEED = {"total_teleop_low_bar_speed", "total_teleop_portcullis_speed",
+            "total_teleop_cheval_de_frise_speed","total_teleop_moat_speed","total_teleop_ramparts_speed","total_teleop_drawbridge_speed",
+            "total_teleop_sally_port_speed","total_teleop_rock_wall_speed","total_teleop_rough_terrain_speed"};
 
     public static final String TOTAL_AUTO_HIGH_HIT = "total_auto_high_hit";
     public static final String TOTAL_AUTO_HIGH_MISS = "total_auto_high_miss";

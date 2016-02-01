@@ -68,11 +68,7 @@ public class Aggregate extends IntentService {
         if(matchesUpdated == null || matchesUpdated.size() > 0)
         {
             Cursor matchCursor;
-
-//            if(matchesUpdated == null)
-                matchCursor = superScoutDB.getAllMatches();
-//            else
-//                matchCursor = superScoutDB.getAllMatchesSince(lastUpdated);
+            matchCursor = superScoutDB.getAllMatches();
 
             Integer[] teamNumbers = pitScoutDB.getTeamNumbers();
             if(matchCursor.getCount() > 0) {
@@ -109,9 +105,10 @@ public class Aggregate extends IntentService {
             }
         }
 
+        boolean update = intent.getBooleanExtra("update",false);
 
-        ArrayList<Integer> teamsUpdated = matchScoutDB.getTeamsUpdatedSince(lastUpdated);
-        Log.d(TAG,String.valueOf(teamsUpdated.size()));
+        ArrayList<Integer> teamsUpdated = (update)?matchScoutDB.getTeamsUpdatedSince(lastUpdated):
+                matchScoutDB.getTeamsUpdatedSince("");
         for(int i = 0; i < teamsUpdated.size(); i++)
         {
             Cursor teamCursor = matchScoutDB.getTeamInfoSince(teamsUpdated.get(i), lastUpdated);
@@ -133,6 +130,7 @@ public class Aggregate extends IntentService {
             //Teleop
             int[] totalTeleopDefenses = set_start_array(teamStats, "teleop");
             int[] totalDefensesSeen = set_start_array(teamStats, "seen");
+            int[] totalDefensesSpeed = set_start_array(teamStats, "speed");
             int totalTeleopHighGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_HIT);
             int totalTeleopHighGoalMiss = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_MISS);
             int totalTeleopLowGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_LOW_HIT);
@@ -193,7 +191,8 @@ public class Aggregate extends IntentService {
                 totalAutoLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_LOW_MISS));
 
                 //Teleop
-                increment_array(teamCursor,totalTeleopDefenses,defense2, defense3,defense4, defense5,"teleop");
+                increment_array(teamCursor, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
+                increment_array(teamCursor, totalDefensesSpeed, defense2, defense3, defense4, defense5, "speed");
                 totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
                 totalTeleopHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_MISS));
                 totalTeleopLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_HIT));
@@ -224,6 +223,7 @@ public class Aggregate extends IntentService {
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_REACHED[j],new ScoutValue(totalDefenseReaches[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_CROSSED[j],new ScoutValue(totalDefenseCrosses[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[j],new ScoutValue(totalTeleopDefenses[j]));
+                teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_SPEED[j], new ScoutValue(totalDefensesSpeed[j]));
             }
             teamMap.put("total_start_spybox",new ScoutValue(totalStartPosition[9]));
             teamMap.put("total_start_secret_passage",new ScoutValue(totalStartPosition[10]));
@@ -233,7 +233,7 @@ public class Aggregate extends IntentService {
             teamMap.put(Constants.TOTAL_AUTO_LOW_HIT,new ScoutValue(totalAutoLowGoalHit));
             teamMap.put(Constants.TOTAL_AUTO_LOW_MISS,new ScoutValue(totalAutoLowGoalMiss));
 
-            teamMap.put(Constants.TOTAL_TELEOP_HIGH_HIT, new ScoutValue(totalAutoHighGoalHit));
+            teamMap.put(Constants.TOTAL_TELEOP_HIGH_HIT, new ScoutValue(totalTeleopHighGoalHit));
             teamMap.put(Constants.TOTAL_TELEOP_HIGH_MISS, new ScoutValue(totalTeleopHighGoalMiss));
             teamMap.put(Constants.TOTAL_TELEOP_LOW_HIT, new ScoutValue(totalTeleopLowGoalHit));
             teamMap.put(Constants.TOTAL_TELEOP_LOW_MISS, new ScoutValue(totalTeleopLowGoalMiss));
@@ -529,6 +529,9 @@ public class Aggregate extends IntentService {
                 case "seen":
                     array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_SEEN[i]);
                     break;
+                case "speed":
+                    array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_TELEOP_SPEED[i]);
+                    break;
             }
         }
         if(type.equals("start"))
@@ -658,6 +661,36 @@ public class Aggregate extends IntentService {
                 index = defensesList.indexOf("low_bar");
                 array[index] ++;
                 break;
+            case "speed":
+                index = defensesList.indexOf(defense2);
+                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_2)));
+                index = defensesList.indexOf(defense3);
+                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_3)));
+                index = defensesList.indexOf(defense4);
+                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_4)));
+                index = defensesList.indexOf(defense5);
+                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_5)));
+                index = defensesList.indexOf("low_bar");
+                array[index] += stringToSpeed(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_1)));
+                break;
         }
     }
+
+    private int stringToSpeed(String string)
+    {
+        switch (string)
+        {
+            case "<5 seconds":
+                return 5;
+            case "<10 seconds":
+                return 10;
+            case "<15 seconds":
+                return 15;
+            case "Stuck":
+                return 30;
+            default:
+                return 0;
+        }
+    }
+
 }

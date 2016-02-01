@@ -135,19 +135,16 @@ public class MatchScouting extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.match_scouting_home:
-                Intent intent = new Intent(this, StartScreen.class);
-                startActivity(intent);
+                home_press();
                 break;
             case R.id.match_scouting_back:
-                Intent intent2 = new Intent(this, MatchList.class);
-                intent2.putExtra("nextPage","match_scouting");
-                startActivity(intent2);
+                back_press();
                 break;
             case R.id.match_scouting_previous:
                 previous_press();
                 break;
             case R.id.match_scouting_next:
-                next_pressed();
+                next_press();
                 break;
             // Shouldn't be one
             default:
@@ -156,7 +153,114 @@ public class MatchScouting extends AppCompatActivity {
         return true;
     }
 
-    void previous_press()
+    private void home_press()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                for (ScoutFragment fragment : fragmentList) {
+                    fragment.writeContentsToMap(data);
+                }
+
+                Log.d(TAG,"Saving values");
+                // Add the team and match numbers
+                MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
+                data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
+                // Store values to the database
+                matchScoutDB.updateMatch(data);
+
+                // Go to the next match
+                Intent intent = new Intent(MatchScouting.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(MatchScouting.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    private void back_press()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                for (ScoutFragment fragment : fragmentList) {
+                    fragment.writeContentsToMap(data);
+                }
+
+                Log.d(TAG,"Saving values");
+                // Add the team and match numbers
+                MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
+                data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
+                // Store values to the database
+                matchScoutDB.updateMatch(data);
+
+                // Go to the next match
+                Intent intent = new Intent(MatchScouting.this, MatchList.class);
+                intent.putExtra("nextPage","match_scouting");
+                startActivity(intent);
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(MatchScouting.this, MatchList.class);
+                intent.putExtra("nextPage","match_scouting");
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+
+    private void previous_press()
     {
         Log.d(TAG,"previous match pressed");
         AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
@@ -213,7 +317,7 @@ public class MatchScouting extends AppCompatActivity {
         builder.show();
     }
 
-    void next_pressed()
+    private void next_press()
     {
         Log.d(TAG, "next match pressed");
 

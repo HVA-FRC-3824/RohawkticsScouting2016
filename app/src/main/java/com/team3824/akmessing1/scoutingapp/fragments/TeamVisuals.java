@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
+import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
@@ -32,6 +33,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
@@ -50,8 +52,14 @@ public class TeamVisuals extends Fragment {
     RadarDataSet mSeen, mStarted, mReached, mAutoCross, mTeleopCross, mSpeed;
 
     LineChart mLineChart;
+    YAxis mLineY;
     LineDataSet mAutoHighMade, mAutoHighPercent, mAutoLowMade, mAutoLowPercent, mTeleopHighMade,
             mTeleopHighPercent, mTeleopLowMade, mTeleopLowPercent;
+
+    ValueFormatter intVF;
+    ValueFormatter percentVF;
+    YAxisValueFormatter intYVF;
+    YAxisValueFormatter percentYVF;
 
     BarChart mBarChart;
     BarDataSet mEndgame;
@@ -60,7 +68,36 @@ public class TeamVisuals extends Fragment {
 
     public TeamVisuals()
     {
+        intVF = new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return String.valueOf((int)value);
+            }
+        };
 
+        percentVF = new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                value *= 10;
+                value = (int)value;
+                value /= 10;
+                return String.valueOf(value)+"%";
+            }
+        };
+
+        intYVF = new YAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, YAxis yAxis) {
+                return String.valueOf((int)value);
+            }
+        };
+
+        percentYVF = new YAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, YAxis yAxis) {
+                return String.valueOf((int)value)+"%";
+            }
+        };
     }
 
     @Override
@@ -118,6 +155,7 @@ public class TeamVisuals extends Fragment {
         mRadarChart.getLegend().setEnabled(false);
         mRadarChart.setDescription("");
         mRadarChart.getYAxis().setShowOnlyMinMax(true);
+        mRadarChart.getYAxis().setValueFormatter(intYVF);
 
         generate_radar_data(statsMap);
 
@@ -126,6 +164,8 @@ public class TeamVisuals extends Fragment {
             @Override
             public void onClick(View v) {
                 mRadarChart.setData(new RadarData(Constants.DEFENSES, mSeen));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mSeen.getYMax() + 1);
+                mRadarChart.getYAxis().setLabelCount((int)mSeen.getYMax()+2,true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
@@ -136,6 +176,8 @@ public class TeamVisuals extends Fragment {
             @Override
             public void onClick(View v) {
                 mRadarChart.setData(new RadarData(Constants.DEFENSES,mStarted));
+                mRadarChart.getYAxis().setAxisMaxValue((int)mStarted.getYMax()+1);
+                mRadarChart.getYAxis().setLabelCount((int) mStarted.getYMax() + 2, true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
@@ -145,7 +187,30 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.DEFENSES,mSpeed));
+                mRadarChart.setData(new RadarData(Constants.DEFENSES, mSpeed));
+                switch((int)mSpeed.getYMax())
+                {
+                    case 30:
+                        mRadarChart.getYAxis().setAxisMaxValue(30);
+                        mRadarChart.getYAxis().setLabelCount(7, true);
+                        break;
+                    case 15:
+                        mRadarChart.getYAxis().setAxisMaxValue(15);
+                        mRadarChart.getYAxis().setLabelCount(4, true);
+                        break;
+                    case 10:
+                        mRadarChart.getYAxis().setAxisMaxValue(10);
+                        mRadarChart.getYAxis().setLabelCount(3, true);
+                        break;
+                    case 5:
+                        mRadarChart.getYAxis().setAxisMaxValue(5);
+                        mRadarChart.getYAxis().setLabelCount(2, true);
+                        break;
+                    case 0:
+                        mRadarChart.getYAxis().setAxisMaxValue(1);
+                        mRadarChart.getYAxis().setLabelCount(2, true);
+                        break;
+                }
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
@@ -156,6 +221,8 @@ public class TeamVisuals extends Fragment {
             @Override
             public void onClick(View v) {
                 mRadarChart.setData(new RadarData(Constants.DEFENSES,mAutoCross));
+                mRadarChart.getYAxis().setAxisMaxValue((int)mAutoCross.getYMax()+1);
+                mRadarChart.getYAxis().setLabelCount((int) mAutoCross.getYMax() + 2, true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
@@ -166,6 +233,8 @@ public class TeamVisuals extends Fragment {
             @Override
             public void onClick(View v) {
                 mRadarChart.setData(new RadarData(Constants.DEFENSES,mTeleopCross));
+                mRadarChart.getYAxis().setAxisMaxValue((int)mTeleopCross.getYMax()+1);
+                mRadarChart.getYAxis().setLabelCount((int) mTeleopCross.getYMax() + 2, true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
@@ -176,20 +245,22 @@ public class TeamVisuals extends Fragment {
             @Override
             public void onClick(View v) {
                 mRadarChart.setData(new RadarData(Constants.DEFENSES, mReached));
+                mRadarChart.getYAxis().setAxisMaxValue((int)mReached.getYMax()+1);
+                mRadarChart.getYAxis().setLabelCount((int) mReached.getYMax() + 2, true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
-        
+
         mLineChart = (LineChart)view.findViewById(R.id.line_chart);
         mLineChart.getLegend().setEnabled(false);
         mLineChart.setDescription("");
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAvoidFirstLastClipping(true);
-        mLineChart.getAxisLeft().setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        mLineY = mLineChart.getAxisLeft();
+        mLineY.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         mLineChart.getAxisRight().setEnabled(false);
-        mLineChart.setExtraLeftOffset(15);
 
         generate_line_data(matchCursor);
 
@@ -197,9 +268,11 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLineChart.getAxisLeft().resetAxisMaxValue();
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mAutoHighMade));
+                mLineY.setAxisMaxValue((int) mAutoHighMade.getYMax()+1);
+                mLineY.setLabelCount((int) mAutoHighMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -209,9 +282,11 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLineChart.getAxisLeft().resetAxisMaxValue();
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mAutoLowMade));
+                mLineY.setAxisMaxValue((int) mAutoLowMade.getYMax()+1);
+                mLineY.setLabelCount((int) mAutoLowMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -221,9 +296,11 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLineChart.getAxisLeft().resetAxisMaxValue();
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mTeleopHighMade));
+                mLineY.setAxisMaxValue((int) mTeleopHighMade.getYMax()+1);
+                mLineY.setLabelCount((int) mTeleopHighMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -233,9 +310,11 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLineChart.getAxisLeft().resetAxisMaxValue();
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mTeleopLowMade));
+                mLineY.setAxisMaxValue((int) mTeleopLowMade.getYMax()+1);
+                mLineY.setLabelCount((int) mTeleopLowMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -248,6 +327,7 @@ public class TeamVisuals extends Fragment {
                 mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mAutoHighPercent));
+                mLineY.setValueFormatter(percentYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -260,6 +340,7 @@ public class TeamVisuals extends Fragment {
                 mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mAutoLowPercent));
+                mLineY.setValueFormatter(percentYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -272,6 +353,7 @@ public class TeamVisuals extends Fragment {
                 mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mTeleopHighPercent));
+                mLineY.setValueFormatter(percentYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -284,6 +366,7 @@ public class TeamVisuals extends Fragment {
                 mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches,mTeleopLowPercent));
+                mLineY.setValueFormatter(percentYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
@@ -294,6 +377,9 @@ public class TeamVisuals extends Fragment {
         mBarChart.getAxisRight().setEnabled(false);
         mBarChart.getLegend().setEnabled(false);
         mBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        mBarChart.getAxisLeft().setAxisMaxValue(15);
+        mBarChart.getAxisLeft().setLabelCount(4,true);
+        mBarChart.getAxisLeft().setValueFormatter(intYVF);
 
         generate_bar_data(matchCursor);
         mBarChart.setData(new BarData(mMatches,mEndgame));
@@ -309,6 +395,7 @@ public class TeamVisuals extends Fragment {
         }
         mSeen = new RadarDataSet(entries,"Seen");
         mSeen.setColor(Color.RED);
+        mSeen.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
         for(int i = 0; i < 9; i++)
@@ -317,6 +404,7 @@ public class TeamVisuals extends Fragment {
         }
         mStarted = new RadarDataSet(entries,"Started in front of");
         mStarted.setColor(Color.RED);
+        mStarted.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
         for(int i = 0; i < 9; i++ ) {
@@ -324,6 +412,7 @@ public class TeamVisuals extends Fragment {
         }
         mReached = new RadarDataSet(entries,"Started in front of");
         mReached.setColor(Color.RED);
+        mReached.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
         for(int i = 0; i < 9; i++) {
@@ -331,6 +420,7 @@ public class TeamVisuals extends Fragment {
         }
         mAutoCross = new RadarDataSet(entries,"Auto Cross");
         mAutoCross.setColor(Color.RED);
+        mAutoCross.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
         for(int i = 0; i < 9; i++) {
@@ -338,6 +428,20 @@ public class TeamVisuals extends Fragment {
         }
         mTeleopCross = new RadarDataSet(entries,"Teleop Cross");
         mTeleopCross.setColor(Color.RED);
+        mTeleopCross.setValueFormatter(intVF);
+
+        entries = new ArrayList<>();
+        for(int i = 0; i < 9; i++){
+            entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_SPEED[i]).getInt() / map.get(Constants.TOTAL_MATCHES).getInt(),i));
+        }
+        mSpeed = new RadarDataSet(entries,"Teleop Speed");
+        mSpeed.setColor(Color.RED);
+        mSpeed.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return "<"+String.valueOf(value);
+            }
+        });
     }
 
     private void generate_line_data(Cursor cursor)
@@ -388,37 +492,46 @@ public class TeamVisuals extends Fragment {
 
             cursor.moveToNext();
         }
+
         mAutoHighMade = new LineDataSet(autoHighMadeEntries,"Auto High Made");
         mAutoHighMade.setColor(Color.RED);
         mAutoHighMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mAutoHighMade.setValueFormatter(intVF);
 
         mAutoLowMade = new LineDataSet(autoLowMadeEntries,"Auto Low Made");
         mAutoLowMade.setColor(Color.RED);
         mAutoLowMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mAutoLowMade.setValueFormatter(intVF);
 
         mTeleopHighMade = new LineDataSet(teleopHighMadeEntries,"Teleop High Made");
         mTeleopHighMade.setColor(Color.RED);
         mTeleopHighMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mTeleopHighMade.setValueFormatter(intVF);
 
         mTeleopLowMade = new LineDataSet(teleopLowMadeEntries,"Teleop Low Made");
         mTeleopLowMade.setColor(Color.RED);
         mTeleopLowMade.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mTeleopLowMade.setValueFormatter(intVF);
 
         mAutoHighPercent = new LineDataSet(autoHighPercentEntries,"Auto High Percent");
         mAutoHighPercent.setColor(Color.RED);
         mAutoHighPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mAutoHighPercent.setValueFormatter(percentVF);
 
         mAutoLowPercent = new LineDataSet(autoLowPercentEntries,"Auto Low Percent");
         mAutoLowPercent.setColor(Color.RED);
         mAutoLowPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mAutoLowPercent.setValueFormatter(percentVF);
 
         mTeleopHighPercent = new LineDataSet(teleopHighPercentEntries,"Teleop High Percent");
         mTeleopHighPercent.setColor(Color.RED);
         mTeleopHighPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mTeleopHighPercent.setValueFormatter(percentVF);
 
         mTeleopLowPercent = new LineDataSet(teleopLowPercentEntries,"Teleop Low Percent");
         mTeleopLowPercent.setColor(Color.RED);
         mTeleopLowPercent.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mTeleopLowPercent.setValueFormatter(percentVF);
     }
 
     private void generate_bar_data(Cursor cursor)
@@ -443,6 +556,7 @@ public class TeamVisuals extends Fragment {
         mEndgame = new BarDataSet(entries,"Endgame");
         mEndgame.setColor(Color.RED);
         mEndgame.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mEndgame.setValueFormatter(intVF);
     }
 
 

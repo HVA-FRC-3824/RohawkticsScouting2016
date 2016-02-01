@@ -188,6 +188,7 @@ public class Settings extends AppCompatActivity {
                 if (aggregatePIntent == null) {
                     Log.d(TAG,"Creating Aggregate Service");
                     Intent intent = new Intent(this, Aggregate.class);
+                    intent.putExtra("update",true);
                     startService(intent);
                     aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -205,13 +206,6 @@ public class Settings extends AppCompatActivity {
                     aggregatePIntent = null;
                 }
             }
-
-            // Should request access to bluetooth
-//            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//            if (!mBluetoothAdapter.isEnabled()) {
-//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                startActivityForResult(enableBtIntent, 1);
-//            }
 
             // Should wait for acknowledgement of bluetooth being enabled, but we are going to assume it is turned on
 

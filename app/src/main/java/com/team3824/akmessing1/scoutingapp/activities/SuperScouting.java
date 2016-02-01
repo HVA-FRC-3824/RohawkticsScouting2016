@@ -106,16 +106,13 @@ public class SuperScouting extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.super_scouting_home:
-                Intent intent = new Intent(this, StartScreen.class);
-                startActivity(intent);
+                home_pres();
                 break;
             case R.id.super_scouting_back:
-                Intent intent2 = new Intent(this, MatchList.class);
-                intent2.putExtra("nextPage","super_scouting");
-                startActivity(intent2);
+                back_press();
                 break;
             case R.id.super_scouting_previous:
-                prev_press();
+                previous_press();
                 break;
             case R.id.super_scouting_next:
                 next_press();
@@ -127,7 +124,121 @@ public class SuperScouting extends AppCompatActivity {
         return true;
     }
 
-    private void prev_press()
+    private void home_pres()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                for (ScoutFragment fragment : fragmentList) {
+                    fragment.writeContentsToMap(data);
+                }
+
+                Log.d(TAG,"Saving values");
+                // Add the team and match numbers
+                SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
+                data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
+                data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
+                data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
+                data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
+                data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
+                data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+                // Store values to the database
+                superScoutDB.updateMatch(data);
+
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, StartScreen.class);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    private void back_press()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                for (ScoutFragment fragment : fragmentList) {
+                    fragment.writeContentsToMap(data);
+                }
+
+                Log.d(TAG,"Saving values");
+                // Add the team and match numbers
+                SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
+                data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
+                data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
+                data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
+                data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
+                data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
+                data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+                // Store values to the database
+                superScoutDB.updateMatch(data);
+
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, MatchList.class);
+                intent.putExtra("nextPage","super_scouting");
+                startActivity(intent);
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, MatchList.class);
+                intent.putExtra("nextPage","super_scouting");
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    private void previous_press()
     {
         Log.d(TAG,"previous match pressed");
         AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
