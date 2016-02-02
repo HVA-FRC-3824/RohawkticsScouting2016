@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/position"
+        android:id="@+id/auto_start_position"
         android:textSize="20sp"
         android:textColor="#000000"
         android:gravity="center_horizontal" />
@@ -31,7 +31,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/avg_points"
+        android:id="@+id/auto_high_hit"
         android:textSize="20sp"
         android:textColor="#000000"
         android:gravity="center_horizontal" />
@@ -39,7 +39,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/three_tote_autos"
+        android:id="@+id/auto_high_miss"
         android:textSize="20sp"
         android:textColor="#000000"
         android:gravity="center_horizontal" />
@@ -47,7 +47,168 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/auto_step_cans"
+        android:id="@+id/auto_high_percent"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/auto_reach_cross_"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/auto_low_hit"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/auto_low_miss"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/auto_low_percent"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_high_hit"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_high_miss"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_high_percent"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_low_hit"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_low_miss"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_low_percent"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_1"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_time_1"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_2"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_time_2"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_3"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_time_3"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_4"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_time_4"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_5"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/teleop_defense_time_5"
         android:textSize="20sp"
         android:textColor="#000000"
         android:gravity="center_horizontal" />
@@ -60,13 +221,6 @@
         android:textColor="#000000"
         android:gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/coop_totes_placed"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

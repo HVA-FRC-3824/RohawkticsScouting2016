@@ -83,7 +83,7 @@ public class TeamViewFragment extends Fragment {
             }
 
             textView = (TextView)view.findViewById(R.id.avg_points);
-            float averagePoints = statsMap.get("total_points").getInt();
+            float averagePoints = statsMap.get("").getInt();
             averagePoints /= (float)numMatches;
             textView.setText(String.valueOf(averagePoints));
 

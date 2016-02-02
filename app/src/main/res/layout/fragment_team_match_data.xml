@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Position:"
+                android:text="Start Position:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Avg. # of totes scored:"
+                android:text="Auto High Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -47,7 +47,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Avg. # of containers scored:"
+                android:text="Auto Low Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Avg. # of noodles scored:"
+                android:text="High Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -63,7 +63,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Three tote autos:"
+                android:text="Low Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -71,7 +71,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Auto step cans:"
+                android:text="Low Bar"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -79,7 +79,63 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Teleop step cans:"
+                android:text="Portcullis"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cheval de Frise"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Moat"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ramparts"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Drawbridge"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sally Fort"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rock Wall"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rough Terrain"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -95,31 +151,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Coop totes placed:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Stacks knocked over:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Stacks dropped:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Fouls:"
+                android:text="Fouls and Tech Fouls:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -164,7 +196,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/position"
+                android:id="@+id/auto_start_position"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
@@ -178,42 +210,91 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/average_totes"
+                android:id="@+id/auto_high_goal"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/average_cans"
+                android:id="@+id/auto_low_goal"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/average_noodles"
+                android:id="@+id/teleop_high_goal"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/total_auto_three_tote_stack"
+                android:id="@+id/teleop_low_goal"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/total_auto_step_cans"
+                android:id="@+id/total_low_bar"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/total_teleop_step_cans"
+                android:id="@+id/total_portcullis"
+                android:textSize="20sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_cheval_de_frise"
+                android:textSize="20sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_moat"
+                android:textSize="20sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_ramparts"
+                android:textSize="20sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_drawbridge"
+                android:textSize="20sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_sally_port"
+                android:textSize="20sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_rock_wall"
+                android:textSize="20sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/total_rough_terrain"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
@@ -227,27 +308,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/total_coop_totes"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_knocked_over_stacks"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_dropped_stacks"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/total_fouls"
                 android:textSize="20sp"
                 android:textColor="#000000" />
@@ -255,7 +315,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/total_dqs"
+                android:id="@+id/total_dq"
                 android:textSize="20sp"
                 android:textColor="#000000" />
 
