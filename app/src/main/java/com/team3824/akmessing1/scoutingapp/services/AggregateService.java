@@ -105,21 +105,23 @@ public class AggregateService extends IntentService {
         }
 
         boolean update = intent.getBooleanExtra("update",false);
+        if(!update)
+            lastUpdated = null;
 
-        ArrayList<Integer> teamsUpdated = (update)?matchScoutDB.getTeamsUpdatedSince(lastUpdated):
-                matchScoutDB.getTeamsUpdatedSince("");
+        ArrayList<Integer> teamsUpdated = matchScoutDB.getTeamsUpdatedSince(lastUpdated);
         for(int i = 0; i < teamsUpdated.size(); i++)
         {
             Cursor teamCursor = matchScoutDB.getTeamInfoSince(teamsUpdated.get(i), lastUpdated);
-            Map<String, ScoutValue> teamStats = statsDB.getTeamStats(teamsUpdated.get(i));
+            Map<String, ScoutValue> teamStats = (update)?statsDB.getTeamStats(teamsUpdated.get(i)):
+                    new HashMap<String,ScoutValue>();
             HashMap<String, ScoutValue> teamMap = new HashMap<>();
 
             // Calculate metrics and insert in map
 
             //Auto
             int[] totalStartPosition = set_start_array(teamStats,"start");
-            int[] totalDefenseReaches = set_start_array(teamStats, "reaches");
-            int[] totalDefenseCrosses = set_start_array(teamStats, "crosses");
+            int[] totalDefenseReaches = set_start_array(teamStats, "reach");
+            int[] totalDefenseCrosses = set_start_array(teamStats, "cross");
             int totalAutoHighGoalHit = set_start(teamStats,Constants.TOTAL_AUTO_HIGH_HIT);
             int totalAutoHighGoalMiss = set_start(teamStats,Constants.TOTAL_AUTO_HIGH_MISS);
             int totalAutoLowGoalHit = set_start(teamStats, Constants.TOTAL_AUTO_LOW_HIT);
@@ -543,6 +545,8 @@ public class AggregateService extends IntentService {
 
     private void increment_array(Cursor cursor, int[] array, String defense2, String defense3, String defense4, String defense5, String type)
     {
+        Log.d(TAG,"increment");
+
         List defensesList = Arrays.asList(Constants.DEFENSES);
 
         int index;
@@ -609,6 +613,7 @@ public class AggregateService extends IntentService {
                 }
                 break;
             case "cross":
+                Log.d(TAG,cursor.getString(cursor.getColumnIndex(Constants.AUTO_REACH_CROSS)));
                 if(cursor.getString(cursor.getColumnIndex(Constants.AUTO_REACH_CROSS)).equals("Cross"))
                 {
                     switch(cursor.getString(cursor.getColumnIndex(Constants.AUTO_START_POSITION)))

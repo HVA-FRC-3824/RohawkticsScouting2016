@@ -249,15 +249,30 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public Cursor getTeamInfoSince(int teamNumber, String since)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(true, // distinct
-                tableName, // a. table
-                null, // b. column names
-                KEY_LAST_UPDATED+" > ? and "+KEY_TEAM_NUMBER+" = ?", // c. selections
-                new String[]{since,String.valueOf(teamNumber)}, // d. selections args
-                null, // e. group by
-                null, // f. having
-                null, // g. order by
-                null); // h. limit
+        Cursor cursor;
+        if(since != null && since != "") {
+            cursor = db.query(true, // distinct
+                    tableName, // a. table
+                    null, // b. column names
+                    KEY_LAST_UPDATED + " > ? and " + KEY_TEAM_NUMBER + " = ?", // c. selections
+                    new String[]{since, String.valueOf(teamNumber)}, // d. selections args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
+        else
+        {
+            cursor = db.query(true, // distinct
+                    tableName, // a. table
+                    null, // b. column names
+                    KEY_TEAM_NUMBER + " = ?", // c. selections
+                    new String[]{String.valueOf(teamNumber)}, // d. selections args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
         if(cursor != null)
             cursor.moveToFirst();
         return cursor;
@@ -266,15 +281,22 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public Cursor getInfoSince(String since)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(true, // distinct
-                tableName, // a. table
-                null, // b. column names
-                KEY_LAST_UPDATED+" > ?", // c. selections
-                new String[]{since}, // d. selections args
-                null, // e. group by
-                null, // f. having
-                null, // g. order by
-                null); // h. limit
+        Cursor cursor;
+        if(since != null && since != "") {
+            cursor = db.query(true, // distinct
+                    tableName, // a. table
+                    null, // b. column names
+                    KEY_LAST_UPDATED + " > ?", // c. selections
+                    new String[]{since}, // d. selections args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
+        else
+        {
+            return getAllInfo();
+        }
         if(cursor != null)
             cursor.moveToFirst();
         return cursor;

@@ -17,12 +17,6 @@
         <item>Challenge</item>
         <item>Scale</item>
     </string-array>
-    <string-array name="pit_drivetrain_radio">
-        <item>Tank</item>
-        <item></item>
-        <item></item>
-        <item></item>
-    </string-array>
     <!-- 
     
     Break Between
