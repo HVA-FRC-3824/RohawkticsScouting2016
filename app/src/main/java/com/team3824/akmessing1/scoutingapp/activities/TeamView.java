@@ -82,8 +82,7 @@ public class TeamView extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.team_view_back:
-                intent = new Intent(this, TeamList.class);
-                startActivity(intent);
+                this.finish();
                 break;
             case R.id.team_view_previous:
                 Log.d(TAG, "previous team pressed");
