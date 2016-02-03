@@ -101,9 +101,9 @@ public class ELA_Auto extends ArrayAdapter<ELI_Auto> {
     {
         String text = String.valueOf(cross) + " ("+String.valueOf(seen)+") : ";
         if(seen == 0)
-            text += "0";
+            text += "0%";
         else
-            text += String.valueOf((float)cross/(float)seen);
+            text += String.valueOf((float)cross/(float)seen) + "%";
         return text;
     }
 }

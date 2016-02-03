@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.SchulzeMethod;
@@ -262,6 +263,7 @@ public class AggregateService extends IntentService {
         matchScoutDB.close();
         superScoutDB.close();
         Log.d(TAG, "Aggregate Service Finished");
+        Toast.makeText(this,"Data aggregated",Toast.LENGTH_SHORT).show();
     }
 
     /*

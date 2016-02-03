@@ -300,6 +300,7 @@ public class SyncService extends NonStopIntentService{
                         bluetoothSync.write(("R").getBytes());
                         recieved = false;
                         while (!recieved) ;
+                        Toast.makeText(this,"Data Recieved",Toast.LENGTH_SHORT).show();
                     }
                     break;
             }

@@ -121,16 +121,16 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView)view.findViewById(R.id.num_matches)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_avg_points)).setText(String.valueOf(0.0));
-            ((TextView)linearLayout.findViewById(R.id.event_points)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_high_points)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_low_points)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_defense_points)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_auto_points)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_teleop_points)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_endgame_points)).setText(String.valueOf(0));
-            ((TextView)linearLayout.findViewById(R.id.event_foul_points)).setText(String.valueOf(0));
+            ((TextView)view.findViewById(R.id.num_matches)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_avg_points)).setText("0.0");
+            ((TextView)linearLayout.findViewById(R.id.event_points)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_high_points)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_low_points)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_defense_points)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_auto_points)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_teleop_points)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_endgame_points)).setText("0");
+            ((TextView)linearLayout.findViewById(R.id.event_foul_points)).setText("0");
         }
 
 
@@ -157,11 +157,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Cheval de Frise row
@@ -177,11 +177,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Moat row
@@ -197,11 +197,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Ramparts row
@@ -217,11 +217,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Drawbridge row
@@ -237,11 +237,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Sally Port row
@@ -257,11 +257,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Rock Wall row
@@ -277,11 +277,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Rough Terrain row
@@ -297,11 +297,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Low Bar row
@@ -317,11 +317,11 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf(-1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
 
         // Setup shooting header row
@@ -357,12 +357,12 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_auto_percentage)).setText(String.valueOf(0.0)+"%");
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_made)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_taken)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText(String.valueOf(0.0)+"%");
+            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_auto_percentage)).setText("0.0%");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_made)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_taken)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText("0.0%");
         }
 
         // Low Goal
@@ -387,12 +387,12 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_auto_percentage)).setText(String.valueOf(0.0)+"%");
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_made)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_taken)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText(String.valueOf(0.0)+"%");
+            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_auto_percentage)).setText("0.0%");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_made)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_taken)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText("0.0%");
         }
 
         if(hasPlayed) {
@@ -449,8 +449,8 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(0));
+            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText("0");
         }
 
         // Setup fouls header row
@@ -473,10 +473,10 @@ public class TeamMatchData extends Fragment {
         }
         else
         {
-            ((TextView) linearLayout.findViewById(R.id.event_fouls)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_tech_fouls)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_yellow_cards)).setText(String.valueOf(0));
-            ((TextView) linearLayout.findViewById(R.id.event_red_cards)).setText(String.valueOf(0));
+            ((TextView) linearLayout.findViewById(R.id.event_fouls)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_tech_fouls)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_yellow_cards)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_red_cards)).setText("0");
         }
 
         statsDB.close();
