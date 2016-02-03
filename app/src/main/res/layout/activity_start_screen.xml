@@ -45,6 +45,16 @@
                 android:visibility="gone"
                 android:onClick="match_schedule"
                 android:background="@color/navy_blue" />
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Drive Team Feedback"
+                android:textColor="@color/white"
+                android:id="@+id/feedback_button"
+                android:visibility="gone"
+                android:onClick="feedback"
+                android:background="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"

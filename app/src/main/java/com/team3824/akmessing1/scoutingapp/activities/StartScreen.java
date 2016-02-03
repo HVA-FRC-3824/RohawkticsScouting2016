@@ -59,6 +59,8 @@ public class StartScreen extends AppCompatActivity {
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.aggregate_button);
                 button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.feedback_button);
+                button.setVisibility(View.VISIBLE);
                 break;
             }
             case Constants.STRATEGY: {
@@ -107,6 +109,12 @@ public class StartScreen extends AppCompatActivity {
     public void match_schedule(View view)
     {
         Intent intent = new Intent(this, MatchSchedule.class);
+        startActivity(intent);
+    }
+    public void feedback (View view)
+    {
+        Intent intent = new Intent(this, DriveTeamFeedback.class);
+        intent.putExtra("match_number",1);
         startActivity(intent);
     }
 
