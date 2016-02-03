@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
-import android.widget.Toolbar;
+
 
 import com.team3824.akmessing1.scoutingapp.Constants;
+import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 
 /**
@@ -28,32 +30,48 @@ public class DriveTeamFeedback extends AppCompatActivity{
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
         Cursor cursor = scheduleDB.getMatch(matchnumber);
+
+        int team1 = -1, team2 = -1;
+
         if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)) == 3824)
-        {int team1 = (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2))
-            int team2 =(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3))}
+        {
+            team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2));
+            team2 =cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3));
+        }
 
         else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2))==3824)
-        {int team1 = (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1))
-            int team2 =(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3))}
+        {
+            team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1));
+            team2 =cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3));}
 
         else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3))==3824)
-        {int team1 = (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1))
-            int team2 =(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2))}
+        {
+            team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1));
+            team2 =cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2));
+        }
 
         else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1))==3824)
-        {int team1 = (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2))
-            int team2 =(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3))}
+        {
+            team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2));
+            team2 =cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3));
+        }
 
         else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2))==3824)
-        {int team1 = (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1))
-            int team2 =(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3))}
+        {
+            team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1));
+            team2 =cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3));
+        }
 
         else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3))==3824)
-        {int team1 = (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1))
-            int team2 =(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2))}
+        {
+            team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1));
+            team2 =cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2));
+        }
 
-        TextView textview = (TextView) findViewById(R.id.Team_Number);
+        TextView textview = (TextView) findViewById(R.id.Team_Number_1);
         textview.setText(String.valueOf(team1));
+        textview = (TextView) findViewById(R.id.Team_Number_2);
+        textview.setText(String.valueOf(team2));
 
     }
 
