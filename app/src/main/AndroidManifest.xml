@@ -67,6 +67,9 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.AggregateActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchPlanning"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <service android:name=".services.AggregateService"/>
         <service android:name=".services.SyncService"/>
     </application>

@@ -49,6 +49,8 @@ public class StartScreen extends AppCompatActivity {
             case Constants.DRIVE_TEAM: {
                 Button button = (Button)findViewById(R.id.matchSchedule_button);
                 button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.matchPlanning_button);
+                button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewMatch_button);
@@ -63,6 +65,8 @@ public class StartScreen extends AppCompatActivity {
             }
             case Constants.STRATEGY: {
                 Button button = (Button)findViewById(R.id.matchSchedule_button);
+                button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.matchPlanning_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
@@ -87,6 +91,8 @@ public class StartScreen extends AppCompatActivity {
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.superScout_button);
                 button.setVisibility(View.VISIBLE);
+                button = (Button) findViewById(R.id.matchPlanning_button);
+                button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewTeam_button);
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.viewMatch_button);
@@ -99,6 +105,7 @@ public class StartScreen extends AppCompatActivity {
                 button.setVisibility(View.VISIBLE);
                 button = (Button) findViewById(R.id.aggregate_button);
                 button.setVisibility(View.VISIBLE);
+
                 break;
             }
         }
@@ -127,6 +134,12 @@ public class StartScreen extends AppCompatActivity {
     {
         Intent intent = new Intent(this, MatchList.class);
         intent.putExtra("nextPage","super_scouting");
+        startActivity(intent);
+    }
+
+    public void match_planning(View view)
+    {
+        Intent intent = new Intent(this, MatchPlanning.class);
         startActivity(intent);
     }
 
