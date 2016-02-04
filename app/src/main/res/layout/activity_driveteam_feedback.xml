@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Team_Number_1"
+        android:id="@+id/team_number_1"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#000000"/>
@@ -31,7 +31,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/Team_Number_2"
+        android:id="@+id/team_number_2"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#000000"/>
