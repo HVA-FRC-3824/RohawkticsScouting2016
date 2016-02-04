@@ -5,6 +5,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
     <!-- Brush sizes -->
+    <dimen name="extra_small_brush">5dp</dimen>
+    <integer name="extra_small_size">5</integer>
     <dimen name="small_brush">10dp</dimen>
     <integer name="small_size">10</integer>
     <dimen name="medium_brush">20dp</dimen>

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -23,7 +24,7 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
 
     private DrawingView drawView;
     private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn;
-    private float smallBrush, mediumBrush, largeBrush;
+    private float extraSmallBrush, smallBrush, mediumBrush, largeBrush;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
         currPaint = (ImageButton)paintLayout.getChildAt(5); //black
         currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed, null));
 
+        extraSmallBrush = 5;
         smallBrush = 10;
         mediumBrush = 20;
         largeBrush = 30;
@@ -52,7 +54,10 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
         saveBtn = (ImageButton)findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(this);
 
-        drawView.setBrushSize(mediumBrush);
+        Button backBtn = (Button)findViewById(R.id.back_btn);
+        backBtn.setOnClickListener(this);
+
+        drawView.setBrushSize(extraSmallBrush);
     }
 
     public void paintClicked(View view)
@@ -80,6 +85,15 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 final Dialog brushDialog = new Dialog(this);
                 brushDialog.setTitle("Brush size:");
                 brushDialog.setContentView(R.layout.dialog_brush_chooser);
+                ImageButton extraSmallBtn = (ImageButton)brushDialog.findViewById(R.id.extra_small_brush);
+                extraSmallBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        drawView.setBrushSize(extraSmallBrush);
+                        drawView.setLastBrushSize(extraSmallBrush);
+                        brushDialog.dismiss();
+                    }
+                });
                 ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
                 smallBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -114,6 +128,15 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 final Dialog eraser_brushDialog = new Dialog(this);
                 eraser_brushDialog.setTitle("Eraser size:");
                 eraser_brushDialog.setContentView(R.layout.dialog_brush_chooser);
+                ImageButton eraser_extraSmallBtn = (ImageButton)eraser_brushDialog.findViewById(R.id.extra_small_brush);
+                eraser_extraSmallBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        drawView.setErase(true);
+                        drawView.setBrushSize(extraSmallBrush);
+                        eraser_brushDialog.dismiss();
+                    }
+                });
                 ImageButton eraser_smallBtn = (ImageButton)eraser_brushDialog.findViewById(R.id.small_brush);
                 eraser_smallBtn.setOnClickListener(new View.OnClickListener(){
                     @Override
@@ -190,7 +213,11 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 });
                 saveDialog.show();
                 break;
+            case R.id.back_btn:
+                this.finish();
+                break;
         }
+
     }
 
 }

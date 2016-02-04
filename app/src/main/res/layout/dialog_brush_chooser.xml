@@ -5,6 +5,14 @@
     android:gravity="center"
     android:orientation="vertical" >
     <ImageButton
+        android:id="@+id/extra_small_brush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:contentDescription="Exta-Small"
+        android:src="@drawable/extra_small" />
+
+    <ImageButton
         android:id="@+id/small_brush"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
