@@ -93,6 +93,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="Match Planning"
+                android:textColor="@color/white"
+                android:id="@+id/matchPlanning_button"
+                android:visibility="gone"
+                android:onClick="match_planning"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="View Match"
                 android:textColor="@color/white"
                 android:id="@+id/viewMatch_button"
