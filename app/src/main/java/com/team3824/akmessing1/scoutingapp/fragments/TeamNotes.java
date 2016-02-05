@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.activities.TeamView;
+import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 
@@ -53,8 +54,7 @@ public class TeamNotes extends Fragment {
         {
             notes = "None";
         }
-        TextView textView = (TextView)view.findViewById(R.id.notes);
-        textView.setText(notes);
+        ((TextView)view.findViewById(R.id.notes)).setText(notes);
         notes = "";
         SuperScoutDB superScoutDB = new SuperScoutDB(activity,eventID);
         cursor = superScoutDB.getTeamNotes(teamNumber);
@@ -72,8 +72,15 @@ public class TeamNotes extends Fragment {
         {
             notes = "None";
         }
-        textView = (TextView)view.findViewById(R.id.super_notes);
-        textView.setText(notes);
+        ((TextView)view.findViewById(R.id.super_notes)).setText(notes);
+        DriveTeamFeedbackDB driveTeamFeedbackDB = new DriveTeamFeedbackDB(activity,eventID);
+        notes = driveTeamFeedbackDB.getComments(teamNumber);
+        if(notes.equals(""))
+        {
+            notes = "None";
+        }
+        ((TextView)view.findViewById(R.id.driveteam_comments)).setText(notes);
+
         return view;
     }
 }

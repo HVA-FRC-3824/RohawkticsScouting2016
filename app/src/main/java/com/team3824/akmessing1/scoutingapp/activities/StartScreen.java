@@ -120,8 +120,7 @@ public class StartScreen extends AppCompatActivity {
     }
     public void feedback (View view)
     {
-        Intent intent = new Intent(this, DriveTeamFeedback.class);
-        intent.putExtra("match_number",1);
+        Intent intent = new Intent(this, OurMatchList.class);
         startActivity(intent);
     }
 
