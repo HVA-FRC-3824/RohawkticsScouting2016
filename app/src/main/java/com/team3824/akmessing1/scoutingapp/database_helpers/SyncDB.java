@@ -74,4 +74,21 @@ public class SyncDB extends SQLiteOpenHelper {
         cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndex(KEY_LAST_UPDATED));
     }
+
+    public void reset()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
+        query = "CREATE TABLE IF NOT EXISTS "+tableName +
+                "( "+KEY_ID+" STRING PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        db.execSQL(query);
+    }
+
+    public void remove()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+    }
 }

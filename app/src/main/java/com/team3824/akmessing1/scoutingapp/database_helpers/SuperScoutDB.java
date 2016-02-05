@@ -276,4 +276,27 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public void reset()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
+        query = "CREATE TABLE IF NOT EXISTS "+tableName +
+                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_BLUE1+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE2+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE3+" INTEGER NOT NULL,"+
+                " "+KEY_RED1+" INTEGER NOT NULL,"+
+                " "+KEY_RED2+" INTEGER NOT NULL,"+
+                " "+KEY_RED3+" INTEGER NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        db.execSQL(query);
+    }
+
+    public void remove()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+    }
+
 }

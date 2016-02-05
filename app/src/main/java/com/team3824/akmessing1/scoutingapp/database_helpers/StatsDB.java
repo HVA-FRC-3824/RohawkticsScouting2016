@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -295,5 +296,61 @@ public class StatsDB extends SQLiteOpenHelper {
             return null;
 
         return cursor.getString(0);
+    }
+
+    public void reset()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ArrayList<Integer> teams = new ArrayList<>();
+        Cursor cursor = db.query(tableName, // a. table
+                new String[]{KEY_TEAM_NUMBER}, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                KEY_TEAM_NUMBER+" DESC", // g. order by
+                null); // h. limit
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {
+            teams.add(cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER)));
+            cursor.moveToNext();
+        }
+
+
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
+        query = "CREATE TABLE IF NOT EXISTS "+tableName +
+                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_COMPUTED_FIRST_PICK_RANK+" INTEGER NOT NULL,"+
+                " "+KEY_COMPUTED_SECOND_PICK_RANK+" INTEGER NOT NULL,"+
+                " "+KEY_COMPUTED_THIRD_PICK_RANK+" INTEGER NOT NULL,"+
+                " "+KEY_FIRST_PICK_RANK+" INTEGER NOT NULL,"+
+                " "+KEY_SECOND_PICK_RANK+" INTEGER NOT NULL,"+
+                " "+KEY_THIRD_PICK_RANK+" INTEGER NOT NULL,"+
+                " "+KEY_PICKED+" INTEGER NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        db.execSQL(query);
+        for(int i = 0; i < teams.size(); i++) {
+                int teamNumber = teams.get(i);
+                ContentValues values = new ContentValues();
+                values.put(KEY_TEAM_NUMBER,teamNumber);
+                values.put(KEY_COMPUTED_FIRST_PICK_RANK,i+1);
+                values.put(KEY_COMPUTED_SECOND_PICK_RANK,i+1);
+                values.put(KEY_COMPUTED_THIRD_PICK_RANK,i+1);
+                values.put(KEY_FIRST_PICK_RANK,i+1);
+                values.put(KEY_SECOND_PICK_RANK,i+1);
+                values.put(KEY_THIRD_PICK_RANK,i+1);
+                values.put(KEY_PICKED, 0);
+                values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+                db.insert(tableName,null,values);
+        }
+    }
+
+    public void remove()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
     }
 }

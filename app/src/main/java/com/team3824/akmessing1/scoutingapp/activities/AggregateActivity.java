@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.services.AggregateService;
 
-public class AggregateActivity extends AppCompatActivity {
+public class AggregateActivity extends AppCompatActivity implements View.OnClickListener{
     private String TAG = "AggregateActivity";
 
     @Override
@@ -20,35 +20,36 @@ public class AggregateActivity extends AppCompatActivity {
 
         // Back button takes the user back to the start screen
         Button button = (Button)findViewById(R.id.back);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AggregateActivity.this,StartScreen.class);
-                startActivity(intent);
-            }
-        });
+        button.setOnClickListener(this);
 
         // AggregateService Update starts the aggregate service with the update option
         button = (Button)findViewById(R.id.aggregate_update);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AggregateActivity.this, AggregateService.class);
-                intent.putExtra("update",true);
-                startService(intent);
-            }
-        });
+        button.setOnClickListener(this);
 
         // AggregateService Reset starts the aggregate service with the update option off
         button = (Button)findViewById(R.id.aggregate_reset);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AggregateActivity.this,AggregateService.class);
+        button.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId())
+        {
+            case R.id.back:
+                this.finish();
+                break;
+            case R.id.aggregate_update:
+                intent = new Intent(AggregateActivity.this, AggregateService.class);
+                intent.putExtra("update",true);
+                startService(intent);
+                break;
+            case R.id.aggregate_reset:
+                intent = new Intent(AggregateActivity.this,AggregateService.class);
                 intent.putExtra("update",false);
                 startService(intent);
-            }
-        });
-
+                break;
+        }
     }
 }

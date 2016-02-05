@@ -11,7 +11,9 @@ import android.widget.Button;
 import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 
-public class StartScreen extends AppCompatActivity {
+import java.util.Set;
+
+public class StartScreen extends AppCompatActivity implements View.OnClickListener{
     private static String TAG = "StartScreen";
 
     // Buttons become visible based on the role
@@ -22,174 +24,137 @@ public class StartScreen extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String type = sharedPreferences.getString(Constants.USER_TYPE, "");
+        setupButton(R.id.settings_button);
         switch (type) {
             case Constants.MATCH_SCOUT: {
-                Button button = (Button)findViewById(R.id.matchSchedule_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.scoutMatch_button);
-                button.setVisibility(View.VISIBLE);
+                setupButton(R.id.matchSchedule_button);
+                setupButton(R.id.scoutMatch_button);
                 break;
             }
             case Constants.PIT_SCOUT: {
-                Button button = (Button)findViewById(R.id.matchSchedule_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.scoutPit_button);
-                button.setVisibility(View.VISIBLE);
+                setupButton(R.id.matchSchedule_button);
+                setupButton(R.id.scoutPit_button);
                 break;
             }
             case Constants.SUPER_SCOUT: {
-                Button button = (Button)findViewById(R.id.matchSchedule_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.superScout_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.sync_button);
-                button.setVisibility(View.VISIBLE);
+                setupButton(R.id.matchSchedule_button);
+                setupButton(R.id.superScout_button);
+                setupButton(R.id.sync_button);
                 break;
             }
             case Constants.DRIVE_TEAM: {
-                Button button = (Button)findViewById(R.id.matchSchedule_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.matchPlanning_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewTeam_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewMatch_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewEvent_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.sync_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.aggregate_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.feedback_button);
-                button.setVisibility(View.VISIBLE);
+                setupButton(R.id.matchSchedule_button);
+                setupButton(R.id.matchPlanning_button);
+                setupButton(R.id.viewTeam_button);
+                setupButton(R.id.viewMatch_button);
+                setupButton(R.id.viewEvent_button);
+                setupButton(R.id.sync_button);
+                setupButton(R.id.aggregate_button);
+                setupButton(R.id.feedback_button);
                 break;
             }
             case Constants.STRATEGY: {
-                Button button = (Button)findViewById(R.id.matchSchedule_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.matchPlanning_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewTeam_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewMatch_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewEvent_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewPicklist_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.sync_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.aggregate_button);
-                button.setVisibility(View.VISIBLE);
+                setupButton(R.id.matchSchedule_button);
+                setupButton(R.id.matchPlanning_button);
+                setupButton(R.id.viewTeam_button);
+                setupButton(R.id.viewMatch_button);
+                setupButton(R.id.viewEvent_button);
+                setupButton(R.id.viewPicklist_button);
+                setupButton(R.id.sync_button);
+                setupButton(R.id.aggregate_button);
                 break;
             }
             case Constants.ADMIN: {
-                Button button = (Button)findViewById(R.id.matchSchedule_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.scoutMatch_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.scoutPit_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.superScout_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.matchPlanning_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewTeam_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewMatch_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewEvent_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.viewPicklist_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.sync_button);
-                button.setVisibility(View.VISIBLE);
-                button = (Button) findViewById(R.id.aggregate_button);
-                button.setVisibility(View.VISIBLE);
-
+                setupButton(R.id.matchSchedule_button);
+                setupButton(R.id.scoutMatch_button);
+                setupButton(R.id.scoutPit_button);
+                setupButton(R.id.superScout_button);
+                setupButton(R.id.matchPlanning_button);
+                setupButton(R.id.viewTeam_button);
+                setupButton(R.id.viewMatch_button);
+                setupButton(R.id.viewEvent_button);
+                setupButton(R.id.viewPicklist_button);
+                setupButton(R.id.sync_button);
+                setupButton(R.id.aggregate_button);
+                setupButton(R.id.feedback_button);
+                setupButton(R.id.database_button);
                 break;
             }
         }
     }
 
-    public void match_schedule(View view)
+    private void setupButton(int btn)
     {
-        Intent intent = new Intent(this, MatchSchedule.class);
-        startActivity(intent);
-    }
-    public void feedback (View view)
-    {
-        Intent intent = new Intent(this, OurMatchList.class);
-        startActivity(intent);
+        Button button = (Button)findViewById(btn);
+        button.setVisibility(View.VISIBLE);
+        button.setOnClickListener(this);
     }
 
-    public void scout_match(View view)
-    {
-        Intent intent = new Intent(this, MatchList.class);
-        intent.putExtra("nextPage","match_scouting");
-        startActivity(intent);
-    }
 
-    public void scout_pit(View view)
-    {
-        Intent intent = new Intent(this, PitList.class);
-        startActivity(intent);
-    }
-
-    public void super_scout(View view)
-    {
-        Intent intent = new Intent(this, MatchList.class);
-        intent.putExtra("nextPage","super_scouting");
-        startActivity(intent);
-    }
-
-    public void match_planning(View view)
-    {
-        Intent intent = new Intent(this, MatchPlanning.class);
-        startActivity(intent);
-    }
-
-    public void view_match(View view)
-    {
-        Intent intent = new Intent(this, MatchList.class);
-        intent.putExtra("nextPage","match_viewing");
-        startActivity(intent);
-    }
-
-    public void view_team(View view)
-    {
-        Intent intent = new Intent(this, TeamList.class);
-        startActivity(intent);
-    }
-
-    public void view_event(View view)
-    {
-        Intent intent = new Intent(this, EventView.class);
-        startActivity(intent);
-    }
-
-    public void view_picklist(View view)
-    {
-        Intent intent = new Intent(this, PickList.class);
-        startActivity(intent);
-    }
-
-    public void settings(View view)
-    {
-        Intent intent = new Intent(this, Settings.class);
-        startActivity(intent);
-    }
-
-    public void sync(View view)
-    {
-        Intent intent = new Intent(this, SyncActivity.class);
-        startActivity(intent);
-    }
-
-    public void aggregate(View view)
-    {
-        Intent intent = new Intent(this, AggregateActivity.class);
-        startActivity(intent);
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        switch(v.getId())
+        {
+            case R.id.settings_button:
+                intent = new Intent(this, Settings.class);
+                startActivity(intent);
+                break;
+            case R.id.matchSchedule_button:
+                intent = new Intent(this, MatchSchedule.class);
+                startActivity(intent);
+                break;
+            case R.id.scoutMatch_button:
+                intent = new Intent(this, MatchList.class);
+                intent.putExtra("nextPage", "match_scouting");
+                startActivity(intent);
+                break;
+            case R.id.scoutPit_button:
+                intent = new Intent(this, PitList.class);
+                startActivity(intent);
+                break;
+            case R.id.superScout_button:
+                intent = new Intent(this, MatchList.class);
+                intent.putExtra("nextPage", "super_scouting");
+                startActivity(intent);
+                break;
+            case R.id.feedback_button:
+                intent = new Intent(this, OurMatchList.class);
+                startActivity(intent);
+                break;
+            case R.id.matchPlanning_button:
+                intent = new Intent(this, MatchPlanning.class);
+                startActivity(intent);
+                break;
+            case R.id.viewTeam_button:
+                intent = new Intent(this, TeamList.class);
+                startActivity(intent);
+                break;
+            case R.id.viewMatch_button:
+                intent = new Intent(this, MatchList.class);
+                intent.putExtra("nextPage","match_viewing");
+                startActivity(intent);
+                break;
+            case R.id.viewEvent_button:
+                intent = new Intent(this, EventView.class);
+                startActivity(intent);
+                break;
+            case R.id.viewPicklist_button:
+                intent = new Intent(this, PickList.class);
+                startActivity(intent);
+                break;
+            case R.id.sync_button:
+                intent = new Intent(this, SyncActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.aggregate_button:
+                intent = new Intent(this, AggregateActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.database_button:
+                intent = new Intent(this, DatabaseManagement.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

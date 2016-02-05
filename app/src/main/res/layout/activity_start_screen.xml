@@ -43,7 +43,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/matchSchedule_button"
                 android:visibility="gone"
-                android:onClick="match_schedule"
                 android:background="@color/navy_blue" />
             <Button
                 android:layout_width="fill_parent"
@@ -53,7 +52,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/feedback_button"
                 android:visibility="gone"
-                android:onClick="feedback"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -64,7 +62,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/scoutMatch_button"
                 android:visibility="gone"
-                android:onClick="scout_match"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -75,7 +72,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/scoutPit_button"
                 android:visibility="gone"
-                android:onClick="scout_pit"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -86,7 +82,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/superScout_button"
                 android:visibility="gone"
-                android:onClick="super_scout"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -97,7 +92,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/matchPlanning_button"
                 android:visibility="gone"
-                android:onClick="match_planning"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -108,7 +102,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/viewMatch_button"
                 android:visibility="gone"
-                android:onClick="view_match"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -130,7 +123,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/viewEvent_button"
                 android:visibility="gone"
-                android:onClick="view_event"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -141,7 +133,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/viewPicklist_button"
                 android:visibility="gone"
-                android:onClick="view_picklist"
                 android:background="@color/navy_blue"/>
 
             <Button
@@ -150,7 +141,6 @@
                 android:layout_marginTop="10dp"
                 android:text="Settings"
                 android:id="@+id/settings_button"
-                android:onClick="settings"
                 android:background="@color/navy_blue"
                 android:textColor="@color/white" />
 
@@ -160,7 +150,6 @@
                 android:layout_marginTop="10dp"
                 android:text="Sync"
                 android:id="@+id/sync_button"
-                android:onClick="sync"
                 android:visibility="gone"
                 android:background="@color/navy_blue"
                 android:textColor="@color/white" />
@@ -171,7 +160,16 @@
                 android:layout_marginTop="10dp"
                 android:text="Aggregate"
                 android:id="@+id/aggregate_button"
-                android:onClick="aggregate"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Database Management"
+                android:id="@+id/database_button"
                 android:visibility="gone"
                 android:background="@color/navy_blue"
                 android:textColor="@color/white" />

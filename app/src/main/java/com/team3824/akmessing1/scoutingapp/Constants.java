@@ -152,4 +152,13 @@ public interface Constants {
     public static final String TOTAL_RED_CARDS = "total_red_cards";
 
     public static final String TOTAL_MATCHES = "total_matches";
+
+    // Database Management
+    public static final int MATCH_SCOUT_DB = 0;
+    public static final int PIT_SCOUT_DB = 1;
+    public static final int SUPER_SCOUT_DB = 2;
+    public static final int DRIVE_TEAM_FEEDBACK_DB = 3;
+    public static final int STATS_DB = 4;
+    public static final int SYNC_DB = 5;
+    public static final int SCHEDULE_DB = 6;
 }
