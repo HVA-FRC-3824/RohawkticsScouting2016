@@ -189,6 +189,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 {
                     bluetoothAdapter.enable();
                     findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
+                    startService(new Intent(this, SyncService.class));
                 }
         }
     }
