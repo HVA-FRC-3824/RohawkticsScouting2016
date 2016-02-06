@@ -25,6 +25,7 @@ public class FirstPick extends ScoutFragment{
 
     DragSortListView list;
     PickListAdapter adapter;
+    StatsDB statsDB;
 
     public FirstPick() {
         // Required empty public constructor
@@ -66,7 +67,7 @@ public class FirstPick extends ScoutFragment{
 
         ArrayList<Team> teams = new ArrayList<>();
         SharedPreferences sharedPref = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
-        final StatsDB statsDB = new StatsDB(getContext(),sharedPref.getString("event_id",""));
+        statsDB = new StatsDB(getContext(),sharedPref.getString("event_id",""));
         Cursor statsCursor = statsDB.getStats();
         PitScoutDB pitScoutDB = new PitScoutDB(getContext(),sharedPref.getString("event_id",""));
         do{
@@ -99,7 +100,7 @@ public class FirstPick extends ScoutFragment{
         }while(!statsCursor.isAfterLast());
         Collections.sort(teams, compare);
 
-        adapter = new PickListAdapter(getContext(),R.id.first_pick_list,teams,1);
+        adapter = new PickListAdapter(getContext(),R.id.first_pick_list,teams,1,statsDB);
         list.setAdapter(adapter);
 
         list.setDropListener(new DragSortListView.DropListener() {

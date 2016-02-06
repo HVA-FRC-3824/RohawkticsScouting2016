@@ -1,6 +1,7 @@
 package com.team3824.akmessing1.scoutingapp.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,27 +42,27 @@ public class ELA_Auto extends ArrayAdapter<ELI_Auto> {
             textView = (TextView)convertView.findViewById(R.id.event_teamNum);
             textView.setText("Team Number");
             textView = (TextView)convertView.findViewById(R.id.event_Portcullis);
-            textView.setText("Portcullis");
+            textView.setText("Portcullis"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Cheval_de_Frise);
-            textView.setText("Cheval de Frise");
+            textView.setText("Cheval de Frise"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Moat);
-            textView.setText("Moat");
+            textView.setText("Moat"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Ramparts);
-            textView.setText("Ramparts");
+            textView.setText("Ramparts"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Drawbridge);
-            textView.setText("Drawbridge");
+            textView.setText("Drawbridge"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Sally_Port);
-            textView.setText("Sally Port");
+            textView.setText("Sally Port"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Rough_Terrain);
-            textView.setText("Rough Terrain");
+            textView.setText("Rough Terrain"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Rock_Wall);
-            textView.setText("Rock Wall");
+            textView.setText("Rock Wall"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Low_Bar);
-            textView.setText("Low Bar");
+            textView.setText("Low Bar"+ Html.fromHtml("<sup>*</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_High);
-            textView.setText("High Goal");
+            textView.setText("High Goal"+ Html.fromHtml("<sup>**</sup"));
             textView = (TextView)convertView.findViewById(R.id.event_Low);
-            textView.setText("Low Goal");
+            textView.setText("Low Goal"+ Html.fromHtml("<sup>**</sup"));
         }
         else
         {
@@ -100,9 +101,9 @@ public class ELA_Auto extends ArrayAdapter<ELI_Auto> {
     {
         String text = String.valueOf(cross) + " ("+String.valueOf(seen)+") : ";
         if(seen == 0)
-            text += "0";
+            text += "0%";
         else
-            text += String.valueOf((float)cross/(float)seen);
+            text += String.valueOf((float)cross/(float)seen) + "%";
         return text;
     }
 }

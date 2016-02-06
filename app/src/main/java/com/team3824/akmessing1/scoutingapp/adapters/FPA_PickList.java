@@ -20,7 +20,6 @@ public class FPA_PickList extends FragmentPagerAdapter{
 
     private String tabTitles[] = new String[] { "1st Pick", "2nd Pick" };
 
-    private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
     public FPA_PickList(FragmentManager fm) {
         super(fm);
@@ -55,19 +54,6 @@ public class FPA_PickList extends FragmentPagerAdapter{
                 break;
         }
 
-        fragments.put(position,new WeakReference<>(fragment));
         return fragment;
     }
-
-    // returns all the fragments
-    // used to get all the values for saving
-    public List<ScoutFragment> getAllFragments(){
-        List<ScoutFragment> fragmentList = new ArrayList<>();
-        for(Map.Entry<Integer,WeakReference<ScoutFragment>> entry: fragments.entrySet())
-        {
-            fragmentList.add(entry.getValue().get());
-        }
-        return fragmentList;
-    }
-
 }

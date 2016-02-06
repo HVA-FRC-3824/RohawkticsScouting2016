@@ -99,7 +99,7 @@ public class ThirdPick extends ScoutFragment{
         }while(!statsCursor.isAfterLast());
         Collections.sort(teams, compare);
 
-        adapter = new PickListAdapter(getContext(),R.id.third_pick_list,teams,3);
+        adapter = new PickListAdapter(getContext(),R.id.third_pick_list,teams,3,statsDB);
         list.setAdapter(adapter);
 
         list.setDropListener(new DragSortListView.DropListener() {

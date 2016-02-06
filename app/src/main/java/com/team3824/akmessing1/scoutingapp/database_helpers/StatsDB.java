@@ -82,7 +82,7 @@ public class StatsDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor =db.query(tableName, // a. table
+        Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
                 null, // c. selections
                 null, // d. selections args

@@ -23,8 +23,6 @@ public class PickList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_list);
 
-        Bundle extras = getIntent().getExtras();
-
         CustomHeader header = (CustomHeader)findViewById(R.id.pick_list_header);
         header.removeHome();
 

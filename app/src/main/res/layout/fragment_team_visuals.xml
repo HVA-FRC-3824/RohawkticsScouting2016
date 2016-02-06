@@ -64,8 +64,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:id="@+id/speed"
-                    android:text="Speed" />
+                    android:id="@+id/time"
+                    android:text="Time" />
             </RadioGroup>
         </LinearLayout>
 
@@ -136,6 +136,11 @@
                     android:text="Teleop Low Percent" />
             </RadioGroup>
         </LinearLayout>
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/bar_chart"/>
 
     </LinearLayout>
 </ScrollView>

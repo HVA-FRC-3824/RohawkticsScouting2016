@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
@@ -38,8 +39,8 @@ public class PitList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString("event_id", "");
+        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);
         displayListView(pitScoutDB);

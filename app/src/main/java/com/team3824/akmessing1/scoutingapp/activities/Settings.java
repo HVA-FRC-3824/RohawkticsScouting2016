@@ -23,12 +23,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.team3824.akmessing1.scoutingapp.JsonUTF8Request;
+import com.team3824.akmessing1.scoutingapp.Constants;
+import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
-import com.team3824.akmessing1.scoutingapp.services.Aggregate;
+import com.team3824.akmessing1.scoutingapp.services.AggregateService;
+import com.team3824.akmessing1.scoutingapp.services.SyncService;
 
 import org.json.JSONArray;
 
@@ -39,6 +41,7 @@ public class Settings extends AppCompatActivity {
     private String TAG = "Settings";
 
     static PendingIntent aggregatePIntent = null;
+    static PendingIntent syncPIntent = null;
 
     // Populate the settings fields with their respective values
     @Override
@@ -49,28 +52,28 @@ public class Settings extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences( "appData", Context.MODE_PRIVATE );
 
         final Spinner colorSelector = (Spinner)findViewById(R.id.colorSelector);
-        String[] colors = new String[]{"Blue", "Red"};
+        String[] colors = new String[]{Constants.BLUE, Constants.RED};
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, colors);
         colorSelector.setAdapter(adapter1);
-        colorSelector.setSelection(Arrays.asList(colors).indexOf(sharedPref.getString("alliance_color", "Blue")));
+        colorSelector.setSelection(Arrays.asList(colors).indexOf(sharedPref.getString(Constants.ALLIANCE_COLOR, Constants.BLUE)));
 
 
         final Spinner numSelector = (Spinner)findViewById(R.id.numSelector);
         String[] numbers = new String[]{"1", "2", "3"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, numbers);
         numSelector.setAdapter(adapter2);
-        numSelector.setSelection(Arrays.asList(numbers).indexOf(Integer.toString(sharedPref.getInt("alliance_number", 1))));
+        numSelector.setSelection(Arrays.asList(numbers).indexOf(Integer.toString(sharedPref.getInt(Constants.ALLIANCE_NUMBER, 1))));
 
 
         Spinner typeSelector = (Spinner)findViewById(R.id.typeSelector);
-        String[] types = new String[]{"Match Scout", "Pit Scout", "Super Scout", "Drive Team", "Strategy", "Admin"};
+        String[] types = new String[]{Constants.MATCH_SCOUT, Constants.PIT_SCOUT, Constants.SUPER_SCOUT, Constants.DRIVE_TEAM, Constants.STRATEGY, Constants.ADMIN};
         ArrayAdapter<String> adapter0 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
         typeSelector.setAdapter(adapter0);
         typeSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = parent.getItemAtPosition(position).toString();
-                if (!selected.equals("Match Scout") && !selected.equals("Admin")) {
+                if (!selected.equals(Constants.MATCH_SCOUT) && !selected.equals(Constants.ADMIN)) {
                     findViewById(R.id.textView3).setVisibility(View.GONE);
                     findViewById(R.id.textView2).setVisibility(View.GONE);
                     colorSelector.setVisibility(View.GONE);
@@ -88,14 +91,14 @@ public class Settings extends AppCompatActivity {
 
             }
         });
-        typeSelector.setSelection(Arrays.asList(types).indexOf(sharedPref.getString("type", "Match Scout")));
-        if(!sharedPref.getString("type","").equals(""))
+        typeSelector.setSelection(Arrays.asList(types).indexOf(sharedPref.getString(Constants.USER_TYPE, Constants.MATCH_SCOUT)));
+        if(!sharedPref.getString(Constants.USER_TYPE,"").equals(""))
         {
             Button homeButton = (Button)findViewById(R.id.homeButton);
             homeButton.setVisibility(View.VISIBLE);
         }
         EditText eventID = (EditText)findViewById(R.id.eventID);
-        eventID.setText(sharedPref.getString("event_id",""));
+        eventID.setText(sharedPref.getString(Constants.EVENT_ID,""));
     }
 
     // back button goes to the start screen
@@ -113,16 +116,16 @@ public class Settings extends AppCompatActivity {
         Spinner numSelector = (Spinner)findViewById(R.id.numSelector);
         EditText eventID = (EditText)findViewById(R.id.eventID);
 
-        SharedPreferences.Editor prefEditor = getSharedPreferences( "appData", Context.MODE_PRIVATE ).edit();
+        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE ).edit();
 
         String eventId = String.valueOf(eventID.getText());
         if(eventId != "") {
-            prefEditor.putString("event_id", String.valueOf(eventID.getText()));
+            prefEditor.putString(Constants.EVENT_ID, String.valueOf(eventID.getText()));
             String type = String.valueOf(typeSelector.getSelectedItem());
-            prefEditor.putString("type", type);
-            if (String.valueOf(typeSelector.getSelectedItem()).equals("Match Scout") || String.valueOf(typeSelector.getSelectedItem()).equals("Admin")) {
-                prefEditor.putString("alliance_color", String.valueOf(colorSelector.getSelectedItem()));
-                prefEditor.putInt("alliance_number", Integer.parseInt(String.valueOf(numSelector.getSelectedItem())));
+            prefEditor.putString(Constants.USER_TYPE, type);
+            if (String.valueOf(typeSelector.getSelectedItem()).equals(Constants.MATCH_SCOUT) || String.valueOf(typeSelector.getSelectedItem()).equals(Constants.ADMIN)) {
+                prefEditor.putString(Constants.ALLIANCE_COLOR, String.valueOf(colorSelector.getSelectedItem()));
+                prefEditor.putInt(Constants.ALLIANCE_NUMBER, Integer.parseInt(String.valueOf(numSelector.getSelectedItem())));
             }
             prefEditor.commit();
             Button homeButton = (Button)findViewById(R.id.homeButton);
@@ -139,7 +142,7 @@ public class Settings extends AppCompatActivity {
                 Log.d(TAG, "url: " + url);
 
                 //Request schedule
-                JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                JsonRequest jsonReq = new Utilities.JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Team List received");
@@ -164,7 +167,7 @@ public class Settings extends AppCompatActivity {
                 RequestQueue queue = Volley.newRequestQueue(this);
                 String url = "http://www.thebluealliance.com/api/v2/event/" + eventId + "/matches?X-TBA-App-Id=amessing:scoutingTest:v3";
                 Log.d(TAG, "url: " + url);
-                JsonRequest jsonReq = new JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                JsonRequest jsonReq = new Utilities.JsonUTF8Request(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "Schedule received");
@@ -184,10 +187,11 @@ public class Settings extends AppCompatActivity {
 
             }
 
-            if(type.equals("Drive Team") || type.equals("Strategy") || type.equals("Admin")) {
+            if(type.equals(Constants.DRIVE_TEAM) || type.equals(Constants.STRATEGY) || type.equals(Constants.ADMIN)) {
                 if (aggregatePIntent == null) {
                     Log.d(TAG,"Creating Aggregate Service");
-                    Intent intent = new Intent(this, Aggregate.class);
+                    Intent intent = new Intent(this, AggregateService.class);
+                    intent.putExtra("update",true);
                     startService(intent);
                     aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
@@ -206,15 +210,16 @@ public class Settings extends AppCompatActivity {
                 }
             }
 
-            // Should request access to bluetooth
-//            BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//            if (!mBluetoothAdapter.isEnabled()) {
-//                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//                startActivityForResult(enableBtIntent, 1);
-//            }
-
-            // Should wait for acknowledgement of bluetooth being enabled, but we are going to assume it is turned on
-
+            if(BluetoothAdapter.getDefaultAdapter() != null) {
+                if (syncPIntent == null) {
+                    Log.d(TAG, "Creating Sync Service");
+                    Intent intent = new Intent(this, SyncService.class);
+                    startService(intent);
+                    syncPIntent = PendingIntent.getService(this, 0, intent, 0);
+                    AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, syncPIntent);
+                }
+            }
             Toast toast =Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
             toast.show();
 
