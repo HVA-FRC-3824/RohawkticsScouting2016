@@ -8,41 +8,22 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+        <com.team3824.akmessing1.scoutingapp.views.CustomDefenseInput
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/teleop_defense_1"
             app:label="Defense 1 (Low bar):"
             app:key="teleop_defense_1"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_defense_time_1"
-            app:label="Time 1: "
-            app:key="teleop_defense_time_1"
-            app:radio_values="@array/teleop_defense_time"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp" />
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+        <com.team3824.akmessing1.scoutingapp.views.CustomDefenseInput
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/teleop_defense_2"
             app:label="Defense 2:"
             app:key="teleop_defense_2"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_defense_time_2"
-            app:label="Time 2: "
-            app:key="teleop_defense_time_2"
-            app:radio_values="@array/teleop_defense_time"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp" />
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+        <com.team3824.akmessing1.scoutingapp.views.CustomDefenseInput
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

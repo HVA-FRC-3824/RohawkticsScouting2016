@@ -26,7 +26,6 @@ public class CustomStacks extends CustomScoutView{
 
     String key;
 
-    int numStacks;
     JSONArray jsonArray;
 
     final CustomCounter totes, preexistingTotes;

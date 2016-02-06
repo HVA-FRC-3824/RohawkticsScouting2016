@@ -645,15 +645,15 @@ public class AggregateService extends IntentService {
                 break;
             case "teleop":
                 index = defensesList.indexOf(defense2);
-                array[index] += cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2));
+                array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
                 index = defensesList.indexOf(defense3);
-                array[index] += cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3));
+                array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
                 index = defensesList.indexOf(defense4);
-                array[index] += cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4));
+                array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
                 index = defensesList.indexOf(defense5);
-                array[index] += cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5));
+                array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
                 index = defensesList.indexOf("low_bar");
-                array[index] += cursor.getInt(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1));
+                array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
                 break;
             case "seen":
                 index = defensesList.indexOf(defense2);
@@ -669,34 +669,57 @@ public class AggregateService extends IntentService {
                 break;
             case "time":
                 index = defensesList.indexOf(defense2);
-                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_2)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
                 index = defensesList.indexOf(defense3);
-                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_3)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
                 index = defensesList.indexOf(defense4);
-                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_4)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
                 index = defensesList.indexOf(defense5);
-                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_5)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
                 index = defensesList.indexOf("low_bar");
-                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_TIME_1)));
+                array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
                 break;
+
         }
     }
 
-    private int stringToTime(String string)
+    private int stringToCount(String jsonText)
     {
-        switch (string)
-        {
-            case "<5 seconds":
-                return 5;
-            case "<10 seconds":
-                return 10;
-            case "<15 seconds":
-                return 15;
-            case "Stuck":
-                return 30;
-            default:
-                return 0;
+        try {
+            JSONArray jsonArray = new JSONArray(jsonText);
+            return jsonArray.length();
+        } catch (JSONException e) {
+            Log.d(TAG,e.getMessage());
         }
+        return 0;
     }
 
+    private int stringToTime(String jsonText)
+    {
+        int sum = 0;
+        try{
+            JSONArray jsonArray = new JSONArray(jsonText);
+            for(int i = 0; i < jsonArray.length(); i++)
+            {
+                switch (jsonArray.getString(i))
+                {
+                    case "< 5":
+                        sum += 5;
+                        break;
+                    case "< 10":
+                        sum += 10;
+                        break;
+                    case "> 10":
+                        sum += 15;
+                        break;
+                    case "Stuck":
+                        sum += 30;
+                        break;
+                }
+            }
+        } catch (JSONException e){
+            Log.d(TAG,e.getMessage());
+        }
+        return sum;
+    }
 }

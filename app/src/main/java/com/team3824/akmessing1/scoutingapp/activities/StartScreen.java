@@ -1,12 +1,15 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.content.Intent;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
@@ -15,12 +18,15 @@ import java.util.Set;
 
 public class StartScreen extends AppCompatActivity implements View.OnClickListener{
     private static String TAG = "StartScreen";
+    private BluetoothAdapter bluetoothAdapter = null;
 
     // Buttons become visible based on the role
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
+
+        ((TextView)findViewById(R.id.version)).setText("Version: 1.0.1");
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String type = sharedPreferences.getString(Constants.USER_TYPE, "");
@@ -51,6 +57,15 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.sync_button);
                 setupButton(R.id.aggregate_button);
                 setupButton(R.id.feedback_button);
+                setupButton(R.id.bluetooth_button);
+                bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if(bluetoothAdapter.isEnabled()) {
+                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
+                }
+                else
+                {
+                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.RED);
+                }
                 break;
             }
             case Constants.STRATEGY: {
@@ -78,6 +93,15 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.aggregate_button);
                 setupButton(R.id.feedback_button);
                 setupButton(R.id.database_button);
+                setupButton(R.id.bluetooth_button);
+                bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if(bluetoothAdapter.isEnabled()) {
+                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
+                }
+                else
+                {
+                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.RED);
+                }
                 break;
             }
         }
@@ -155,6 +179,17 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 intent = new Intent(this, DatabaseManagement.class);
                 startActivity(intent);
                 break;
+            case R.id.bluetooth_button:
+                if(bluetoothAdapter.isEnabled())
+                {
+                    bluetoothAdapter.disable();
+                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.RED);
+                }
+                else
+                {
+                    bluetoothAdapter.enable();
+                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
+                }
         }
     }
 }

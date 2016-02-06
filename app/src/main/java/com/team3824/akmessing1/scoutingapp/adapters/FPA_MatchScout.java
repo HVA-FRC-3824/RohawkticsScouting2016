@@ -21,7 +21,7 @@ import java.util.Map;
 // Setup up page fragments for match scouting
 public class FPA_MatchScout extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "Autonomous", "Teleop","Post-Match","EndGame","Fouls" };
+    private String tabTitles[] = new String[] { "Autonomous", "Teleop","EndGame","Post-Match","Fouls" };
     private MatchAuto matchAuto;
     private MatchTeleop matchTeleop;
     private MatchPost matchPost;

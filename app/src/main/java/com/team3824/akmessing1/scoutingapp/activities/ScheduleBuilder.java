@@ -43,7 +43,8 @@ public class ScheduleBuilder extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if(schedule.getCount()>0)
         {
-            do{
+            while(!schedule.isAfterLast())
+            {
                 matchNum++;
                 view = inflater.inflate(R.layout.list_item_schedule_match_build, null);
 
@@ -70,7 +71,7 @@ public class ScheduleBuilder extends AppCompatActivity {
                 int numChildren = layout.getChildCount();
                 layout.addView(view,numChildren-1);
                 schedule.moveToNext();
-            }while(!schedule.isAfterLast());
+            }
         }
         matchNum++;
         addRow(matchNum);

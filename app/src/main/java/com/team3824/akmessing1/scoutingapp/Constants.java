@@ -34,15 +34,13 @@ public interface Constants {
 
     // Teleop
     public static final String TELEOP_DEFENSE_1 = "teleop_defense_1";
-    public static final String TELEOP_DEFENSE_TIME_1 = "teleop_defense_time_1";
     public static final String TELEOP_DEFENSE_2 = "teleop_defense_2";
-    public static final String TELEOP_DEFENSE_TIME_2 = "teleop_defense_time_2";
     public static final String TELEOP_DEFENSE_3 = "teleop_defense_3";
-    public static final String TELEOP_DEFENSE_TIME_3 = "teleop_defense_time_3";
     public static final String TELEOP_DEFENSE_4 = "teleop_defense_4";
-    public static final String TELEOP_DEFENSE_TIME_4 = "teleop_defense_time_4";
     public static final String TELEOP_DEFENSE_5 = "teleop_defense_5";
-    public static final String TELEOP_DEFENSE_TIME_5 = "teleop_defense_time_5";
+
+    public static final String[] TELEOP_DEFENSE_TIMES = {"< 5", "< 10", "> 10","Stuck"};
+
     public static final String TELEOP_HIGH_HIT = "teleop_high_hit";
     public static final String TELEOP_HIGH_MISS = "teleop_high_miss";
     public static final String TELEOP_LOW_HIT = "teleop_low_hit";

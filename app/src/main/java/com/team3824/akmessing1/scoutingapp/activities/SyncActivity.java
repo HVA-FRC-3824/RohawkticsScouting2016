@@ -47,7 +47,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class SyncActivity extends AppCompatActivity {
+public class SyncActivity extends AppCompatActivity implements View.OnClickListener{
     private static String TAG = "SyncActivity";
     private BluetoothAdapter mBluetoothAdapter = null;
     Object[] pairedDevices;
@@ -60,6 +60,47 @@ public class SyncActivity extends AppCompatActivity {
     PitScoutDB pitScoutDB;
     SuperScoutDB superScoutDB;
     SyncDB syncDB;
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId())
+        {
+            case R.id.back:
+                this.finish();
+                break;
+            case R.id.sync_send:
+                Log.d(TAG, "Sending");
+                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
+                    Log.d(TAG, "Connected");
+                    String lastUpdated = syncDB.getLastUpdated(selectedAddress);
+                    syncDB.updateSync(selectedAddress);
+                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncActivity.this.matchScoutDB.getInfoSince(lastUpdated));
+                    bluetoothSync.write(matchUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncActivity.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                    bluetoothSync.write(pitUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                    String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncActivity.this.superScoutDB.getAllMatchesSince(lastUpdated));
+                    bluetoothSync.write(superUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.sync_picture_send:
+                ArrayList<String> filenames = getImageFiles(SyncActivity.this.pitScoutDB.getAllTeamInfo());
+                for (int i = 0; i < filenames.size(); i++) {
+                    bluetoothSync.write(("F" + filenames.get(i)).getBytes());
+                    File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
+                    bluetoothSync.writeFile(file);
+                    Toast.makeText(SyncActivity.this, "Picture " + String.valueOf(i + 1) + " of " + String.valueOf(filenames.size()) + " Sent", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.sync_receive:
+                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
+                    bluetoothSync.write(("R").getBytes());
+                }
+                break;
+        }
+    }
 
     private class SyncHandler extends android.os.Handler
     {
@@ -230,84 +271,57 @@ public class SyncActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
+        ((Button)findViewById(R.id.back)).setOnClickListener(this);
+
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(mBluetoothAdapter.isEnabled()) {
+            ArrayAdapter<String> pairedDevicesArrayAdapter =
+                    new ArrayAdapter<String>(this, R.layout.list_item_device_name);
 
-        ArrayAdapter<String> pairedDevicesArrayAdapter =
-                new ArrayAdapter<String>(this, R.layout.list_item_device_name);
+            // Find and set up the ListView for paired devices
+            ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+            pairedListView.setAdapter(pairedDevicesArrayAdapter);
+            pairedListView.setOnItemClickListener(mDeviceClickListener);
 
-        // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
-        pairedListView.setAdapter(pairedDevicesArrayAdapter);
-        pairedListView.setOnItemClickListener(mDeviceClickListener);
-
-        // Get a set of currently paired devices
-        Set<BluetoothDevice> pairedDevicesSet = mBluetoothAdapter.getBondedDevices();
-        pairedDevices = pairedDevicesSet.toArray();
-        if (pairedDevices.length > 0) {
-            for (int i = 0; i < pairedDevices.length; i++){
-                pairedDevicesArrayAdapter.add(((BluetoothDevice)pairedDevices[i]).getName() + "\n" + ((BluetoothDevice)pairedDevices[i]).getAddress());
+            // Get a set of currently paired devices
+            Set<BluetoothDevice> pairedDevicesSet = mBluetoothAdapter.getBondedDevices();
+            pairedDevices = pairedDevicesSet.toArray();
+            if (pairedDevices.length > 0) {
+                for (int i = 0; i < pairedDevices.length; i++) {
+                    pairedDevicesArrayAdapter.add(((BluetoothDevice) pairedDevices[i]).getName() + "\n" + ((BluetoothDevice) pairedDevices[i]).getAddress());
+                }
             }
+            handler = new SyncHandler();
+            bluetoothSync = new BluetoothSync(handler, false);
+
+            textView = (TextView) findViewById(R.id.sync_log);
+
+            matchScoutDB = new MatchScoutDB(this, eventID);
+            pitScoutDB = new PitScoutDB(this, eventID);
+            superScoutDB = new SuperScoutDB(this, eventID);
+            syncDB = new SyncDB(this, eventID);
+
+            ((Button) findViewById(R.id.sync_send)).setOnClickListener(this);
+
+            ((Button) findViewById(R.id.sync_picture_send)).setOnClickListener(this);
+
+            Button sync_receive = (Button) findViewById(R.id.sync_receive);
+            sync_receive.setOnClickListener(this);
+
+            bluetoothSync.start();
         }
-        handler = new SyncHandler();
-        bluetoothSync = new BluetoothSync(handler, false);
+        else
+        {
+            findViewById(R.id.bluetooth_text).setVisibility(View.VISIBLE);
+            findViewById(R.id.paired_devices).setVisibility(View.GONE);
+            findViewById(R.id.sync_send).setVisibility(View.GONE);
+            findViewById(R.id.sync_picture_send).setVisibility(View.GONE);
+            findViewById(R.id.sync_receive).setVisibility(View.GONE);
+            findViewById(R.id.sync_log).setVisibility(View.GONE);
 
-        textView = (TextView)findViewById(R.id.sync_log);
 
-        matchScoutDB = new MatchScoutDB(this,eventID);
-        pitScoutDB = new PitScoutDB(this,eventID);
-        superScoutDB = new SuperScoutDB(this, eventID);
-        syncDB = new SyncDB(this,eventID);
-
-        Button sync_send = (Button)findViewById(R.id.sync_send);
-        sync_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Sending");
-                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    Log.d(TAG, "Connected");
-                    String lastUpdated = syncDB.getLastUpdated(selectedAddress);
-                    syncDB.updateSync(selectedAddress);
-                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncActivity.this.matchScoutDB.getInfoSince(lastUpdated));
-                    bluetoothSync.write(matchUpdatedText.getBytes());
-                    Toast.makeText(SyncActivity.this,"Match Data Sent",Toast.LENGTH_SHORT).show();
-                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncActivity.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
-                    bluetoothSync.write(pitUpdatedText.getBytes());
-                    Toast.makeText(SyncActivity.this,"Pit Data Sent",Toast.LENGTH_SHORT).show();
-                    String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncActivity.this.superScoutDB.getAllMatchesSince(lastUpdated));
-                    bluetoothSync.write(superUpdatedText.getBytes());
-                    Toast.makeText(SyncActivity.this,"Super Data Sent",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        Button sync_picture_send = (Button)findViewById(R.id.sync_picture_send);
-        sync_picture_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<String> filenames = getImageFiles(SyncActivity.this.pitScoutDB.getAllTeamInfo());
-                for(int i = 0; i < filenames.size(); i++)
-                {
-                    bluetoothSync.write(("F"+filenames.get(i)).getBytes());
-                    File file = new File(SyncActivity.this.getFilesDir(),filenames.get(i));
-                    bluetoothSync.writeFile(file);
-                    Toast.makeText(SyncActivity.this,"Picture "+String.valueOf(i+1)+" of "+String.valueOf(filenames.size())+" Sent",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        Button sync_receive = (Button)findViewById(R.id.sync_receive);
-        sync_receive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED)
-                {
-                    bluetoothSync.write(("R").getBytes());
-                }
-            }
-        });
-
-        bluetoothSync.start();
+        }
     }
 
     /**
