@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp.views;
+package com.team3824.akmessing1.scoutingapp.views.rebound_rumble_specific;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,6 +12,9 @@ import android.widget.RadioGroup;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.views.CustomCheckbox;
+import com.team3824.akmessing1.scoutingapp.views.CustomCounter;
+import com.team3824.akmessing1.scoutingapp.views.CustomScoutView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +23,7 @@ import org.w3c.dom.Attr;
 
 import java.util.Map;
 
-public class CustomStacks extends CustomScoutView{
+public class CustomStacks extends CustomScoutView {
 
     private String TAG = "CustomStacks";
 

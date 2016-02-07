@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp.views;
+package com.team3824.akmessing1.scoutingapp.views.rebound_rumble_specific;
 
 import android.content.Context;
 import android.database.Cursor;
