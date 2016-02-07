@@ -15,8 +15,6 @@ import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.services.SyncService;
 
-import java.util.Set;
-
 public class StartScreen extends AppCompatActivity implements View.OnClickListener{
     private static String TAG = "StartScreen";
     private BluetoothAdapter bluetoothAdapter = null;
@@ -27,7 +25,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
 
-        ((TextView)findViewById(R.id.version)).setText("Version: 1.0.2");
+        ((TextView)findViewById(R.id.version)).setText("Version: 1.0.3");
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String type = sharedPreferences.getString(Constants.USER_TYPE, "");
@@ -58,14 +56,14 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.sync_button);
                 setupButton(R.id.aggregate_button);
                 setupButton(R.id.feedback_button);
-                setupButton(R.id.bluetooth_button);
-                bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if(bluetoothAdapter.isEnabled()) {
-                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
-                }
-                else
-                {
-                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.RED);
+                if(bluetoothAdapter != null) {
+                    setupButton(R.id.bluetooth_button);
+                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (bluetoothAdapter.isEnabled()) {
+                        findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
+                    } else {
+                        findViewById(R.id.bluetooth_button).setBackgroundColor(Color.RED);
+                    }
                 }
                 break;
             }
@@ -75,7 +73,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.viewTeam_button);
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.viewEvent_button);
-                setupButton(R.id.viewPicklist_button);
+                setupButton(R.id.viewPickList_button);
                 setupButton(R.id.sync_button);
                 setupButton(R.id.aggregate_button);
                 break;
@@ -89,20 +87,21 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.viewTeam_button);
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.viewEvent_button);
-                setupButton(R.id.viewPicklist_button);
+                setupButton(R.id.viewPickList_button);
                 setupButton(R.id.sync_button);
                 setupButton(R.id.aggregate_button);
                 setupButton(R.id.feedback_button);
                 setupButton(R.id.database_button);
                 setupButton(R.id.teamlist_button);
+                if(bluetoothAdapter != null) {
                 setupButton(R.id.bluetooth_button);
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if(bluetoothAdapter.isEnabled()) {
-                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
-                }
-                else
-                {
-                    findViewById(R.id.bluetooth_button).setBackgroundColor(Color.RED);
+
+                    if (bluetoothAdapter.isEnabled()) {
+                        findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
+                    } else {
+                        findViewById(R.id.bluetooth_button).setBackgroundColor(Color.RED);
+                    }
                 }
                 break;
             }
@@ -165,7 +164,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 intent = new Intent(this, EventView.class);
                 startActivity(intent);
                 break;
-            case R.id.viewPicklist_button:
+            case R.id.viewPickList_button:
                 intent = new Intent(this, PickList.class);
                 startActivity(intent);
                 break;

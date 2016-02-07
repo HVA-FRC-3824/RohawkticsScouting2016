@@ -12,7 +12,7 @@
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Back"
             android:id="@+id/back_btn"
             android:layout_gravity="left" />
@@ -38,6 +38,7 @@
             android:contentDescription="Erase"
             android:src="@drawable/eraser"
             android:layout_gravity="right" />
+        <!--
         <ImageButton
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
@@ -45,34 +46,41 @@
             android:contentDescription="Save"
             android:src="@drawable/save"
             android:layout_gravity="right" />
-
+        <ImageButton
+            android:id="@+id/open_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:contentDescription="Open"
+            android:src="@drawable/open"
+            android:layout_gravity="right" />
+        -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Category A\nPortcullis (P)\nCheval de Frise (C)"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="40dp"
             android:textAlignment="center" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Category B\nMoat (M)\nRamparts (R)"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textAlignment="center" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Category C\nDrawbridge (D)\nSally Port (SP)"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:textAlignment="center" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Category D\nRock Wall (RW)\nRough Terrain (RT)"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="40dp"
             android:textAlignment="center" />
         <LinearLayout
             android:layout_width="wrap_content"

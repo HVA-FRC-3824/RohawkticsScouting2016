@@ -142,9 +142,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="View Picklist"
+                android:text="View Pick List"
                 android:textColor="@color/white"
-                android:id="@+id/viewPicklist_button"
+                android:id="@+id/viewPickList_button"
                 android:visibility="gone"
                 android:background="@color/navy_blue"/>
 

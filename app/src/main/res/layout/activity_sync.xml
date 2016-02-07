@@ -37,7 +37,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:text="Send"
+        android:text="Send Pictures"
         android:id="@+id/sync_picture_send"
         android:layout_weight=".5" />
 

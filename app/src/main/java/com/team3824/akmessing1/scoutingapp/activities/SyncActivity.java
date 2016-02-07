@@ -275,52 +275,62 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(mBluetoothAdapter.isEnabled()) {
-            ArrayAdapter<String> pairedDevicesArrayAdapter =
-                    new ArrayAdapter<String>(this, R.layout.list_item_device_name);
+        if(mBluetoothAdapter != null) {
+            if (mBluetoothAdapter.isEnabled()) {
+                ArrayAdapter<String> pairedDevicesArrayAdapter =
+                        new ArrayAdapter<String>(this, R.layout.list_item_device_name);
 
-            // Find and set up the ListView for paired devices
-            ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
-            pairedListView.setAdapter(pairedDevicesArrayAdapter);
-            pairedListView.setOnItemClickListener(mDeviceClickListener);
+                // Find and set up the ListView for paired devices
+                ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+                pairedListView.setAdapter(pairedDevicesArrayAdapter);
+                pairedListView.setOnItemClickListener(mDeviceClickListener);
 
-            // Get a set of currently paired devices
-            Set<BluetoothDevice> pairedDevicesSet = mBluetoothAdapter.getBondedDevices();
-            pairedDevices = pairedDevicesSet.toArray();
-            if (pairedDevices.length > 0) {
-                for (int i = 0; i < pairedDevices.length; i++) {
-                    pairedDevicesArrayAdapter.add(((BluetoothDevice) pairedDevices[i]).getName() + "\n" + ((BluetoothDevice) pairedDevices[i]).getAddress());
+                // Get a set of currently paired devices
+                Set<BluetoothDevice> pairedDevicesSet = mBluetoothAdapter.getBondedDevices();
+                pairedDevices = pairedDevicesSet.toArray();
+                if (pairedDevices.length > 0) {
+                    for (int i = 0; i < pairedDevices.length; i++) {
+                        pairedDevicesArrayAdapter.add(((BluetoothDevice) pairedDevices[i]).getName() + "\n" + ((BluetoothDevice) pairedDevices[i]).getAddress());
+                    }
                 }
+                handler = new SyncHandler();
+                bluetoothSync = new BluetoothSync(handler, false);
+
+                textView = (TextView) findViewById(R.id.sync_log);
+
+                matchScoutDB = new MatchScoutDB(this, eventID);
+                pitScoutDB = new PitScoutDB(this, eventID);
+                superScoutDB = new SuperScoutDB(this, eventID);
+                syncDB = new SyncDB(this, eventID);
+
+                ((Button) findViewById(R.id.sync_send)).setOnClickListener(this);
+
+                ((Button) findViewById(R.id.sync_picture_send)).setOnClickListener(this);
+
+                Button sync_receive = (Button) findViewById(R.id.sync_receive);
+                sync_receive.setOnClickListener(this);
+
+                bluetoothSync.start();
+            } else {
+                findViewById(R.id.bluetooth_text).setVisibility(View.VISIBLE);
+                findViewById(R.id.paired_devices).setVisibility(View.GONE);
+                findViewById(R.id.sync_send).setVisibility(View.GONE);
+                findViewById(R.id.sync_picture_send).setVisibility(View.GONE);
+                findViewById(R.id.sync_receive).setVisibility(View.GONE);
+                findViewById(R.id.sync_log).setVisibility(View.GONE);
+
+
             }
-            handler = new SyncHandler();
-            bluetoothSync = new BluetoothSync(handler, false);
-
-            textView = (TextView) findViewById(R.id.sync_log);
-
-            matchScoutDB = new MatchScoutDB(this, eventID);
-            pitScoutDB = new PitScoutDB(this, eventID);
-            superScoutDB = new SuperScoutDB(this, eventID);
-            syncDB = new SyncDB(this, eventID);
-
-            ((Button) findViewById(R.id.sync_send)).setOnClickListener(this);
-
-            ((Button) findViewById(R.id.sync_picture_send)).setOnClickListener(this);
-
-            Button sync_receive = (Button) findViewById(R.id.sync_receive);
-            sync_receive.setOnClickListener(this);
-
-            bluetoothSync.start();
         }
         else
         {
             findViewById(R.id.bluetooth_text).setVisibility(View.VISIBLE);
+            ((TextView)findViewById(R.id.bluetooth_text)).setText("No Bluetooth on this device");
             findViewById(R.id.paired_devices).setVisibility(View.GONE);
             findViewById(R.id.sync_send).setVisibility(View.GONE);
             findViewById(R.id.sync_picture_send).setVisibility(View.GONE);
             findViewById(R.id.sync_receive).setVisibility(View.GONE);
             findViewById(R.id.sync_log).setVisibility(View.GONE);
-
-
         }
     }
 
