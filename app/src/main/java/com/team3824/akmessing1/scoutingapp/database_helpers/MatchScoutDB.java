@@ -336,6 +336,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
     }
 
 }

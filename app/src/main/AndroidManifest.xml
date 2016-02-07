@@ -78,6 +78,9 @@
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.DatabaseManagement"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.TeamListBuilder"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <service android:name=".services.AggregateService"/>
         <service android:name=".services.SyncService"/>
     </application>

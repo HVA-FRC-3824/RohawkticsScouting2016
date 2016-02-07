@@ -191,6 +191,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="Team List Builder"
+                android:id="@+id/teamlist_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Bluetooth"
                 android:id="@+id/bluetooth_button"
                 android:visibility="gone"

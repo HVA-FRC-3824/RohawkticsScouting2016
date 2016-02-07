@@ -204,5 +204,6 @@ public class ScheduleDB extends SQLiteOpenHelper
     {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
     }
 }

@@ -126,6 +126,29 @@ public class StatsDB extends SQLiteOpenHelper {
         }
     }
 
+    public void addTeamNumber(int teamNumber)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int numEntries = (int) DatabaseUtils.queryNumEntries(db, tableName);
+        ContentValues values = new ContentValues();
+        values.put(KEY_TEAM_NUMBER,teamNumber);
+        values.put(KEY_COMPUTED_FIRST_PICK_RANK,numEntries+1);
+        values.put(KEY_COMPUTED_SECOND_PICK_RANK,numEntries+1);
+        values.put(KEY_COMPUTED_THIRD_PICK_RANK,numEntries+1);
+        values.put(KEY_FIRST_PICK_RANK,numEntries+1);
+        values.put(KEY_SECOND_PICK_RANK,numEntries+1);
+        values.put(KEY_THIRD_PICK_RANK,numEntries+1);
+        values.put(KEY_PICKED, 0);
+        values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+        db.insert(tableName,null,values);
+    }
+
+    public void removeTeamNumber(int teamNumber)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName,KEY_TEAM_NUMBER+" = ?",new String[]{String.valueOf(teamNumber)});
+    }
+
     public void updateStats(Map<String, ScoutValue> map)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -352,5 +375,6 @@ public class StatsDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
     }
 }

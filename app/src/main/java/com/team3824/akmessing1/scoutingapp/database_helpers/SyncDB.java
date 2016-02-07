@@ -90,5 +90,6 @@ public class SyncDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
     }
 }

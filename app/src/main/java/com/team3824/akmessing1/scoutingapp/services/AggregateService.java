@@ -70,7 +70,7 @@ public class AggregateService extends IntentService {
             Cursor matchCursor;
             matchCursor = superScoutDB.getAllMatches();
 
-            Integer[] teamNumbers = pitScoutDB.getTeamNumbers();
+            ArrayList<Integer> teamNumbers = pitScoutDB.getTeamNumbers();
             if(matchCursor.getCount() > 0) {
 
                 // Normal updateStats method does not seem to give the table enough time to update
@@ -86,9 +86,9 @@ public class AggregateService extends IntentService {
 
                 String[] driveAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DRIVE_ABILITY);
                 HashMap<String, ScoutValue> map;
-                for (int i = 0; i < teamNumbers.length; i++) {
+                for (int i = 0; i < teamNumbers.size(); i++) {
                     map = new HashMap<>();
-                    map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers[i]));
+                    map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers.get(i)));
                     map.put(Constants.DRIVE_ABILITY_RANKING, new ScoutValue(driveAbilityRanking[i]));
                     statsDB.updateStats(map);
                 }
@@ -96,9 +96,9 @@ public class AggregateService extends IntentService {
                 matchCursor.moveToFirst();
 
                 String[] defenseAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DEFENSE_ABILITY);
-                for (int i = 0; i < teamNumbers.length; i++) {
+                for (int i = 0; i < teamNumbers.size(); i++) {
                     map = new HashMap<>();
-                    map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers[i]));
+                    map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers.get(i)));
                     map.put(Constants.DEFENSE_ABILITY_RANKING, new ScoutValue(defenseAbilityRanking[i]));
                     statsDB.updateStats(map);
                 }
@@ -279,11 +279,10 @@ public class AggregateService extends IntentService {
          of all the teams. It uses Schulze Method for voting.
      */
 
-    public String[] CardinalRankCalc(Integer[] teamNumbers, Cursor matchCursor, String eventID, String key)
+    public String[] CardinalRankCalc(final ArrayList<Integer> teamNumbers, Cursor matchCursor, String eventID, String key)
     {
-        int numTeams = teamNumbers.length;
+        int numTeams = teamNumbers.size();
         Set<Integer> ranking = new HashSet<Integer>();
-        final List<Integer> teamNumList = Arrays.asList(teamNumbers);
         String[] output;
 
 
@@ -334,10 +333,10 @@ public class AggregateService extends IntentService {
                 before.clear();
                 for(int i = 0; i < jsonArray.length(); i++)
                 {
-                    int index2 = teamNumList.indexOf(jsonArray.getInt(i));
+                    int index2 = teamNumbers.indexOf(jsonArray.getInt(i));
                     for(int j = 0; j < before.size(); j++)
                     {
-                        int index1 = teamNumList.indexOf(before.get(j));
+                        int index1 = teamNumbers.indexOf(before.get(j));
                         matrix[index1][index2]++;
                     }
                     before.add(jsonArray.getInt(i));
@@ -426,8 +425,8 @@ public class AggregateService extends IntentService {
         // sort the teams based on their paths to another team
         Collections.sort(sortedRanking, new Comparator<Integer>() {
             public int compare(Integer a, Integer b) {
-                int indexA = teamNumList.indexOf(a);
-                int indexB = teamNumList.indexOf(b);
+                int indexA = teamNumbers.indexOf(a);
+                int indexB = teamNumbers.indexOf(b);
                 Log.i(TAG,indexA+" "+indexB+" "+strongestPathMatrix[indexA][indexB]+" "+strongestPathMatrix[indexB][indexA]);
                 if (strongestPathMatrix[indexA][indexB] > strongestPathMatrix[indexB][indexA]) {
                     return -1;
@@ -454,17 +453,17 @@ public class AggregateService extends IntentService {
         }
 
         // Create output that includes ties
-        output = new String[teamNumbers.length];
+        output = new String[teamNumbers.size()];
         int rank = 1;
         for(int i = 0; i < sortedRanking.size(); i++)
         {
             boolean tied = false;
             int currentTeamNumber = sortedRanking.get(i);
-            int currentTeamNumberIndex = teamNumList.indexOf(currentTeamNumber);
+            int currentTeamNumberIndex = teamNumbers.indexOf(currentTeamNumber);
             if(i > 0)
             {
                 int previousTeamNumber = sortedRanking.get(i-1);
-                int previousTeamNumberIndex = teamNumList.indexOf(previousTeamNumber);
+                int previousTeamNumberIndex = teamNumbers.indexOf(previousTeamNumber);
 
                 if(strongestPathMatrix[currentTeamNumberIndex][previousTeamNumberIndex] == strongestPathMatrix[previousTeamNumberIndex][currentTeamNumberIndex])
                 {
@@ -474,7 +473,7 @@ public class AggregateService extends IntentService {
             if(!tied && i < ranking.size()-1)
             {
                 int nextTeamNumber = sortedRanking.get(i+1);
-                int nextTeamNumberIndex = teamNumList.indexOf(nextTeamNumber);
+                int nextTeamNumberIndex = teamNumbers.indexOf(nextTeamNumber);
 
                 if(strongestPathMatrix[currentTeamNumberIndex][nextTeamNumberIndex] == strongestPathMatrix[nextTeamNumberIndex][currentTeamNumberIndex])
                 {
@@ -490,15 +489,15 @@ public class AggregateService extends IntentService {
                 rank = i+1;
                 output[currentTeamNumberIndex] = String.valueOf(rank);
             }
-            Log.i(TAG,teamNumbers[currentTeamNumberIndex]+": "+output[currentTeamNumberIndex]);
+            Log.i(TAG,teamNumbers.get(currentTeamNumberIndex)+": "+output[currentTeamNumberIndex]);
         }
         rank = sortedRanking.size()+1;
-        for(int i = 0; i < teamNumbers.length; i++)
+        for(int i = 0; i < teamNumbers.size(); i++)
         {
-            if(sortedRanking.indexOf(teamNumbers[i]) == -1)
+            if(sortedRanking.indexOf(teamNumbers.get(i)) == -1)
             {
                 output[i] = "T"+ String.valueOf(rank);
-                Log.i(TAG,teamNumbers[i]+": "+output[i]);
+                Log.i(TAG,teamNumbers.get(i)+": "+output[i]);
             }
         }
 

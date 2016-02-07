@@ -27,7 +27,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
 
-        ((TextView)findViewById(R.id.version)).setText("Version: 1.0.1");
+        ((TextView)findViewById(R.id.version)).setText("Version: 1.0.2");
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String type = sharedPreferences.getString(Constants.USER_TYPE, "");
@@ -94,6 +94,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.aggregate_button);
                 setupButton(R.id.feedback_button);
                 setupButton(R.id.database_button);
+                setupButton(R.id.teamlist_button);
                 setupButton(R.id.bluetooth_button);
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if(bluetoothAdapter.isEnabled()) {
@@ -178,6 +179,10 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.database_button:
                 intent = new Intent(this, DatabaseManagement.class);
+                startActivity(intent);
+                break;
+            case R.id.teamlist_button:
+                intent = new Intent(this, TeamListBuilder.class);
                 startActivity(intent);
                 break;
             case R.id.bluetooth_button:

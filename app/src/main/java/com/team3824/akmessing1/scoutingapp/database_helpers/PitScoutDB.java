@@ -96,6 +96,35 @@ public class PitScoutDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addTeamNumber(int teamNumber)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TEAM_NUMBER,teamNumber);
+        values.put(KEY_NICKNAME,"");
+        values.put(KEY_COMPLETE, 0);
+        values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+        db.insert(tableName, null, values);
+    }
+
+    public void addTeamNumber(int teamNumber, String nickname)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TEAM_NUMBER,teamNumber);
+        values.put(KEY_NICKNAME,nickname);
+        values.put(KEY_COMPLETE, 0);
+        values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+        db.insert(tableName,null,values);
+    }
+
+    public void removeTeamNumber(int teamNumber)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName, KEY_TEAM_NUMBER+" = ?", new String[]{String.valueOf(teamNumber)});
+    }
+
+
     // Store data in the pit database for a team
     public void updatePit(Map<String, ScoutValue> map)
     {
@@ -284,10 +313,9 @@ public class PitScoutDB extends SQLiteOpenHelper {
         return (int) DatabaseUtils.queryNumEntries(db, tableName);
     }
 
-    public Integer[] getTeamNumbers()
+    public ArrayList<Integer> getTeamNumbers()
     {
-        int numTeams = getNumTeams();
-        Integer[] teamNumbers = new Integer[numTeams];
+        ArrayList<Integer> teamNumbers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 new String[]{KEY_TEAM_NUMBER}, // b. column names
@@ -303,9 +331,9 @@ public class PitScoutDB extends SQLiteOpenHelper {
         }
         cursor.moveToFirst();
 
-        for(int i = 0; i < numTeams; i++)
+        for(int i = 0; i < cursor.getCount(); i++)
         {
-            teamNumbers[i] = cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER));
+            teamNumbers.add(cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER)));
             cursor.moveToNext();
         }
 
@@ -394,5 +422,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
     }
 }
