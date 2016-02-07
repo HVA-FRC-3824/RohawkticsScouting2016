@@ -31,17 +31,7 @@
             app:label="Defense 3:"
             app:key="teleop_defense_3"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_defense_time_3"
-            app:label="Time 3: "
-            app:key="teleop_defense_time_3"
-            app:radio_values="@array/teleop_defense_time"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp" />
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+        <com.team3824.akmessing1.scoutingapp.views.CustomDefenseInput
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -49,33 +39,13 @@
             app:label="Defense 4:"
             app:key="teleop_defense_4"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_defense_time_4"
-            app:label="Time 4: "
-            app:key="teleop_defense_time_4"
-            app:radio_values="@array/teleop_defense_time"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp" />
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+        <com.team3824.akmessing1.scoutingapp.views.CustomDefenseInput
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/teleop_defense_5"
             app:label="Defense 5:"
             app:key="teleop_defense_5"/>
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/teleop_defense_time_5"
-            app:label="Time 5: "
-            app:key="teleop_defense_time_5"
-            app:radio_values="@array/teleop_defense_time"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

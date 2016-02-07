@@ -99,6 +99,8 @@ public class Settings extends AppCompatActivity {
         }
         EditText eventID = (EditText)findViewById(R.id.eventID);
         eventID.setText(sharedPref.getString(Constants.EVENT_ID,""));
+
+        Utilities.setupUI(this, findViewById(android.R.id.content));
     }
 
     // back button goes to the start screen

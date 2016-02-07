@@ -158,63 +158,71 @@ public class AggregateService extends IntentService {
 
             while(!teamCursor.isAfterLast())
             {
-                totalMatches++;
-
                 int matchNumber = teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER));
                 Map<String, ScoutValue> superMatch = superScoutDB.getMatchInfo(matchNumber);
-                Cursor match = scheduleDB.getMatch(matchNumber);
+                // If superscout has not yet recorded the match change the update time so that this
+                // match can be aggreagated later
+                if(superMatch == null) {
+                    Map<String, ScoutValue> matchTeam = new HashMap<>();
+                    matchTeam.put(MatchScoutDB.KEY_ID,new ScoutValue(teamCursor.getString(teamCursor.getColumnIndex(MatchScoutDB.KEY_ID))));
+                    matchTeam.put(MatchScoutDB.KEY_TEAM_NUMBER,new ScoutValue(teamCursor.getString(teamCursor.getColumnIndex(MatchScoutDB.KEY_TEAM_NUMBER))));
+                    matchTeam.put(MatchScoutDB.KEY_MATCH_NUMBER,new ScoutValue(teamCursor.getString(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))));
 
-                String defense2, defense3, defense4, defense5;
-                defense3 = superMatch.get(Constants.DEFENSE_3).getString().toLowerCase().replace(" ", "_");
-                if(match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE1)) == teamsUpdated.get(i) ||
-                        match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE2)) == teamsUpdated.get(i) ||
-                        match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE3)) == teamsUpdated.get(i))
-                {
-                    defense2 = superMatch.get(Constants.BLUE_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
-                    defense4 = superMatch.get(Constants.BLUE_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
-                    defense5 = superMatch.get(Constants.BLUE_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
+                    matchScoutDB.updateMatch(matchTeam);
                 }
-                else
-                {
-                    defense2 = superMatch.get(Constants.RED_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
-                    defense4 = superMatch.get(Constants.RED_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
-                    defense5 = superMatch.get(Constants.RED_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
+                else{
+                    totalMatches++;
+
+                    Cursor match = scheduleDB.getMatch(matchNumber);
+
+                    String defense2, defense3, defense4, defense5;
+                    defense3 = superMatch.get(Constants.DEFENSE_3).getString().toLowerCase().replace(" ", "_");
+                    if (match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE1)) == teamsUpdated.get(i) ||
+                            match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE2)) == teamsUpdated.get(i) ||
+                            match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE3)) == teamsUpdated.get(i)) {
+                        defense2 = superMatch.get(Constants.BLUE_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
+                        defense4 = superMatch.get(Constants.BLUE_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
+                        defense5 = superMatch.get(Constants.BLUE_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
+                    } else {
+                        defense2 = superMatch.get(Constants.RED_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
+                        defense4 = superMatch.get(Constants.RED_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
+                        defense5 = superMatch.get(Constants.RED_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
+                    }
+
+                    increment_array(teamCursor, totalDefensesSeen, defense2, defense3, defense4, defense5, "seen");
+
+                    //Auto
+                    increment_array(teamCursor, totalStartPosition, defense2, defense3, defense4, defense5, "start");
+                    increment_array(teamCursor, totalDefenseReaches, defense2, defense3, defense4, defense5, "reach");
+                    increment_array(teamCursor, totalDefenseCrosses, defense2, defense3, defense4, defense5, "cross");
+                    totalAutoHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_HIGH_HIT));
+                    totalAutoHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_HIGH_MISS));
+                    totalAutoLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_LOW_HIT));
+                    totalAutoLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_LOW_MISS));
+
+                    //Teleop
+                    increment_array(teamCursor, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
+                    increment_array(teamCursor, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
+                    totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
+                    totalTeleopHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_MISS));
+                    totalTeleopLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_HIT));
+                    totalTeleopLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_MISS));
+
+                    //Endgame
+                    totalChallenge += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Challenge")) ? 1 : 0;
+                    totalScale += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Scale")) ? 1 : 0;
+
+                    //Post
+                    totalDQ += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_DQ));
+                    totalStopped += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_STOPPED));
+                    totalDidntShowUp += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_DIDNT_SHOW_UP));
+
+                    //Fouls
+                    totalFouls += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_STANDARD));
+                    totalTechFouls += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_TECH));
+                    totalYellowCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_YELLOW_CARD));
+                    totalRedCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_RED_CARD));
                 }
-
-                increment_array(teamCursor,totalDefensesSeen,defense2, defense3,defense4, defense5,"seen");
-
-                //Auto
-                increment_array(teamCursor,totalStartPosition,defense2, defense3,defense4, defense5,"start");
-                increment_array(teamCursor, totalDefenseReaches, defense2, defense3, defense4, defense5, "reach");
-                increment_array(teamCursor,totalDefenseCrosses,defense2, defense3,defense4, defense5,"cross");
-                totalAutoHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_HIGH_HIT));
-                totalAutoHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_HIGH_MISS));
-                totalAutoLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_LOW_HIT));
-                totalAutoLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_LOW_MISS));
-
-                //Teleop
-                increment_array(teamCursor, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
-                increment_array(teamCursor, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
-                totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
-                totalTeleopHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_MISS));
-                totalTeleopLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_HIT));
-                totalTeleopLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_MISS));
-
-                //Endgame
-                totalChallenge += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Challenge"))?1:0;
-                totalScale += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Scale"))?1:0;
-
-                //Post
-                totalDQ += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_DQ));
-                totalStopped += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_STOPPED));
-                totalDidntShowUp += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_DIDNT_SHOW_UP));
-
-                //Fouls
-                totalFouls += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_STANDARD));
-                totalTechFouls += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_TECH));
-                totalYellowCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_YELLOW_CARD));
-                totalRedCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_RED_CARD));
-
                 teamCursor.moveToNext();
             }
 

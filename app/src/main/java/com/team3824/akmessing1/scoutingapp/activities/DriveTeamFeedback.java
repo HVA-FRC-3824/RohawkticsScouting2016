@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
@@ -115,6 +116,8 @@ public class DriveTeamFeedback extends AppCompatActivity{
             commentEditText2 = (EditText)customEdittext.findViewById(R.id.edittext);
             commentEditText2.setText(comment);
         }
+
+        Utilities.setupUI(this, findViewById(android.R.id.content));
 
     }
 
