@@ -64,10 +64,10 @@ public class FPA_MatchScout extends FragmentPagerAdapter{
                 fragment = matchTeleop;
                 break;
             case 2:
-                fragment = matchPost;
+                fragment = matchEndgame;
                 break;
             case 3:
-                fragment = matchEndgame;
+                fragment = matchPost;
                 break;
             case 4:
                 fragment = matchFouls;
