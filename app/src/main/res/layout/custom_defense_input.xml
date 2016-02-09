@@ -35,6 +35,18 @@
         android:textColor="#000000"
         android:id="@+id/submit_button"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="Can Cross Defense"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        android:id="@+id/can_cross_text"
+        android:layout_marginRight="10dp" />
+
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -724,7 +724,9 @@ public class AggregateService extends IntentService {
                         break;
                 }
             }
-            sum /= jsonArray.length();
+            if(jsonArray.length() > 0) {
+                sum /= jsonArray.length();
+            }
         } catch (JSONException e){
             Log.d(TAG,e.getMessage());
         }

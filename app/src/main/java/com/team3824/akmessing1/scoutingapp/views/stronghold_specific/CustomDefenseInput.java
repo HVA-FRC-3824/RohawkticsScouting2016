@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -30,6 +31,7 @@ public class CustomDefenseInput extends CustomScoutView {
     RadioGroup timeRadios;
     Button submit;
     JSONArray jsonArray;
+    TextView canCrossText;
 
     String key;
 
@@ -44,6 +46,8 @@ public class CustomDefenseInput extends CustomScoutView {
         ((TextView)findViewById(R.id.label)).setText(typedArray.getString(R.styleable.CustomScoutView_label));
 
         jsonArray = new JSONArray();
+
+        canCrossText = (TextView)findViewById(R.id.can_cross_text);
 
         timeRadios = (RadioGroup)findViewById(R.id.radiobuttons);
 
@@ -91,6 +95,15 @@ public class CustomDefenseInput extends CustomScoutView {
                             crossNum.addView(radioButton1);
                             crossNum.check(whichCross + 1);
                             timeRadios.clearCheck();
+
+                            if(whichCross >= 6)
+                            {
+                                timeRadios.removeAllViews();
+                                crossNum.removeAllViews();
+                                ViewGroup parent = (ViewGroup)v.getParent();
+                                parent.removeView(v);
+                                canCrossText.setVisibility(VISIBLE);
+                            }
                         }
                     } else {
                         if(timeRadios.getCheckedRadioButtonId() > -1) {
@@ -105,9 +118,6 @@ public class CustomDefenseInput extends CustomScoutView {
                             }
                         }
                     }
-
-                    //TODO: Once a certain number of submissions have happened grey out
-
                 }
 
         });
