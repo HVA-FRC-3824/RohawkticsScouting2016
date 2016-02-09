@@ -83,27 +83,33 @@ public class CustomDefenseInput extends CustomScoutView {
             @Override
             public void onClick(View v) {
                 int whichCross = crossNum.getCheckedRadioButtonId();
-                if (jsonArray.length() == whichCross) {
-                    jsonArray.put(Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
-                    RadioButton radioButton1 = new RadioButton(getContext());
-                    radioButton1.setId(whichCross + 1);
-                    crossNum.addView(radioButton1);
-                    crossNum.check(whichCross + 1);
-                    timeRadios.clearCheck();
-                }
-                else
-                {
-                    jsonArray.remove(whichCross);
-                    try {
-                        jsonArray.put(whichCross, Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
-                        crossNum.check(whichCross + 1);
-                        String string1 = jsonArray.getString(whichCross + 1);
-                        timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(string1));
-                    } catch (JSONException e) {
-                        Log.d(TAG,e.getMessage());
+                    if (jsonArray.length() == whichCross) {
+                        if(timeRadios.getCheckedRadioButtonId() > -1) {
+                            jsonArray.put(Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
+                            RadioButton radioButton1 = new RadioButton(getContext());
+                            radioButton1.setId(whichCross + 1);
+                            crossNum.addView(radioButton1);
+                            crossNum.check(whichCross + 1);
+                            timeRadios.clearCheck();
+                        }
+                    } else {
+                        if(timeRadios.getCheckedRadioButtonId() > -1) {
+                            jsonArray.remove(whichCross);
+                            try {
+                                jsonArray.put(whichCross, Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
+                                crossNum.check(whichCross + 1);
+                                String string1 = jsonArray.getString(whichCross + 1);
+                                timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(string1));
+                            } catch (JSONException e) {
+                                Log.d(TAG, e.getMessage());
+                            }
+                        }
                     }
+
+                    //TODO: Once a certain number of submissions have happened grey out
+
                 }
-            }
+
         });
 
     }

@@ -56,9 +56,9 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.sync_button);
                 setupButton(R.id.aggregate_button);
                 setupButton(R.id.feedback_button);
+                bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if(bluetoothAdapter != null) {
                     setupButton(R.id.bluetooth_button);
-                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (bluetoothAdapter.isEnabled()) {
                         findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
                     } else {
@@ -93,10 +93,9 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.feedback_button);
                 setupButton(R.id.database_button);
                 setupButton(R.id.teamlist_button);
-                if(bluetoothAdapter != null) {
-                setupButton(R.id.bluetooth_button);
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
+                if(bluetoothAdapter != null) {
+                    setupButton(R.id.bluetooth_button);
                     if (bluetoothAdapter.isEnabled()) {
                         findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
                     } else {

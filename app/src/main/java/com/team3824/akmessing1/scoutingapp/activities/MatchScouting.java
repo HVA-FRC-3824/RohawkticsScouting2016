@@ -108,7 +108,7 @@ public class MatchScouting extends AppCompatActivity {
         Cursor nextCursor = scheduleDB.getMatch(matchNumber + 1);
 
         //Last match doesn't need a next button
-        if(nextCursor != null)
+        if(nextCursor != null && nextCursor.getCount() > 0)
         {
             int allianceNum = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
             nextTeamNumber = nextCursor.getInt(nextCursor.getColumnIndex(allianceColor.toLowerCase()+allianceNum));

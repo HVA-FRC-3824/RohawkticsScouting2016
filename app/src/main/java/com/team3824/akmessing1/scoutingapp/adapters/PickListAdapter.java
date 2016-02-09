@@ -78,7 +78,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 }
             });
 
-            final Comparator<Team> compare = new Comparator<Team>(){
+            final Comparator<Team> compare1 = new Comparator<Team>(){
                 public int compare(Team a, Team b)
                 {
                     int rankA = a.getMapElement(StatsDB.KEY_FIRST_PICK_RANK).getInt();
@@ -100,6 +100,54 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                     }
                 }
             };
+
+            final Comparator<Team> compare2 = new Comparator<Team>(){
+                public int compare(Team a, Team b)
+                {
+                    int rankA = a.getMapElement(StatsDB.KEY_SECOND_PICK_RANK).getInt();
+                    int rankB = b.getMapElement(StatsDB.KEY_SECOND_PICK_RANK).getInt();
+                    if(a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 && b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                    {
+                        return rankA - rankB;
+                    }
+                    else if( a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 )
+                    {
+                        return 1;
+                    }
+                    else if(b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                    {
+                        return -1;
+                    }
+                    else {
+                        return rankA - rankB;
+                    }
+                }
+            };
+
+
+            final Comparator<Team> compare3 = new Comparator<Team>(){
+                public int compare(Team a, Team b)
+                {
+                    int rankA = a.getMapElement(StatsDB.KEY_THIRD_PICK_RANK).getInt();
+                    int rankB = b.getMapElement(StatsDB.KEY_THIRD_PICK_RANK).getInt();
+                    if(a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 && b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                    {
+                        return rankA - rankB;
+                    }
+                    else if( a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 )
+                    {
+                        return 1;
+                    }
+                    else if(b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+                    {
+                        return -1;
+                    }
+                    else {
+                        return rankA - rankB;
+                    }
+                }
+            };
+
 
             button = (Button)convertView.findViewById(R.id.team_picked);
             if(t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
@@ -129,7 +177,20 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                     else
                     {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(0));
-                        Collections.sort(teams,compare);
+                        switch(pickNumber)
+                        {
+                            case 1:
+                                Collections.sort(teams, compare1);
+                                break;
+                            case 2:
+                                Collections.sort(teams, compare2);
+                                break;
+
+                            case 3:
+                                Collections.sort(teams, compare3);
+                                break;
+                        }
+
                         HashMap<String, ScoutValue> map = new HashMap<>();
                         map.put(StatsDB.KEY_TEAM_NUMBER,new ScoutValue(t.getTeamNumber()));
                         map.put(StatsDB.KEY_PICKED, new ScoutValue(0));

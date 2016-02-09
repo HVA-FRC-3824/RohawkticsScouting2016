@@ -44,8 +44,6 @@ public class CustomRadioButtons extends CustomScoutView {
 
         radios = (RadioGroup)findViewById(R.id.radiobuttons);
 
-
-
         for(int i = 0; i < resourceStrings.length;i++)
         {
             RadioButton radioButton = new RadioButton(context, attrs);
@@ -53,6 +51,7 @@ public class CustomRadioButtons extends CustomScoutView {
             radioButton.setId(i);
             radios.addView(radioButton);
         }
+        radios.check(0);
     }
 
     @Override

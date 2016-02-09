@@ -73,7 +73,7 @@ public class TeamPitData extends Fragment{
         textView = (TextView)view.findViewById(R.id.pit_number_cims);
         if(pitMap.containsKey(Constants.PIT_NUMBER_OF_CIMS))
         {
-            textView.setText(String.valueOf(pitMap.get(Constants.PIT_NUMBER_OF_CIMS).getFloat()));
+            textView.setText(String.valueOf(pitMap.get(Constants.PIT_NUMBER_OF_CIMS).getInt()));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_drivetrain);
