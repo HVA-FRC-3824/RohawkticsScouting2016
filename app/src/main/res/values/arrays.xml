@@ -67,4 +67,14 @@
         <item>Rough Terrain</item>
     </string-array>
 
+    <string-array name="database_dropdown">
+        <item>MatchScoutDB</item>
+        <item>PitScoutDB</item>
+        <item>SuperScoutDB</item>
+        <item>DriveTeamFeedbackDB</item>
+        <item>StatsDB</item>
+        <item>SyncDB</item>
+        <item>ScheduleDB</item>
+    </string-array>
+
 </resources>

@@ -89,5 +89,24 @@ public class DriveTeamFeedbackDB extends SQLiteOpenHelper {
         cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
     }
+
+    public void reset()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
+        query = "CREATE TABLE IF NOT EXISTS "+tableName +
+                "( "+KEY_ID+" INT PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_COMMENTS+" TEXT NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        db.execSQL(query);
+    }
+
+    public void remove()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
+    }
 }
 

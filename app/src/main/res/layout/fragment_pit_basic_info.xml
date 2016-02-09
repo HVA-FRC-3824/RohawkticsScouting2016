@@ -67,18 +67,11 @@
         <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pit_loading"
-            app:label="Robot Loading Area:"
-            app:key="pit_loading"/>
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/pit_drivetrain"
             app:label="Pit Drivetrain:"
             app:key="pit_drivetrain"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomNumeric
+        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pit_number_cims"

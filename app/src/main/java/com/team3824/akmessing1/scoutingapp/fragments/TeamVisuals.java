@@ -437,7 +437,7 @@ public class TeamVisuals extends Fragment {
         mTeleopCross.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
-        if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_TIME[0])) {
+        if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_TIME[0]) && map.get(Constants.TOTAL_MATCHES).getInt() > 0) {
             for (int i = 0; i < 9; i++) {
                 entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt() / map.get(Constants.TOTAL_MATCHES).getInt(), i));
             }

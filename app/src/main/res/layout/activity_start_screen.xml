@@ -6,12 +6,6 @@
     android:layout_height="match_parent" android:fitsSystemWindows="true"
     tools:context=".StartScreen"
     android:background="@color/columbia_blue">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:theme="@style/AppTheme.AppBarOverlay">
-    </android.support.design.widget.AppBarLayout>
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -26,14 +20,33 @@
             tools:showIn="@layout/activity_start_screen" tools:context=".StartScreen"
             android:orientation="vertical">
 
-            <TextView android:text="RoHawktics \nScouting App" android:layout_width="fill_parent"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:text="RoHAWKtics \nScouting App"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:id="@+id/textView"
+                    android:textSize="@dimen/abc_text_size_display_3_material"
+                    android:textColor="@color/navy_blue"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@drawable/logo"
+                    android:id="@+id/logo"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/textView"/>
+
+            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:id="@+id/textView"
-                android:textSize="@dimen/abc_text_size_display_3_material"
-                android:layout_gravity="right"
-                android:gravity="center_horizontal"
-                android:textColor="@color/navy_blue" />
+                android:id="@+id/version"
+                android:layout_gravity="center_horizontal"/>
 
             <Button
                 android:layout_width="fill_parent"
@@ -43,7 +56,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/matchSchedule_button"
                 android:visibility="gone"
-                android:onClick="match_schedule"
                 android:background="@color/navy_blue" />
             <Button
                 android:layout_width="fill_parent"
@@ -53,7 +65,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/feedback_button"
                 android:visibility="gone"
-                android:onClick="feedback"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -64,7 +75,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/scoutMatch_button"
                 android:visibility="gone"
-                android:onClick="scout_match"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -75,7 +85,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/scoutPit_button"
                 android:visibility="gone"
-                android:onClick="scout_pit"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -86,7 +95,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/superScout_button"
                 android:visibility="gone"
-                android:onClick="super_scout"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -97,7 +105,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/matchPlanning_button"
                 android:visibility="gone"
-                android:onClick="match_planning"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -108,7 +115,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/viewMatch_button"
                 android:visibility="gone"
-                android:onClick="view_match"
                 android:background="@color/navy_blue" />
 
             <Button
@@ -130,18 +136,16 @@
                 android:textColor="@color/white"
                 android:id="@+id/viewEvent_button"
                 android:visibility="gone"
-                android:onClick="view_event"
                 android:background="@color/navy_blue" />
 
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="View Picklist"
+                android:text="View Pick List"
                 android:textColor="@color/white"
-                android:id="@+id/viewPicklist_button"
+                android:id="@+id/viewPickList_button"
                 android:visibility="gone"
-                android:onClick="view_picklist"
                 android:background="@color/navy_blue"/>
 
             <Button
@@ -150,7 +154,6 @@
                 android:layout_marginTop="10dp"
                 android:text="Settings"
                 android:id="@+id/settings_button"
-                android:onClick="settings"
                 android:background="@color/navy_blue"
                 android:textColor="@color/white" />
 
@@ -160,7 +163,6 @@
                 android:layout_marginTop="10dp"
                 android:text="Sync"
                 android:id="@+id/sync_button"
-                android:onClick="sync"
                 android:visibility="gone"
                 android:background="@color/navy_blue"
                 android:textColor="@color/white" />
@@ -171,7 +173,36 @@
                 android:layout_marginTop="10dp"
                 android:text="Aggregate"
                 android:id="@+id/aggregate_button"
-                android:onClick="aggregate"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Database Management"
+                android:id="@+id/database_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Team List Builder"
+                android:id="@+id/teamlist_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Bluetooth"
+                android:id="@+id/bluetooth_button"
                 android:visibility="gone"
                 android:background="@color/navy_blue"
                 android:textColor="@color/white" />

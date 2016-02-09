@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -94,6 +95,35 @@ public class PitScoutDB extends SQLiteOpenHelper {
         }
         db.close();
     }
+
+    public void addTeamNumber(int teamNumber)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TEAM_NUMBER,teamNumber);
+        values.put(KEY_NICKNAME,"");
+        values.put(KEY_COMPLETE, 0);
+        values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+        db.insert(tableName, null, values);
+    }
+
+    public void addTeamNumber(int teamNumber, String nickname)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_TEAM_NUMBER,teamNumber);
+        values.put(KEY_NICKNAME,nickname);
+        values.put(KEY_COMPLETE, 0);
+        values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+        db.insert(tableName,null,values);
+    }
+
+    public void removeTeamNumber(int teamNumber)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName, KEY_TEAM_NUMBER+" = ?", new String[]{String.valueOf(teamNumber)});
+    }
+
 
     // Store data in the pit database for a team
     public void updatePit(Map<String, ScoutValue> map)
@@ -283,10 +313,9 @@ public class PitScoutDB extends SQLiteOpenHelper {
         return (int) DatabaseUtils.queryNumEntries(db, tableName);
     }
 
-    public Integer[] getTeamNumbers()
+    public ArrayList<Integer> getTeamNumbers()
     {
-        int numTeams = getNumTeams();
-        Integer[] teamNumbers = new Integer[numTeams];
+        ArrayList<Integer> teamNumbers = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 new String[]{KEY_TEAM_NUMBER}, // b. column names
@@ -302,9 +331,9 @@ public class PitScoutDB extends SQLiteOpenHelper {
         }
         cursor.moveToFirst();
 
-        for(int i = 0; i < numTeams; i++)
+        for(int i = 0; i < cursor.getCount(); i++)
         {
-            teamNumbers[i] = cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER));
+            teamNumbers.add(cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER)));
             cursor.moveToNext();
         }
 
@@ -345,5 +374,54 @@ public class PitScoutDB extends SQLiteOpenHelper {
         }
         cursor.moveToFirst();
         return cursor;
+    }
+
+    public void reset()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ArrayList<Integer> teams = new ArrayList<>();
+        ArrayList<String> nicknames = new ArrayList<>();
+        Cursor cursor = db.query(tableName, // a. table
+                new String[]{KEY_TEAM_NUMBER, KEY_NICKNAME}, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                KEY_TEAM_NUMBER+" DESC", // g. order by
+                null); // h. limit
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast())
+        {
+            teams.add(cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER)));
+            nicknames.add(cursor.getString(cursor.getColumnIndex(KEY_NICKNAME)));
+            cursor.moveToNext();
+        }
+
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
+        query = "CREATE TABLE IF NOT EXISTS "+tableName +
+                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_NICKNAME+" TEXT,"+
+                " "+KEY_COMPLETE+" INTEGER NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        db.execSQL(query);
+        for(int i = 0; i < teams.size(); i++) {
+            int teamNumber = teams.get(i);
+            String nickname = nicknames.get(i);
+            ContentValues values = new ContentValues();
+            values.put(KEY_TEAM_NUMBER,teamNumber);
+            values.put(KEY_NICKNAME,nickname);
+            values.put(KEY_COMPLETE, 0);
+            values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+            db.insert(tableName,null,values);
+        }
+    }
+
+    public void remove()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
     }
 }

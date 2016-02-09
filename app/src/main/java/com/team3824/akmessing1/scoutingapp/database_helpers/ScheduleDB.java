@@ -91,7 +91,7 @@ public class ScheduleDB extends SQLiteOpenHelper
     public void removeMatch(int matchNum)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(tableName,KEY_MATCH_NUMBER+" = ?",new String[]{String.valueOf(matchNum)});
+        db.delete(tableName, KEY_MATCH_NUMBER + " = ?", new String[]{String.valueOf(matchNum)});
     }
 
     public Cursor getMatch(int matchNum)
@@ -181,5 +181,29 @@ public class ScheduleDB extends SQLiteOpenHelper
     {
         SQLiteDatabase db = this.getReadableDatabase();
         return (int)DatabaseUtils.queryNumEntries(db, tableName);
+    }
+
+    public void reset()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
+        query = "CREATE TABLE IF NOT EXISTS "+tableName +
+                "( "+KEY_MATCH_NUMBER+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
+                " "+KEY_BLUE1+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE2+" INTEGER NOT NULL,"+
+                " "+KEY_BLUE3+" INTEGER NOT NULL,"+
+                " "+KEY_RED1+" INTEGER NOT NULL,"+
+                " "+KEY_RED2+" INTEGER NOT NULL,"+
+                " "+KEY_RED3+" INTEGER NOT NULL,"+
+                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        db.execSQL(query);
+    }
+
+    public void remove()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE "+tableName;
+        db.execSQL(query);
     }
 }

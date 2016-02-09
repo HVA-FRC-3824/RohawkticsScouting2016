@@ -55,7 +55,7 @@ public class MatchList extends AppCompatActivity {
     private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences, final String nextPage)
     {
         Cursor cursor = scheduleDB.getSchedule();
-        if(cursor != null)
+        if(cursor != null && cursor.getCount() > 0)
         {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_list);
             int alliance_number = -1;

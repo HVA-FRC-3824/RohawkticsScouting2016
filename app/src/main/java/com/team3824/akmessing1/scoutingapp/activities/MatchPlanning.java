@@ -2,13 +2,16 @@ package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,12 +21,18 @@ import android.widget.Toast;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.views.DrawingView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 public class MatchPlanning extends AppCompatActivity implements View.OnClickListener{
 
+    private String TAG = "MatchPlanning";
+
     private DrawingView drawView;
-    private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn;
+    private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn, openBtn;
     private float extraSmallBrush, smallBrush, mediumBrush, largeBrush;
 
     @Override
@@ -50,10 +59,13 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
 
         newBtn = (ImageButton)findViewById(R.id.new_btn);
         newBtn.setOnClickListener(this);
-
+/*
         saveBtn = (ImageButton)findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(this);
 
+        openBtn = (ImageButton)findViewById(R.id.open_btn);
+        openBtn.setOnClickListener(this);
+*/
         Button backBtn = (Button)findViewById(R.id.back_btn);
         backBtn.setOnClickListener(this);
 
@@ -169,7 +181,7 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
             case R.id.new_btn:
                 AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
                 newDialog.setTitle("New drawing");
-                newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
+                newDialog.setMessage("Start new strategy (you will lose the current strategy)?");
                 newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int which){
                         drawView.startNew();
@@ -183,25 +195,30 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 });
                 newDialog.show();
                 break;
+/*
             case R.id.save_btn:
                 AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
-                saveDialog.setTitle("Save drawing");
-                saveDialog.setMessage("Save drawing to device Gallery?");
+                saveDialog.setTitle("Save strategy");
+                saveDialog.setMessage("Save strategy to device Gallery?");
                 saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int which){
                         drawView.setDrawingCacheEnabled(true);
-                        String imgSaved = MediaStore.Images.Media.insertImage(
-                                getContentResolver(), drawView.getDrawingCache(),
-                                UUID.randomUUID().toString()+".png", "drawing");
-                        if(imgSaved!=null){
-                            Toast savedToast = Toast.makeText(getApplicationContext(),
-                                    "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
-                            savedToast.show();
+                        Bitmap saveImage = drawView.getDrawingCache();
+                        String imageName = "strategy_"+UUID.randomUUID().toString()+".png";
+                        FileOutputStream fos = null;
+                        try {
+                            fos = openFileOutput(imageName, Context.MODE_WORLD_WRITEABLE);
+                            saveImage.compress(Bitmap.CompressFormat.PNG,100,fos);
+                        } catch (FileNotFoundException e) {
+                            Log.d(TAG, e.getMessage());
                         }
-                        else{
-                            Toast unsavedToast = Toast.makeText(getApplicationContext(),
-                                    "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
-                            unsavedToast.show();
+                        if(fos != null)
+                        {
+                            try {
+                                fos.close();
+                            } catch (IOException e) {
+                                Log.d(TAG,e.getMessage());
+                            }
                         }
                         drawView.destroyDrawingCache();
                     }
@@ -213,6 +230,10 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 });
                 saveDialog.show();
                 break;
+            case R.id.open_btn:
+                // TODO: allow image that is saved to be opened
+                break;
+*/
             case R.id.back_btn:
                 this.finish();
                 break;

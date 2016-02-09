@@ -29,7 +29,7 @@ public class CustomNumeric extends CustomScoutView{
         inflater.inflate(R.layout.custom_numeric, this);
 
         numeric = (EditText)this.findViewById(R.id.numeric);
-        numeric.setText("0");
+        //numeric.setText("0");
         label = (TextView)this.findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
