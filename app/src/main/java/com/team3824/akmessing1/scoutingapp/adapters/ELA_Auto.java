@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Auto;
+import com.team3824.akmessing1.scoutingapp.list_items.ELI_Auto;
 
 import java.util.ArrayList;
 

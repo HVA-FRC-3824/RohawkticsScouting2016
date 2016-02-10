@@ -13,7 +13,7 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
-import com.team3824.akmessing1.scoutingapp.Team;
+import com.team3824.akmessing1.scoutingapp.list_items.Team;
 import com.team3824.akmessing1.scoutingapp.adapters.PickListAdapter;
 
 import java.util.ArrayList;

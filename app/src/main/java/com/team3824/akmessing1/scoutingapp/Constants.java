@@ -47,7 +47,7 @@ public interface Constants {
     public static final String TELEOP_LOW_MISS = "teleop_low_miss";
 
     // Endgame
-    public static final String ENDGAME_CHALLENGE_SCALE = "endGame_challenge_scale";
+    public static final String ENDGAME_CHALLENGE_SCALE = "endgame_challenge_scale";
 
     // Post
     public static final String POST_DQ = "post_dq";
@@ -68,7 +68,6 @@ public interface Constants {
     public static final String PIT_ROBOT_HEIGHT = "pit_robot_height";
     public static final String PIT_ROBOT_WEIGHT = "pit_robot_weight";
     public static final String PIT_NOTES = "pit_notes";
-    public static final String PIT_LOADING = "pit_loading";
     public static final String PIT_DRIVETRAIN = "pit_drivetrain";
     public static final String PIT_NUMBER_OF_CIMS = "pit_number_cims";
 
@@ -159,4 +158,11 @@ public interface Constants {
     public static final int STATS_DB = 4;
     public static final int SYNC_DB = 5;
     public static final int SCHEDULE_DB = 6;
+    // Match Schedule;
+    public static final int BLUE1_INDEX = 0;
+    public static final int BLUE2_INDEX = 1;
+    public static final int BLUE3_INDEX = 2;
+    public static final int RED1_INDEX = 3;
+    public static final int RED2_INDEX = 4;
+    public static final int RED3_INDEX = 5;
 }

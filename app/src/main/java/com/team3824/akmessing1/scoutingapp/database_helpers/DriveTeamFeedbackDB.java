@@ -90,6 +90,24 @@ public class DriveTeamFeedbackDB extends SQLiteOpenHelper {
         return cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
     }
 
+    public Cursor getAllCommentsSince(String since)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                KEY_LAST_UPDATED + " > ?", // c. selections
+                new String[]{since}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+
+        if(cursor != null)
+            cursor.moveToFirst();
+        return cursor;
+    }
+
+
     public void reset()
     {
         SQLiteDatabase db = this.getWritableDatabase();
