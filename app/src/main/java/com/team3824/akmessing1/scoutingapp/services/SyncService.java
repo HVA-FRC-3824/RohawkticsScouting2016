@@ -14,6 +14,7 @@ import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
+import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
@@ -41,6 +42,7 @@ public class SyncService extends NonStopIntentService{
     MatchScoutDB matchScoutDB;
     PitScoutDB pitScoutDB;
     SuperScoutDB superScoutDB;
+    DriveTeamFeedbackDB driveTeamFeedbackDB;
     SyncDB syncDB;
 
     boolean recieved = false;
@@ -167,6 +169,41 @@ public class SyncService extends NonStopIntentService{
                     }
                     Toast.makeText(getApplicationContext(), "Super Data Received", Toast.LENGTH_SHORT).show();
                     break;
+                case 'D':
+                    try{
+                        JSONArray jsonArray = new JSONArray(message.substring(1));
+                        for(int i = 0; i < jsonArray.length(); i++)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            HashMap<String, ScoutValue> map = new HashMap<>();
+                            Iterator<String> iter = jsonObject.keys();
+                            while (iter.hasNext()) {
+                                String key = iter.next();
+                                try {
+                                    Object value = jsonObject.get(key);
+                                    if(value instanceof Integer)
+                                    {
+                                        map.put(key,new ScoutValue((int)value));
+                                    }
+                                    else if(value instanceof Float)
+                                    {
+                                        map.put(key,new ScoutValue((float)value));
+                                    }
+                                    else if(value instanceof String)
+                                    {
+                                        map.put(key,new ScoutValue((String)value));
+                                    }
+                                } catch (JSONException e) {
+                                    // Something went wrong!
+                                }
+                            }
+                            SyncService.this.driveTeamFeedbackDB.updateComments(map.get(DriveTeamFeedbackDB.KEY_TEAM_NUMBER).getInt(), map.get(DriveTeamFeedbackDB.KEY_COMMENTS).getString());
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG,e.getMessage());
+                    }
+                    Toast.makeText(SyncService.this, "Drive Team Feedback Data Received", Toast.LENGTH_SHORT).show();
+                    break;
                 case 'F':
                     filename = message.substring(1);
                     break;
@@ -176,15 +213,23 @@ public class SyncService extends NonStopIntentService{
                     String selectedAddress = bluetoothSync.getConnectedAddress();
                     String lastUpdated = SyncService.this.syncDB.getLastUpdated(selectedAddress);
                     syncDB.updateSync(selectedAddress);
+
                     String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncService.this.matchScoutDB.getInfoSince(lastUpdated));
                     bluetoothSync.write(matchUpdatedText.getBytes());
                     Toast.makeText(context,"Match Data Sent",Toast.LENGTH_SHORT).show();
+
                     String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncService.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
                     bluetoothSync.write(pitUpdatedText.getBytes());
                     Toast.makeText(context,"Pit Data Sent",Toast.LENGTH_SHORT).show();
+
                     String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncService.this.superScoutDB.getAllMatchesSince(lastUpdated));
                     bluetoothSync.write(superUpdatedText.getBytes());
                     Toast.makeText(context,"Super Data Sent",Toast.LENGTH_SHORT).show();
+
+                    String driveUpdatedText = "D" + Utilities.CursorToJsonString(SyncService.this.driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                    bluetoothSync.write(superUpdatedText.getBytes());
+                    Toast.makeText(context,"Drive Team Feedback Data Sent",Toast.LENGTH_SHORT).show();
+
                     bluetoothSync.write(("received").getBytes());
                     break;
                 case 'r':
@@ -239,6 +284,7 @@ public class SyncService extends NonStopIntentService{
             matchScoutDB = new MatchScoutDB(this, eventID);
             pitScoutDB = new PitScoutDB(this, eventID);
             superScoutDB = new SuperScoutDB(this, eventID);
+            driveTeamFeedbackDB = new DriveTeamFeedbackDB(this, eventID);
             syncDB = new SyncDB(this, eventID);
 
             while (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED
@@ -291,6 +337,22 @@ public class SyncService extends NonStopIntentService{
                         }
                         break;
                     case Constants.DRIVE_TEAM:
+                        if(connectedName.equals("3824_SuperScout"))
+                        {
+                            bluetoothSync.connect(device, false);
+                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
+                            String connectedAddress = bluetoothSync.getConnectedAddress();
+                            String lastUpdated = syncDB.getLastUpdated(connectedAddress);
+                            syncDB.updateSync(connectedAddress);
+                            String driveUpdatedText = "D" + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                            bluetoothSync.write(driveUpdatedText.getBytes());
+                            Toast.makeText(this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                            bluetoothSync.write(("R").getBytes());
+                            recieved = false;
+                            while (!recieved) ;
+                            Toast.makeText(this, "Data Recieved", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
                     case Constants.STRATEGY:
                     case Constants.ADMIN:
                         if (connectedName.equals("3824_SuperScout")) {

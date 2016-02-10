@@ -228,15 +228,23 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                     selectedAddress = bluetoothSync.getConnectedAddress();
                     String lastUpdated = syncDB.getLastUpdated(selectedAddress);
                     syncDB.updateSync(selectedAddress);
+
                     String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncActivity.this.matchScoutDB.getInfoSince(lastUpdated));
                     bluetoothSync.write(matchUpdatedText.getBytes());
                     Toast.makeText(SyncActivity.this,"Match Data Sent",Toast.LENGTH_SHORT).show();
+
                     String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncActivity.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
                     bluetoothSync.write(pitUpdatedText.getBytes());
                     Toast.makeText(SyncActivity.this,"Pit Data Sent",Toast.LENGTH_SHORT).show();
+
                     String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncActivity.this.superScoutDB.getAllMatchesSince(lastUpdated));
                     bluetoothSync.write(superUpdatedText.getBytes());
                     Toast.makeText(SyncActivity.this,"Super Data Sent",Toast.LENGTH_SHORT).show();
+
+                    String driveUpdatedText = "D" + Utilities.CursorToJsonString(SyncActivity.this.driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                    bluetoothSync.write(superUpdatedText.getBytes());
+                    Toast.makeText(SyncActivity.this,"Drive Team Feedback Data Sent",Toast.LENGTH_SHORT).show();
+
                     break;
                 case 'f':
                     if(message.startsWith("file:") && message.endsWith(":end")) {
