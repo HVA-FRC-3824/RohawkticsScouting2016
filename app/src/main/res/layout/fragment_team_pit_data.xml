@@ -52,14 +52,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Robot Loading Area:"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="Drivetrain:"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -111,13 +103,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/pit_number_cims"
-            android:textSize="20sp"
-            android:textColor="#000000" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/pit_loading"
             android:textSize="20sp"
             android:textColor="#000000" />
 

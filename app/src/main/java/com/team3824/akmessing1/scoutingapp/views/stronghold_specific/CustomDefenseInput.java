@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -23,13 +24,14 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Map;
 
-public class CustomDefenseInput extends CustomScoutView {
+public class CustomDefenseInput extends CustomScoutView implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
     private String TAG = "CustomDefenseInput";
 
     RadioGroup crossNum;
     RadioGroup timeRadios;
-    Button submit;
+    Button submit, delete;
     JSONArray jsonArray;
+    TextView canCrossText;
 
     String key;
 
@@ -44,6 +46,8 @@ public class CustomDefenseInput extends CustomScoutView {
         ((TextView)findViewById(R.id.label)).setText(typedArray.getString(R.styleable.CustomScoutView_label));
 
         jsonArray = new JSONArray();
+
+        canCrossText = (TextView)findViewById(R.id.can_cross_text);
 
         timeRadios = (RadioGroup)findViewById(R.id.radiobuttons);
 
@@ -62,55 +66,13 @@ public class CustomDefenseInput extends CustomScoutView {
         crossNum.addView(radioButton);
         crossNum.check(0);
 
-        crossNum.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == jsonArray.length()) {
-                    timeRadios.clearCheck();
-                } else {
-                    try {
-                        String time = jsonArray.getString(checkedId);
-                        timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(time));
-                    } catch (JSONException e) {
-                        Log.d(TAG, e.getMessage());
-                    }
-                }
-            }
-        });
+        crossNum.setOnCheckedChangeListener(this);
 
         submit = (Button)findViewById(R.id.submit_button);
-        submit.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int whichCross = crossNum.getCheckedRadioButtonId();
-                    if (jsonArray.length() == whichCross) {
-                        if(timeRadios.getCheckedRadioButtonId() > -1) {
-                            jsonArray.put(Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
-                            RadioButton radioButton1 = new RadioButton(getContext());
-                            radioButton1.setId(whichCross + 1);
-                            crossNum.addView(radioButton1);
-                            crossNum.check(whichCross + 1);
-                            timeRadios.clearCheck();
-                        }
-                    } else {
-                        if(timeRadios.getCheckedRadioButtonId() > -1) {
-                            jsonArray.remove(whichCross);
-                            try {
-                                jsonArray.put(whichCross, Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
-                                crossNum.check(whichCross + 1);
-                                String string1 = jsonArray.getString(whichCross + 1);
-                                timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(string1));
-                            } catch (JSONException e) {
-                                Log.d(TAG, e.getMessage());
-                            }
-                        }
-                    }
+        submit.setOnClickListener(this);
 
-                    //TODO: Once a certain number of submissions have happened grey out
-
-                }
-
-        });
+        delete = (Button)findViewById(R.id.delete_button);
+        delete.setOnClickListener(this);
 
     }
 
@@ -139,9 +101,87 @@ public class CustomDefenseInput extends CustomScoutView {
                         crossNum.addView(radioButton);
                     }
                     crossNum.check(0);
+                    delete.setVisibility(VISIBLE);
+                    submit.setText("Update");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int whichCross = crossNum.getCheckedRadioButtonId();
+        switch (v.getId())
+        {
+            case R.id.submit_button:
+                if (jsonArray.length() == whichCross) {
+                    if(timeRadios.getCheckedRadioButtonId() > -1) {
+                        jsonArray.put(Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
+                        RadioButton radioButton1 = new RadioButton(getContext());
+                        radioButton1.setId(whichCross + 1);
+                        crossNum.addView(radioButton1);
+                        crossNum.check(whichCross + 1);
+                        timeRadios.clearCheck();
+
+                        if(whichCross >= 5)
+                        {
+                            timeRadios.setVisibility(GONE);
+                            crossNum.setVisibility(GONE);
+                            submit.setVisibility(GONE);
+                            delete.setVisibility(GONE);
+                            canCrossText.setVisibility(VISIBLE);
+                        }
+                    }
+                } else {
+                    if(timeRadios.getCheckedRadioButtonId() > -1) {
+                        try {
+                            jsonArray.put(whichCross, Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
+                            crossNum.check(whichCross + 1);
+                            String string1 = jsonArray.getString(whichCross + 1);
+                            timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(string1));
+                        } catch (JSONException e) {
+                            Log.d(TAG, e.getMessage());
+                        }
+                    }
+                }
+                break;
+            case R.id.delete_button:
+                int lastRadio = jsonArray.length();
+                jsonArray.remove(whichCross);
+                crossNum.removeViewAt(lastRadio);
+                crossNum.check(whichCross);
+                if(whichCross < jsonArray.length()) {
+                    try {
+                        String string1 = jsonArray.getString(whichCross);
+                        timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(string1));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    timeRadios.clearCheck();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        if (checkedId == jsonArray.length()) {
+            timeRadios.clearCheck();
+            delete.setVisibility(GONE);
+            submit.setText("Submit");
+        } else {
+            try {
+                String time = jsonArray.getString(checkedId);
+                timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(time));
+                delete.setVisibility(VISIBLE);
+                submit.setText("Update");
+            } catch (JSONException e) {
+                Log.d(TAG, e.getMessage());
             }
         }
     }

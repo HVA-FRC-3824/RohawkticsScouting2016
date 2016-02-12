@@ -61,13 +61,14 @@ public class DriveTeamFeedbackDB extends SQLiteOpenHelper {
 
     public void updateComments(int teamNumber, String comment)
     {
-        SQLiteDatabase db = this.getWritableDatabase();
+        String previousComments = getComments(teamNumber);
 
+        SQLiteDatabase db = this.getWritableDatabase();
         // Make sure the last updated time gets updated
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_TEAM_NUMBER,teamNumber);
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-        cvs.put(KEY_COMMENTS,comment);
+        cvs.put(KEY_COMMENTS,previousComments+"\n\n"+comment);
         db.replace(tableName, null, cvs);
     }
 
@@ -89,6 +90,24 @@ public class DriveTeamFeedbackDB extends SQLiteOpenHelper {
         cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
     }
+
+    public Cursor getAllCommentsSince(String since)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                KEY_LAST_UPDATED + " > ?", // c. selections
+                new String[]{since}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+
+        if(cursor != null)
+            cursor.moveToFirst();
+        return cursor;
+    }
+
 
     public void reset()
     {

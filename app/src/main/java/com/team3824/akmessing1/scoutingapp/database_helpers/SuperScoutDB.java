@@ -91,8 +91,27 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
-                null); // h. limit
+                "1"); // h. limit
         String[] columnNames = cursor.getColumnNames();
+        if(cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getColumnCount(); i++) {
+                if (!map.containsKey(cursor.getColumnName(i))) {
+                    switch (cursor.getType(i)) {
+                        case Cursor.FIELD_TYPE_FLOAT:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                            break;
+                        case Cursor.FIELD_TYPE_INTEGER:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                            break;
+                        case Cursor.FIELD_TYPE_STRING:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                            break;
+                    }
+
+                }
+            }
+        }
 
         // Make sure the last updated time gets updated
         map.remove(KEY_LAST_UPDATED);
@@ -135,7 +154,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                     break;
             }
         }
-        db.replace(tableName,null,cvs);
+        db.replace(tableName, null, cvs);
         db.close();
     }
 

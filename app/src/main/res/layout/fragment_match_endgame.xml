@@ -10,9 +10,9 @@
         <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/endGame_challenge_scale"
+            android:id="@+id/endgame_challenge_scale"
             app:label="Tower:"
-            app:key="endGame_challenge_scale"
+            app:key="endgame_challenge_scale"
             app:radio_values="@array/endGame_challenge_scale_radio"/>
     </LinearLayout>
 </ScrollView>

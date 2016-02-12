@@ -1,5 +1,7 @@
-package com.team3824.akmessing1.scoutingapp;
+package com.team3824.akmessing1.scoutingapp.list_items;
 
+
+import com.team3824.akmessing1.scoutingapp.ScoutValue;
 
 import java.util.HashMap;
 
@@ -12,6 +14,7 @@ public class Team {
     {
         this.teamNumber = teamNumber;
         this.nickname = nickname;
+        values = new HashMap<>();
     }
 
     public int getTeamNumber()
@@ -52,4 +55,16 @@ public class Team {
         return null;
     }
 
+    public boolean containsMapElement(String key)
+    {
+        return values.containsKey(key);
+    }
+
+    public void removeMapElement(String key)
+    {
+        if(values.containsKey(key))
+        {
+            values.remove(key);
+        }
+    }
 }

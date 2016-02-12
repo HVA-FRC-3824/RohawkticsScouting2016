@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
@@ -34,7 +35,7 @@ public class MatchList extends AppCompatActivity {
         String nextPage = extras.getString("nextPage");
 
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString("event_id", "");
+        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         CustomHeader header = (CustomHeader)findViewById(R.id.match_list_header);
         header.removeHome();
@@ -61,8 +62,8 @@ public class MatchList extends AppCompatActivity {
             int alliance_number = -1;
             String alliance_color = "";
             if(nextPage.equals("match_scouting")) {
-                alliance_number = sharedPreferences.getInt("alliance_number", 0);
-                alliance_color = sharedPreferences.getString("alliance_color", "");
+                alliance_number = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
+                alliance_color = sharedPreferences.getString(Constants.ALLIANCE_COLOR, "");
             }
             cursor.moveToFirst();
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -76,10 +77,10 @@ public class MatchList extends AppCompatActivity {
                 int tempTeamNumber = -1; // fixes issue with final and possible noninitialization
                 if(nextPage.equals("match_scouting")) {
                     tempTeamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
-                    button.setText("Match " + matchNumber + ": " + tempTeamNumber);
+                    button.setText(String.format("Match %d : %d",matchNumber,tempTeamNumber));
                 }
                 else {
-                    button.setText("Match " + matchNumber);
+                    button.setText(String.format("Match %d",matchNumber));
                 }
                 final int teamNumber = tempTeamNumber; // fixes issue with final and possible noninitialization
                 switch (alliance_color.toLowerCase())

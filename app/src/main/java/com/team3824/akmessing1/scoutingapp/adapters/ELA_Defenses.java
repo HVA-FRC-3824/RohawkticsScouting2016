@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Defenses;
+import com.team3824.akmessing1.scoutingapp.list_items.ELI_Defenses;
 
 import java.util.ArrayList;
 
@@ -101,7 +101,7 @@ public class ELA_Defenses extends ArrayAdapter<ELI_Defenses>{
 
     String create_text(int cross, int seen, float speed)
     {
-        String text = String.valueOf(cross) + " ("+String.valueOf(seen)+") : "+String.valueOf(speed);
+        String text = String.format("%d (%d) : %.2f",cross,seen,speed);
         return text;
     }
 }

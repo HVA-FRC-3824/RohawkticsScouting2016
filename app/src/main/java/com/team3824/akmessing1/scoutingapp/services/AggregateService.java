@@ -156,18 +156,17 @@ public class AggregateService extends IntentService {
 
             int totalMatches = set_start(teamStats,Constants.TOTAL_MATCHES);
 
-            while(!teamCursor.isAfterLast())
+            for(teamCursor.moveToFirst(); !teamCursor.isAfterLast(); teamCursor.moveToNext())
             {
                 int matchNumber = teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER));
                 Map<String, ScoutValue> superMatch = superScoutDB.getMatchInfo(matchNumber);
                 // If superscout has not yet recorded the match change the update time so that this
-                // match can be aggreagated later
+                // match can be aggregated later
                 if(superMatch == null) {
                     Map<String, ScoutValue> matchTeam = new HashMap<>();
                     matchTeam.put(MatchScoutDB.KEY_ID,new ScoutValue(teamCursor.getString(teamCursor.getColumnIndex(MatchScoutDB.KEY_ID))));
-                    matchTeam.put(MatchScoutDB.KEY_TEAM_NUMBER,new ScoutValue(teamCursor.getString(teamCursor.getColumnIndex(MatchScoutDB.KEY_TEAM_NUMBER))));
-                    matchTeam.put(MatchScoutDB.KEY_MATCH_NUMBER,new ScoutValue(teamCursor.getString(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))));
-
+                    matchTeam.put(MatchScoutDB.KEY_TEAM_NUMBER,new ScoutValue(teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_TEAM_NUMBER))));
+                    matchTeam.put(MatchScoutDB.KEY_MATCH_NUMBER,new ScoutValue(teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))));
                     matchScoutDB.updateMatch(matchTeam);
                 }
                 else{
@@ -223,7 +222,6 @@ public class AggregateService extends IntentService {
                     totalYellowCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_YELLOW_CARD));
                     totalRedCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_RED_CARD));
                 }
-                teamCursor.moveToNext();
             }
 
             for(int j = 0; j < 9; j++)
@@ -235,8 +233,8 @@ public class AggregateService extends IntentService {
                 teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[j],new ScoutValue(totalTeleopDefenses[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_TIME[j], new ScoutValue(totalDefensesTime[j]));
             }
-            teamMap.put("total_start_spybox",new ScoutValue(totalStartPosition[9]));
-            teamMap.put("total_start_secret_passage",new ScoutValue(totalStartPosition[10]));
+            teamMap.put(Constants.TOTAL_DEFENSES_STARTED[9],new ScoutValue(totalStartPosition[9]));
+            teamMap.put(Constants.TOTAL_DEFENSES_STARTED[10],new ScoutValue(totalStartPosition[10]));
 
             teamMap.put(Constants.TOTAL_AUTO_HIGH_HIT,new ScoutValue(totalAutoHighGoalHit));
             teamMap.put(Constants.TOTAL_AUTO_HIGH_MISS,new ScoutValue(totalAutoHighGoalMiss));
@@ -325,7 +323,7 @@ public class AggregateService extends IntentService {
         // path between it and those ranked lower than it
         JSONArray jsonArray = null;
         ArrayList<Integer> before = new ArrayList<>();
-        while(!matchCursor.isAfterLast()){
+        for(matchCursor.moveToFirst(); !matchCursor.isAfterLast(); matchCursor.moveToNext()){
 
             String line = matchCursor.getString(matchCursor.getColumnIndex(key));
             try {
@@ -346,7 +344,6 @@ public class AggregateService extends IntentService {
                 e.printStackTrace();
                 return null;
             }
-            matchCursor.moveToNext();
         }
 /*
         try {
@@ -724,7 +721,9 @@ public class AggregateService extends IntentService {
                         break;
                 }
             }
-            sum /= jsonArray.length();
+            if(jsonArray.length() > 0) {
+                sum /= jsonArray.length();
+            }
         } catch (JSONException e){
             Log.d(TAG,e.getMessage());
         }

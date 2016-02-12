@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.event_list_items.ELI_Auto;
+import com.team3824.akmessing1.scoutingapp.list_items.ELI_Auto;
 
 import java.util.ArrayList;
 
@@ -99,11 +99,11 @@ public class ELA_Auto extends ArrayAdapter<ELI_Auto> {
 
     String create_text(int cross, int seen)
     {
-        String text = String.valueOf(cross) + " ("+String.valueOf(seen)+") : ";
+        String text = String.format("%d (%d) : ",cross,seen);
         if(seen == 0)
-            text += "0%";
+            text += "0";
         else
-            text += String.valueOf((float)cross/(float)seen) + "%";
+            text += String.valueOf((float)cross/(float)seen);
         return text;
     }
 }

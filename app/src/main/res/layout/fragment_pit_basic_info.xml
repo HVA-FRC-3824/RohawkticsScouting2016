@@ -60,13 +60,6 @@
         <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pit_notes"
-            app:label="Pit Notes:"
-            app:key="pit_notes"/>
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/pit_drivetrain"
             app:label="Pit Drivetrain:"
             app:key="pit_drivetrain"/>
@@ -75,7 +68,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pit_number_cims"
-            app:label="Number of Cims:"
+            app:label="Number of CIMs:"
             app:key="pit_number_cims"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pit_notes"
+            app:label="Pit Notes:"
+            app:key="pit_notes"/>
     </LinearLayout>
 </ScrollView>

@@ -47,7 +47,7 @@ public interface Constants {
     public static final String TELEOP_LOW_MISS = "teleop_low_miss";
 
     // Endgame
-    public static final String ENDGAME_CHALLENGE_SCALE = "endGame_challenge_scale";
+    public static final String ENDGAME_CHALLENGE_SCALE = "endgame_challenge_scale";
 
     // Post
     public static final String POST_DQ = "post_dq";
@@ -68,7 +68,6 @@ public interface Constants {
     public static final String PIT_ROBOT_HEIGHT = "pit_robot_height";
     public static final String PIT_ROBOT_WEIGHT = "pit_robot_weight";
     public static final String PIT_NOTES = "pit_notes";
-    public static final String PIT_LOADING = "pit_loading";
     public static final String PIT_DRIVETRAIN = "pit_drivetrain";
     public static final String PIT_NUMBER_OF_CIMS = "pit_number_cims";
 
@@ -90,6 +89,7 @@ public interface Constants {
     // Defense Arrays
     public static final String[] DEFENSES = {"low_bar","portcullis","cheval_de_frise","moat","ramparts",
             "drawbridge","sally_port","rock_wall","rough_terrain"};
+    public static final String[] DEFENSES_ABREV = {"LB","P","CdF","M","R","D","SP","RW","RT"};
 
     public static final int LOW_BAR_INDEX = 0;
     public static final int PORTCULLIS_INDEX = 1;
@@ -113,7 +113,7 @@ public interface Constants {
         "total_seen_sally_port","total_seen_rock_wall","total_seen_rough_terrain"};
     public static final String[] TOTAL_DEFENSES_STARTED = {"total_start_low_bar", "total_start_portcullis",
             "total_start_cheval_de_frise","total_start_moat","total_start_ramparts","total_start_drawbridge",
-            "total_start_sally_port","total_start_rock_wall","total_start_rough_terrain"};
+            "total_start_sally_port","total_start_rock_wall","total_start_rough_terrain", "total_start_spybox", "total_start_secret_passage"};
     public static final String[] TOTAL_DEFENSES_AUTO_REACHED = {"total_auto_low_bar_reach", "total_auto_portcullis_reach",
             "total_auto_cheval_de_frise_reach","total_auto_moat_reach","total_auto_ramparts_reach","total_auto_drawbridge_reach",
             "total_auto_sally_port_reach","total_auto_rock_wall_reach","total_auto_rough_terrain_reach"};
@@ -151,12 +151,19 @@ public interface Constants {
 
     public static final String TOTAL_MATCHES = "total_matches";
 
-    // Database Management
-    public static final int MATCH_SCOUT_DB = 0;
-    public static final int PIT_SCOUT_DB = 1;
-    public static final int SUPER_SCOUT_DB = 2;
-    public static final int DRIVE_TEAM_FEEDBACK_DB = 3;
-    public static final int STATS_DB = 4;
-    public static final int SYNC_DB = 5;
-    public static final int SCHEDULE_DB = 6;
+    // Pick List
+    public static final String SHOOTER_PICKABILITY = "shooter_pickability";
+    public static final String BREACHER_PICKABILITY = "breacher_pickability";
+    public static final String OFFENSIVE_PICKABILITY = "offensive_pickability";
+    public static final String DEFENSIVE_PICKABILITY = "defensive_pickability";
+
+    public static final String BOTTOM_TEXT = "bottom_text";
+
+    // Match Schedule;
+    public static final int BLUE1_INDEX = 0;
+    public static final int BLUE2_INDEX = 1;
+    public static final int BLUE3_INDEX = 2;
+    public static final int RED1_INDEX = 3;
+    public static final int RED2_INDEX = 4;
+    public static final int RED3_INDEX = 5;
 }
