@@ -93,6 +93,25 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null, // g. order by
                 null); // h. limit
         String[] columnNames = cursor.getColumnNames();
+        for(int i = 0; i < columnNames.length; i++)
+        {
+            if(!map.containsKey(columnNames[i]))
+            {
+                switch (cursor.getType(i))
+                {
+                    case Cursor.FIELD_TYPE_FLOAT:
+                        map.put(columnNames[i],new ScoutValue(cursor.getFloat(cursor.getColumnIndex(columnNames[i]))));
+                        break;
+                    case Cursor.FIELD_TYPE_INTEGER:
+                        map.put(columnNames[i],new ScoutValue(cursor.getInt(cursor.getColumnIndex(columnNames[i]))));
+                        break;
+                    case Cursor.FIELD_TYPE_STRING:
+                        map.put(columnNames[i],new ScoutValue(cursor.getString(cursor.getColumnIndex(columnNames[i]))));
+                        break;
+                }
+
+            }
+        }
 
         // Make sure the last updated time gets updated
         map.remove(KEY_LAST_UPDATED);
