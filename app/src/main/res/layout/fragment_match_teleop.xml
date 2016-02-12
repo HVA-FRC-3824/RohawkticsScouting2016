@@ -59,8 +59,8 @@
                 android:text="High Goal"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="20sp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginTop="6dp"
+                android:textColor="#000000" />
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"
@@ -92,8 +92,8 @@
                 android:text="Low Goal"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="20sp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp" />
+                android:layout_marginTop="6dp"
+                android:textColor="#000000" />
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
                 android:layout_width="0dp"

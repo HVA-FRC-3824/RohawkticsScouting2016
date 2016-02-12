@@ -61,23 +61,5 @@
         android:text="Remove All Event Data"
         android:id="@+id/remove_all_event_data"
         android:layout_weight="1" />
-<!--
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/db_selector"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/query_input"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Send"
-        android:id="@+id/query_send"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/query_response"/>
-        -->
+
 </LinearLayout>
