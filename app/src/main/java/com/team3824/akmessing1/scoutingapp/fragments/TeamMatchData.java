@@ -393,7 +393,7 @@ public class TeamMatchData extends Fragment {
             ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText("0.0%");
         }
 
-        if(hasPlayed) {
+        if(hasPlayed && statsMap.containsKey(Constants.DEFENSE_ABILITY_RANKING)) {
             String ranking = statsMap.get(Constants.DEFENSE_ABILITY_RANKING).getString();
             switch(ranking.charAt(ranking.length()-1))
             {

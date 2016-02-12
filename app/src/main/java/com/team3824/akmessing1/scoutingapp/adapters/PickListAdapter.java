@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
@@ -28,16 +29,18 @@ import java.util.HashMap;
 public class PickListAdapter extends ArrayAdapter<Team> {
 
     private ArrayList<Team> teams;
-    int pickNumber;
+    String pickType;
     Context context;
     StatsDB statsDB;
+    Comparator<Team> comparator;
 
-    public PickListAdapter(Context context, int textViewResourceId, ArrayList<Team> teams, int pickNumber, StatsDB statsDB) {
+    public PickListAdapter(Context context, int textViewResourceId, ArrayList<Team> teams, String pickType, StatsDB statsDB, Comparator<Team> comparator) {
         super(context, textViewResourceId, teams);
         this.context = context;
         this.teams = teams;
-        this.pickNumber = pickNumber;
+        this.pickType = pickType;
         this.statsDB = statsDB;
+        this.comparator = comparator;
     }
 
     public void add(int to, Team team)
@@ -78,77 +81,6 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 }
             });
 
-            final Comparator<Team> compare1 = new Comparator<Team>(){
-                public int compare(Team a, Team b)
-                {
-                    int rankA = a.getMapElement(StatsDB.KEY_FIRST_PICK_RANK).getInt();
-                    int rankB = b.getMapElement(StatsDB.KEY_FIRST_PICK_RANK).getInt();
-                    if(a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 && b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-                    {
-                        return rankA - rankB;
-                    }
-                    else if( a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 )
-                    {
-                        return 1;
-                    }
-                    else if(b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-                    {
-                        return -1;
-                    }
-                    else {
-                        return rankA - rankB;
-                    }
-                }
-            };
-
-            final Comparator<Team> compare2 = new Comparator<Team>(){
-                public int compare(Team a, Team b)
-                {
-                    int rankA = a.getMapElement(StatsDB.KEY_SECOND_PICK_RANK).getInt();
-                    int rankB = b.getMapElement(StatsDB.KEY_SECOND_PICK_RANK).getInt();
-                    if(a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 && b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-                    {
-                        return rankA - rankB;
-                    }
-                    else if( a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 )
-                    {
-                        return 1;
-                    }
-                    else if(b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-                    {
-                        return -1;
-                    }
-                    else {
-                        return rankA - rankB;
-                    }
-                }
-            };
-
-
-            final Comparator<Team> compare3 = new Comparator<Team>(){
-                public int compare(Team a, Team b)
-                {
-                    int rankA = a.getMapElement(StatsDB.KEY_THIRD_PICK_RANK).getInt();
-                    int rankB = b.getMapElement(StatsDB.KEY_THIRD_PICK_RANK).getInt();
-                    if(a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 && b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-                    {
-                        return rankA - rankB;
-                    }
-                    else if( a.getMapElement(StatsDB.KEY_PICKED).getInt() > 0 )
-                    {
-                        return 1;
-                    }
-                    else if(b.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-                    {
-                        return -1;
-                    }
-                    else {
-                        return rankA - rankB;
-                    }
-                }
-            };
-
-
             button = (Button)convertView.findViewById(R.id.team_picked);
             if(t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
             {
@@ -177,20 +109,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                     else
                     {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(0));
-                        switch(pickNumber)
-                        {
-                            case 1:
-                                Collections.sort(teams, compare1);
-                                break;
-                            case 2:
-                                Collections.sort(teams, compare2);
-                                break;
-
-                            case 3:
-                                Collections.sort(teams, compare3);
-                                break;
-                        }
-
+                        Collections.sort(teams, comparator);
                         HashMap<String, ScoutValue> map = new HashMap<>();
                         map.put(StatsDB.KEY_TEAM_NUMBER,new ScoutValue(t.getTeamNumber()));
                         map.put(StatsDB.KEY_PICKED, new ScoutValue(0));
@@ -217,18 +136,8 @@ public class PickListAdapter extends ArrayAdapter<Team> {
             topText.setText(String.valueOf(teamNumber)+ " - "+nickname);
 
             TextView bottomText = (TextView)convertView.findViewById(R.id.bottomText);
-            switch (pickNumber)
-            {
-                case 1:
-                    bottomText.setText(t.getMapElement("first_pick_bottom_text").getString());
-                    break;
-                case 2:
-                    bottomText.setText(t.getMapElement("second_pick_bottom_text").getString());
-                    break;
-                case 3:
-                    bottomText.setText(t.getMapElement("third_pick_bottom_text").getString());
-                    break;
-            }
+            bottomText.setText(t.getMapElement(Constants.BOTTOM_TEXT).getString());
+
         }
 
         return convertView;

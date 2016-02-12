@@ -112,7 +112,7 @@ public interface Constants {
         "total_seen_sally_port","total_seen_rock_wall","total_seen_rough_terrain"};
     public static final String[] TOTAL_DEFENSES_STARTED = {"total_start_low_bar", "total_start_portcullis",
             "total_start_cheval_de_frise","total_start_moat","total_start_ramparts","total_start_drawbridge",
-            "total_start_sally_port","total_start_rock_wall","total_start_rough_terrain"};
+            "total_start_sally_port","total_start_rock_wall","total_start_rough_terrain", "total_start_spybox", "total_start_secret_passage"};
     public static final String[] TOTAL_DEFENSES_AUTO_REACHED = {"total_auto_low_bar_reach", "total_auto_portcullis_reach",
             "total_auto_cheval_de_frise_reach","total_auto_moat_reach","total_auto_ramparts_reach","total_auto_drawbridge_reach",
             "total_auto_sally_port_reach","total_auto_rock_wall_reach","total_auto_rough_terrain_reach"};
@@ -150,14 +150,8 @@ public interface Constants {
 
     public static final String TOTAL_MATCHES = "total_matches";
 
-    // Database Management
-    public static final int MATCH_SCOUT_DB = 0;
-    public static final int PIT_SCOUT_DB = 1;
-    public static final int SUPER_SCOUT_DB = 2;
-    public static final int DRIVE_TEAM_FEEDBACK_DB = 3;
-    public static final int STATS_DB = 4;
-    public static final int SYNC_DB = 5;
-    public static final int SCHEDULE_DB = 6;
+    public static final String BOTTOM_TEXT = "bottom_text";
+
     // Match Schedule;
     public static final int BLUE1_INDEX = 0;
     public static final int BLUE2_INDEX = 1;

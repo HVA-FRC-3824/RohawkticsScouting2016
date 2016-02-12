@@ -33,12 +33,6 @@ public class StatsDB extends SQLiteOpenHelper {
     public static final String KEY_ID = "_id"; // _id is needed for updating
     // The team number is going to be the id, but another variable is set up for convenience
     public static final String KEY_TEAM_NUMBER = "_id";
-    public static final String KEY_COMPUTED_FIRST_PICK_RANK = "computed_first_pick_rank";
-    public static final String KEY_COMPUTED_SECOND_PICK_RANK = "computed_second_pick_rank";
-    public static final String KEY_COMPUTED_THIRD_PICK_RANK = "computed_third_pick_rank";
-    public static final String KEY_FIRST_PICK_RANK = "first_pick_rank";
-    public static final String KEY_SECOND_PICK_RANK = "second_pick_rank";
-    public static final String KEY_THIRD_PICK_RANK = "third_pick_rank";
     public static final String KEY_PICKED = "picked";
     public static final String KEY_LAST_UPDATED = "last_updated";
 
@@ -61,12 +55,6 @@ public class StatsDB extends SQLiteOpenHelper {
     {
         String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
                 "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_COMPUTED_FIRST_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_COMPUTED_SECOND_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_COMPUTED_THIRD_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_FIRST_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_SECOND_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_THIRD_PICK_RANK+" INTEGER NOT NULL,"+
                 " "+KEY_PICKED+" INTEGER NOT NULL,"+
                 " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
         db.execSQL(queryString);
@@ -111,12 +99,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 int teamNumber = jsonObject.getInt("team_number");
                 ContentValues values = new ContentValues();
                 values.put(KEY_TEAM_NUMBER,teamNumber);
-                values.put(KEY_COMPUTED_FIRST_PICK_RANK,i+1);
-                values.put(KEY_COMPUTED_SECOND_PICK_RANK,i+1);
-                values.put(KEY_COMPUTED_THIRD_PICK_RANK,i+1);
-                values.put(KEY_FIRST_PICK_RANK,i+1);
-                values.put(KEY_SECOND_PICK_RANK,i+1);
-                values.put(KEY_THIRD_PICK_RANK,i+1);
                 values.put(KEY_PICKED, 0);
                 values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
                 db.insert(tableName,null,values);
@@ -132,12 +114,6 @@ public class StatsDB extends SQLiteOpenHelper {
         int numEntries = (int) DatabaseUtils.queryNumEntries(db, tableName);
         ContentValues values = new ContentValues();
         values.put(KEY_TEAM_NUMBER,teamNumber);
-        values.put(KEY_COMPUTED_FIRST_PICK_RANK,numEntries+1);
-        values.put(KEY_COMPUTED_SECOND_PICK_RANK,numEntries+1);
-        values.put(KEY_COMPUTED_THIRD_PICK_RANK,numEntries+1);
-        values.put(KEY_FIRST_PICK_RANK,numEntries+1);
-        values.put(KEY_SECOND_PICK_RANK,numEntries+1);
-        values.put(KEY_THIRD_PICK_RANK,numEntries+1);
         values.put(KEY_PICKED, 0);
         values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
         db.insert(tableName,null,values);
@@ -346,12 +322,6 @@ public class StatsDB extends SQLiteOpenHelper {
         db.execSQL(query);
         query = "CREATE TABLE IF NOT EXISTS "+tableName +
                 "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_COMPUTED_FIRST_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_COMPUTED_SECOND_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_COMPUTED_THIRD_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_FIRST_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_SECOND_PICK_RANK+" INTEGER NOT NULL,"+
-                " "+KEY_THIRD_PICK_RANK+" INTEGER NOT NULL,"+
                 " "+KEY_PICKED+" INTEGER NOT NULL,"+
                 " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
         db.execSQL(query);
@@ -359,12 +329,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 int teamNumber = teams.get(i);
                 ContentValues values = new ContentValues();
                 values.put(KEY_TEAM_NUMBER,teamNumber);
-                values.put(KEY_COMPUTED_FIRST_PICK_RANK,i+1);
-                values.put(KEY_COMPUTED_SECOND_PICK_RANK,i+1);
-                values.put(KEY_COMPUTED_THIRD_PICK_RANK,i+1);
-                values.put(KEY_FIRST_PICK_RANK,i+1);
-                values.put(KEY_SECOND_PICK_RANK,i+1);
-                values.put(KEY_THIRD_PICK_RANK,i+1);
                 values.put(KEY_PICKED, 0);
                 values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
                 db.insert(tableName,null,values);

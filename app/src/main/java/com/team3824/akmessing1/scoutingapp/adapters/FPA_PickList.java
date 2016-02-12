@@ -18,7 +18,7 @@ import java.util.Map;
 // Setup up page fragments for pick list
 public class FPA_PickList extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "1st Pick", "2nd Pick" };
+    private String tabTitles[] = new String[] { "1st Pick"/*, "2nd Pick"*/ };
 
 
     public FPA_PickList(FragmentManager fm) {
