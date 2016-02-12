@@ -86,7 +86,6 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 "1"); // h. limit
         String[] columnNames = cursor.getColumnNames();
         if(cursor != null && cursor.getCount() > 0) {
-            Log.d(TAG,"updating");
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 if (!map.containsKey(cursor.getColumnName(i))) {

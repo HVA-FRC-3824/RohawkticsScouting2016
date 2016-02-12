@@ -91,25 +91,25 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
-                null); // h. limit
+                "1"); // h. limit
         String[] columnNames = cursor.getColumnNames();
-        for(int i = 0; i < columnNames.length; i++)
-        {
-            if(!map.containsKey(columnNames[i]))
-            {
-                switch (cursor.getType(i))
-                {
-                    case Cursor.FIELD_TYPE_FLOAT:
-                        map.put(columnNames[i],new ScoutValue(cursor.getFloat(cursor.getColumnIndex(columnNames[i]))));
-                        break;
-                    case Cursor.FIELD_TYPE_INTEGER:
-                        map.put(columnNames[i],new ScoutValue(cursor.getInt(cursor.getColumnIndex(columnNames[i]))));
-                        break;
-                    case Cursor.FIELD_TYPE_STRING:
-                        map.put(columnNames[i],new ScoutValue(cursor.getString(cursor.getColumnIndex(columnNames[i]))));
-                        break;
-                }
+        if(cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getColumnCount(); i++) {
+                if (!map.containsKey(cursor.getColumnName(i))) {
+                    switch (cursor.getType(i)) {
+                        case Cursor.FIELD_TYPE_FLOAT:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                            break;
+                        case Cursor.FIELD_TYPE_INTEGER:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                            break;
+                        case Cursor.FIELD_TYPE_STRING:
+                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                            break;
+                    }
 
+                }
             }
         }
 
@@ -154,7 +154,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                     break;
             }
         }
-        db.replace(tableName,null,cvs);
+        db.replace(tableName, null, cvs);
         db.close();
     }
 

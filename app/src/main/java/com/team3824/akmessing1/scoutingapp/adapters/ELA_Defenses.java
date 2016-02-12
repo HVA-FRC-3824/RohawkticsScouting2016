@@ -101,7 +101,7 @@ public class ELA_Defenses extends ArrayAdapter<ELI_Defenses>{
 
     String create_text(int cross, int seen, float speed)
     {
-        String text = String.valueOf(cross) + " ("+String.valueOf(seen)+") : "+String.valueOf(speed);
+        String text = String.format("%d (%d) : %f",cross,seen,speed);
         return text;
     }
 }

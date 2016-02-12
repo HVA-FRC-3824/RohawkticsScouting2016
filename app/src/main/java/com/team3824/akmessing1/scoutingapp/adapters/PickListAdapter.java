@@ -130,10 +130,18 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 }
             }
 
+            if(t.getMapElement(Constants.TOTAL_YELLOW_CARDS).getInt() > 0) {
+                convertView.findViewById(R.id.yellow_card).setVisibility(View.VISIBLE);
+            }
+
+            if(t.getMapElement(Constants.TOTAL_RED_CARDS).getInt() > 0) {
+                convertView.findViewById(R.id.red_card).setVisibility(View.VISIBLE);
+            }
+
             int teamNumber = t.getTeamNumber();
             String nickname = t.getNickname();
             TextView topText = (TextView)convertView.findViewById(R.id.topText);
-            topText.setText(String.valueOf(teamNumber)+ " - "+nickname);
+            topText.setText(String.format("%d - %s",teamNumber,nickname));
 
             TextView bottomText = (TextView)convertView.findViewById(R.id.bottomText);
             bottomText.setText(t.getMapElement(Constants.BOTTOM_TEXT).getString());
@@ -141,5 +149,10 @@ public class PickListAdapter extends ArrayAdapter<Team> {
         }
 
         return convertView;
+    }
+
+    public void sort()
+    {
+        Collections.sort(teams,comparator);
     }
 }
