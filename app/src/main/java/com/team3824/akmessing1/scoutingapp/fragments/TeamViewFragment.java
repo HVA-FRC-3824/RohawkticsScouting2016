@@ -212,13 +212,19 @@ public class TeamViewFragment extends Fragment {
                     }
                 });
 
-                String Bestdefense1 = Constants.DEFENSES[defenses.get(0).mDefense].replaceAll("_", " ");
-                String Bestdefense2 = Constants.DEFENSES[defenses.get(1).mDefense].replaceAll("_", " ");
-                String Worstdefense1 = Constants.DEFENSES[defenses.get(7).mDefense].replaceAll("_", " ");
-                String Worstdefense2 = Constants.DEFENSES[defenses.get(8).mDefense].replaceAll("_", " ");
-
-                textView.setText(String.format("1. %s\n2. %s\n1. %s\n2. %s",Bestdefense1, Bestdefense2,Worstdefense1,Worstdefense2));
-
+                if(defenses.get(0).mDefensePoints == 0)
+                {
+                    String Bestdefense1 = Constants.DEFENSES_LABEL[defenses.get(0).mDefense];
+                    String Bestdefense2 = Constants.DEFENSES_LABEL[defenses.get(1).mDefense];
+                    String Worstdefense1 = Constants.DEFENSES_LABEL[defenses.get(7).mDefense];
+                    String Worstdefense2 = Constants.DEFENSES_LABEL[defenses.get(8).mDefense];
+                    textView.setText(String.format("1. %s\n2. %s\n1. %s\n2. %s",Bestdefense1, Bestdefense2,Worstdefense1,Worstdefense2));
+                }
+                else
+                {
+                    textView.setText("None\n\nNone\n\n");
+                }
+                
 
                 textView = (TextView) view.findViewById(R.id.driver_ability);
                 if (statsMap.containsKey(Constants.DRIVE_ABILITY_RANKING)) {

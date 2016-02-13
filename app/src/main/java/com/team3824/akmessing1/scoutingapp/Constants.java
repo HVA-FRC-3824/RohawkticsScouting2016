@@ -90,6 +90,8 @@ public interface Constants {
     public static final String[] DEFENSES = {"low_bar","portcullis","cheval_de_frise","moat","ramparts",
             "drawbridge","sally_port","rock_wall","rough_terrain"};
     public static final String[] DEFENSES_ABREV = {"LB","P","CdF","M","R","D","SP","RW","RT"};
+    public static final String[] DEFENSES_LABEL = {"Low Bar","Portcullis","Cheval de Frise","Moat",
+            "Ramparts","Drawbridge","Sally Port","Rock Wall","Rough Terrain"};
 
     public static final int LOW_BAR_INDEX = 0;
     public static final int PORTCULLIS_INDEX = 1;
