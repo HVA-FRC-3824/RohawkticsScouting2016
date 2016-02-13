@@ -49,17 +49,17 @@ public class MatchView extends AppCompatActivity {
         Cursor cursor = scheduleDB.getMatch(matchNumber);
         FragmentManager fm = getFragmentManager();
         TeamViewFragment blue1 = (TeamViewFragment) fm.findFragmentById(R.id.blue1);
-        blue1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)));
+        blue1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)),this);
         TeamViewFragment blue2 = (TeamViewFragment) fm.findFragmentById(R.id.blue2);
-        blue2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)));
+        blue2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)),this);
         TeamViewFragment blue3 = (TeamViewFragment) fm.findFragmentById(R.id.blue3);
-        blue3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)));
+        blue3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)),this);
         TeamViewFragment red1 = (TeamViewFragment) fm.findFragmentById(R.id.red1);
-        red1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)));
+        red1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)),this);
         TeamViewFragment red2 = (TeamViewFragment) fm.findFragmentById(R.id.red2);
-        red2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)));
+        red2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)),this);
         TeamViewFragment red3 = (TeamViewFragment) fm.findFragmentById(R.id.red3);
-        red3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)));
+        red3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)),this);
 
         // First match doesn't need a previous button
         Button previous = (Button)findViewById(R.id.previous_match);

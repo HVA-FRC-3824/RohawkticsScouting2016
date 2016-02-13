@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +28,18 @@ import java.util.Map;
 
 public class TeamViewFragment extends Fragment {
 
+    private String TAG = "TeamViewFragment";
+
     private class TeamMatchDataStartP{
 
         int mDefenseStart;
         int mDefenseStartAmount;
     }
- private class TeamViewFragmentD{
+    private class TeamViewFragmentD{
 
-     int mDefense;
-     int mDefensePoints;
- }
+        int mDefense;
+        int mDefensePoints;
+    }
     View view;
 
     public TeamViewFragment()
@@ -57,52 +60,45 @@ public class TeamViewFragment extends Fragment {
         return view;
     }
 
-    public void setTeamNumber(final int teamNumber)
+    public void setTeamNumber(final int teamNumber, Context context)
     {
         TextView textView = (TextView)view.findViewById(R.id.team_number);
         textView.setText(String.valueOf(teamNumber));
 
+        SharedPreferences sharedPreferences = context.getSharedPreferences("appData", Context.MODE_PRIVATE);
+        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
 
-        Activity activity = getActivity();
+        Button button = (Button) view.findViewById(R.id.view_team);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), TeamView.class);
+                intent.putExtra("team_number", teamNumber);
+                startActivity(intent);
+            }
+        });
 
-        SharedPreferences sharedPreferences = activity.getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString("event_id", "");
-
-        StatsDB statsDB = new StatsDB(activity,eventId);
+        StatsDB statsDB = new StatsDB(context,eventId);
         Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
+        Log.d(TAG, String.format("TN: %d",teamNumber));
         if(statsMap.containsKey(Constants.TOTAL_MATCHES)) {
-
-
             textView = (TextView) view.findViewById(R.id.total_matches);
-            float numMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
+            int numMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
+            Log.d(TAG, String.format("TN: %d NM%d", teamNumber, numMatches));
             textView.setText(String.valueOf(numMatches));
 
             if (numMatches > 0) {
-
-                float totalMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
 
                 textView = (TextView) view.findViewById(R.id.bestPosition);
 
                 ArrayList<TeamMatchDataStartP> starts = new ArrayList<>();
 
-                TeamMatchDataStartP start = new TeamMatchDataStartP();
-
-                totalMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
-
-                if (totalMatches > 0) {
-                    totalMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
-
-                    for (int i = 0; i < 9; i++) {
-                        start.mDefenseStartAmount += statsMap.get(Constants.TOTAL_DEFENSES_STARTED[i]).getInt();
-
-
-
-                        start.mDefenseStart = i;
-
-                        starts.add(start);
-                    }
+                for (int i = 0; i < 9; i++) {
+                    TeamMatchDataStartP start = new TeamMatchDataStartP();
+                    start.mDefenseStartAmount += statsMap.get(Constants.TOTAL_DEFENSES_STARTED[i]).getInt();
+                    start.mDefenseStart = i;
+                    starts.add(start);
                 }
-
 
                 Collections.sort(starts, new Comparator<TeamMatchDataStartP>() {
                     @Override
@@ -111,8 +107,7 @@ public class TeamViewFragment extends Fragment {
                     }
                 });
 
-                String BestPosition =  String.valueOf(Constants.DEFENSES[starts.get(0).mDefenseStart]).replaceAll("_", " ");
-
+                String BestPosition = String.valueOf(Constants.DEFENSES[starts.get(0).mDefenseStart]).replaceAll("_", " ");
 
                 textView.setText(String.valueOf(BestPosition));
 
@@ -125,8 +120,9 @@ public class TeamViewFragment extends Fragment {
 
                 int mTeleopPoints = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() * 5 +
                         statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt() * 2;
+                //edited to account for only being able to get 5 points for crossing once
                 for (int i = 0; i < 9; i++) {
-                    mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
+                        mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
                 }
 
                 int mAutoPoints = statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt() * 10 +
@@ -138,7 +134,7 @@ public class TeamViewFragment extends Fragment {
                 float mTotalPoints = mEndgamePoints + mTeleopPoints + mAutoPoints + mFoulPoints;
 
 
-                float averagePoints = mTotalPoints / numMatches;
+                float averagePoints = mTotalPoints / (float)numMatches;
 
                 textView.setText(String.valueOf(averagePoints));
 
@@ -151,18 +147,20 @@ public class TeamViewFragment extends Fragment {
                 float mAutoLowMissed = statsMap.get(Constants.TOTAL_AUTO_LOW_MISS).getInt();
                 float mAutoLowTotal = (mAutoLowMade + mAutoLowMissed);
                 float mAutoLowPointsTotal = statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt() * 5;
-                double mAutoAccuracy = ((mAutoHighMade + mAutoLowMade) / (mAutoHighTotal + mAutoLowTotal));
+                float mAutoHighAccuracy = ((mAutoHighMade / mAutoHighTotal) * 100);
+                float mAutoLowAccuracy = ((mAutoLowMade / mAutoLowTotal) * 100);
                 float mAutoReachPoints = 0;
                 float mAutoCrossPoints = 0;
                 for (int i = 0; i < 9; i++) {
-                    mAutoReachPoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 2;
+                    mAutoReachPoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 5;
                     mAutoCrossPoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt() * 10;
                 }
                 float mAutoDefensePoints = (mAutoReachPoints + mAutoCrossPoints);
                 float mOverallAutoTotal = (mAutoHighPointsTotal + mAutoLowPointsTotal + mAutoDefensePoints);
                 float mOverallAutoAvg = (mOverallAutoTotal / numMatches);
-                textView.setText(String.valueOf(mOverallAutoTotal) + " " + String.valueOf(mOverallAutoAvg) + " "
-                        + String.valueOf(mAutoAccuracy));
+
+                textView.setText(String.format("\n %.2f\n %.2f\n %.2f%%\n %.2f%%",mOverallAutoTotal,mOverallAutoAvg,
+                        mAutoHighAccuracy,mAutoLowAccuracy));
 
                 textView = (TextView) view.findViewById(R.id.overall_teleop_points);
                 float mTeleopFoulPoints = statsMap.get(Constants.TOTAL_FOULS).getInt() * -5 +
@@ -170,47 +168,40 @@ public class TeamViewFragment extends Fragment {
                 float mTeleopHighMade = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt();
                 float mTeleopHighMissed = statsMap.get(Constants.TOTAL_TELEOP_HIGH_MISS).getInt();
                 float mTeleopHighTotal = (mTeleopHighMade + mTeleopHighMissed);
-                float mTeleopHighPointsTotal = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() * 10;
+                float mTeleopHighPointsTotal = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() * 5;
                 float mTeleopLowMade = statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt();
                 float mTeleopLowMissed = statsMap.get(Constants.TOTAL_TELEOP_LOW_MISS).getInt();
                 float mTeleopLowTotal = (mTeleopLowMade + mTeleopLowMissed);
                 float mTeleopLowPointsTotal = statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt() * 2;
-                float mTeleopAccuracy = ((mTeleopHighMade + mTeleopLowMade) / (mTeleopHighTotal + mTeleopLowTotal));
-                float mTeleopCrossPoints = 0 ;
-                //need some way of stopping after one time per defense
+                float mTeleopHighAccuracy = ((mTeleopHighMade / mTeleopHighTotal) * 100);
+                float mTeleopLowAccuracy = ((mTeleopLowMade / mTeleopLowTotal) * 100);
+                float mTeleopCrossPoints = 0;
+
                 for (int i = 0; i < 9; i++) {
-                    mTeleopCrossPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
+                        mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
                 }
                 float mTeleopDefensePoints = mTeleopCrossPoints;
                 float mOverallTeleopTotal = (mTeleopHighPointsTotal + mTeleopLowPointsTotal + mTeleopDefensePoints + mTeleopFoulPoints);
                 float mOverallTeleopAvg = (mOverallTeleopTotal / numMatches);
-                textView.setText(String.valueOf(mOverallTeleopTotal) + " " + String.valueOf(mOverallTeleopAvg) + " "
-                        + String.valueOf(mTeleopAccuracy));
+                textView.setText(String.format("\n %.2f\n %.2f\n %.2f%%\n %.2f%%\n",mOverallTeleopTotal,mOverallTeleopAvg,
+                        mTeleopHighAccuracy,mTeleopLowAccuracy));
+
+                textView = (TextView) view.findViewById(R.id.can_scale);
+                int mCanScale = statsMap.get(Constants.TOTAL_SCALE).getInt();
+                textView.setText(String.valueOf(mCanScale));
 
                 textView = (TextView) view.findViewById(R.id.best2_worst2_defenses);
 
 
-
-
                 ArrayList<TeamViewFragmentD> defenses = new ArrayList<>();
 
-                TeamViewFragmentD defense = new TeamViewFragmentD();
-
-                totalMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
-
-                if (totalMatches > 0) {
-                    totalMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
-
-                    for (int i = 0; i < 9; i++) {
-                        defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 2;
-                        defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt() * 10;
-                        defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
-
-
-                        defense.mDefense = i;
-
-                        defenses.add(defense);
-                    }
+                for (int i = 0; i < 9; i++) {
+                    TeamViewFragmentD defense = new TeamViewFragmentD();
+                    defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 2;
+                    defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt() * 10;
+                    defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
+                    defense.mDefense = i;
+                    defenses.add(defense);
                 }
 
 
@@ -221,22 +212,17 @@ public class TeamViewFragment extends Fragment {
                     }
                 });
 
-                        String Bestdefense1 =  String.valueOf(Constants.DEFENSES[defenses.get(0).mDefense]).replaceAll("_", " ");
-                        String Bestdefense2 =  String.valueOf(Constants.DEFENSES[defenses.get(1).mDefense]).replaceAll("_", " ");
-                        String Worstdefense1 = String.valueOf(Constants.DEFENSES[defenses.get(7).mDefense]).replaceAll("_", " ");
-                        String Worstdefense2 = String.valueOf(Constants.DEFENSES[defenses.get(8).mDefense]).replaceAll("_", " ");
+                String Bestdefense1 = Constants.DEFENSES[defenses.get(0).mDefense].replaceAll("_", " ");
+                String Bestdefense2 = Constants.DEFENSES[defenses.get(1).mDefense].replaceAll("_", " ");
+                String Worstdefense1 = Constants.DEFENSES[defenses.get(7).mDefense].replaceAll("_", " ");
+                String Worstdefense2 = Constants.DEFENSES[defenses.get(8).mDefense].replaceAll("_", " ");
 
-                textView.setText("Best: " + "1." + Bestdefense1 + " 2." +
-                        Bestdefense2 + "\n" +
-                        "Worst: " + "1." + Worstdefense1 + " 2." +
-                        Worstdefense2);
-
-                }
+                textView.setText(String.format("1. %s\n2. %s\n1. %s\n2. %s",Bestdefense1, Bestdefense2,Worstdefense1,Worstdefense2));
 
 
                 textView = (TextView) view.findViewById(R.id.driver_ability);
-                if (statsMap.containsKey("super_drive_ability_ranking")) {
-                    String ranking = statsMap.get("super_drive_ability_ranking").getString();
+                if (statsMap.containsKey(Constants.DRIVE_ABILITY_RANKING)) {
+                    String ranking = statsMap.get(Constants.DRIVE_ABILITY_RANKING).getString();
                     if (ranking.charAt(ranking.length() - 1) == '1')
                         ranking += "st";
                     else if (ranking.charAt(ranking.length() - 1) == '2')
@@ -246,22 +232,41 @@ public class TeamViewFragment extends Fragment {
                     else
                         ranking += "th";
                     textView.setText(ranking);
-                } else {
+                }
+                else {
                     textView.setText("N/A");
                 }
-            } else {
-                textView = (TextView) view.findViewById(R.id.total_matches);
-                textView.setText(String.valueOf(0));
-            }
-            Button button = (Button) view.findViewById(R.id.view_team);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), TeamView.class);
-                        intent.putExtra("team_number", teamNumber);
-                        startActivity(intent);
+                    textView = (TextView) view.findViewById(R.id.defense_ability);
+                    if (statsMap.containsKey(Constants.DEFENSE_ABILITY_RANKING)) {
+                        String ranking = statsMap.get(Constants.DEFENSE_ABILITY_RANKING).getString();
+                        if (ranking.charAt(ranking.length() - 1) == '1')
+                            ranking += "st";
+                        else if (ranking.charAt(ranking.length() - 1) == '2')
+                            ranking += "nd";
+                        else if (ranking.charAt(ranking.length() - 1) == '3')
+                            ranking += "rd";
+                        else
+                            ranking += "th";
+                        textView.setText(ranking);
                     }
-                });
+                    else {
+                        textView.setText("N/A");
+                }
+            }
+            else {
+                textView = (TextView) view.findViewById(R.id.best2_worst2_defenses);
+                textView.setText("\n\n\n");
+            }
+        }
+        else
+        {
+            textView = (TextView) view.findViewById(R.id.total_matches);
+            textView.setText("0");
+
+            textView = (TextView) view.findViewById(R.id.best2_worst2_defenses);
+            textView.setText("\n\n\n\n\n\n\n\n\n\n\n\n");
+        }
     }
 }
+
 
