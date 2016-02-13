@@ -123,6 +123,9 @@ public interface Constants {
     public static final String[] TOTAL_DEFENSES_TELEOP_CROSSED = {"total_teleop_low_bar", "total_teleop_portcullis",
             "total_teleop_cheval_de_frise","total_teleop_moat","total_teleop_ramparts","total_teleop_drawbridge",
             "total_teleop_sally_port","total_teleop_rock_wall","total_teleop_rough_terrain"};
+    public static final String[] TOTAL_DEFENSES_TELEOP_CROSSED_POINTS = {"total_teleop_points_low_bar", "total_teleop_points_portcullis",
+            "total_teleop_points_cheval_de_frise","total_teleop_points_moat","total_teleop_points_ramparts","total_teleop_points_drawbridge",
+            "total_teleop_points_sally_port","total_teleop_points_rock_wall","total_teleop_points_rough_terrain"};
     public static final String[] TOTAL_DEFENSES_TELEOP_TIME = {"total_teleop_low_bar_time", "total_teleop_portcullis_time",
             "total_teleop_cheval_de_frise_time","total_teleop_moat_time","total_teleop_ramparts_time","total_teleop_drawbridge_time",
             "total_teleop_sally_port_time","total_teleop_rock_wall_time","total_teleop_rough_terrain_time"};

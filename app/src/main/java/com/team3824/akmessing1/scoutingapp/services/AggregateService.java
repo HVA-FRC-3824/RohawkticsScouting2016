@@ -131,6 +131,7 @@ public class AggregateService extends IntentService {
 
             //Teleop
             int[] totalTeleopDefenses = set_start_array(teamStats, "teleop");
+            int[] totalTeleopDefensesPoints = set_start_array(teamStats, "teleop_points");
             int[] totalDefensesSeen = set_start_array(teamStats, "seen");
             int[] totalDefensesTime = set_start_array(teamStats, "time");
             int totalTeleopHighGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_HIT);
@@ -201,6 +202,7 @@ public class AggregateService extends IntentService {
 
                     //Teleop
                     increment_array(teamCursor, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
+                    increment_array(teamCursor, totalTeleopDefensesPoints, defense2, defense3, defense4, defense5, "teleop_points");
                     increment_array(teamCursor, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
                     totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
                     totalTeleopHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_MISS));
@@ -231,6 +233,7 @@ public class AggregateService extends IntentService {
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_REACHED[j],new ScoutValue(totalDefenseReaches[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_AUTO_CROSSED[j],new ScoutValue(totalDefenseCrosses[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[j],new ScoutValue(totalTeleopDefenses[j]));
+                teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[j], new ScoutValue(totalTeleopDefensesPoints[j]));
                 teamMap.put(Constants.TOTAL_DEFENSES_TELEOP_TIME[j], new ScoutValue(totalDefensesTime[j]));
             }
             teamMap.put(Constants.TOTAL_DEFENSES_STARTED[9],new ScoutValue(totalStartPosition[9]));
@@ -533,6 +536,9 @@ public class AggregateService extends IntentService {
                 case "teleop":
                     array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]);
                     break;
+                case "teleop_points":
+                    array[i] = set_start(teamStats, Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]);
+                    break;
                 case "seen":
                     array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_SEEN[i]);
                     break;
@@ -563,7 +569,7 @@ public class AggregateService extends IntentService {
                 switch(cursor.getString(cursor.getColumnIndex(Constants.AUTO_START_POSITION)))
                 {
                     case "Defense 1 (Low bar)":
-                        index = defensesList.indexOf("low_bar");
+                        index = Constants.LOW_BAR_INDEX;
                         array[index]++;
                         break;
                     case "Defense 2":
@@ -596,7 +602,7 @@ public class AggregateService extends IntentService {
                     switch(cursor.getString(cursor.getColumnIndex(Constants.AUTO_START_POSITION)))
                     {
                         case "Defense 1 (Low bar)":
-                            index = defensesList.indexOf("low_bar");
+                            index = Constants.LOW_BAR_INDEX;
                             array[index]++;
                             break;
                         case "Defense 2":
@@ -625,7 +631,7 @@ public class AggregateService extends IntentService {
                     switch(cursor.getString(cursor.getColumnIndex(Constants.AUTO_START_POSITION)))
                     {
                         case "Defense 1 (Low bar)":
-                            index = defensesList.indexOf("low_bar");
+                            index = Constants.LOW_BAR_INDEX;
                             array[index]++;
                             break;
                         case "Defense 2":
@@ -656,8 +662,144 @@ public class AggregateService extends IntentService {
                 array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
                 index = defensesList.indexOf(defense5);
                 array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
-                index = defensesList.indexOf("low_bar");
+                index = Constants.LOW_BAR_INDEX;
                 array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
+                break;
+            case "teleop_points":
+                if(cursor.getString(cursor.getColumnIndex(Constants.AUTO_REACH_CROSS)).equals("Cross"))
+                {
+                    int numCross = 0;
+                    switch (cursor.getString(cursor.getColumnIndex(Constants.AUTO_START_POSITION)))
+                    {
+                        case "Defense 1 (Low bar)":
+                            index = Constants.LOW_BAR_INDEX;
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
+                            array[index] += (numCross > 1) ? 1 : numCross;
+
+                            index = defensesList.indexOf(defense2);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense3);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense4);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense5);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+                            break;
+                        case "Defense 2":
+                            index = Constants.LOW_BAR_INDEX;
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense2);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
+                            array[index] += (numCross > 1) ? 1 : numCross;
+
+                            index = defensesList.indexOf(defense3);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense4);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense5);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+                            break;
+                        case "Defense 3":
+                            index = Constants.LOW_BAR_INDEX;
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense2);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense3);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
+                            array[index] += (numCross > 1) ? 1 : numCross;
+
+                            index = defensesList.indexOf(defense4);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense5);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+                            break;
+                        case "Defense 4":
+                            index = Constants.LOW_BAR_INDEX;
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense2);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense3);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense4);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
+                            array[index] += (numCross > 1) ? 1 : numCross;
+
+                            index = defensesList.indexOf(defense5);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+                            break;
+                        case "Defense 5":
+                            index = Constants.LOW_BAR_INDEX;
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense2);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense3);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense4);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
+                            array[index] += (numCross > 2) ? 2 : numCross;
+
+                            index = defensesList.indexOf(defense5);
+                            numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
+                            array[index] += (numCross > 1) ? 1 : numCross;
+                            break;
+                    }
+                }
+                else
+                {
+                    index = Constants.LOW_BAR_INDEX;
+                    int numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
+                    array[index] += (numCross > 2) ? 2 : numCross;
+
+                    index = defensesList.indexOf(defense2);
+                    numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
+                    array[index] += (numCross > 2) ? 2 : numCross;
+
+                    index = defensesList.indexOf(defense3);
+                    numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
+                    array[index] += (numCross > 2) ? 2 : numCross;
+
+                    index = defensesList.indexOf(defense4);
+                    numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
+                    array[index] += (numCross > 2) ? 2 : numCross;
+
+                    index = defensesList.indexOf(defense5);
+                    numCross = stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
+                    array[index] += (numCross > 2) ? 2 : numCross;
+                }
                 break;
             case "seen":
                 index = defensesList.indexOf(defense2);
@@ -668,11 +810,11 @@ public class AggregateService extends IntentService {
                 array[index] ++;
                 index = defensesList.indexOf(defense5);
                 array[index] ++;
-                index = defensesList.indexOf("low_bar");
+                index = Constants.LOW_BAR_INDEX;
                 array[index] ++;
                 break;
             case "time":
-                index = defensesList.indexOf(defense2);
+                index = Constants.LOW_BAR_INDEX;
                 array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
                 index = defensesList.indexOf(defense3);
                 array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));

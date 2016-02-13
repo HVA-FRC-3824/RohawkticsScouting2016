@@ -21,7 +21,7 @@ public class BreacherPick extends ScoutPick{
             for(int i = 0; i < 9; i++) {
                 avgDefensePoints += statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]))*2;
                 avgDefensePoints += statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]))*10;
-                avgDefensePoints += statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]))*5;
+                avgDefensePoints += statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]))*5;
             }
 
             avgDefensePoints /= (float)statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_MATCHES));
@@ -37,10 +37,6 @@ public class BreacherPick extends ScoutPick{
             if(defensesFast.length() > 2) {
                 defensesFast = defensesFast.substring(0, defensesFast.length() - 2);
             }
-            if (statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.DRAWBRIDGE_INDEX])) < 5 && statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.DRAWBRIDGE_INDEX])) > 0)
-                numDefenseFast++;
-            if (statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.SALLY_PORT_INDEX])) < 5 && statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.SALLY_PORT_INDEX])) > 0)
-                numDefenseFast++;
             team.setMapElement(Constants.BREACHER_PICKABILITY, new ScoutValue(((int)avgDefensePoints)+numDefenseFast*5));
 
             String bottomText = String.format("Breacher Pickability: %d Avg Defense Points: %.2f Fast Defenses: ",team.getMapElement(Constants.BREACHER_PICKABILITY).getInt(),avgDefensePoints);
@@ -59,8 +55,6 @@ public class BreacherPick extends ScoutPick{
             team.setMapElement(Constants.BREACHER_PICKABILITY, new ScoutValue(0));
             team.setMapElement(Constants.BOTTOM_TEXT,new ScoutValue("No matches yet"));
         }
-
-
 
         return team;
     }

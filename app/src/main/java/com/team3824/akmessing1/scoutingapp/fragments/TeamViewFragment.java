@@ -80,7 +80,7 @@ public class TeamViewFragment extends Fragment {
 
         StatsDB statsDB = new StatsDB(context,eventId);
         Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
-        Log.d(TAG, String.format("TN: %d",teamNumber));
+        Log.d(TAG, String.format("TN: %d", teamNumber));
         if(statsMap.containsKey(Constants.TOTAL_MATCHES)) {
             textView = (TextView) view.findViewById(R.id.total_matches);
             int numMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
@@ -120,9 +120,9 @@ public class TeamViewFragment extends Fragment {
 
                 int mTeleopPoints = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() * 5 +
                         statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt() * 2;
-                //edited to account for only being able to get 5 points for crossing once
+
                 for (int i = 0; i < 9; i++) {
-                        mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
+                        mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]).getInt() * 5;
                 }
 
                 int mAutoPoints = statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt() * 10 +
@@ -199,7 +199,7 @@ public class TeamViewFragment extends Fragment {
                     TeamViewFragmentD defense = new TeamViewFragmentD();
                     defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 2;
                     defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt() * 10;
-                    defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
+                    defense.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]).getInt() * 5;
                     defense.mDefense = i;
                     defenses.add(defense);
                 }

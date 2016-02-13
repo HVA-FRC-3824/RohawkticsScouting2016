@@ -173,13 +173,13 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 for(int i = 0; i < 9; i++) {
                     team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]))*2;
                     team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]))*10;
-                    team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]))*5;
+                    team.mDefensePoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]))*5;
                 }
 
                 team.mTeleopPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_HIGH_HIT)) * 5 +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_LOW_HIT)) * 2;
                 for(int i = 0; i < 9; i++) {
-                    team.mTeleopPoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i])) * 5;
+                    team.mTeleopPoints += cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i])) * 5;
                 }
 
                 team.mAutoPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_HIT)) * 10 +

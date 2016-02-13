@@ -107,9 +107,10 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
             }
 
             team.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(StatsDB.KEY_PICKED))));
-            team.setMapElement(Constants.TOTAL_YELLOW_CARDS,new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_YELLOW_CARDS))));
-            team.setMapElement(Constants.TOTAL_RED_CARDS,new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_RED_CARDS))));
-
+            if(statsCursor.getColumnIndex(Constants.TOTAL_YELLOW_CARDS) > -1) {
+                team.setMapElement(Constants.TOTAL_YELLOW_CARDS, new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_YELLOW_CARDS))));
+                team.setMapElement(Constants.TOTAL_RED_CARDS, new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_RED_CARDS))));
+            }
 
             team = setupTeam(team,statsCursor);
 

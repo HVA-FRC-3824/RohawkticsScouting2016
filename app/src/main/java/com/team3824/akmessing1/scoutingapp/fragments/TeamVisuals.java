@@ -156,24 +156,32 @@ public class TeamVisuals extends Fragment {
 
         generate_radar_data(statsMap);
 
+        mRadarChart.setData(new RadarData(Constants.DEFENSES, mSeen));
+        mRadarChart.getYAxis().setAxisMaxValue((int) mSeen.getYMax() + 1);
+        mRadarChart.getYAxis().setLabelCount((int) mSeen.getYMax() + 2, true);
+        mRadarChart.notifyDataSetChanged();
+        mRadarChart.invalidate();
+
         RadioButton radioButton = (RadioButton)view.findViewById(R.id.seen);
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mRadarChart.setData(new RadarData(Constants.DEFENSES, mSeen));
                 mRadarChart.getYAxis().setAxisMaxValue((int) mSeen.getYMax() + 1);
-                mRadarChart.getYAxis().setLabelCount((int)mSeen.getYMax()+2,true);
+                mRadarChart.getYAxis().setLabelCount((int) mSeen.getYMax() + 2, true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
             }
         });
 
+        radioButton.setChecked(true);
+
         radioButton = (RadioButton)view.findViewById(R.id.started);
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.DEFENSES,mStarted));
-                mRadarChart.getYAxis().setAxisMaxValue((int)mStarted.getYMax()+1);
+                mRadarChart.setData(new RadarData(Constants.DEFENSES, mStarted));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mStarted.getYMax() + 1);
                 mRadarChart.getYAxis().setLabelCount((int) mStarted.getYMax() + 2, true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
@@ -185,8 +193,7 @@ public class TeamVisuals extends Fragment {
             @Override
             public void onClick(View v) {
                 mRadarChart.setData(new RadarData(Constants.DEFENSES, mTime));
-                switch((int) mTime.getYMax())
-                {
+                switch ((int) mTime.getYMax()) {
                     case 30:
                         mRadarChart.getYAxis().setAxisMaxValue(30);
                         mRadarChart.getYAxis().setLabelCount(7, true);
@@ -217,8 +224,8 @@ public class TeamVisuals extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.DEFENSES,mAutoCross));
-                mRadarChart.getYAxis().setAxisMaxValue((int)mAutoCross.getYMax()+1);
+                mRadarChart.setData(new RadarData(Constants.DEFENSES, mAutoCross));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mAutoCross.getYMax() + 1);
                 mRadarChart.getYAxis().setLabelCount((int) mAutoCross.getYMax() + 2, true);
                 mRadarChart.notifyDataSetChanged();
                 mRadarChart.invalidate();
@@ -258,8 +265,18 @@ public class TeamVisuals extends Fragment {
         mLineY = mLineChart.getAxisLeft();
         mLineY.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         mLineChart.getAxisRight().setEnabled(false);
+        mLineChart.setDoubleTapToZoomEnabled(false);
+        mLineChart.setPinchZoom(false);
 
         generate_line_data(matchCursor);
+
+        mLineChart.clear();
+        mLineChart.setData(new LineData(mMatches, mAutoHighMade));
+        mLineY.setAxisMaxValue((int) mAutoHighMade.getYMax() + 1);
+        mLineY.setLabelCount((int) mAutoHighMade.getYMax() + 2, true);
+        mLineY.setValueFormatter(intYVF);
+        mLineChart.notifyDataSetChanged();
+        mLineChart.invalidate();
 
         radioButton = (RadioButton)view.findViewById(R.id.auto_high_made);
         radioButton.setOnClickListener(new View.OnClickListener() {
@@ -267,13 +284,15 @@ public class TeamVisuals extends Fragment {
             public void onClick(View v) {
                 mLineChart.clear();
                 mLineChart.setData(new LineData(mMatches, mAutoHighMade));
-                mLineY.setAxisMaxValue((int) mAutoHighMade.getYMax()+1);
+                mLineY.setAxisMaxValue((int) mAutoHighMade.getYMax() + 1);
                 mLineY.setLabelCount((int) mAutoHighMade.getYMax() + 2, true);
                 mLineY.setValueFormatter(intYVF);
                 mLineChart.notifyDataSetChanged();
                 mLineChart.invalidate();
             }
         });
+
+        radioButton.setChecked(true);
 
         radioButton = (RadioButton)view.findViewById(R.id.auto_low_made);
         radioButton.setOnClickListener(new View.OnClickListener() {
@@ -375,8 +394,10 @@ public class TeamVisuals extends Fragment {
         mBarChart.getLegend().setEnabled(false);
         mBarChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         mBarChart.getAxisLeft().setAxisMaxValue(15);
-        mBarChart.getAxisLeft().setLabelCount(4,true);
+        mBarChart.getAxisLeft().setLabelCount(4, true);
         mBarChart.getAxisLeft().setValueFormatter(intYVF);
+        mBarChart.setPinchZoom(false);
+        mBarChart.setDoubleTapToZoomEnabled(false);
 
         generate_bar_data(matchCursor);
         mBarChart.setData(new BarData(mMatches,mEndgame));

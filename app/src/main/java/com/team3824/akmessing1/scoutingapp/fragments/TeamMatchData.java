@@ -83,13 +83,13 @@ public class TeamMatchData extends Fragment {
             for (int i = 0; i < 9; i++) {
                 team.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 2;
                 team.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt() * 10;
-                team.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
+                team.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]).getInt() * 5;
             }
 
             team.mTeleopPoints = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() * 5 +
                     statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt() * 2;
             for (int i = 0; i < 9; i++) {
-                team.mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt() * 5;
+                team.mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]).getInt() * 5;
             }
 
             team.mAutoPoints = statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt() * 10 +

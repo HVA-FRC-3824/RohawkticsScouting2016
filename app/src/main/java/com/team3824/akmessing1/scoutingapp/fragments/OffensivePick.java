@@ -38,7 +38,7 @@ public class OffensivePick extends ScoutPick {
             int teleopPoints = statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_TELEOP_HIGH_HIT)) * 5 +
                     statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_TELEOP_LOW_HIT)) * 2;
             for (int i = 0; i < 9; i++) {
-                teleopPoints += statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i])) * 5;
+                teleopPoints += statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i])) * 5;
             }
 
             int endgamePoints = statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_CHALLENGE)) * 5 +

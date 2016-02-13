@@ -130,12 +130,15 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 }
             }
 
-            if(t.getMapElement(Constants.TOTAL_YELLOW_CARDS).getInt() > 0) {
-                convertView.findViewById(R.id.yellow_card).setVisibility(View.VISIBLE);
-            }
+            if(t.containsMapElement(Constants.TOTAL_YELLOW_CARDS))
+            {
+                if (t.getMapElement(Constants.TOTAL_YELLOW_CARDS).getInt() > 0) {
+                    convertView.findViewById(R.id.yellow_card).setVisibility(View.VISIBLE);
+                }
 
-            if(t.getMapElement(Constants.TOTAL_RED_CARDS).getInt() > 0) {
-                convertView.findViewById(R.id.red_card).setVisibility(View.VISIBLE);
+                if (t.getMapElement(Constants.TOTAL_RED_CARDS).getInt() > 0) {
+                    convertView.findViewById(R.id.red_card).setVisibility(View.VISIBLE);
+                }
             }
 
             int teamNumber = t.getTeamNumber();
