@@ -24,6 +24,15 @@ public interface Constants {
     public static final String BLUE = "Blue";
     public static final String RED = "Red";
 
+    // Intent Extras
+    public static final String TEAM_NUMBER = "team_number";
+    public static final String MATCH_NUMBER = "match_number";
+    public static final String NEXT_PAGE = "next_page";
+    public static final String MATCH_SCOUTING = "match_scouting";
+    public static final String SUPER_SCOUTING = "super_scouting";
+    public static final String MATCH_VIEWING = "match_viewing";
+    public static final String UPDATE = "update";
+
     // Auto
     public static final String AUTO_START_POSITION = "auto_start_position";
     public static final String AUTO_REACH_CROSS = "auto_reach_cross";

@@ -69,14 +69,14 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 convertView.setBackgroundColor(Color.GREEN);
             }
 
-            ScoutValue robotPicture = t.getMapElement("robotPicture");
+            ScoutValue robotPicture = t.getMapElement(Constants.PIT_ROBOT_PICTURE);
 
             Button button = (Button)convertView.findViewById(R.id.pick_view_team);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), TeamView.class);
-                    intent.putExtra("team_number", t.getTeamNumber());
+                    intent.putExtra(Constants.TEAM_NUMBER, t.getTeamNumber());
                     getContext().startActivity(intent);
                 }
             });

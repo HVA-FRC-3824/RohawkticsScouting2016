@@ -54,7 +54,7 @@ public class SuperScouting extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        matchNumber = extras.getInt("match_number");
+        matchNumber = extras.getInt(Constants.MATCH_NUMBER);
         setTitle("Match Number: " + matchNumber);
 
 
@@ -213,7 +213,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, MatchList.class);
-                intent.putExtra("nextPage","super_scouting");
+                intent.putExtra(Constants.NEXT_PAGE,Constants.SUPER_SCOUTING);
                 startActivity(intent);
             }
         });
@@ -232,7 +232,7 @@ public class SuperScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, MatchList.class);
-                intent.putExtra("nextPage","super_scouting");
+                intent.putExtra(Constants.NEXT_PAGE,Constants.SUPER_SCOUTING);
                 startActivity(intent);
             }
         });
@@ -272,7 +272,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra("match_number",matchNumber-1);
+                intent.putExtra(Constants.MATCH_NUMBER,matchNumber-1);
                 startActivity(intent);
             }
         });
@@ -291,7 +291,7 @@ public class SuperScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra("match_number", matchNumber - 1);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
                 startActivity(intent);
             }
         });
@@ -332,7 +332,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra("match_number",matchNumber+1);
+                intent.putExtra(Constants.MATCH_NUMBER,matchNumber+1);
                 startActivity(intent);
             }
         });
@@ -351,7 +351,7 @@ public class SuperScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra("match_number", matchNumber + 1);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
                 startActivity(intent);
             }
         });

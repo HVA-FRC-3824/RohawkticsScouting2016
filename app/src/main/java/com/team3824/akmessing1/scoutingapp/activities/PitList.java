@@ -61,7 +61,7 @@ public class PitList extends AppCompatActivity {
 
             // Add buttons
 
-            do{
+            for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
 
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
@@ -72,7 +72,7 @@ public class PitList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(PitList.this, PitScouting.class);
-                        intent.putExtra("team_number", teamNumber);
+                        intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
                         startActivity(intent);
                     }
                 });
@@ -87,8 +87,7 @@ public class PitList extends AppCompatActivity {
                 }
 
                 linearLayout.addView(button);
-                cursor.moveToNext();
-            }while(!cursor.isAfterLast());
+            }
         }
     }
 

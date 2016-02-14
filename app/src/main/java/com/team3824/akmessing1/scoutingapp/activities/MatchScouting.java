@@ -54,8 +54,8 @@ public class MatchScouting extends AppCompatActivity {
 
         // Get Match Number and Team Number from the intent
         Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt("team_number");
-        matchNumber = extras.getInt("match_number");
+        teamNumber = extras.getInt(Constants.TEAM_NUMBER);
+        matchNumber = extras.getInt(Constants.MATCH_NUMBER);
 
         setTitle("Match Number: " + matchNumber + " Team Number: " + teamNumber);
 
@@ -176,7 +176,7 @@ public class MatchScouting extends AppCompatActivity {
                 MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
                 data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
                 data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
+                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
                 // Store values to the database
                 matchScoutDB.updateMatch(data);
 
@@ -228,13 +228,13 @@ public class MatchScouting extends AppCompatActivity {
                 MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
                 data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
                 data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
+                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
                 // Store values to the database
                 matchScoutDB.updateMatch(data);
 
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchList.class);
-                intent.putExtra("nextPage","match_scouting");
+                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_SCOUTING);
                 startActivity(intent);
             }
         });
@@ -253,7 +253,7 @@ public class MatchScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchList.class);
-                intent.putExtra("nextPage","match_scouting");
+                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_SCOUTING);
                 startActivity(intent);
             }
         });
@@ -284,14 +284,14 @@ public class MatchScouting extends AppCompatActivity {
                 MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
                 data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
                 data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
+                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
                 // Store values to the database
                 matchScoutDB.updateMatch(data);
 
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra("team_number",prevTeamNumber);
-                intent.putExtra("match_number",matchNumber-1);
+                intent.putExtra(Constants.TEAM_NUMBER,prevTeamNumber);
+                intent.putExtra(Constants.MATCH_NUMBER,matchNumber-1);
                 startActivity(intent);
             }
         });
@@ -310,8 +310,8 @@ public class MatchScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra("team_number", prevTeamNumber);
-                intent.putExtra("match_number", matchNumber - 1);
+                intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
                 startActivity(intent);
             }
         });
@@ -342,14 +342,14 @@ public class MatchScouting extends AppCompatActivity {
                 MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
                 data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
                 data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.valueOf(matchNumber)+"_"+String.valueOf(teamNumber)));
+                data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
                 // Store values to the database
                 matchScoutDB.updateMatch(data);
 
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra("team_number",nextTeamNumber);
-                intent.putExtra("match_number",matchNumber+1);
+                intent.putExtra(Constants.TEAM_NUMBER,nextTeamNumber);
+                intent.putExtra(Constants.MATCH_NUMBER,matchNumber+1);
                 startActivity(intent);
             }
         });
@@ -368,8 +368,8 @@ public class MatchScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra("team_number", nextTeamNumber);
-                intent.putExtra("match_number", matchNumber + 1);
+                intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
                 startActivity(intent);
             }
         });

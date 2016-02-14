@@ -115,13 +115,13 @@ public class PitScoutDB extends SQLiteOpenHelper {
         values.put(KEY_NICKNAME,nickname);
         values.put(KEY_COMPLETE, 0);
         values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-        db.insert(tableName,null,values);
+        db.insert(tableName, null, values);
     }
 
     public void removeTeamNumber(int teamNumber)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(tableName, KEY_TEAM_NUMBER+" = ?", new String[]{String.valueOf(teamNumber)});
+        db.delete(tableName, KEY_TEAM_NUMBER + " = ?", new String[]{String.valueOf(teamNumber)});
     }
 
 
@@ -202,6 +202,31 @@ public class PitScoutDB extends SQLiteOpenHelper {
         }
         db.replace(tableName,null,cvs);
         db.close();
+    }
+
+    public void resetTeam(int teamNumber)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor =db.query(tableName, // a. table
+                null, // b. column names
+                KEY_TEAM_NUMBER + " = ? ", // c. selections
+                new String[]{String.valueOf(teamNumber)}, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        cursor.moveToFirst();
+
+        String nickname = cursor.getString(cursor.getColumnIndex(KEY_NICKNAME));
+
+        db.delete(tableName, KEY_TEAM_NUMBER + " = ?", new String[]{String.valueOf(teamNumber)});
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_TEAM_NUMBER,teamNumber);
+        values.put(KEY_NICKNAME,nickname);
+        values.put(KEY_COMPLETE, 0);
+        values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+        db.insert(tableName, null, values);
     }
 
     public Cursor getAllTeams()

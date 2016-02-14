@@ -102,8 +102,8 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
             Team team = new Team(teamNumber,
                     pitCursor.getString(pitCursor.getColumnIndex(PitScoutDB.KEY_NICKNAME)));
 
-            if (pitCursor.getColumnIndex("robotPicture") != -1) {
-                team.setMapElement("robotPicture", new ScoutValue(pitCursor.getString(pitCursor.getColumnIndex("robotPicture"))));
+            if (pitCursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE) != -1) {
+                team.setMapElement(Constants.PIT_ROBOT_PICTURE, new ScoutValue(pitCursor.getString(pitCursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE))));
             }
 
             team.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(StatsDB.KEY_PICKED))));

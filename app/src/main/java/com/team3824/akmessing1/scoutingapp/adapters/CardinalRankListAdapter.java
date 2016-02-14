@@ -36,7 +36,7 @@ public class CardinalRankListAdapter extends ArrayAdapter<Integer> {
         }
 
         TextView textView = (TextView)convertView.findViewById(R.id.textView);
-        textView.setText(String.valueOf(position+1)+") "+String.valueOf(teams.get(position)));
+        textView.setText(String.format("%d) %d",position+1,teams.get(position)));
         return  convertView;
     }
 

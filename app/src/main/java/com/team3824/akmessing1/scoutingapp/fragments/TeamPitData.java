@@ -33,10 +33,10 @@ public class TeamPitData extends Fragment{
         View view = inflater.inflate(R.layout.fragment_team_pit_data, container, false);
 
         Bundle args = getArguments();
-        int teamNumber = args.getInt("teamNumber", -1);
+        int teamNumber = args.getInt(Constants.TEAM_NUMBER, -1);
         Activity activity = getActivity();
         SharedPreferences sharedPreferences = activity.getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventID = sharedPreferences.getString("event_id", "");
+        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         PitScoutDB pitScoutDB = new PitScoutDB(activity,eventID);
         Map<String, ScoutValue> pitMap = pitScoutDB.getTeamMap(teamNumber);
 

@@ -260,7 +260,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                         } catch (IOException e) {
                             Log.e(TAG, e.getMessage());
                         }
-                        Toast.makeText(SyncActivity.this,"File " + filename + " Received",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SyncActivity.this,String.format("File %s Received",filename),Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -360,16 +360,15 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
     {
         ArrayList<String> filenames = new ArrayList<>();
         int i = 0;
-        while(!cursor.isAfterLast())
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
         {
-            if(cursor.getColumnIndex("robotPicture") != -1) {
-                if(cursor.getType(cursor.getColumnIndex("robotPicture")) == Cursor.FIELD_TYPE_STRING) {
-                    String filename = cursor.getString(cursor.getColumnIndex("robotPicture"));
+            if(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE) != -1) {
+                if(cursor.getType(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
+                    String filename = cursor.getString(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE));
                     Log.d(TAG, filename);
                     filenames.add(filename);
                 }
             }
-            cursor.moveToNext();
         }
         return filenames;
     }
@@ -407,7 +406,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                     bluetoothSync.write(("F" + filenames.get(i)).getBytes());
                     File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
                     bluetoothSync.writeFile(file);
-                    Toast.makeText(SyncActivity.this, "Picture " + String.valueOf(i + 1) + " of " + String.valueOf(filenames.size()) + " Sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SyncActivity.this, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.sync_receive:

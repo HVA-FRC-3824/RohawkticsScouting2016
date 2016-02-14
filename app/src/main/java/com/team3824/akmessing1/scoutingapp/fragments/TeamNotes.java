@@ -34,7 +34,7 @@ public class TeamNotes extends Fragment {
         View view = inflater.inflate(R.layout.fragment_team_notes, container, false);
 
         Bundle args = getArguments();
-        int teamNumber = args.getInt("teamNumber", -1);
+        int teamNumber = args.getInt(Constants.TEAM_NUMBER, -1);
         Activity activity = getActivity();
         SharedPreferences sharedPreferences = activity.getSharedPreferences("appData", Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
@@ -44,9 +44,7 @@ public class TeamNotes extends Fragment {
         while(!cursor.isAfterLast())
         {
             if(cursor.getColumnIndex(Constants.POST_NOTES) != -1 && !cursor.getString(cursor.getColumnIndex(Constants.POST_NOTES)).equals("")) {
-                notes += "Match "+ String.valueOf(cursor.getInt(cursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))) + ": ";
-                notes += cursor.getString(cursor.getColumnIndex(Constants.POST_NOTES));
-                notes += "\n";
+                notes = String.format("Match %d: %s\n",cursor.getInt(cursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER)),cursor.getString(cursor.getColumnIndex(Constants.POST_NOTES)));
             }
             cursor.moveToNext();
         }
@@ -59,13 +57,10 @@ public class TeamNotes extends Fragment {
         SuperScoutDB superScoutDB = new SuperScoutDB(activity,eventID);
         cursor = superScoutDB.getTeamNotes(teamNumber);
         if(cursor != null) {
-            while (!cursor.isAfterLast()) {
+            for (cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()) {
                 if (cursor.getColumnIndex(Constants.SUPER_NOTES) != -1 && !cursor.getString(cursor.getColumnIndex(Constants.SUPER_NOTES)).equals("")) {
-                    notes += "Match " + String.valueOf(cursor.getInt(cursor.getColumnIndex(SuperScoutDB.KEY_MATCH_NUMBER))) + ": ";
-                    notes += cursor.getString(cursor.getColumnIndex(Constants.SUPER_NOTES));
-                    notes += "\n";
+                    notes = String.format("Match %d: %s\n",cursor.getInt(cursor.getColumnIndex(SuperScoutDB.KEY_MATCH_NUMBER)),cursor.getString(cursor.getColumnIndex(Constants.SUPER_NOTES)));
                 }
-                cursor.moveToNext();
             }
         }
         if(notes.equals(""))

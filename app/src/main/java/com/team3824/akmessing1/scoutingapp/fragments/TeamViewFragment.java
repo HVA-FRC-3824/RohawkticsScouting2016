@@ -73,18 +73,16 @@ public class TeamViewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), TeamView.class);
-                intent.putExtra("team_number", teamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
                 startActivity(intent);
             }
         });
 
         StatsDB statsDB = new StatsDB(context,eventId);
         Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
-        Log.d(TAG, String.format("TN: %d", teamNumber));
         if(statsMap.containsKey(Constants.TOTAL_MATCHES)) {
             textView = (TextView) view.findViewById(R.id.total_matches);
             int numMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
-            Log.d(TAG, String.format("TN: %d NM%d", teamNumber, numMatches));
             textView.setText(String.valueOf(numMatches));
 
             if (numMatches > 0) {
@@ -224,7 +222,7 @@ public class TeamViewFragment extends Fragment {
                 {
                     textView.setText("None\n\nNone\n\n");
                 }
-                
+
 
                 textView = (TextView) view.findViewById(R.id.driver_ability);
                 if (statsMap.containsKey(Constants.DRIVE_ABILITY_RANKING)) {
@@ -261,7 +259,7 @@ public class TeamViewFragment extends Fragment {
             }
             else {
                 textView = (TextView) view.findViewById(R.id.best2_worst2_defenses);
-                textView.setText("\n\n\n");
+                textView.setText("\n\n\n\n\n\n\n\n\n\n\n\n");
             }
         }
         else

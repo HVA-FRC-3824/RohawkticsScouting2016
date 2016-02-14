@@ -23,6 +23,7 @@ import com.team3824.akmessing1.scoutingapp.adapters.FPA_PitScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ public class PitScouting extends AppCompatActivity {
     private int teamNumber;
 
     private String eventId;
+    private String userType;
     private int prevTeamNumber = -1;
     private int nextTeamNumber = -1;
 
@@ -49,7 +51,7 @@ public class PitScouting extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt("team_number");
+        teamNumber = extras.getInt(Constants.TEAM_NUMBER);
         setTitle("Team Number: " + teamNumber);
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
@@ -63,6 +65,7 @@ public class PitScouting extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        userType = sharedPreferences.getString(Constants.USER_TYPE,"");
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
         Map<String, ScoutValue> map = pitScoutDB.getTeamMap(teamNumber);
         if(map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0)
@@ -83,6 +86,10 @@ public class PitScouting extends AppCompatActivity {
         if(nextTeamNumber == -1) {
             menu.removeItem(R.id.pit_scouting_next);
         }
+        if(!userType.equals(Constants.ADMIN))
+        {
+            menu.removeItem(R.id.pit_scouting_reset);
+        }
         return true;
     }
 
@@ -101,6 +108,8 @@ public class PitScouting extends AppCompatActivity {
             case R.id.pit_scouting_next:
                 next_press();
                 break;
+            case R.id.pit_scouting_reset:
+                reset();
             // Shouldn't be one
             default:
                 super.onOptionsItemSelected(item);
@@ -232,7 +241,7 @@ public class PitScouting extends AppCompatActivity {
 
                 // Go to the next match
                 Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra("team_number",prevTeamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER,prevTeamNumber);
                 startActivity(intent);
             }
         });
@@ -251,7 +260,7 @@ public class PitScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra("team_number", prevTeamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
                 startActivity(intent);
             }
         });
@@ -285,7 +294,7 @@ public class PitScouting extends AppCompatActivity {
 
                 // Go to the next match
                 Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra("team_number",nextTeamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER,nextTeamNumber);
                 startActivity(intent);
             }
         });
@@ -304,8 +313,35 @@ public class PitScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra("team_number", nextTeamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
                 startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    private void reset()
+    {
+        Log.d(TAG,"team delete pressed");
+        AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
+        builder.setTitle("Reset pit data?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+                pitScoutDB.resetTeam(teamNumber);
+                Map<String, ScoutValue> map = new Hashtable<String, ScoutValue>();
+                Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                intent.putExtra(Constants.TEAM_NUMBER,teamNumber);
+                startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
         builder.show();

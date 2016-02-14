@@ -193,7 +193,7 @@ public class Settings extends AppCompatActivity {
                 if (aggregatePIntent == null) {
                     Log.d(TAG,"Creating Aggregate Service");
                     Intent intent = new Intent(this, AggregateService.class);
-                    intent.putExtra("update",true);
+                    intent.putExtra(Constants.UPDATE,true);
                     startService(intent);
                     aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);

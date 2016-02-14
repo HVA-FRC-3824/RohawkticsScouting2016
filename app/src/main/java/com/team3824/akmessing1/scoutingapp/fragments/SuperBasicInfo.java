@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class SuperBasicInfo extends ScoutFragment {
         if(valueMap != null) {
             restoreContentsFromMap(valueMap, (ViewGroup) view);
         }
-        //Utilities.setupUI(getActivity(), view);
+        Utilities.setupUI(getActivity(), view);
         return view;
     }
 

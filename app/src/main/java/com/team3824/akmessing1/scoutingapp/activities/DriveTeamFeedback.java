@@ -50,7 +50,7 @@ public class DriveTeamFeedback extends AppCompatActivity{
         setSupportActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        int matchNumber = extras.getInt("match_number");
+        int matchNumber = extras.getInt(Constants.MATCH_NUMBER);
         position = extras.getString("position");
         setTitle("Match Number: " + matchNumber);
 

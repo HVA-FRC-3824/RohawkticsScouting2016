@@ -39,7 +39,7 @@ public class TeamView extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt("team_number");
+        teamNumber = extras.getInt(Constants.TEAM_NUMBER);
         setTitle("Team Number: " + teamNumber);
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
@@ -88,7 +88,7 @@ public class TeamView extends AppCompatActivity {
                 Log.d(TAG, "previous team pressed");
                 // Go to the next match
                 intent = new Intent(TeamView.this, TeamView.class);
-                intent.putExtra("team_number", previousTeamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER, previousTeamNumber);
                 startActivity(intent);
                 break;
             case R.id.team_view_next:
@@ -96,7 +96,7 @@ public class TeamView extends AppCompatActivity {
 
                 // Go to the next match
                 intent = new Intent(TeamView.this, TeamView.class);
-                intent.putExtra("team_number", nextTeamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
                 startActivity(intent);
                 break;
             // Shouldn't be one

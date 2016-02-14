@@ -130,7 +130,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.scoutMatch_button:
                 intent = new Intent(this, MatchList.class);
-                intent.putExtra("nextPage", "match_scouting");
+                intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_SCOUTING);
                 startActivity(intent);
                 break;
             case R.id.scoutPit_button:
@@ -139,7 +139,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.superScout_button:
                 intent = new Intent(this, MatchList.class);
-                intent.putExtra("nextPage", "super_scouting");
+                intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
                 startActivity(intent);
                 break;
             case R.id.feedback_button:
@@ -156,7 +156,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.viewMatch_button:
                 intent = new Intent(this, MatchList.class);
-                intent.putExtra("nextPage","match_viewing");
+                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_VIEWING);
                 startActivity(intent);
                 break;
             case R.id.viewEvent_button:

@@ -17,4 +17,8 @@
         android:id="@+id/pit_scouting_next"
         android:title="Next Team"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/pit_scouting_reset"
+        android:title="Reset"
+        app:showAsAction="never" />
 </menu>

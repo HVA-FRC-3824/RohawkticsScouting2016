@@ -32,7 +32,7 @@ public class MatchList extends AppCompatActivity {
         setContentView(R.layout.activity_match_list);
 
         Bundle extras = getIntent().getExtras();
-        String nextPage = extras.getString("nextPage");
+        String nextPage = extras.getString(Constants.NEXT_PAGE);
 
         final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
@@ -61,21 +61,21 @@ public class MatchList extends AppCompatActivity {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.match_list);
             int alliance_number = -1;
             String alliance_color = "";
-            if(nextPage.equals("match_scouting")) {
+            if(nextPage.equals(Constants.MATCH_SCOUTING)) {
                 alliance_number = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
                 alliance_color = sharedPreferences.getString(Constants.ALLIANCE_COLOR, "");
             }
-            cursor.moveToFirst();
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4, 4, 4, 4);
 
             // Add buttons
-            do{
+            for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
+            {
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
                 final int matchNumber = cursor.getInt(0);
                 int tempTeamNumber = -1; // fixes issue with final and possible noninitialization
-                if(nextPage.equals("match_scouting")) {
+                if(nextPage.equals(Constants.MATCH_SCOUTING)) {
                     tempTeamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
                     button.setText(String.format("Match %d : %d",matchNumber,tempTeamNumber));
                 }
@@ -83,12 +83,12 @@ public class MatchList extends AppCompatActivity {
                     button.setText(String.format("Match %d",matchNumber));
                 }
                 final int teamNumber = tempTeamNumber; // fixes issue with final and possible noninitialization
-                switch (alliance_color.toLowerCase())
+                switch (alliance_color)
                 {
-                    case "blue":
+                    case Constants.BLUE:
                         button.setBackgroundColor(Color.BLUE);
                         break;
-                    case "red":
+                    case Constants.RED:
                         button.setBackgroundColor(Color.RED);
                         break;
                 }
@@ -97,26 +97,25 @@ public class MatchList extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = null;
 
-                        if(nextPage.equals("match_scouting"))
+                        if(nextPage.equals(Constants.MATCH_SCOUTING))
                         {
                             intent = new Intent(MatchList.this, MatchScouting.class);
-                            intent.putExtra("team_number", teamNumber);
+                            intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
                         }
-                        else if(nextPage.equals("super_scouting"))
+                        else if(nextPage.equals(Constants.SUPER_SCOUTING))
                         {
                             intent = new Intent(MatchList.this, SuperScouting.class);
                         }
-                        else if(nextPage.equals("match_viewing"))
+                        else if(nextPage.equals(Constants.MATCH_VIEWING))
                         {
                             intent = new Intent(MatchList.this, MatchView.class);
                         }
-                        intent.putExtra("match_number",matchNumber);
+                        intent.putExtra(Constants.MATCH_NUMBER,matchNumber);
                         startActivity(intent);
                     }
                 });
                 linearLayout.addView(button);
-                cursor.moveToNext();
-            }while(!cursor.isAfterLast());
+            }
         }
     }
 }

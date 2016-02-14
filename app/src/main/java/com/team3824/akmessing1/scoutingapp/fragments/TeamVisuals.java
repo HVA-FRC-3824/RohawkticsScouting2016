@@ -75,10 +75,7 @@ public class TeamVisuals extends Fragment {
         percentVF = new ValueFormatter() {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                value *= 10;
-                value = (int)value;
-                value /= 10;
-                return String.valueOf(value)+"%";
+                return String.format("%.1f%%",value);
             }
         };
 
@@ -107,11 +104,11 @@ public class TeamVisuals extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_team_visuals, container, false);
         Bundle args = getArguments();
-        int teamNumber = args.getInt("teamNumber", -1);
+        int teamNumber = args.getInt(Constants.TEAM_NUMBER, -1);
 
         Activity activity = getActivity();
         SharedPreferences sharedPreferences = activity.getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventID = sharedPreferences.getString("event_id", "");
+        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         PitScoutDB pitScoutDB = new PitScoutDB(activity, eventID);
         Map<String, ScoutValue> pitMap = pitScoutDB.getTeamMap(teamNumber);
@@ -123,8 +120,8 @@ public class TeamVisuals extends Fragment {
         Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
 
         ImageView imageView = (ImageView)view.findViewById(R.id.robotPicture);
-        if (pitMap.containsKey("robotPicture")) {
-            String robotPhoto = pitMap.get("robotPicture").getString();
+        if (pitMap.containsKey(Constants.PIT_ROBOT_PICTURE)) {
+            String robotPhoto = pitMap.get(Constants.PIT_ROBOT_PICTURE).getString();
             Log.d(TAG, robotPhoto);
             String fullPath = getContext().getFilesDir().getAbsolutePath() + "/" + robotPhoto;
             int targetW = 400;

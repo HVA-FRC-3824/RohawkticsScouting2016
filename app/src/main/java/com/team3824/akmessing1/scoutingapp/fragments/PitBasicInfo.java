@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.Utilities;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
@@ -56,9 +57,9 @@ public class PitBasicInfo extends ScoutFragment{
         // restore all values from the database
         if(valueMap != null) {
             // Set up the image if one already exists
-            if(valueMap.containsKey("robotPicture")) {
-                mCurrentPhotoPath = valueMap.get("robotPicture").getString();
-                valueMap.remove("robotPicture");
+            if(valueMap.containsKey(Constants.PIT_ROBOT_PICTURE)) {
+                mCurrentPhotoPath = valueMap.get(Constants.PIT_ROBOT_PICTURE).getString();
+                valueMap.remove(Constants.PIT_ROBOT_PICTURE);
                 if (!mCurrentPhotoPath.equals("")) {
                     setPic();
                     mButton.setText("Remove Picture");
@@ -166,7 +167,7 @@ public class PitBasicInfo extends ScoutFragment{
     @Override
     public void writeContentsToMap(Map<String, ScoutValue> map)
     {
-        map.put("robotPicture",new ScoutValue(mCurrentPhotoPath));
+        map.put(Constants.PIT_ROBOT_PICTURE,new ScoutValue(mCurrentPhotoPath));
         super.writeContentsToMap(map);
     }
 }

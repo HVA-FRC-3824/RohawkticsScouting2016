@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.Constants;
-import com.team3824.akmessing1.scoutingapp.SchulzeMethod;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
@@ -33,12 +32,10 @@ import java.util.Set;
 
 public class AggregateService extends IntentService {
     private String TAG ="AggregateService";
-    static Map<String, SchulzeMethod> rankingCalcs;
 
     public AggregateService()
     {
         super("AggregateService");
-        rankingCalcs = new HashMap<>();
     }
 
     @Override
@@ -105,7 +102,7 @@ public class AggregateService extends IntentService {
             }
         }
 
-        boolean update = intent.getBooleanExtra("update",false);
+        boolean update = intent.getBooleanExtra(Constants.UPDATE,false);
         if(!update)
             lastUpdated = null;
 
@@ -286,41 +283,14 @@ public class AggregateService extends IntentService {
         Set<Integer> ranking = new HashSet<Integer>();
         String[] output;
 
-
         // Create empty matrix
         Integer[][] matrix = new Integer[numTeams][numTeams];
         for (Integer[] line : matrix) {
             Arrays.fill(line, 0);
         }
-/*
-        try {
-            FileInputStream inputStream = openFileInput(eventID+"_"+key);
-            String matrixText = "";
-            int c;
-            while((c = inputStream.read()) != -1)
-            {
-                matrixText += (char)c;
-            }
-            inputStream.close();
-            List<String> matrixList = Arrays.asList(matrixText.split(","));
-            for(int i = 0; i < matrix.length; i++)
-            {
-                for(int j = 0; j < matrix[i].length; j++)
-                {
-                    matrix[i][j] = Integer.parseInt(matrixList.get(i*matrix.length+j));
-                    if(matrix[i][j] > 0)
-                    {
-                        ranking.add(teamNumbers[i]);
-                        ranking.add(teamNumbers[j]);
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            Log.d(TAG,"File not found");
-        } catch (IOException e) {
-            Log.d(TAG, "IOException");
-        }
-*/
+
+        matrix_to_file(String.format("%s_%s_zero.csv",eventID,key),matrix);
+
         // Go through the cursor and get all the subset rankings
         // Each team that is ranked higher in a subset ranking gets an increase in the direct
         // path between it and those ranked lower than it
@@ -344,33 +314,21 @@ public class AggregateService extends IntentService {
                     ranking.add(jsonArray.getInt(i));
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
+                Log.d(TAG,e.getMessage());
             }
         }
-/*
-        try {
-            FileOutputStream outputStream = openFileOutput(eventID+"_"+key, Context.MODE_PRIVATE);
-            String string = "";
-            for(int i = 0; i < matrix.length;i++)
-            {
-                for(int j = 0; j < matrix[i].length; j++)
-                {
-                    string += matrix[i][j] +",";
-                }
-            }
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            Log.d(TAG,"Exception");
-        }
-*/
+
+        matrix_to_file(String.format("%s_%s_matrix.csv",eventID,key),matrix);
+
         // If one team has more higher rankings over another team then that gets put in the
         // strongest path matrix otherwise it is left at 0
-        final int[][] strongestPathMatrix = new int[numTeams][numTeams];
-        for (int[] line : strongestPathMatrix) {
+        final Integer[][] strongestPathMatrix = new Integer[numTeams][numTeams];
+        for (Integer[] line : strongestPathMatrix) {
             Arrays.fill(line, 0);
         }
+
+        matrix_to_file(String.format("%s_%s_spm_zero.csv",eventID,key),strongestPathMatrix);
+
 
         for(int i = 0; i < numTeams; i++)
         {
@@ -382,6 +340,8 @@ public class AggregateService extends IntentService {
                 }
             }
         }
+
+        matrix_to_file(String.format("%s_%s_spm_1.csv",eventID,key),strongestPathMatrix);
 
         // find the strongest path from each team to each other team
         for(int i = 0; i < numTeams; i++)
@@ -396,29 +356,12 @@ public class AggregateService extends IntentService {
                     if(i != k && j != k)
                     {
                         strongestPathMatrix[j][k] = Math.max(strongestPathMatrix[j][k], Math.min(strongestPathMatrix[j][i], strongestPathMatrix[i][k]));
-
                     }
                 }
             }
         }
-/*
-        try {
-            FileOutputStream outputStream = openFileOutput("strongestpathmatrix.csv", Context.MODE_PRIVATE);
-            String string = "";
-            for(int i = 0; i < strongestPathMatrix.length;i++)
-            {
-                for(int j = 0; j < strongestPathMatrix[i].length; j++)
-                {
-                    string += strongestPathMatrix[i][j] +", ";
-                }
-                string += "\n";
-            }
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-*/
+
+        matrix_to_file(String.format("%s_%s_spm_2.csv",eventID,key),strongestPathMatrix);
 
         List<Integer> sortedRanking = new ArrayList<>();
         sortedRanking.addAll(ranking);
@@ -427,7 +370,6 @@ public class AggregateService extends IntentService {
             public int compare(Integer a, Integer b) {
                 int indexA = teamNumbers.indexOf(a);
                 int indexB = teamNumbers.indexOf(b);
-                Log.i(TAG,indexA+" "+indexB+" "+strongestPathMatrix[indexA][indexB]+" "+strongestPathMatrix[indexB][indexA]);
                 if (strongestPathMatrix[indexA][indexB] > strongestPathMatrix[indexB][indexA]) {
                     return -1;
                 } else if (strongestPathMatrix[indexA][indexB] == strongestPathMatrix[indexB][indexA]) {
@@ -437,20 +379,6 @@ public class AggregateService extends IntentService {
                 }
             }
         });
-
-        try {
-            FileOutputStream outputStream = openFileOutput("ranking.csv", Context.MODE_PRIVATE);
-            String string = "";
-            for(int j = 0; j < ranking.size(); j++)
-            {
-                string += sortedRanking.get(j) +", ";
-            }
-
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         // Create output that includes ties
         output = new String[teamNumbers.size()];
@@ -501,9 +429,48 @@ public class AggregateService extends IntentService {
             }
         }
 
+
+
         return output;
     }
 
+    public void matrix_to_file(String filename, Integer[][] matrix)
+    {
+        try {
+            FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            String string = "";
+            for(int i = 0; i < matrix.length;i++)
+            {
+                for(int j = 0; j < matrix[i].length; j++)
+                {
+                    string += matrix[i][j] +",";
+                }
+                string = string.substring(0,string.length()-1);
+                string += ";\n";
+            }
+            outputStream.write(string.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            Log.d(TAG,"Exception");
+        }
+    }
+/*
+    public void rankings_to_file(String filename, String[] rankings)
+    {
+        try {
+            FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            String string = "";
+            for(int i = 0; i < rankings.length;i++)
+            {
+                    string += rankings[i] +";\n";
+            }
+            outputStream.write(string.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            Log.d(TAG,"Exception");
+        }
+    }
+*/
 
     private int set_start(Map<String, ScoutValue> teamStats, String key)
     {
@@ -814,7 +781,7 @@ public class AggregateService extends IntentService {
                 array[index] ++;
                 break;
             case "time":
-                index = Constants.LOW_BAR_INDEX;
+                index = defensesList.indexOf(defense2);
                 array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2)));
                 index = defensesList.indexOf(defense3);
                 array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3)));
@@ -822,7 +789,7 @@ public class AggregateService extends IntentService {
                 array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4)));
                 index = defensesList.indexOf(defense5);
                 array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
-                index = defensesList.indexOf("low_bar");
+                index = Constants.LOW_BAR_INDEX;
                 array[index] += stringToTime(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1)));
                 break;
 

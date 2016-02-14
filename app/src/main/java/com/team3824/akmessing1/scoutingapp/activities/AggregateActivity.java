@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.team3824.akmessing1.scoutingapp.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.services.AggregateService;
 
@@ -42,12 +43,12 @@ public class AggregateActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.aggregate_update:
                 intent = new Intent(AggregateActivity.this, AggregateService.class);
-                intent.putExtra("update",true);
+                intent.putExtra(Constants.UPDATE,true);
                 startService(intent);
                 break;
             case R.id.aggregate_reset:
                 intent = new Intent(AggregateActivity.this,AggregateService.class);
-                intent.putExtra("update",false);
+                intent.putExtra(Constants.UPDATE,false);
                 startService(intent);
                 break;
         }

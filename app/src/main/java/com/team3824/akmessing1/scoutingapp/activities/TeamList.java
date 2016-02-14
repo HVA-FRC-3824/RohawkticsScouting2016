@@ -66,7 +66,7 @@ public class TeamList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(TeamList.this, TeamView.class);
-                        intent.putExtra("team_number", teamNumber);
+                        intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
                         startActivity(intent);
                     }
                 });

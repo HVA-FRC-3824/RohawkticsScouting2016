@@ -27,7 +27,7 @@ public class MatchView extends AppCompatActivity {
         setContentView(R.layout.activity_match_view);
 
         Bundle extras = getIntent().getExtras();
-        final int matchNumber = extras.getInt("match_number");
+        final int matchNumber = extras.getInt(Constants.MATCH_NUMBER);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
@@ -37,7 +37,7 @@ public class MatchView extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MatchView.this, MatchList.class);
-                intent.putExtra("nextPage","match_viewing");
+                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_VIEWING);
                 startActivity(intent);
             }
         });
@@ -74,7 +74,7 @@ public class MatchView extends AppCompatActivity {
                 public void onClick(View v) {
                     // Go to the next match
                     Intent intent = new Intent(MatchView.this, MatchView.class);
-                    intent.putExtra("match_number", matchNumber - 1);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
                     startActivity(intent);
                 }
             });
@@ -94,7 +94,7 @@ public class MatchView extends AppCompatActivity {
                 public void onClick(View v) {
                     // Go to the next match
                     Intent intent = new Intent(MatchView.this, MatchView.class);
-                    intent.putExtra("match_number", matchNumber + 1);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
                     startActivity(intent);
                 }
             });
