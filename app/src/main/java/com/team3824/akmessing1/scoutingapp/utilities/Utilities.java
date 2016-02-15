@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp;
+package com.team3824.akmessing1.scoutingapp.utilities;
 
 import android.app.Activity;
 import android.database.Cursor;

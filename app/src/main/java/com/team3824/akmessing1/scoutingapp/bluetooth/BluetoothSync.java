@@ -7,7 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.util.Log;
 
-import com.team3824.akmessing1.scoutingapp.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 import java.io.BufferedInputStream;
 import java.io.File;

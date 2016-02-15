@@ -1,6 +1,5 @@
 package com.team3824.akmessing1.scoutingapp.services;
 
-import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -10,9 +9,9 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.team3824.akmessing1.scoutingapp.Constants;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.Utilities;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
 import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;

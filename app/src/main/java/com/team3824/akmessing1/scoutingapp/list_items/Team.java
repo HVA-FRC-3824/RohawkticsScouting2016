@@ -1,7 +1,7 @@
 package com.team3824.akmessing1.scoutingapp.list_items;
 
 
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.HashMap;
 

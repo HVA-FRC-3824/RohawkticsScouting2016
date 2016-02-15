@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.team3824.akmessing1.scoutingapp.Utilities;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.R;
 
 public class MatchEndgame extends ScoutFragment {

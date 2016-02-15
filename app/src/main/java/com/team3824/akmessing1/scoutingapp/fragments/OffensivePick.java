@@ -2,8 +2,8 @@ package com.team3824.akmessing1.scoutingapp.fragments;
 
 import android.database.Cursor;
 
-import com.team3824.akmessing1.scoutingapp.Constants;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.list_items.Team;
 
 /**

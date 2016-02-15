@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp;
+package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
