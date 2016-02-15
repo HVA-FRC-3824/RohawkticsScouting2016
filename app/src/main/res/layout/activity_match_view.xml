@@ -3,44 +3,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/columbia_blue">
-    <com.team3824.akmessing1.scoutingapp.views.CustomHeader
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/match_view_header"/>
-    <LinearLayout
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/match_view_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/navy_blue"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:text="* Avg. (Percentage)"
+        android:id="@+id/textView6"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:gravity="center_horizontal" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/previous_match"
-            android:text="Previous Match"
-            android:background="#909090"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Match Number:"
-            android:id="@+id/match_num"
-            android:textColor="#000000"
-            android:layout_weight="1"
-            android:layout_marginLeft="16dp"
-            android:textStyle="bold"
-            android:gravity="center_horizontal" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/next_match"
-            android:text="Next Match"
-            android:background="#909090"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp" />
-    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -75,84 +55,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Favorite Start Position:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="Avg. Points:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Auto:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tTotal Points:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tAvg Points:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tHigh Accuracy:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tLow Accuracy:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Teleop:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tTotal Points:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tAvg Points:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tHigh Accuracy:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tLow Accuracy:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -160,24 +63,89 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Best 2 Defenses:\n"
+                android:text="Best Start Position:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Worst 2 Defenses:\n"
+                android:text="Auto:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Times Scaled:"
+                android:text="\t\tHigh Goal:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:id="@+id/auto_high_goal_blue"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t\tLow Goal:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:id="@+id/auto_low_goal_blue"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Teleop:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t\tHigh Goal:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:id="@+id/teleop_high_goal_blue"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\t\tLow Goal:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:id="@+id/teleop_low_goal_blue"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Best Defenses:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:id="@+id/best_defenses_blue"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Worst Defenses:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:id="@+id/worst_defenses_blue"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scaled:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -185,6 +153,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -201,8 +170,8 @@
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".66"
-            android:name="com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment"
+            android:layout_weight="1"
+            android:name="com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment"
             android:id="@+id/blue1"/>
         <View
             android:layout_width="1dp"
@@ -211,8 +180,8 @@
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".66"
-            android:name="com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment"
+            android:layout_weight="1"
+            android:name="com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment"
             android:id="@+id/blue2"/>
         <View
             android:layout_width="1dp"
@@ -221,8 +190,8 @@
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".66"
-            android:name="com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment"
+            android:layout_weight="1"
+            android:name="com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment"
             android:id="@+id/blue3"/>
     </LinearLayout>
     </ScrollView>
@@ -264,7 +233,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Favorite Start Position:"
+                android:text="Avg. Points:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -272,7 +241,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Avg. Points:"
+                android:text="Best Start Position:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -284,34 +253,25 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\t\tTotal Points:"
+                android:text="\t\tHigh Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:id="@+id/auto_high_goal_red"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\t\tAvg Points:"
+                android:text="\t\tLow Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tHigh Accuracy:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\t\tLow Accuracy:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:id="@+id/auto_low_goal_red"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -319,55 +279,51 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\tTotal Points:"
+                android:text="\t\tHigh Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:id="@+id/teleop_high_goal_red"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\tAvg Points:"
+                android:text="\t\tLow Goal:"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:id="@+id/teleop_low_goal_red"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\tHigh Accuracy:"
+                android:text="Best Defenses:"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:id="@+id/best_defenses_red"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="\tLow Accuracy:"
+                android:text="Worst Defenses:"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:id="@+id/worst_defenses_red"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Best 2 Defenses:\n"
+                android:text="Scaled:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Worst 2 Defenses:\n"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Times Scaled:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -375,6 +331,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -391,8 +348,8 @@
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".66"
-            class="com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment"
+            android:layout_weight="1"
+            class="com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment"
             android:id="@+id/red1"/>
         <View
             android:layout_width="1dp"
@@ -401,8 +358,8 @@
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".66"
-            android:name="com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment"
+            android:layout_weight="1"
+            android:name="com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment"
             android:id="@+id/red2"/>
         <View
             android:layout_width="1dp"
@@ -411,8 +368,8 @@
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".66"
-            class="com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment"
+            android:layout_weight="1"
+            class="com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment"
             android:id="@+id/red3"/>
     </LinearLayout>
     </ScrollView>

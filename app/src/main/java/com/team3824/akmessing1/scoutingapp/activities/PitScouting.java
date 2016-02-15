@@ -21,6 +21,7 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.FPA_PitScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -75,20 +76,23 @@ public class PitScouting extends AppCompatActivity {
 
         prevTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
         nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
+
+        Utilities.setupUI(this, findViewById(android.R.id.content));
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.pit_scouting_overflow, menu);
+        getMenuInflater().inflate(R.menu.team_overflow, menu);
         if(prevTeamNumber == -1) {
-            menu.removeItem(R.id.pit_scouting_previous);
+            menu.removeItem(R.id.previous);
         }
         if(nextTeamNumber == -1) {
-            menu.removeItem(R.id.pit_scouting_next);
+            menu.removeItem(R.id.next);
         }
         if(!userType.equals(Constants.ADMIN))
         {
-            menu.removeItem(R.id.pit_scouting_reset);
+            menu.removeItem(R.id.reset);
         }
         return true;
     }
@@ -96,19 +100,19 @@ public class PitScouting extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.pit_scouting_home:
+            case R.id.home:
                 home_press();
                 break;
-            case R.id.pit_scouting_back:
+            case R.id.back:
                 back_press();
                 break;
-            case R.id.pit_scouting_previous:
+            case R.id.previous:
                 previous_press();
                 break;
-            case R.id.pit_scouting_next:
+            case R.id.next:
                 next_press();
                 break;
-            case R.id.pit_scouting_reset:
+            case R.id.reset:
                 reset();
             // Shouldn't be one
             default:

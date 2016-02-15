@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
+import com.team3824.akmessing1.scoutingapp.utilities.SchulzeMethod;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
@@ -81,7 +82,7 @@ public class AggregateService extends IntentService {
                     statsDB.addColumn(Constants.DEFENSE_ABILITY_RANKING,"TEXT");
                 }
 
-                String[] driveAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DRIVE_ABILITY);
+                String[] driveAbilityRanking = SchulzeMethod.CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DRIVE_ABILITY, this);
                 HashMap<String, ScoutValue> map;
                 for (int i = 0; i < teamNumbers.size(); i++) {
                     map = new HashMap<>();
@@ -92,7 +93,7 @@ public class AggregateService extends IntentService {
 
                 matchCursor.moveToFirst();
 
-                String[] defenseAbilityRanking = CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DEFENSE_ABILITY);
+                String[] defenseAbilityRanking = SchulzeMethod.CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DEFENSE_ABILITY, this);
                 for (int i = 0; i < teamNumbers.size(); i++) {
                     map = new HashMap<>();
                     map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers.get(i)));
@@ -269,208 +270,8 @@ public class AggregateService extends IntentService {
         matchScoutDB.close();
         superScoutDB.close();
         Log.d(TAG, "Aggregate Service Finished");
-        Toast.makeText(this,"Data aggregated",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"Data aggregated",Toast.LENGTH_SHORT).show();
     }
-
-    /*
-        This function is designed to combine qualitative rankings of subsets of teams into a ranking
-         of all the teams. It uses Schulze Method for voting.
-     */
-
-    public String[] CardinalRankCalc(final ArrayList<Integer> teamNumbers, Cursor matchCursor, String eventID, String key)
-    {
-        int numTeams = teamNumbers.size();
-        Set<Integer> ranking = new HashSet<Integer>();
-        String[] output;
-
-        // Create empty matrix
-        Integer[][] matrix = new Integer[numTeams][numTeams];
-        for (Integer[] line : matrix) {
-            Arrays.fill(line, 0);
-        }
-
-        matrix_to_file(String.format("%s_%s_zero.csv",eventID,key),matrix);
-
-        // Go through the cursor and get all the subset rankings
-        // Each team that is ranked higher in a subset ranking gets an increase in the direct
-        // path between it and those ranked lower than it
-        JSONArray jsonArray = null;
-        ArrayList<Integer> before = new ArrayList<>();
-        for(matchCursor.moveToFirst(); !matchCursor.isAfterLast(); matchCursor.moveToNext()){
-
-            String line = matchCursor.getString(matchCursor.getColumnIndex(key));
-            try {
-                jsonArray = new JSONArray(line);
-                before.clear();
-                for(int i = 0; i < jsonArray.length(); i++)
-                {
-                    int index2 = teamNumbers.indexOf(jsonArray.getInt(i));
-                    for(int j = 0; j < before.size(); j++)
-                    {
-                        int index1 = teamNumbers.indexOf(before.get(j));
-                        matrix[index1][index2]++;
-                    }
-                    before.add(jsonArray.getInt(i));
-                    ranking.add(jsonArray.getInt(i));
-                }
-            } catch (JSONException e) {
-                Log.d(TAG,e.getMessage());
-            }
-        }
-
-        matrix_to_file(String.format("%s_%s_matrix.csv",eventID,key),matrix);
-
-        // If one team has more higher rankings over another team then that gets put in the
-        // strongest path matrix otherwise it is left at 0
-        final Integer[][] strongestPathMatrix = new Integer[numTeams][numTeams];
-        for (Integer[] line : strongestPathMatrix) {
-            Arrays.fill(line, 0);
-        }
-
-        matrix_to_file(String.format("%s_%s_spm_zero.csv",eventID,key),strongestPathMatrix);
-
-
-        for(int i = 0; i < numTeams; i++)
-        {
-            for(int j = 0; j < numTeams; j++)
-            {
-                if(matrix[i][j] > matrix[j][i])
-                {
-                    strongestPathMatrix[i][j] = matrix[i][j];
-                }
-            }
-        }
-
-        matrix_to_file(String.format("%s_%s_spm_1.csv",eventID,key),strongestPathMatrix);
-
-        // find the strongest path from each team to each other team
-        for(int i = 0; i < numTeams; i++)
-        {
-            for(int j = 0; j < numTeams; j++)
-            {
-                if(i == j) {
-                    continue;
-                }
-                for(int k = 0; k < numTeams; k++)
-                {
-                    if(i != k && j != k)
-                    {
-                        strongestPathMatrix[j][k] = Math.max(strongestPathMatrix[j][k], Math.min(strongestPathMatrix[j][i], strongestPathMatrix[i][k]));
-                    }
-                }
-            }
-        }
-
-        matrix_to_file(String.format("%s_%s_spm_2.csv",eventID,key),strongestPathMatrix);
-
-        List<Integer> sortedRanking = new ArrayList<>();
-        sortedRanking.addAll(ranking);
-        // sort the teams based on their paths to another team
-        Collections.sort(sortedRanking, new Comparator<Integer>() {
-            public int compare(Integer a, Integer b) {
-                int indexA = teamNumbers.indexOf(a);
-                int indexB = teamNumbers.indexOf(b);
-                if (strongestPathMatrix[indexA][indexB] > strongestPathMatrix[indexB][indexA]) {
-                    return -1;
-                } else if (strongestPathMatrix[indexA][indexB] == strongestPathMatrix[indexB][indexA]) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-        });
-
-        // Create output that includes ties
-        output = new String[teamNumbers.size()];
-        int rank = 1;
-        for(int i = 0; i < sortedRanking.size(); i++)
-        {
-            boolean tied = false;
-            int currentTeamNumber = sortedRanking.get(i);
-            int currentTeamNumberIndex = teamNumbers.indexOf(currentTeamNumber);
-            if(i > 0)
-            {
-                int previousTeamNumber = sortedRanking.get(i-1);
-                int previousTeamNumberIndex = teamNumbers.indexOf(previousTeamNumber);
-
-                if(strongestPathMatrix[currentTeamNumberIndex][previousTeamNumberIndex] == strongestPathMatrix[previousTeamNumberIndex][currentTeamNumberIndex])
-                {
-                    tied = true;
-                }
-            }
-            if(!tied && i < ranking.size()-1)
-            {
-                int nextTeamNumber = sortedRanking.get(i+1);
-                int nextTeamNumberIndex = teamNumbers.indexOf(nextTeamNumber);
-
-                if(strongestPathMatrix[currentTeamNumberIndex][nextTeamNumberIndex] == strongestPathMatrix[nextTeamNumberIndex][currentTeamNumberIndex])
-                {
-                    tied = true;
-                }
-            }
-            if(tied)
-            {
-                output[currentTeamNumberIndex] = "T"+String.valueOf(rank);
-            }
-            else
-            {
-                rank = i+1;
-                output[currentTeamNumberIndex] = String.valueOf(rank);
-            }
-            Log.i(TAG,teamNumbers.get(currentTeamNumberIndex)+": "+output[currentTeamNumberIndex]);
-        }
-        rank = sortedRanking.size()+1;
-        for(int i = 0; i < teamNumbers.size(); i++)
-        {
-            if(sortedRanking.indexOf(teamNumbers.get(i)) == -1)
-            {
-                output[i] = "T"+ String.valueOf(rank);
-                Log.i(TAG,teamNumbers.get(i)+": "+output[i]);
-            }
-        }
-
-
-
-        return output;
-    }
-
-    public void matrix_to_file(String filename, Integer[][] matrix)
-    {
-        try {
-            FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            String string = "";
-            for(int i = 0; i < matrix.length;i++)
-            {
-                for(int j = 0; j < matrix[i].length; j++)
-                {
-                    string += matrix[i][j] +",";
-                }
-                string = string.substring(0,string.length()-1);
-                string += ";\n";
-            }
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            Log.d(TAG,"Exception");
-        }
-    }
-/*
-    public void rankings_to_file(String filename, String[] rankings)
-    {
-        try {
-            FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            String string = "";
-            for(int i = 0; i < rankings.length;i++)
-            {
-                    string += rankings[i] +";\n";
-            }
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            Log.d(TAG,"Exception");
-        }
-    }
-*/
 
     private int set_start(Map<String, ScoutValue> teamStats, String key)
     {

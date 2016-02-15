@@ -13,6 +13,7 @@ import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
+import com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6;
 import com.team3824.akmessing1.scoutingapp.views.CustomEdittext;
 import com.team3824.akmessing1.scoutingapp.views.CustomNumeric;
 
@@ -32,7 +33,7 @@ public class Utilities {
     public static void setupUI(final Activity activity, View view) {
 
         //Set up touch listener for non-text box views to hide keyboard.
-        if(!(view instanceof CustomEdittext) && !(view instanceof CustomNumeric)) {
+        if(!(view instanceof CustomEdittext) && !(view instanceof CustomNumeric) && !(view instanceof CustomCardinalRank6)) {
 
             view.setOnTouchListener(new View.OnTouchListener() {
 
@@ -117,4 +118,5 @@ public class Utilities {
         }
         return jsonArray.toString();
     }
+
 }

@@ -7,19 +7,24 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
-import com.team3824.akmessing1.scoutingapp.fragments.TeamViewFragment;
-import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 public class MatchView extends AppCompatActivity {
 
     private static final String TAG = "MatchView";
+
+    private boolean prevMatch, nextMatch;
+    private int matchNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,77 +32,115 @@ public class MatchView extends AppCompatActivity {
         setContentView(R.layout.activity_match_view);
 
         Bundle extras = getIntent().getExtras();
-        final int matchNumber = extras.getInt(Constants.MATCH_NUMBER);
+        matchNumber = extras.getInt(Constants.MATCH_NUMBER);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
 
-        CustomHeader header = (CustomHeader)findViewById(R.id.match_view_header);
-        header.setBackOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MatchView.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_VIEWING);
-                startActivity(intent);
-            }
-        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.match_view_toolbar);
+        setSupportActionBar(toolbar);
 
-        TextView tv = (TextView)findViewById(R.id.match_num);
-        tv.setText("Match Number: " + matchNumber);
+        setTitle("Match Number: " + matchNumber);
+
+        TextView tv = (TextView)findViewById(R.id.auto_high_goal_blue);
+        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
+        tv = (TextView)findViewById(R.id.auto_low_goal_blue);
+        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
+        tv = (TextView)findViewById(R.id.teleop_high_goal_blue);
+        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
+        tv = (TextView)findViewById(R.id.teleop_low_goal_blue);
+        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
+
+        tv = (TextView)findViewById(R.id.auto_high_goal_red);
+        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
+        tv = (TextView)findViewById(R.id.auto_low_goal_red);
+        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
+        tv = (TextView)findViewById(R.id.teleop_high_goal_red);
+        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
+        tv = (TextView)findViewById(R.id.teleop_low_goal_red);
+        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
+
+        tv = (TextView)findViewById(R.id.best_defenses_blue);
+        String text = "Best Defenses:";
+        for(int i = 0; i < Constants.NUM_BEST-1; i++)
+            text += "\n";
+        tv.setText(text);
+        tv = (TextView)findViewById(R.id.best_defenses_red);
+        text = "Best Defenses:";
+        for(int i = 0; i < Constants.NUM_BEST-1; i++)
+            text += "\n";
+        tv.setText(text);
+        tv = (TextView)findViewById(R.id.worst_defenses_blue);
+        text = "Worst Defenses:";
+        for(int i = 0; i < Constants.NUM_WORST-1; i++)
+            text += "\n";
+        tv.setText(text);
+        tv = (TextView)findViewById(R.id.worst_defenses_red);
+        text = "Worst Defenses:";
+        for(int i = 0; i < Constants.NUM_WORST-1; i++)
+            text += "\n";
+        tv.setText(text);
 
         ScheduleDB scheduleDB = new ScheduleDB(this,eventId);
         Cursor cursor = scheduleDB.getMatch(matchNumber);
         FragmentManager fm = getFragmentManager();
-        TeamViewFragment blue1 = (TeamViewFragment) fm.findFragmentById(R.id.blue1);
+        MatchTeamFragment blue1 = (MatchTeamFragment) fm.findFragmentById(R.id.blue1);
         blue1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)),this);
-        TeamViewFragment blue2 = (TeamViewFragment) fm.findFragmentById(R.id.blue2);
+        MatchTeamFragment blue2 = (MatchTeamFragment) fm.findFragmentById(R.id.blue2);
         blue2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)),this);
-        TeamViewFragment blue3 = (TeamViewFragment) fm.findFragmentById(R.id.blue3);
+        MatchTeamFragment blue3 = (MatchTeamFragment) fm.findFragmentById(R.id.blue3);
         blue3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)),this);
-        TeamViewFragment red1 = (TeamViewFragment) fm.findFragmentById(R.id.red1);
+        MatchTeamFragment red1 = (MatchTeamFragment) fm.findFragmentById(R.id.red1);
         red1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)),this);
-        TeamViewFragment red2 = (TeamViewFragment) fm.findFragmentById(R.id.red2);
+        MatchTeamFragment red2 = (MatchTeamFragment) fm.findFragmentById(R.id.red2);
         red2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)),this);
-        TeamViewFragment red3 = (TeamViewFragment) fm.findFragmentById(R.id.red3);
+        MatchTeamFragment red3 = (MatchTeamFragment) fm.findFragmentById(R.id.red3);
         red3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)),this);
 
-        // First match doesn't need a previous button
-        Button previous = (Button)findViewById(R.id.previous_match);
-        if(matchNumber == 1)
-        {
-            previous.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            previous.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Go to the next match
-                    Intent intent = new Intent(MatchView.this, MatchView.class);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
-                    startActivity(intent);
-                }
-            });
-        }
-
+        prevMatch = matchNumber != 1;
         Cursor nextCursor = scheduleDB.getMatch(matchNumber + 1);
-        //Last match doesn't need a next button
-        Button next = (Button)findViewById(R.id.next_match);
-        if(nextCursor == null)
-        {
-            next.setVisibility(View.INVISIBLE);
+        nextMatch = nextCursor != null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.match_overflow, menu);
+        if(!prevMatch) {
+            menu.removeItem(R.id.previous);
         }
-        else
-        {
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Go to the next match
-                    Intent intent = new Intent(MatchView.this, MatchView.class);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
-                    startActivity(intent);
-                }
-            });
+        if(!nextMatch) {
+            menu.removeItem(R.id.next);
         }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.home:
+                intent = new Intent(this,StartScreen.class);
+                startActivity(intent);
+                break;
+            case R.id.back:
+                intent = new Intent(this,MatchList.class);
+                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_VIEWING);
+                startActivity(intent);
+                break;
+            case R.id.previous:
+                intent = new Intent(this,MatchView.class);
+                intent.putExtra(Constants.MATCH_NUMBER,matchNumber-1);
+                startActivity(intent);
+                break;
+            case R.id.next:
+                intent = new Intent(this,MatchView.class);
+                intent.putExtra(Constants.MATCH_NUMBER,matchNumber+1);
+                startActivity(intent);
+                break;
+            // Shouldn't be one
+            default:
+                super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

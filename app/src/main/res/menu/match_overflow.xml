@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/match_scouting_home"
+        android:id="@+id/home"
         android:title="Home"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/match_scouting_back"
+        android:id="@+id/back"
         android:title="Back"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/match_scouting_previous"
+        android:id="@+id/previous"
         android:title="Previous Match"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/match_scouting_next"
+        android:id="@+id/next"
         android:title="Next Match"
         app:showAsAction="never"/>
 </menu>

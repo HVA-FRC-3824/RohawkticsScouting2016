@@ -11,9 +11,6 @@ import com.team3824.akmessing1.scoutingapp.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by akmessing1 on 11/22/15.
- */
 public class CardinalRankListAdapter extends ArrayAdapter<Integer> {
 
     ArrayList<Integer> teams;

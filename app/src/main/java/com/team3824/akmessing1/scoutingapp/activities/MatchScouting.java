@@ -23,6 +23,7 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.FPA_MatchScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.util.HashMap;
 import java.util.List;
@@ -118,16 +119,19 @@ public class MatchScouting extends AppCompatActivity {
         {
             Log.d(TAG,"No next team");
         }
+
+        Utilities.setupUI(this, findViewById(android.R.id.content));
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.match_scouting_overflow, menu);
+        getMenuInflater().inflate(R.menu.match_overflow, menu);
         if(prevTeamNumber == -1) {
-            menu.removeItem(R.id.match_scouting_previous);
+            menu.removeItem(R.id.previous);
         }
         if(nextTeamNumber == -1) {
-            menu.removeItem(R.id.match_scouting_next);
+            menu.removeItem(R.id.next);
         }
         return true;
     }
@@ -135,16 +139,16 @@ public class MatchScouting extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.match_scouting_home:
+            case R.id.home:
                 home_press();
                 break;
-            case R.id.match_scouting_back:
+            case R.id.back:
                 back_press();
                 break;
-            case R.id.match_scouting_previous:
+            case R.id.previous:
                 previous_press();
                 break;
-            case R.id.match_scouting_next:
+            case R.id.next:
                 next_press();
                 break;
             // Shouldn't be one

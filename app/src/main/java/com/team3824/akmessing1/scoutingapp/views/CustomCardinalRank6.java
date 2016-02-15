@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mobeta.android.dslv.DragSortListView;
+import com.mobeta.android.dslv.SimpleFloatViewManager;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.CardinalRankListAdapter;
@@ -19,7 +20,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class CustomCardinalRank6 extends CustomScoutView {
+public class CustomCardinalRank6 extends CustomScoutView implements DragSortListView.DropListener{
     private String TAG = "CustomCardinalRank6";
     private String key;
     private DragSortListView listView;
@@ -41,20 +42,15 @@ public class CustomCardinalRank6 extends CustomScoutView {
         typedArray.recycle();
 
         listView = (DragSortListView)this.findViewById(R.id.list_view);
+        listView.setFloatViewManager(new SimpleFloatViewManager(listView));
     }
 
     public void setArray(final ArrayList<Integer> array)
     {
         adapter = new CardinalRankListAdapter(context,R.layout.list_item_cardinal_rank,array);
         listView.setAdapter(adapter);
-        listView.setDropListener(new DragSortListView.DropListener() {
-            @Override
-            public void drop(int from, int to) {
-                int teamNumber = adapter.get(from);
-                adapter.remove(teamNumber);
-                adapter.add(to,teamNumber);
-            }
-        });
+        listView.setDropListener(this);
+
 
         int totalHeight = 0;
         for (int i = 0; i < adapter.getCount(); i++) {
@@ -97,5 +93,12 @@ public class CustomCardinalRank6 extends CustomScoutView {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void drop(int from, int to) {
+        int teamNumber = adapter.get(from);
+        adapter.remove(teamNumber);
+        adapter.add(to,teamNumber);
     }
 }

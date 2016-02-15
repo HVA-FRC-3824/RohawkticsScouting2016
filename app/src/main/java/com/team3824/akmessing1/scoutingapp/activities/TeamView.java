@@ -63,13 +63,14 @@ public class TeamView extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.team_view_overflow, menu);
+        getMenuInflater().inflate(R.menu.team_overflow, menu);
         if(previousTeamNumber == -1) {
-            menu.removeItem(R.id.team_view_previous);
+            menu.removeItem(R.id.previous);
         }
         if(nextTeamNumber == -1) {
-            menu.removeItem(R.id.team_view_next);
+            menu.removeItem(R.id.next);
         }
+        menu.removeItem(R.id.reset);
         return true;
     }
 
@@ -77,21 +78,21 @@ public class TeamView extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.team_view_home:
+            case R.id.home:
                 intent = new Intent(this, StartScreen.class);
                 startActivity(intent);
                 break;
-            case R.id.team_view_back:
+            case R.id.back:
                 this.finish();
                 break;
-            case R.id.team_view_previous:
+            case R.id.previous:
                 Log.d(TAG, "previous team pressed");
                 // Go to the next match
                 intent = new Intent(TeamView.this, TeamView.class);
                 intent.putExtra(Constants.TEAM_NUMBER, previousTeamNumber);
                 startActivity(intent);
                 break;
-            case R.id.team_view_next:
+            case R.id.next:
                 Log.d(TAG, "next team pressed");
 
                 // Go to the next match

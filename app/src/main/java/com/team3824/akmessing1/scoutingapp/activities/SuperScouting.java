@@ -23,6 +23,7 @@ import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import com.team3824.akmessing1.scoutingapp.adapters.FPA_SuperScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,16 +90,18 @@ public class SuperScouting extends AppCompatActivity {
 
         if(scheduleDB.getNumMatches() != matchNumber+1)
             nextMatch = true;
+
+        Utilities.setupUI(this,findViewById(android.R.id.content));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.super_scouting_overflow, menu);
+        getMenuInflater().inflate(R.menu.match_overflow, menu);
         if(matchNumber == 1) {
-            menu.removeItem(R.id.super_scouting_previous);
+            menu.removeItem(R.id.previous);
         }
         if(!nextMatch) {
-            menu.removeItem(R.id.super_scouting_next);
+            menu.removeItem(R.id.next);
         }
         return true;
     }
@@ -106,16 +109,16 @@ public class SuperScouting extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.super_scouting_home:
+            case R.id.home:
                 home_pres();
                 break;
-            case R.id.super_scouting_back:
+            case R.id.back:
                 back_press();
                 break;
-            case R.id.super_scouting_previous:
+            case R.id.previous:
                 previous_press();
                 break;
-            case R.id.super_scouting_next:
+            case R.id.next:
                 next_press();
                 break;
             // Shouldn't be one

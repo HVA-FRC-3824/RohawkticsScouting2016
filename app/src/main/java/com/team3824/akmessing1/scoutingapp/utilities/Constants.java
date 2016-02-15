@@ -180,4 +180,8 @@ public interface Constants {
     public static final int RED1_INDEX = 3;
     public static final int RED2_INDEX = 4;
     public static final int RED3_INDEX = 5;
+
+    // Match View
+    public static final int NUM_BEST = 2;
+    public static final int NUM_WORST = 2;
 }

@@ -121,7 +121,7 @@ public class Settings extends AppCompatActivity {
         SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE ).edit();
 
         String eventId = String.valueOf(eventID.getText());
-        if(eventId != "") {
+        if(!eventId.equals("")) {
             prefEditor.putString(Constants.EVENT_ID, String.valueOf(eventID.getText()));
             String type = String.valueOf(typeSelector.getSelectedItem());
             prefEditor.putString(Constants.USER_TYPE, type);
