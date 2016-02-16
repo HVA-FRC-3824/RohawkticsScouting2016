@@ -48,9 +48,10 @@ public class CustomSpinner extends CustomScoutView{
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
         map.put(key, new ScoutValue(String.valueOf(spinner.getSelectedItem())));
+        return "";
     }
 
     @Override

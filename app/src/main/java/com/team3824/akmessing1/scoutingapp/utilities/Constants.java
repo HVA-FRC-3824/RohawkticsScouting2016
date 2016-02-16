@@ -98,6 +98,9 @@ public interface Constants {
 
     public static final String DEFENSE_3 = "defense3";
 
+    public static final String[] SUPER_DEFENSES = {"blue_defense2","blue_defense4","blue_defense5",
+            "red_defense2","red_defense4","red_defense5","defense3"};
+
     // Defense Arrays
     public static final String[] DEFENSES = {"low_bar","portcullis","cheval_de_frise","moat","ramparts",
             "drawbridge","sally_port","rock_wall","rough_terrain"};

@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
@@ -134,19 +135,26 @@ public class PitScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                // Store values to the database
-                PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                pitScoutDB.updatePit(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    // Store values to the database
+                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+                    pitScoutDB.updatePit(data);
 
-                Intent intent = new Intent(PitScouting.this, StartScreen.class);
-                startActivity(intent);
+                    Intent intent = new Intent(PitScouting.this, StartScreen.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -182,19 +190,26 @@ public class PitScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                // Store values to the database
-                PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                pitScoutDB.updatePit(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    // Store values to the database
+                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+                    pitScoutDB.updatePit(data);
 
-                Intent intent2 = new Intent(PitScouting.this, PitList.class);
-                startActivity(intent2);
+                    Intent intent2 = new Intent(PitScouting.this, PitList.class);
+                    startActivity(intent2);
+                }
+                else
+                {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -232,21 +247,28 @@ public class PitScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                // Store values to the database
-                PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                pitScoutDB.updatePit(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    // Store values to the database
+                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+                    pitScoutDB.updatePit(data);
 
-                // Go to the next match
-                Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER,prevTeamNumber);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                    intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -285,21 +307,28 @@ public class PitScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                // Store values to the database
-                PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                pitScoutDB.updatePit(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    // Store values to the database
+                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+                    pitScoutDB.updatePit(data);
 
-                // Go to the next match
-                Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER,nextTeamNumber);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                    intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
             }
         });
 

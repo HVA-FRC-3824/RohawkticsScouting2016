@@ -28,7 +28,7 @@ public abstract class ScoutFragment extends Fragment {
     }
 
     // Recursive functions to get all the values and store them in a map
-    public void writeContentsToMap(Map<String, ScoutValue> map)
+    public String writeContentsToMap(Map<String, ScoutValue> map)
     {
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
@@ -37,30 +37,35 @@ public abstract class ScoutFragment extends Fragment {
             // If the view has been destroyed, state should already be saved
             // to parent activity
             map.putAll(valueMap);
-            return;
+            return "";
         }
+        String error = "";
         int childCount = vg.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = vg.getChildAt(i);
             if (view instanceof CustomScoutView) {
-                ((CustomScoutView) view).writeToMap(map);
+                error += ((CustomScoutView) view).writeToMap(map);
             } else if (view instanceof ViewGroup) {
-                writeContentsToMap(map, (ViewGroup) view);
+                error += writeContentsToMap(map, (ViewGroup) view);
             }
         }
+
+        return error;
     }
 
-    public void writeContentsToMap(Map<String, ScoutValue> map, ViewGroup viewGroup)
+    public String writeContentsToMap(Map<String, ScoutValue> map, ViewGroup viewGroup)
     {
+        String error = "";
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = viewGroup.getChildAt(i);
             if (view instanceof CustomScoutView) {
-                ((CustomScoutView) view).writeToMap(map);
+                error += ((CustomScoutView) view).writeToMap(map);
             } else if (view instanceof ViewGroup) {
-                writeContentsToMap(map, (ViewGroup) view);
+                error += writeContentsToMap(map, (ViewGroup) view);
             }
         }
+        return error;
     }
 
     // Recursive function to get all the values from a map and populate the fields

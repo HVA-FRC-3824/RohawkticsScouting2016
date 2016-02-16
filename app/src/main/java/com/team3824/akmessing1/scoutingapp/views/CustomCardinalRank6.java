@@ -3,6 +3,7 @@ package com.team3824.akmessing1.scoutingapp.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,7 @@ public class CustomCardinalRank6 extends CustomScoutView implements DragSortList
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
         JSONArray jsonArray = new JSONArray();
         for(int i = 0; i < adapter.size(); i++) {
@@ -74,6 +75,7 @@ public class CustomCardinalRank6 extends CustomScoutView implements DragSortList
         }
         String value = jsonArray.toString();
         map.put(key, new ScoutValue(value));
+        return "";
     }
 
     @Override
@@ -90,7 +92,7 @@ public class CustomCardinalRank6 extends CustomScoutView implements DragSortList
                 }
                 setArray(array);
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.d(TAG, e.getMessage());
             }
         }
     }

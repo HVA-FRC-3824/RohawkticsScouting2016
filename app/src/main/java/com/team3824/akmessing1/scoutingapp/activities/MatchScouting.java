@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
@@ -171,22 +172,30 @@ public class MatchScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
-                // Store values to the database
-                matchScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
+                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
+                    // Store values to the database
+                    matchScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(MatchScouting.this, StartScreen.class);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(MatchScouting.this, StartScreen.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+
+                }
             }
         });
 
@@ -223,23 +232,30 @@ public class MatchScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
-                // Store values to the database
-                matchScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
+                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
+                    // Store values to the database
+                    matchScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(MatchScouting.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_SCOUTING);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(MatchScouting.this, MatchList.class);
+                    intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_SCOUTING);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -279,24 +295,31 @@ public class MatchScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID,new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
-                // Store values to the database
-                matchScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
+                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
+                    // Store values to the database
+                    matchScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER,prevTeamNumber);
-                intent.putExtra(Constants.MATCH_NUMBER,matchNumber-1);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
+                    intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -337,24 +360,31 @@ public class MatchScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d",matchNumber,teamNumber)));
-                // Store values to the database
-                matchScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
+                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
+                    // Store values to the database
+                    matchScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER,nextTeamNumber);
-                intent.putExtra(Constants.MATCH_NUMBER,matchNumber+1);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
+                    intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
             }
         });
 

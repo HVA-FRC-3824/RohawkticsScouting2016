@@ -50,7 +50,9 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
 
             defensesLists[i] = new ArrayList<>(Arrays.asList(Constants.DEFENSES_LABEL));
             defensesLists[i].set(0, SELECT_DEFENSE);
+            //justSet[i] = 3;
         }
+        //justSet[BOTH_3] = 6;
 
         defensesSpinners[BLUE_2] = (Spinner)view.findViewById(R.id.blue_defense2);
         defensesSpinners[BLUE_4] = (Spinner)view.findViewById(R.id.blue_defense4);
@@ -62,7 +64,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
 
         for(int i = 0; i < 7; i++)
         {
-            defensesAdapters[i] = new DefenseAdapter(getContext(),R.layout.list_item_string,defensesLists[i]);
+            defensesAdapters[i] = new DefenseAdapter(getContext(),R.layout.list_item_string,defensesLists[i],(i==6));
             defensesSpinners[i].setAdapter(defensesAdapters[i]);
             defensesSpinners[i].setOnItemSelectedListener(this);
         }
@@ -75,56 +77,40 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
     }
 
     @Override
-    public void writeContentsToMap(Map<String, ScoutValue> map, ViewGroup vg)
+    public String writeContentsToMap(Map<String, ScoutValue> map, ViewGroup vg)
     {
-        map.put(Constants.BLUE_DEFENSE_2, new ScoutValue(String.valueOf(defensesSpinners[BLUE_2].getSelectedItem())));
-        map.put(Constants.BLUE_DEFENSE_4, new ScoutValue(String.valueOf(defensesSpinners[BLUE_4].getSelectedItem())));
-        map.put(Constants.BLUE_DEFENSE_5, new ScoutValue(String.valueOf(defensesSpinners[BLUE_5].getSelectedItem())));
-        map.put(Constants.RED_DEFENSE_2, new ScoutValue(String.valueOf(defensesSpinners[RED_2].getSelectedItem())));
-        map.put(Constants.RED_DEFENSE_4, new ScoutValue(String.valueOf(defensesSpinners[RED_4].getSelectedItem())));
-        map.put(Constants.RED_DEFENSE_5, new ScoutValue(String.valueOf(defensesSpinners[RED_5].getSelectedItem())));
-        map.put(Constants.DEFENSE_3, new ScoutValue(String.valueOf(defensesSpinners[BOTH_3].getSelectedItem())));
-
+        for(int i = 0; i < 7; i++)
+        {
+            String value = String.valueOf(defensesSpinners[i].getSelectedItem());
+            if(value.equals(SELECT_DEFENSE))
+            {
+                return "Not all defenses have been selected\n";
+            }
+            else
+            {
+                map.put(Constants.SUPER_DEFENSES[i], new ScoutValue(value));
+            }
+        }
+        return "";
     }
 
     @Override
     public void restoreContentsFromMap(Map<String, ScoutValue> map, ViewGroup vg)
     {
-        ScoutValue sv = map.get(Constants.BLUE_DEFENSE_2);
-        if(sv != null) {
-            defensesSpinners[BLUE_2].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
+        for(int i = 0; i < 7; i++)
+        {
+            ScoutValue sv = map.get(Constants.SUPER_DEFENSES[i]);
+            if(sv != null) {
+                defensesSpinners[i].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
+                if(i==6)
+                {
+                    justSet[i] = 6;
+                }
+                else {
+                    justSet[i] = 3;
+                }
+            }
         }
-
-        sv = map.get(Constants.BLUE_DEFENSE_4);
-        if(sv != null) {
-            defensesSpinners[BLUE_4].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
-        }
-
-        sv = map.get(Constants.BLUE_DEFENSE_5);
-        if(sv != null) {
-            defensesSpinners[BLUE_5].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
-        }
-
-        sv = map.get(Constants.RED_DEFENSE_2);
-        if(sv != null) {
-            defensesSpinners[RED_2].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
-        }
-
-        sv = map.get(Constants.RED_DEFENSE_4);
-        if(sv != null) {
-            defensesSpinners[RED_4].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
-        }
-
-        sv = map.get(Constants.RED_DEFENSE_5);
-        if(sv != null) {
-            defensesSpinners[RED_5].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
-        }
-
-        sv = map.get(Constants.DEFENSE_3);
-        if(sv != null) {
-            defensesSpinners[BOTH_3].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
-        }
-
         optimizeLists();
     }
 
@@ -259,7 +245,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
         }
         
         for(int i = 0; i < 7; i++) {
-            defensesAdapters[i] = new DefenseAdapter(getContext(), R.layout.list_item_string, defensesLists[i]);
+            defensesAdapters[i] = new DefenseAdapter(getContext(), R.layout.list_item_string, defensesLists[i],(i==6));
             defensesSpinners[i].setAdapter(defensesAdapters[i]);
         }
 
@@ -317,6 +303,30 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
         }
 
         current = String.valueOf(defensesSpinners[BOTH_3].getSelectedItem());
+
+        for(int i = 0; i < 3; i++)
+        {
+            if(i+offset == index) continue;
+
+            if (current.equals(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX])) {
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]);
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]);
+            } else if (current.equals(Constants.DEFENSES_LABEL[Constants.MOAT_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.RAMPARTS_INDEX])) {
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.MOAT_INDEX]);
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.RAMPARTS_INDEX]);
+            } else if (current.equals(Constants.DEFENSES_LABEL[Constants.DRAWBRIDGE_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.SALLY_PORT_INDEX])) {
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.DRAWBRIDGE_INDEX]);
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.SALLY_PORT_INDEX]);
+            } else if (current.equals(Constants.DEFENSES_LABEL[Constants.ROCK_WALL_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.ROUGH_TERRAIN_INDEX])) {
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.ROCK_WALL_INDEX]);
+                defensesLists[i + offset].remove(Constants.DEFENSES_LABEL[Constants.ROUGH_TERRAIN_INDEX]);
+            }
+
+        }
 
         defensesAdapters[BOTH_3] = new DefenseAdapter(getContext(), R.layout.list_item_string, defensesLists[BOTH_3], true);
         defensesSpinners[BOTH_3].setAdapter(defensesAdapters[BOTH_3]);
@@ -379,7 +389,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
         for(int i = 0; i < 3; i++)
         {
             String blue = String.valueOf(defensesSpinners[i].getSelectedItem());
-            String red = String.valueOf(defensesSpinners[i+RED_2].getSelectedItem());
+            String red = String.valueOf(defensesSpinners[i+RED].getSelectedItem());
             for(int j = 0; j < 3; j++)
             {
                 if(i==j)continue;
@@ -413,27 +423,27 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
                 if (red.equals(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]) ||
                         red.equals(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]))
                 {
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]);
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]);
                 }
                 else if(red.equals(Constants.DEFENSES_LABEL[Constants.MOAT_INDEX]) ||
                         red.equals(Constants.DEFENSES_LABEL[Constants.RAMPARTS_INDEX]))
                 {
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.MOAT_INDEX]);
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.RAMPARTS_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.MOAT_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.RAMPARTS_INDEX]);
                 }
                 else if(red.equals(Constants.DEFENSES_LABEL[Constants.DRAWBRIDGE_INDEX]) ||
                         red.equals(Constants.DEFENSES_LABEL[Constants.SALLY_PORT_INDEX]))
                 {
 
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.DRAWBRIDGE_INDEX]);
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.SALLY_PORT_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.DRAWBRIDGE_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.SALLY_PORT_INDEX]);
                 }
                 else if(red.equals(Constants.DEFENSES_LABEL[Constants.ROCK_WALL_INDEX]) ||
                         red.equals(Constants.DEFENSES_LABEL[Constants.ROUGH_TERRAIN_INDEX]))
                 {
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.ROCK_WALL_INDEX]);
-                    defensesLists[j+RED_2].remove(Constants.DEFENSES_LABEL[Constants.ROUGH_TERRAIN_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.ROCK_WALL_INDEX]);
+                    defensesLists[j+RED].remove(Constants.DEFENSES_LABEL[Constants.ROUGH_TERRAIN_INDEX]);
                 }
             }
         }

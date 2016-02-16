@@ -165,9 +165,9 @@ public class PitBasicInfo extends ScoutFragment{
     }
 
     @Override
-    public void writeContentsToMap(Map<String, ScoutValue> map)
+    public String writeContentsToMap(Map<String, ScoutValue> map)
     {
         map.put(Constants.PIT_ROBOT_PICTURE,new ScoutValue(mCurrentPhotoPath));
-        super.writeContentsToMap(map);
+        return super.writeContentsToMap(map);
     }
 }

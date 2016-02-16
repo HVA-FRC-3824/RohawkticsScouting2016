@@ -37,9 +37,10 @@ public class CustomEdittext extends CustomScoutView {
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
         map.put(key, new ScoutValue(String.valueOf(edittext.getText())));
+        return "";
     }
 
     @Override

@@ -75,10 +75,11 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
         String saveValue = jsonArray.toString();
         map.put(key,new ScoutValue(saveValue));
+        return "";
     }
 
     // Custom restore

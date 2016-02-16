@@ -14,8 +14,9 @@ public abstract class CustomScoutView extends RelativeLayout {
         super(context, attrs);
     }
 
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
+        return "";
     }
 
     public void restoreFromMap(Map<String, ScoutValue> map)

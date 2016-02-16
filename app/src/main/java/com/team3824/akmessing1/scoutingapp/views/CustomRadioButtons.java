@@ -53,7 +53,7 @@ public class CustomRadioButtons extends CustomScoutView {
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
         if(radios.getCheckedRadioButtonId() != -1) {
             map.put(key, new ScoutValue(resourceStrings[radios.getCheckedRadioButtonId()]));
@@ -62,6 +62,8 @@ public class CustomRadioButtons extends CustomScoutView {
         {
             map.put(key, new ScoutValue(""));
         }
+
+        return "";
     }
 
     @Override

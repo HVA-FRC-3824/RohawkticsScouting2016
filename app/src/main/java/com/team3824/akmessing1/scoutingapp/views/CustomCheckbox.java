@@ -56,9 +56,10 @@ public class CustomCheckbox extends CustomScoutView {
 
     // Custom save
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
         map.put(key, new ScoutValue(checkbox.isChecked()? 1 : 0));
+        return "";
     }
 
     // Custom restore

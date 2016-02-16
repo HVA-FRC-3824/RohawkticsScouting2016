@@ -79,9 +79,10 @@ public class CustomCounter extends CustomScoutView{
 
     // Custom save
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(Map<String, ScoutValue> map)
     {
         map.put(key,new ScoutValue(count));
+        return "";
     }
 
     // Custom restore

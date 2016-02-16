@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
@@ -141,26 +142,33 @@ public class SuperScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                // Store values to the database
-                superScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
+                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
+                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
+                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
+                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
+                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
+                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+                    // Store values to the database
+                    superScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, StartScreen.class);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, StartScreen.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -197,27 +205,34 @@ public class SuperScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                // Store values to the database
-                superScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
+                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
+                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
+                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
+                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
+                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
+                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+                    // Store values to the database
+                    superScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.SUPER_SCOUTING);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, MatchList.class);
+                    intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -256,27 +271,34 @@ public class SuperScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                // Store values to the database
-                superScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
+                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
+                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
+                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
+                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
+                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
+                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+                    // Store values to the database
+                    superScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra(Constants.MATCH_NUMBER,matchNumber-1);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -316,27 +338,34 @@ public class SuperScouting extends AppCompatActivity {
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
                 Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
                 for (ScoutFragment fragment : fragmentList) {
-                    fragment.writeContentsToMap(data);
+                    error += fragment.writeContentsToMap(data);
                 }
 
-                Log.d(TAG,"Saving values");
-                // Add the team and match numbers
-                SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                // Store values to the database
-                superScoutDB.updateMatch(data);
+                if(error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
+                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
+                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
+                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
+                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
+                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
+                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+                    // Store values to the database
+                    superScoutDB.updateMatch(data);
 
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra(Constants.MATCH_NUMBER,matchNumber+1);
-                startActivity(intent);
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
+                }
             }
         });
 
