@@ -25,7 +25,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_screen);
 
-        ((TextView)findViewById(R.id.version)).setText("Version: 1.0.5");
+        ((TextView)findViewById(R.id.version)).setText(Constants.VERSION);
 
         SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
         String type = sharedPreferences.getString(Constants.USER_TYPE, "");

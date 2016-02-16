@@ -40,10 +40,6 @@
                     android:id="@+id/super_notes"
                     app:label="Notes:"
                     app:key="super_notes"/>
-
-                <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefenses
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

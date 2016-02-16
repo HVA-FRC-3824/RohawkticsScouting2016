@@ -2,6 +2,9 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
+    public static final String VERSION="Version: 1.0.6";
+
+
     // Message types sent from the Handler
     public static final int MESSAGE_READ=0;
     public static final int MESSAGE_WRITE=1;

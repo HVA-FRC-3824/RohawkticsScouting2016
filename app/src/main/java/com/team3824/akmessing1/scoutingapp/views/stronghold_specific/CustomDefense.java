@@ -22,7 +22,7 @@ import org.json.JSONException;
 import java.util.Arrays;
 import java.util.Map;
 
-public class CustomDefenseInput extends CustomScoutView implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
+public class CustomDefense extends CustomScoutView implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
     private String TAG = "CustomDefenseInput";
 
     RadioGroup crossNum;
@@ -33,11 +33,11 @@ public class CustomDefenseInput extends CustomScoutView implements View.OnClickL
 
     String key;
 
-    public CustomDefenseInput(Context context, AttributeSet attrs) {
+    public CustomDefense(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.custom_defense_input, this);
+        inflater.inflate(R.layout.custom_defense, this);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         key = typedArray.getString(R.styleable.CustomScoutView_key);

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Blue Defense 2:"
+            android:background="#0011ff"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:paddingRight="4dp"
+            android:id="@+id/blue_defense2"
+            android:background="#0011ff"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Red Defense 2:"
+            android:background="#ff0000"
+            android:gravity="center_vertical"/>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:paddingRight="4dp"
+            android:id="@+id/red_defense2"
+            android:background="#ff0000"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Both Defense 3:"
+            android:background="@color/white"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:paddingRight="4dp"
+            android:id="@+id/defense3"
+            android:background="@color/white"
+            android:layout_gravity="center_vertical" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Blue Defense 4:"
+            android:background="#0011ff"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:paddingRight="4dp"
+            android:id="@+id/blue_defense4"
+            android:background="#0011ff"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Red Defense 4:"
+            android:background="#ff0000"
+            android:gravity="center_vertical"/>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:paddingRight="4dp"
+            android:id="@+id/red_defense4"
+            android:background="#ff0000"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Blue Defense 5:"
+            android:background="#0011ff"
+            android:gravity="center_vertical" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:paddingRight="4dp"
+            android:id="@+id/blue_defense5"
+            android:background="#0011ff"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Red Defense 5:"
+            android:background="#ff0000"
+            android:gravity="center_vertical"/>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:paddingRight="4dp"
+            android:id="@+id/red_defense5"
+            android:background="#ff0000"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+</LinearLayout>

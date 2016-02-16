@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import com.team3824.akmessing1.scoutingapp.fragments.SuperDefenses;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.fragments.SuperBasicInfo;
@@ -17,7 +18,7 @@ import java.util.Map;
 // Setup up page fragments for pit scouting
 public class FPA_SuperScout extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "Basic Info" };
+    private String tabTitles[] = new String[] { "Basic Info", "Defenses" };
 
     private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
@@ -47,6 +48,9 @@ public class FPA_SuperScout extends FragmentPagerAdapter{
             case 0:
                 fragment = new SuperBasicInfo();
                 ((SuperBasicInfo)fragment).setTeams(teams);
+                break;
+            case 1:
+                fragment = new SuperDefenses();
                 break;
             default:
                 fragment = null; // There has been a problem!
