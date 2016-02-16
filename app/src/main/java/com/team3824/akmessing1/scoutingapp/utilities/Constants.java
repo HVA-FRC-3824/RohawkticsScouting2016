@@ -190,4 +190,7 @@ public interface Constants {
     // Match View
     public static final int NUM_BEST = 2;
     public static final int NUM_WORST = 2;
+
+    //Bluetooth
+    public static final int BLUETOOTH_TIMEOUT = 1000;
 }

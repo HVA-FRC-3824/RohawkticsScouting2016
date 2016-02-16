@@ -221,19 +221,19 @@ public class SyncService extends NonStopIntentService{
                     String lastUpdated = SyncService.this.syncDB.getLastUpdated(selectedAddress);
                     syncDB.updateSync(selectedAddress);
 
-                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncService.this.matchScoutDB.getInfoSince(lastUpdated));
+                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
                     writeUntilAcknowledged(matchUpdatedText);
                     Toast.makeText(context,"Match Data Sent",Toast.LENGTH_SHORT).show();
 
-                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncService.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
                     writeUntilAcknowledged(pitUpdatedText);
                     Toast.makeText(context,"Pit Data Sent",Toast.LENGTH_SHORT).show();
 
-                    String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncService.this.superScoutDB.getAllMatchesSince(lastUpdated));
+                    String superUpdatedText = "S" + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
                     writeUntilAcknowledged(superUpdatedText);
                     Toast.makeText(context,"Super Data Sent",Toast.LENGTH_SHORT).show();
 
-                    String driveUpdatedText = "D" + Utilities.CursorToJsonString(SyncService.this.driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                    String driveUpdatedText = "D" + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
                     writeUntilAcknowledged(driveUpdatedText);
                     Toast.makeText(context,"Drive Team Feedback Data Sent",Toast.LENGTH_SHORT).show();
 
@@ -314,17 +314,7 @@ public class SyncService extends NonStopIntentService{
                     case Constants.MATCH_SCOUT:
                         if (connectedName.equals("3824_Super_Scout")) {
                             bluetoothSync.connect(device, false);
-                            long time = SystemClock.currentThreadTimeMillis();
-                            boolean connected = true;
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
-                            {
-                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
-                                {
-                                    connected = false;
-                                    break;
-                                }
-                            };
-                            if(!connected)
+                            if(!timeout())
                                 continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
@@ -339,17 +329,7 @@ public class SyncService extends NonStopIntentService{
                     case Constants.PIT_SCOUT:
                         if (connectedName.equals("3824_Super_Scout")) {
                             bluetoothSync.connect(device, false);
-                            long time = SystemClock.currentThreadTimeMillis();
-                            boolean connected = true;
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
-                            {
-                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
-                                {
-                                    connected = false;
-                                    break;
-                                }
-                            };
-                            if(!connected)
+                            if(!timeout())
                                 continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
@@ -364,17 +344,7 @@ public class SyncService extends NonStopIntentService{
                     case Constants.SUPER_SCOUT:
                         if (connectedName.equals("3824_Drive_Team") || connectedName.equals("3824_Strategy")) {
                             bluetoothSync.connect(device, false);
-                            long time = SystemClock.currentThreadTimeMillis();
-                            boolean connected = true;
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
-                            {
-                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
-                                {
-                                    connected = false;
-                                    break;
-                                }
-                            };
-                            if(!connected)
+                            if(!timeout())
                                 continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
@@ -402,17 +372,7 @@ public class SyncService extends NonStopIntentService{
                         if(connectedName.equals("3824_Super_Scout"))
                         {
                             bluetoothSync.connect(device, false);
-                            long time = SystemClock.currentThreadTimeMillis();
-                            boolean connected = true;
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
-                            {
-                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
-                                {
-                                    connected = false;
-                                    break;
-                                }
-                            };
-                            if(!connected)
+                            if(!timeout())
                                 continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
@@ -435,17 +395,7 @@ public class SyncService extends NonStopIntentService{
                     case Constants.ADMIN:
                         if (connectedName.equals("3824_Super_Scout")) {
                             bluetoothSync.connect(device, false);
-                            long time = SystemClock.currentThreadTimeMillis();
-                            boolean connected = true;
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
-                            {
-                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
-                                {
-                                    connected = false;
-                                    break;
-                                }
-                            };
-                            if(!connected)
+                            if(!timeout())
                                 continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
@@ -478,6 +428,19 @@ public class SyncService extends NonStopIntentService{
             SystemClock.sleep(250);
         }
         acknowledged = false;
+    }
+
+    private boolean timeout()
+    {
+        long time = SystemClock.currentThreadTimeMillis();
+        while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+        {
+            if(SystemClock.currentThreadTimeMillis() > time + Constants.BLUETOOTH_TIMEOUT)
+            {
+                return false;
+            }
+        };
+        return true;
     }
 
     private void acknowledge()

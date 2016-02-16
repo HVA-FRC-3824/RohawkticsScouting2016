@@ -373,7 +373,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             v.setBackgroundColor(Color.BLUE);
             ((TextView) v).setTextColor(Color.WHITE);
             bluetoothSync.connect(((BluetoothDevice) pairedDevices[position]), false);
-            SystemClock.sleep(1000);
+            SystemClock.sleep(Constants.BLUETOOTH_TIMEOUT);
             if(bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
             {
                 v.setBackgroundColor(Color.WHITE);
