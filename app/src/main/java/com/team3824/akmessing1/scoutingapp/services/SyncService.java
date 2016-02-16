@@ -312,9 +312,20 @@ public class SyncService extends NonStopIntentService{
                 // TODO: get actual names
                 switch (userType) {
                     case Constants.MATCH_SCOUT:
-                        if (connectedName.equals("3824_SuperScout")) {
+                        if (connectedName.equals("3824_Super_Scout")) {
                             bluetoothSync.connect(device, false);
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
+                            long time = SystemClock.currentThreadTimeMillis();
+                            boolean connected = true;
+                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+                            {
+                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
+                                {
+                                    connected = false;
+                                    break;
+                                }
+                            };
+                            if(!connected)
+                                continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
                             String lastUpdated = syncDB.getLastUpdated(connectedAddress);
@@ -326,9 +337,20 @@ public class SyncService extends NonStopIntentService{
                         }
                         break;
                     case Constants.PIT_SCOUT:
-                        if (connectedName.equals("3824_SuperScout")) {
+                        if (connectedName.equals("3824_Super_Scout")) {
                             bluetoothSync.connect(device, false);
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
+                            long time = SystemClock.currentThreadTimeMillis();
+                            boolean connected = true;
+                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+                            {
+                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
+                                {
+                                    connected = false;
+                                    break;
+                                }
+                            };
+                            if(!connected)
+                                continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
                             String lastUpdated = syncDB.getLastUpdated(connectedAddress);
@@ -340,9 +362,20 @@ public class SyncService extends NonStopIntentService{
                         }
                         break;
                     case Constants.SUPER_SCOUT:
-                        if (connectedName.equals("3824_DriveTeam") || connectedName.equals("3824_Strategy") || connectedName.equals("3824_Admin")) {
+                        if (connectedName.equals("3824_Drive_Team") || connectedName.equals("3824_Strategy")) {
                             bluetoothSync.connect(device, false);
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
+                            long time = SystemClock.currentThreadTimeMillis();
+                            boolean connected = true;
+                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+                            {
+                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
+                                {
+                                    connected = false;
+                                    break;
+                                }
+                            };
+                            if(!connected)
+                                continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
                             String lastUpdated = syncDB.getLastUpdated(connectedAddress);
@@ -366,10 +399,21 @@ public class SyncService extends NonStopIntentService{
                         }
                         break;
                     case Constants.DRIVE_TEAM:
-                        if(connectedName.equals("3824_SuperScout"))
+                        if(connectedName.equals("3824_Super_Scout"))
                         {
                             bluetoothSync.connect(device, false);
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
+                            long time = SystemClock.currentThreadTimeMillis();
+                            boolean connected = true;
+                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+                            {
+                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
+                                {
+                                    connected = false;
+                                    break;
+                                }
+                            };
+                            if(!connected)
+                                continue;
 
                             String connectedAddress = bluetoothSync.getConnectedAddress();
                             String lastUpdated = syncDB.getLastUpdated(connectedAddress);
@@ -389,9 +433,21 @@ public class SyncService extends NonStopIntentService{
                         }
                     case Constants.STRATEGY:
                     case Constants.ADMIN:
-                        if (connectedName.equals("3824_SuperScout")) {
+                        if (connectedName.equals("3824_Super_Scout")) {
                             bluetoothSync.connect(device, false);
-                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) ;
+                            long time = SystemClock.currentThreadTimeMillis();
+                            boolean connected = true;
+                            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+                            {
+                                if(SystemClock.currentThreadTimeMillis() > time + 1000)
+                                {
+                                    connected = false;
+                                    break;
+                                }
+                            };
+                            if(!connected)
+                                continue;
+
                             String connectedAddress = bluetoothSync.getConnectedAddress();
                             String lastUpdated = syncDB.getLastUpdated(connectedAddress);
                             syncDB.updateSync(connectedAddress);

@@ -312,7 +312,8 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                 pairedDevices = pairedDevicesSet.toArray();
                 if (pairedDevices.length > 0) {
                     for (int i = 0; i < pairedDevices.length; i++) {
-                        pairedDevicesArrayAdapter.add(((BluetoothDevice) pairedDevices[i]).getName() + "\n" + ((BluetoothDevice) pairedDevices[i]).getAddress());
+                        BluetoothDevice bluetoothDevice = (BluetoothDevice)pairedDevices[i];
+                        pairedDevicesArrayAdapter.add(bluetoothDevice.getName() + "\n" + bluetoothDevice.getAddress());
                     }
                 }
                 handler = new SyncHandler();
@@ -371,7 +372,15 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             }
             v.setBackgroundColor(Color.BLUE);
             ((TextView) v).setTextColor(Color.WHITE);
-            bluetoothSync.connect(((BluetoothDevice)pairedDevices[position]), false);
+            bluetoothSync.connect(((BluetoothDevice) pairedDevices[position]), false);
+            SystemClock.sleep(1000);
+            if(bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+            {
+                v.setBackgroundColor(Color.WHITE);
+                ((TextView) v).setTextColor(Color.BLACK);
+                textView.setText("Connection failed");
+                bluetoothSync.start();
+            }
         }
     };
 
