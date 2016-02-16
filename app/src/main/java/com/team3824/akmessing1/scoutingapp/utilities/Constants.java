@@ -192,5 +192,7 @@ public interface Constants {
     public static final int NUM_WORST = 2;
 
     //Bluetooth
-    public static final int BLUETOOTH_TIMEOUT = 1000;
+    public static final int CONNECTION_TIMEOUT = 1000;
+    public static final int ACKNOWLEDGEMENT_TIMEOUT = 250;
+
 }

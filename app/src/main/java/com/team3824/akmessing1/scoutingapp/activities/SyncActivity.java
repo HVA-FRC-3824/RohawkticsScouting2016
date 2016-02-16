@@ -104,7 +104,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                     // Something went wrong!
                                 }
                             }
-                            SyncActivity.this.matchScoutDB.updateMatch(map);
+                            matchScoutDB.updateMatch(map);
                         }
                     } catch (JSONException e) {
                         Log.e(TAG,e.getMessage());
@@ -141,7 +141,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                     // Something went wrong!
                                 }
                             }
-                            SyncActivity.this.pitScoutDB.updatePit(map);
+                            pitScoutDB.updatePit(map);
                         }
                     } catch (JSONException e) {
                         Log.e(TAG,e.getMessage());
@@ -178,7 +178,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                     // Something went wrong!
                                 }
                             }
-                            SyncActivity.this.superScoutDB.updateMatch(map);
+                            superScoutDB.updateMatch(map);
                         }
                     } catch (JSONException e) {
                         Log.e(TAG,e.getMessage());
@@ -214,7 +214,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                     // Something went wrong!
                                 }
                             }
-                            SyncActivity.this.driveTeamFeedbackDB.updateComments(map.get(DriveTeamFeedbackDB.KEY_TEAM_NUMBER).getInt(),map.get(DriveTeamFeedbackDB.KEY_COMMENTS).getString());
+                            driveTeamFeedbackDB.updateComments(map.get(DriveTeamFeedbackDB.KEY_TEAM_NUMBER).getInt(),map.get(DriveTeamFeedbackDB.KEY_COMMENTS).getString());
                         }
                     } catch (JSONException e) {
                         Log.e(TAG,e.getMessage());
@@ -226,31 +226,58 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                     filename = message.substring(1);
                     break;
                 case 'R':
+                    if(message.equals("RA"))
+                    {
+                        acknowledge();
 
-                    acknowledge();
+                        filename = "";
+                        selectedAddress = bluetoothSync.getConnectedAddress();
+                        syncDB.updateSync(selectedAddress);
 
-                    filename = "";
-                    selectedAddress = bluetoothSync.getConnectedAddress();
-                    String lastUpdated = syncDB.getLastUpdated(selectedAddress);
-                    syncDB.updateSync(selectedAddress);
+                        String matchUpdatedText = "M" + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(""));
+                        writeUntilAcknowledged(matchUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
 
-                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
-                    writeUntilAcknowledged(matchUpdatedText);
-                    Toast.makeText(SyncActivity.this,"Match Data Sent",Toast.LENGTH_SHORT).show();
+                        String pitUpdatedText = "P" + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(""));
+                        writeUntilAcknowledged(pitUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
 
-                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
-                    writeUntilAcknowledged(pitUpdatedText);
-                    Toast.makeText(SyncActivity.this,"Pit Data Sent",Toast.LENGTH_SHORT).show();
+                        String superUpdatedText = "S" + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(""));
+                        writeUntilAcknowledged(superUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
 
-                    String superUpdatedText = "S" + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-                    writeUntilAcknowledged(superUpdatedText);
-                    Toast.makeText(SyncActivity.this,"Super Data Sent",Toast.LENGTH_SHORT).show();
+                        String driveUpdatedText = "D" + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(""));
+                        writeUntilAcknowledged(driveUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
 
-                    String driveUpdatedText = "D" + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
-                    writeUntilAcknowledged(driveUpdatedText);
-                    Toast.makeText(SyncActivity.this,"Drive Team Feedback Data Sent",Toast.LENGTH_SHORT).show();
+                        writeUntilAcknowledged("recieved");
+                    }
+                    else {
+                        acknowledge();
 
-                    writeUntilAcknowledged("recieved");
+                        filename = "";
+                        selectedAddress = bluetoothSync.getConnectedAddress();
+                        String lastUpdated = syncDB.getLastUpdated(selectedAddress);
+                        syncDB.updateSync(selectedAddress);
+
+                        String matchUpdatedText = "M" + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
+                        writeUntilAcknowledged(matchUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
+
+                        String pitUpdatedText = "P" + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                        writeUntilAcknowledged(pitUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+
+                        String superUpdatedText = "S" + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+                        writeUntilAcknowledged(superUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
+
+                        String driveUpdatedText = "D" + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                        writeUntilAcknowledged(driveUpdatedText);
+                        Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+
+                        writeUntilAcknowledged("recieved");
+                    }
                     break;
                 case 'r':
                     if(message.equals("recieved"))
@@ -326,12 +353,11 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                 superScoutDB = new SuperScoutDB(this, eventID);
                 syncDB = new SyncDB(this, eventID);
 
-                ((Button) findViewById(R.id.sync_send)).setOnClickListener(this);
-
+                ((Button) findViewById(R.id.sync_send_update)).setOnClickListener(this);
+                ((Button) findViewById(R.id.sync_send_all)).setOnClickListener(this);
                 ((Button) findViewById(R.id.sync_picture_send)).setOnClickListener(this);
-
-                Button sync_receive = (Button) findViewById(R.id.sync_receive);
-                sync_receive.setOnClickListener(this);
+                ((Button) findViewById(R.id.sync_receive_update)).setOnClickListener(this);
+                ((Button) findViewById(R.id.sync_receive_all)).setOnClickListener(this);
 
                 bluetoothSync.start();
             } else {
@@ -373,7 +399,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             v.setBackgroundColor(Color.BLUE);
             ((TextView) v).setTextColor(Color.WHITE);
             bluetoothSync.connect(((BluetoothDevice) pairedDevices[position]), false);
-            SystemClock.sleep(Constants.BLUETOOTH_TIMEOUT);
+            SystemClock.sleep(Constants.CONNECTION_TIMEOUT);
             if(bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
             {
                 v.setBackgroundColor(Color.WHITE);
@@ -408,26 +434,46 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.back:
                 this.finish();
                 break;
-            case R.id.sync_send:
+            case R.id.sync_send_update:
                 Log.d(TAG, "Sending");
                 if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    Log.d(TAG, "Connected");
                     String lastUpdated = syncDB.getLastUpdated(selectedAddress);
                     syncDB.updateSync(selectedAddress);
 
-                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(SyncActivity.this.matchScoutDB.getInfoSince(lastUpdated));
+                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
                     writeUntilAcknowledged(matchUpdatedText);
                     Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
 
-                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(SyncActivity.this.pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
                     writeUntilAcknowledged(pitUpdatedText);
                     Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
 
-                    String superUpdatedText = "S" + Utilities.CursorToJsonString(SyncActivity.this.superScoutDB.getAllMatchesSince(lastUpdated));
+                    String superUpdatedText = "S" + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
                     writeUntilAcknowledged(superUpdatedText);
                     Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
 
-                    String driverUpdatedText = "D" + Utilities.CursorToJsonString(SyncActivity.this.driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                    String driverUpdatedText = "D" + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                    writeUntilAcknowledged(driverUpdatedText);
+                    Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.sync_send_all:
+                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
+                    syncDB.updateSync(selectedAddress);
+
+                    String matchUpdatedText = "M" + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(""));
+                    writeUntilAcknowledged(matchUpdatedText);
+                    Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
+
+                    String pitUpdatedText = "P" + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(""));
+                    writeUntilAcknowledged(pitUpdatedText);
+                    Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+
+                    String superUpdatedText = "S" + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(""));
+                    writeUntilAcknowledged(superUpdatedText);
+                    Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
+
+                    String driverUpdatedText = "D" + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(""));
                     writeUntilAcknowledged(driverUpdatedText);
                     Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
                 }
@@ -441,9 +487,17 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(SyncActivity.this, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.sync_receive:
+            case R.id.sync_receive_update:
                 if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
                     writeUntilAcknowledged("R");
+                    while (!recieved) {
+                        SystemClock.sleep(250);
+                    };
+                }
+                break;
+            case R.id.sync_receive_all:
+                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
+                    writeUntilAcknowledged("RA");
                     while (!recieved) {
                         SystemClock.sleep(250);
                     };
@@ -457,7 +511,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         while(!acknowledged)
         {
             bluetoothSync.write(message.getBytes());
-            SystemClock.sleep(250);
+            SystemClock.sleep(Constants.ACKNOWLEDGEMENT_TIMEOUT);
         }
         acknowledged = false;
     }

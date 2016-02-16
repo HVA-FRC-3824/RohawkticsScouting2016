@@ -30,8 +30,15 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:text="Send"
-        android:id="@+id/sync_send"
+        android:text="Send Update"
+        android:id="@+id/sync_send_update"
+        android:layout_weight=".5" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="Send All"
+        android:id="@+id/sync_send_all"
         android:layout_weight=".5" />
 
     <Button
@@ -44,8 +51,15 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:text="Receive"
-        android:id="@+id/sync_receive"
+        android:text="Receive Update"
+        android:id="@+id/sync_receive_update"
+        android:layout_weight=".5" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="Receive All"
+        android:id="@+id/sync_receive_all"
         android:layout_weight=".5" />
 
     <TextView

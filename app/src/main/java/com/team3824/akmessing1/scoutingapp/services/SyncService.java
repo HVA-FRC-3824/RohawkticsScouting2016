@@ -425,7 +425,7 @@ public class SyncService extends NonStopIntentService{
         while(!acknowledged)
         {
             bluetoothSync.write(message.getBytes());
-            SystemClock.sleep(250);
+            SystemClock.sleep(Constants.ACKNOWLEDGEMENT_TIMEOUT);
         }
         acknowledged = false;
     }
@@ -435,7 +435,7 @@ public class SyncService extends NonStopIntentService{
         long time = SystemClock.currentThreadTimeMillis();
         while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
         {
-            if(SystemClock.currentThreadTimeMillis() > time + Constants.BLUETOOTH_TIMEOUT)
+            if(SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT)
             {
                 return false;
             }
