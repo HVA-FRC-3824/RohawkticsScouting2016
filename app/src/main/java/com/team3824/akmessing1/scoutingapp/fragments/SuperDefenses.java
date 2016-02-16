@@ -245,8 +245,10 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
         }
         
         for(int i = 0; i < 7; i++) {
+            String current = String.valueOf(defensesSpinners[i].getSelectedItem());
             defensesAdapters[i] = new DefenseAdapter(getContext(), R.layout.list_item_string, defensesLists[i],(i==6));
             defensesSpinners[i].setAdapter(defensesAdapters[i]);
+            defensesSpinners[i].setSelection(defensesLists[i].indexOf(current));
         }
 
     }
@@ -334,9 +336,8 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
 
         for(int i = 0; i < 3; i++) {
             if(i+offset == index) continue;
-
-            defensesAdapters[i+offset] = new DefenseAdapter(getContext(), R.layout.list_item_string, defensesLists[i+offset]);
             current = String.valueOf(defensesSpinners[i+offset].getSelectedItem());
+            defensesAdapters[i+offset] = new DefenseAdapter(getContext(), R.layout.list_item_string, defensesLists[i+offset]);
             defensesSpinners[i+offset].setAdapter(defensesAdapters[i+offset]);
             defensesSpinners[i+offset].setSelection(defensesLists[i+offset].indexOf(current));
         }
