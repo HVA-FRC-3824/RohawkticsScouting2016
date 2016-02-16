@@ -8,43 +8,43 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
-        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefenseInput
+        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefense
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/teleop_defense_1"
-            app:label="Defense 1 (Low bar):"
+            app:label="D1 (LB):"
             app:key="teleop_defense_1"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefenseInput
+        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefense
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/teleop_defense_2"
-            app:label="Defense 2:"
+            app:label="D2:"
             app:key="teleop_defense_2"/>
 
 
-        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefenseInput
+        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefense
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/teleop_defense_3"
-            app:label="Defense 3:"
+            app:label="D3:"
             app:key="teleop_defense_3"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefenseInput
+        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefense
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/teleop_defense_4"
-            app:label="Defense 4:"
+            app:label="D4:"
             app:key="teleop_defense_4"/>
 
-        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefenseInput
+        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomDefense
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/teleop_defense_5"
-            app:label="Defense 5:"
+            app:label="D5:"
             app:key="teleop_defense_5"/>
 
         <LinearLayout
