@@ -194,5 +194,7 @@ public interface Constants {
     //Bluetooth
     public static final int CONNECTION_TIMEOUT = 1000;
     public static final int ACKNOWLEDGEMENT_TIMEOUT = 250;
-
+    public static final int CHUNK_SIZE = 4192;
+    public static final int HEADER_MSB = 0x10;
+    public static final int HEADER_LSB = 0x55;
 }

@@ -5,17 +5,22 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.MessageType;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class BluetoothSync {
@@ -211,16 +216,16 @@ public class BluetoothSync {
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
-    public void write(byte[] out) {
+    public boolean write(byte[] out) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
+            if (mState != STATE_CONNECTED) return false;
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
-        r.write(out);
+        return r.write(out);
     }
 
     /**
@@ -229,16 +234,16 @@ public class BluetoothSync {
      * @param file The buffered input file to write
      * @see ConnectedThread#writeFile(File)
      */
-    public void writeFile(File file) {
+    public boolean writeFile(File file) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
         synchronized (this) {
-            if (mState != STATE_CONNECTED) return;
+            if (mState != STATE_CONNECTED) return false;
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
-        r.writeFile(file);
+        return r.writeFile(file);
     }
 
     /**
@@ -401,7 +406,7 @@ public class BluetoothSync {
             }
 
             // Start the connected thread
-            connected(mmSocket, mmDevice,socketType);
+            connected(mmSocket, mmDevice, socketType);
         }
 
         public void cancel() {
@@ -422,6 +427,10 @@ public class BluetoothSync {
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
+        private int mSubstate;
+        private static final int SUBSTATE_SENDING = 0;
+        private static final int SUBSTATE_RECEIVING = 1;
+
         public ConnectedThread(BluetoothSocket socket, String socketType) {
             Log.d(TAG, "create ConnectedThread");
             mmSocket = socket;
@@ -438,42 +447,87 @@ public class BluetoothSync {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+            mSubstate = SUBSTATE_RECEIVING;
         }
 
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
-            String inBuffer = "";
-            while (true) {
-                //Log.d(TAG,inBuffer);
-                try {
-                    int inChar = mmInStream.read();
-                    if(inBuffer.length() > 5 && inBuffer.startsWith("file:"))
-                    {
-                        if(inBuffer.endsWith(":end"))
-                        {
-                            mHandler.obtainMessage(Constants.MESSAGE_READ, inBuffer.getBytes()).sendToTarget();
-                            inBuffer = "";
-                        }
-                        else
-                        {
-                            inBuffer += (char) inChar;
-                        }
-                    }
-                    else {
-                        if (inChar == '\0') {
-                            mHandler.obtainMessage(Constants.MESSAGE_READ, inBuffer.getBytes()).sendToTarget();
-                            inBuffer = "";
-                        } else {
-                            inBuffer += (char) inChar;
-                        }
-                    }
-                } catch (IOException e) {
-                    connectionLost();
-                    BluetoothSync.this.start();
-                    break;
-                }
-            }
+            try {
+                while (mState == STATE_CONNECTED) {
+                    if (mmInStream.available() > 0 && mSubstate == SUBSTATE_RECEIVING) {
 
+                        boolean waitingForHeader = true;
+                        ByteArrayOutputStream dataOutputStream = new ByteArrayOutputStream();
+                        byte[] headerBytes = new byte[22];
+                        byte[] digest = new byte[16];
+                        int headerIndex = 0;
+                        byte header;
+                        int totalSize = -1, remainingSize = -1;
+
+                        while (true) {
+                            if (waitingForHeader) {
+                                header = (byte)mmInStream.read();
+                                Log.v(TAG, "Received Header Byte: " + header);
+                                headerBytes[headerIndex++] = header;
+
+                                if (headerIndex == 22) {
+                                    if ((headerBytes[0] == Constants.HEADER_MSB) && (headerBytes[1] == Constants.HEADER_LSB)) {
+                                        Log.v(TAG, "Header Received.  Now obtaining length");
+                                        byte[] dataSizeBuffer = Arrays.copyOfRange(headerBytes, 2, 6);
+                                        totalSize = Utilities.byteArrayToInt(dataSizeBuffer);
+                                        remainingSize = totalSize;
+                                        Log.v(TAG, "Data size: " + totalSize);
+                                        digest = Arrays.copyOfRange(headerBytes, 6, 22);
+                                        waitingForHeader = false;
+                                    } else {
+                                        Log.e(TAG, "Did not receive correct header.  Closing socket");
+                                        mmSocket.close();
+                                        mHandler.sendEmptyMessage(MessageType.INVALID_HEADER);
+                                        break;
+                                    }
+                                }
+
+                            } else {
+                                // Read the data from the stream in chunks
+                                byte[] buffer = new byte[Constants.CHUNK_SIZE];
+                                Log.v(TAG, String.format("Waiting for data.  Expecting %d more bytes.",remainingSize));
+                                int bytesRead = mmInStream.read(buffer);
+                                Log.v(TAG, "Read " + bytesRead + " bytes into buffer");
+                                dataOutputStream.write(buffer, 0, bytesRead);
+                                remainingSize -= bytesRead;
+
+                                if (remainingSize <= 0) {
+                                    Log.v(TAG, "Expected data has been received.");
+                                    break;
+                                }
+                            }
+                        }
+
+                        // check the integrity of the data
+                        final byte[] data = dataOutputStream.toByteArray();
+
+                        if (Utilities.digestMatch(data, digest)) {
+                            Log.v(TAG, "Digest matches OK.");
+                            Message message = new Message();
+                            message.obj = data;
+                            message.what = MessageType.DATA_RECEIVED;
+                            mHandler.sendMessage(message);
+
+                            // Send the digest back to the client as a confirmation
+                            Log.v(TAG, "Sending back digest for confirmation");
+                            mmOutStream.write(digest);
+
+                        } else {
+                            Log.e(TAG, "Digest did not match.  Corrupt transfer?");
+                            mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
+                        }
+
+                    }
+                    while (mmInStream.available() == 0 && mSubstate != SUBSTATE_RECEIVING);
+                }
+            } catch (IOException e) {
+                Log.e(TAG,e.toString());
+            }
         }
 
         /**
@@ -481,17 +535,60 @@ public class BluetoothSync {
          *
          * @param buffer The bytes to write
          */
-        public void write(byte[] buffer) {
+        public boolean write(byte[] buffer) {
             Log.d(TAG,"Sending: "+new String(buffer));
-            byte[] tempBuffer = new byte[buffer.length+1];
-            System.arraycopy(buffer,0,tempBuffer,0,buffer.length);
-            tempBuffer[buffer.length] = '\0'; // null character to symbolize end of message
+            mSubstate = SUBSTATE_SENDING;
             try {
-                mmOutStream.write(tempBuffer);
+                mHandler.sendEmptyMessage(MessageType.SENDING_DATA);
+
+                // Send the header control first
+                mmOutStream.write(Constants.HEADER_MSB);
+                mmOutStream.write(Constants.HEADER_LSB);
+
+                // write size
+                mmOutStream.write(Utilities.intToByteArray(buffer.length));
+
+                // write digest
+                byte[] digest = Utilities.getDigest(buffer);
+                mmOutStream.write(digest);
+
+                // now write the data
+                mmOutStream.write(buffer);
                 mmOutStream.flush();
-            } catch (IOException e) {
-                Log.e(TAG, "Exception during write", e);
+
+                Log.v(TAG, "Data sent.  Waiting for return digest as confirmation");
+
+                byte[] incomingDigest = new byte[16];
+                int incomingIndex = 0;
+
+                try {
+                    while (true) {
+                        byte header = (byte)mmInStream.read();
+                        incomingDigest[incomingIndex++] = header;
+                        if (incomingIndex == 16) {
+                            if (Utilities.digestMatch(buffer, incomingDigest)) {
+                                Log.v(TAG, "Digest matched OK.  Data was received OK.");
+                                mHandler.sendEmptyMessage(MessageType.DATA_SENT_OK);
+                                mSubstate = SUBSTATE_RECEIVING;
+                                return true;
+                            } else {
+                                Log.e(TAG, "Digest did not match.  Might want to resend.");
+                                mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
+                                mSubstate = SUBSTATE_RECEIVING;
+                                return false;
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.toString());
+                }
+
             }
+            catch (Exception ex) {
+                Log.e(TAG, ex.toString());
+            }
+            mSubstate = SUBSTATE_RECEIVING;
+            return false;
         }
 
         /**
@@ -499,45 +596,81 @@ public class BluetoothSync {
          *
          * @param file The buffered input stream from the file to write
          */
-        public void writeFile(File file)
+        public boolean writeFile(File file)
         {
             Log.d(TAG,"Sending file...");
-            byte[] bytes = new byte[1024];
-            BufferedInputStream bis;
-            int len;
-            try{
-                bis = new BufferedInputStream(new FileInputStream(file));
-                mmOutStream.write(("file:").getBytes());
-                Log.d(TAG, "file");
-                Log.d(TAG,String.valueOf(bis.available()));
+            mSubstate = SUBSTATE_SENDING;
+
+            try {
+                mHandler.sendEmptyMessage(MessageType.SENDING_DATA);
+
+                byte[] bytes = new byte[1024];
+                int len;
+
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                ByteArrayOutputStream dataOutputStream = new ByteArrayOutputStream();
                 while(bis.available()>0)
                 {
                     len = bis.read(bytes,0,bytes.length);
                     if(len <= 0)
                         break;
                     if(len == bytes.length) {
-                        mmOutStream.write(bytes);
+                        dataOutputStream.write(bytes);
                     }
                     else {
-                        mmOutStream.write(bytes,0,len);
+                        dataOutputStream.write(bytes,0,len);
                         break;
                     }
-                    Log.d(TAG,String.valueOf(bis.available()));
                 }
                 bis.close();
-                Log.d(TAG,"data");
-                mmOutStream.write((":end").getBytes());
-                Log.d(TAG,"end");
+
+                byte[] buffer = dataOutputStream.toByteArray();
+
+                // Send the header control first
+                mmOutStream.write(Constants.HEADER_MSB);
+                mmOutStream.write(Constants.HEADER_LSB);
+
+                // write size
+                mmOutStream.write(Utilities.intToByteArray(bis.available()));
+
+                // write digest
+                byte[] digest = Utilities.getDigest(buffer);
+                mmOutStream.write(digest);
+
+                // now write the data
+                mmOutStream.write(buffer);
                 mmOutStream.flush();
+
+                Log.v(TAG, "Data sent.  Waiting for return digest as confirmation");
+
+                byte[] incomingDigest = new byte[16];
+                int incomingIndex = 0;
+
+                while (true) {
+                    byte header = (byte)mmInStream.read();
+                    incomingDigest[incomingIndex++] = header;
+                    if (incomingIndex == 16) {
+                        if (Utilities.digestMatch(buffer, incomingDigest)) {
+                            Log.v(TAG, "Digest matched OK.  Data was received OK.");
+                            mHandler.sendEmptyMessage(MessageType.DATA_SENT_OK);
+                            mSubstate = SUBSTATE_RECEIVING;
+                            return true;
+                        } else {
+                            Log.e(TAG, "Digest did not match.  Might want to resend.");
+                            mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
+                            mSubstate = SUBSTATE_RECEIVING;
+                            return false;
+                        }
+                    }
+                }
+
             }
-            catch (FileNotFoundException e)
-            {
-                Log.e(TAG,e.getMessage());
+            catch (Exception ex) {
+                Log.e(TAG, ex.toString());
             }
-            catch (IOException e2)
-            {
-                Log.e(TAG,e2.getMessage());
-            }
+            mSubstate = SUBSTATE_RECEIVING;
+            return false;
+
         }
 
 
