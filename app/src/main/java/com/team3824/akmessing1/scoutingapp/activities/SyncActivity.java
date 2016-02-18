@@ -40,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -145,7 +146,9 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                             // Something went wrong!
                                         }
                                     }
-                                    pitScoutDB.updatePit(map);
+                                    if(map.get(PitScoutDB.KEY_COMPLETE).getInt() == 1) {
+                                        pitScoutDB.updatePit(map);
+                                    }
                                 }
                             } catch (JSONException e) {
                                 Log.e(TAG, e.getMessage());
@@ -260,19 +263,19 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             break;
                         case 'f':
-                            if (message.startsWith("file:") && message.endsWith(":end")) {
-                                String messageWOPrefix = message.substring(5);
-                                String messageWOSuffix = message.substring(0, messageWOPrefix.length() - 4);
-                                File f = new File(SyncActivity.this.getFilesDir(), filename);
+                            if (message.startsWith("file:")) {
+                                byte[] fileBuffer = Arrays.copyOfRange((byte[]) msg.obj, 5, ((byte[]) msg.obj).length);
                                 FileOutputStream fileOutputStream = null;
                                 try {
-                                    fileOutputStream = new FileOutputStream(f);
-                                    fileOutputStream.write(messageWOSuffix.getBytes());
+                                    fileOutputStream = SyncActivity.this.openFileOutput(filename, Context.MODE_WORLD_WRITEABLE);
+                                    fileOutputStream.write(fileBuffer);
+                                    fileOutputStream.close();
                                 } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
+                                    Log.e(TAG,e.getMessage());
                                 } catch (IOException e) {
                                     Log.e(TAG, e.getMessage());
                                 }
+                                Log.d(TAG,String.format("File %s Received", filename));
                                 Toast.makeText(SyncActivity.this, String.format("File %s Received", filename), Toast.LENGTH_SHORT).show();
                             }
                             break;
@@ -394,8 +397,10 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             if(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE) != -1) {
                 if(cursor.getType(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
                     String filename = cursor.getString(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE));
-                    Log.d(TAG, filename);
-                    filenames.add(filename);
+                    if(!filename.equals("")) {
+                        Log.d(TAG, filename);
+                        filenames.add(filename);
+                    }
                 }
             }
         }
@@ -456,9 +461,9 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.sync_picture_send:
                 ArrayList<String> filenames = getImageFiles(SyncActivity.this.pitScoutDB.getAllTeamInfo());
                 for (int i = 0; i < filenames.size(); i++) {
-                    bluetoothSync.write(("F" + filenames.get(i)).getBytes());
+                    while(!bluetoothSync.write(("F" + filenames.get(i)).getBytes()));
                     File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
-                    bluetoothSync.writeFile(file);
+                    while(!bluetoothSync.writeFile(file));
                     Toast.makeText(SyncActivity.this, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -470,7 +475,6 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.sync_receive_all:
                 if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
                     while (!bluetoothSync.write("RA".getBytes()));
-
                 }
                 break;
         }

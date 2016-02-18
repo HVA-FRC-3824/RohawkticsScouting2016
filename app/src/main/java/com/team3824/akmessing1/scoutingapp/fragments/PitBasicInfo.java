@@ -61,8 +61,9 @@ public class PitBasicInfo extends ScoutFragment{
                 mCurrentPhotoPath = valueMap.get(Constants.PIT_ROBOT_PICTURE).getString();
                 valueMap.remove(Constants.PIT_ROBOT_PICTURE);
                 if (!mCurrentPhotoPath.equals("")) {
-                    setPic();
-                    mButton.setText("Remove Picture");
+                    if(setPic()) {
+                        mButton.setText("Remove Picture");
+                    }
                 }
             }
             restoreContentsFromMap(valueMap, (ViewGroup) view);
@@ -120,7 +121,7 @@ public class PitBasicInfo extends ScoutFragment{
         return view;
     }
 
-    private void setPic() {
+    private boolean setPic() {
         // Get the dimensions of the View
         int targetW = 400;
         int targetH = 600;
@@ -145,14 +146,19 @@ public class PitBasicInfo extends ScoutFragment{
         Bitmap bitmap = BitmapFactory.decodeFile(fullPath, bmOptions);
         try {
             FileOutputStream fos = context.openFileOutput(mCurrentPhotoPath, Context.MODE_WORLD_WRITEABLE);
-            bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
-            fos.close();
+            if(fos != null && bitmap != null) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.close();
+                mImageView.setImageBitmap(bitmap);
+                return true;
+            }
         } catch (FileNotFoundException e) {
             Log.e(TAG,e.getMessage());
         } catch (IOException e) {
             Log.e(TAG,e.getMessage());
         }
-        mImageView.setImageBitmap(bitmap);
+
+        return false;
     }
 
     @Override

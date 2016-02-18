@@ -626,44 +626,12 @@ public class BluetoothSync {
 
                 byte[] buffer = dataOutputStream.toByteArray();
 
-                // Send the header control first
-                mmOutStream.write(Constants.HEADER_MSB);
-                mmOutStream.write(Constants.HEADER_LSB);
+                byte[] prefix = {'f','i','l','e',':'};
 
-                // write size
-                mmOutStream.write(Utilities.intToByteArray(bis.available()));
-
-                // write digest
-                byte[] digest = Utilities.getDigest(buffer);
-                mmOutStream.write(digest);
-
-                // now write the data
-                mmOutStream.write(buffer);
-                mmOutStream.flush();
-
-                Log.v(TAG, "Data sent.  Waiting for return digest as confirmation");
-
-                byte[] incomingDigest = new byte[16];
-                int incomingIndex = 0;
-
-                while (true) {
-                    byte header = (byte)mmInStream.read();
-                    incomingDigest[incomingIndex++] = header;
-                    if (incomingIndex == 16) {
-                        if (Utilities.digestMatch(buffer, incomingDigest)) {
-                            Log.v(TAG, "Digest matched OK.  Data was received OK.");
-                            mHandler.sendEmptyMessage(MessageType.DATA_SENT_OK);
-                            mSubstate = SUBSTATE_RECEIVING;
-                            return true;
-                        } else {
-                            Log.e(TAG, "Digest did not match.  Might want to resend.");
-                            mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
-                            mSubstate = SUBSTATE_RECEIVING;
-                            return false;
-                        }
-                    }
-                }
-
+                byte[] combined = new byte[prefix.length + buffer.length];
+                System.arraycopy(prefix,0,combined,0,prefix.length);
+                System.arraycopy(buffer,0,combined,prefix.length,buffer.length);
+                return write(combined);
             }
             catch (Exception ex) {
                 Log.e(TAG, ex.toString());
