@@ -28,7 +28,7 @@ public class ScheduleBuilder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_builder);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
 

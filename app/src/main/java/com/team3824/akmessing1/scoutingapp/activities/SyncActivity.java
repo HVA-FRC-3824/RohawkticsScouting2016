@@ -324,7 +324,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         ((Button)findViewById(R.id.back)).setOnClickListener(this);

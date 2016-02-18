@@ -302,7 +302,7 @@ public class SyncService extends NonStopIntentService{
         else {
 
             Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
-            SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
             String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
             String userType = sharedPreferences.getString(Constants.USER_TYPE, "");
             matchScoutDB = new MatchScoutDB(this, eventID);

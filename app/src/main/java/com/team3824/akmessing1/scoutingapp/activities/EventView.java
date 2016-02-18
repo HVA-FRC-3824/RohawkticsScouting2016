@@ -69,7 +69,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
         listView = (ListView)findViewById(R.id.event_view_list);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         statsDB = new StatsDB(this,eventID);

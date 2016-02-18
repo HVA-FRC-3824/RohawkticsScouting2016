@@ -62,7 +62,7 @@ public class SuperScouting extends AppCompatActivity {
         setTitle("Match Number: " + matchNumber);
 
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
 

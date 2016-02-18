@@ -47,7 +47,7 @@ public class DriveTeamFeedback extends AppCompatActivity{
         position = extras.getString("position");
         setTitle("Match Number: " + matchNumber);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
         Cursor cursor = scheduleDB.getMatch(matchNumber);

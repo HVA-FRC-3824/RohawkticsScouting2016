@@ -4,7 +4,9 @@ public interface Constants {
 
     public static final String VERSION="Version: 1.0.8";
 
-        // Settings
+    public static final String APP_DATA = "appData";
+
+    // Settings
     public static final String EVENT_ID = "event_id";
     public static final String USER_TYPE = "user_type";
     public static final String ALLIANCE_COLOR = "alliance_color";

@@ -27,7 +27,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
 
         ((TextView)findViewById(R.id.version)).setText(Constants.VERSION);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String type = sharedPreferences.getString(Constants.USER_TYPE, "");
         setupButton(R.id.settings_button);
         switch (type) {

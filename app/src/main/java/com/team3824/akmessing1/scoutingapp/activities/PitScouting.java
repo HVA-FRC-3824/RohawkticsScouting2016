@@ -68,7 +68,7 @@ public class PitScouting extends AppCompatActivity {
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         userType = sharedPreferences.getString(Constants.USER_TYPE,"");
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);

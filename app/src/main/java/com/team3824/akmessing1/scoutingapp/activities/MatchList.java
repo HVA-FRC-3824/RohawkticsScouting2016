@@ -34,7 +34,7 @@ public class MatchList extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String nextPage = extras.getString(Constants.NEXT_PAGE);
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         CustomHeader header = (CustomHeader)findViewById(R.id.match_list_header);

@@ -66,7 +66,7 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
         list = (DragSortListView) view.findViewById(R.id.pick_list);
 
         teams = new ArrayList<>();
-        sharedPref = getActivity().getSharedPreferences("appData", Context.MODE_PRIVATE);
+        sharedPref = getActivity().getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         statsDB = new StatsDB(getContext(),sharedPref.getString(Constants.EVENT_ID, ""));
         Cursor statsCursor = statsDB.getStats();
         PitScoutDB pitScoutDB = new PitScoutDB(getContext(),sharedPref.getString(Constants.EVENT_ID,""));

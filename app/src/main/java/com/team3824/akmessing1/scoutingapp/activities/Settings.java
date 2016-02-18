@@ -49,7 +49,7 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        SharedPreferences sharedPref = getSharedPreferences( "appData", Context.MODE_PRIVATE );
+        SharedPreferences sharedPref = getSharedPreferences( Constants.APP_DATA, Context.MODE_PRIVATE );
 
         final Spinner colorSelector = (Spinner)findViewById(R.id.colorSelector);
         String[] colors = new String[]{Constants.BLUE, Constants.RED};
@@ -118,7 +118,7 @@ public class Settings extends AppCompatActivity {
         Spinner numSelector = (Spinner)findViewById(R.id.numSelector);
         EditText eventID = (EditText)findViewById(R.id.eventID);
 
-        SharedPreferences.Editor prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE ).edit();
+        SharedPreferences.Editor prefEditor = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE ).edit();
 
         String eventId = String.valueOf(eventID.getText());
         if(!eventId.equals("")) {

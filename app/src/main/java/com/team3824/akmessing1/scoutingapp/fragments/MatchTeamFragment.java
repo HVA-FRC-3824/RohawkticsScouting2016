@@ -62,7 +62,7 @@ public class MatchTeamFragment extends Fragment {
         TextView textView = (TextView)view.findViewById(R.id.team_number);
         textView.setText(String.valueOf(teamNumber));
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         Button button = (Button) view.findViewById(R.id.view_team);

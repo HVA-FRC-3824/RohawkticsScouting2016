@@ -62,7 +62,7 @@ public class MatchScouting extends AppCompatActivity {
 
         setTitle("Match Number: " + matchNumber + " Team Number: " + teamNumber);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         allianceColor = sharedPreferences.getString(Constants.ALLIANCE_COLOR, "");
 
         // Set up tabs and pages for different fragments of a match

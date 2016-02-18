@@ -38,7 +38,7 @@ public class PitList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);

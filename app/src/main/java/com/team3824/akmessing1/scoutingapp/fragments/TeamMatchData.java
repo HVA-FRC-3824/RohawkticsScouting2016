@@ -39,7 +39,7 @@ public class TeamMatchData extends Fragment {
         Bundle args = getArguments();
         int teamNumber = args.getInt(Constants.TEAM_NUMBER, -1);
         Activity activity = getActivity();
-        SharedPreferences sharedPreferences = activity.getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         StatsDB statsDB = new StatsDB(activity,eventID);
         Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);

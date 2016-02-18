@@ -44,7 +44,7 @@ public class AggregateService extends IntentService {
     {
         Log.d(TAG, "Aggregate Service Started");
         Context context = getApplicationContext();
-        SharedPreferences sharedPreferences = context.getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         PitScoutDB pitScoutDB = new PitScoutDB(context,eventID);
         SuperScoutDB superScoutDB = new SuperScoutDB(context, eventID);

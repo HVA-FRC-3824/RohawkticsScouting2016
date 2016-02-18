@@ -35,7 +35,7 @@ public class TeamPitData extends Fragment{
         Bundle args = getArguments();
         int teamNumber = args.getInt(Constants.TEAM_NUMBER, -1);
         Activity activity = getActivity();
-        SharedPreferences sharedPreferences = activity.getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         PitScoutDB pitScoutDB = new PitScoutDB(activity,eventID);
         Map<String, ScoutValue> pitMap = pitScoutDB.getTeamMap(teamNumber);

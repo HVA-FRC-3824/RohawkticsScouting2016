@@ -44,7 +44,7 @@ public class MatchSchedule extends AppCompatActivity {
             }
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         String userType = sharedPreferences.getString(Constants.USER_TYPE,"");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventID);

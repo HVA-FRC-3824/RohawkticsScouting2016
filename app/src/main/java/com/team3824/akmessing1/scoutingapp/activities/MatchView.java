@@ -34,7 +34,7 @@ public class MatchView extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         matchNumber = extras.getInt(Constants.MATCH_NUMBER);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.match_view_toolbar);

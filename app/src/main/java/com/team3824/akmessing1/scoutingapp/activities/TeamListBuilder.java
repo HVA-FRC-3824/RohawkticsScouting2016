@@ -38,7 +38,7 @@ public class TeamListBuilder extends AppCompatActivity implements View.OnClickLi
 
         ((CustomHeader)findViewById(R.id.header)).removeHome();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         pitScoutDB = new PitScoutDB(this, eventID);
         statsDB = new StatsDB(this, eventID);

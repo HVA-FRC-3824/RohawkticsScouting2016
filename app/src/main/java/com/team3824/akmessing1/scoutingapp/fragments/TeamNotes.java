@@ -35,7 +35,7 @@ public class TeamNotes extends Fragment {
         Bundle args = getArguments();
         int teamNumber = args.getInt(Constants.TEAM_NUMBER, -1);
         Activity activity = getActivity();
-        SharedPreferences sharedPreferences = activity.getSharedPreferences("appData", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         MatchScoutDB matchScoutDB = new MatchScoutDB(activity,eventID);
         String notes = "";

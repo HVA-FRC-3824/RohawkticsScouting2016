@@ -37,7 +37,7 @@ public class DatabaseManagement extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_management);
 
-        sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         matchScoutDB = new MatchScoutDB(this, eventId);
         pitScoutDB = new PitScoutDB(this, eventId);

@@ -32,7 +32,7 @@ public class TeamList extends AppCompatActivity {
         CustomHeader header = (CustomHeader)findViewById(R.id.team_list_header);
         header.removeHome();
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);
