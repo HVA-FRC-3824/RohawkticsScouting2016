@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
@@ -123,6 +125,21 @@ public class PitScouting extends AppCompatActivity {
         return true;
     }
 
+    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Map<String, ScoutValue>... maps) {
+            Map<String, ScoutValue> data = maps[0];
+
+            PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+            // Add the team and match numbers
+            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+            // Store values to the database
+            pitScoutDB.updatePit(data);
+            return null;
+        }
+    }
+
     private void home_press()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
@@ -143,11 +160,7 @@ public class PitScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    // Store values to the database
-                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                    pitScoutDB.updatePit(data);
+                    new SaveTask().execute(data);
 
                     Intent intent = new Intent(PitScouting.this, StartScreen.class);
                     startActivity(intent);
@@ -199,13 +212,10 @@ public class PitScouting extends AppCompatActivity {
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
                     // Add the team and match numbers
-                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    // Store values to the database
-                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                    pitScoutDB.updatePit(data);
+                    new SaveTask().execute(data);
 
-                    Intent intent2 = new Intent(PitScouting.this, PitList.class);
-                    startActivity(intent2);
+                    Intent intent = new Intent(PitScouting.this, PitList.class);
+                    startActivity(intent);
                 }
                 else
                 {
@@ -255,11 +265,7 @@ public class PitScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    // Store values to the database
-                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                    pitScoutDB.updatePit(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(PitScouting.this, PitScouting.class);
@@ -315,11 +321,7 @@ public class PitScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    // Store values to the database
-                    PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                    pitScoutDB.updatePit(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(PitScouting.this, PitScouting.class);

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -159,6 +160,22 @@ public class MatchScouting extends AppCompatActivity {
         return true;
     }
 
+    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Map<String, ScoutValue>... maps) {
+            Map<String, ScoutValue> data = maps[0];
+
+            MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
+            data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+            data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+            data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
+            // Store values to the database
+            matchScoutDB.updateMatch(data);
+            return null;
+        }
+    }
+
     private void home_press()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
@@ -179,13 +196,7 @@ public class MatchScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
-                    // Store values to the database
-                    matchScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, StartScreen.class);
@@ -239,13 +250,7 @@ public class MatchScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
-                    // Store values to the database
-                    matchScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchList.class);
@@ -302,13 +307,7 @@ public class MatchScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
-                    // Store values to the database
-                    matchScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
@@ -367,13 +366,7 @@ public class MatchScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-                    data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                    data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
-                    // Store values to the database
-                    matchScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchScouting.class);

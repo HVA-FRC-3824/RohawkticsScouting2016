@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
@@ -129,6 +131,27 @@ public class SuperScouting extends AppCompatActivity {
         return true;
     }
 
+    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Map<String, ScoutValue>... maps) {
+            Map<String, ScoutValue> data = maps[0];
+
+            // Add the team and match numbers
+            SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
+            data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
+            data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
+            data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
+            data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
+            data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
+            data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
+            data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+            // Store values to the database
+            superScoutDB.updateMatch(data);
+            return null;
+        }
+    }
+
     private void home_pres()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
@@ -149,17 +172,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                    // Store values to the database
-                    superScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, StartScreen.class);
@@ -212,17 +225,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                    // Store values to the database
-                    superScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, MatchList.class);
@@ -278,17 +281,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                    // Store values to the database
-                    superScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
@@ -345,17 +338,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 if(error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    // Add the team and match numbers
-                    SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-                    data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-                    data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-                    data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-                    data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-                    data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-                    data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-                    data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
-                    // Store values to the database
-                    superScoutDB.updateMatch(data);
+                    new SaveTask().execute(data);
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, SuperScouting.class);

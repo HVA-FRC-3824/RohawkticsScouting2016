@@ -2,14 +2,9 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
-    public static final String VERSION="Version: 1.0.7";
+    public static final String VERSION="Version: 1.0.8";
 
-
-    // Message types sent from the Handler
-    public static final int MESSAGE_READ=0;
-    public static final int MESSAGE_WRITE=1;
-
-    // Settings
+        // Settings
     public static final String EVENT_ID = "event_id";
     public static final String USER_TYPE = "user_type";
     public static final String ALLIANCE_COLOR = "alliance_color";
