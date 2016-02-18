@@ -151,14 +151,14 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     private void points(Cursor cursor)
     {
         ArrayList<ELI_Points> teams = new ArrayList<>();
-        while(!cursor.isAfterLast())
+        for(cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext())
         {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Points team = new ELI_Points(teamNumber);
 
             float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
-            if(totalMatches > 0) {
+            if(totalMatches > -1) {
                 totalMatches = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_MATCHES));
 
                 team.mHighPoints = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_TELEOP_HIGH_HIT)) * 5 +
@@ -199,8 +199,6 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 team.mAvgPoints = (totalMatches == 0.0f) ? 0.0f : (float) team.mTotalPoints / totalMatches;
             }
             teams.add(team);
-
-            cursor.moveToNext();
         }
 
         // Sorting is based on average points
@@ -228,13 +226,14 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_Defenses> teams = new ArrayList<>();
 
-        while(!cursor.isAfterLast()) {
+        for(cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext())
+        {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Defenses team = new ELI_Defenses(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
+            int totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
-            if (totalMatches > 0) {
+            if (totalMatches > -1) {
                 team.cPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.PORTCULLIS_INDEX])) +
                         cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.PORTCULLIS_INDEX]));
                 team.sPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.PORTCULLIS_INDEX]));
@@ -285,7 +284,6 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                         team.cRockWall + team.cLowBar;
             }
             teams.add(team);
-            cursor.moveToNext();
         }
 
         // Compares based on average total number of crosses
@@ -314,13 +312,14 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_IndividualDefense> teams = new ArrayList<>();
 
-        while(!cursor.isAfterLast()) {
+        for(cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext())
+        {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_IndividualDefense team = new ELI_IndividualDefense(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
+            int totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
-            if (totalMatches > 0) {
+            if (totalMatches > -1) {
                 team.mTeleopCross = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]));
                 team.mAutoCross = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]));
                 team.mAutoReach = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[defense_index]));
@@ -376,13 +375,14 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_Shots> teams = new ArrayList<>();
 
-        while(!cursor.isAfterLast()) {
+        for(cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext())
+        {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Shots team = new ELI_Shots(teamNumber);
 
             float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
-            if (totalMatches > 0) {
+            if (totalMatches > -1) {
                 team.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_"+goal+"_hit"));
                 team.mAutoTaken = cursor.getInt(cursor.getColumnIndex("total_auto_"+goal+"_miss")) + team.mAutoMade;
                 team.mAutoPercentage = (team.mAutoTaken == 0)?0:(float)team.mAutoMade/(float)team.mAutoTaken * 100.0f;
@@ -392,7 +392,6 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 team.mTeleopPercentage = (team.mTeleopTaken == 0)?0:(float)team.mTeleopMade/(float)team.mTeleopTaken * 100.0f;
             }
             teams.add(team);
-            cursor.moveToNext();
         }
 
         // Sorted based on percentage if more than 10 shots taken or
@@ -440,14 +439,15 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_Auto> teams = new ArrayList<>();
 
-        while(!cursor.isAfterLast()) {
+        for(cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext())
+        {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Auto team = new ELI_Auto(teamNumber);
 
             float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
 
-            if (totalMatches > 0) {
+            if (totalMatches > -1) {
                 team.mDefenses.cPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.PORTCULLIS_INDEX]));
                 team.mDefenses.sPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.PORTCULLIS_INDEX]));
 
@@ -489,7 +489,6 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
             }
             teams.add(team);
-            cursor.moveToNext();
         }
 
         // Compares based on average auto points
@@ -544,14 +543,14 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_Ability> teams = new ArrayList<>();
 
-        while(!cursor.isAfterLast())
+        for(cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext())
         {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Ability team = new ELI_Ability(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
+            int totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
-            if (totalMatches > 0) {
+            if (totalMatches > -1) {
                 team.mRank = cursor.getString(cursor.getColumnIndex(ability));
             }
             else
@@ -559,7 +558,6 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 team.mRank = "N/A";
             }
             teams.add(team);
-            cursor.moveToNext();
         }
 
         Collections.sort(teams, new Comparator<ELI_Ability>() {
@@ -594,20 +592,19 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_Endgame> teams = new ArrayList<>();
 
-        while(!cursor.isAfterLast())
+        for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext())
         {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Endgame team = new ELI_Endgame(teamNumber);
 
-            float totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
+            int totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
-            if (totalMatches > 0) {
+            if (totalMatches > -1) {
                 team.mTotalMatches = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_MATCHES));
                 team.mChallenge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_CHALLENGE));
                 team.mScale = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_SCALE));
             }
             teams.add(team);
-            cursor.moveToNext();
         }
 
         // Sorts based on average endgame points
@@ -659,7 +656,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_Fouls> teams = new ArrayList<>();
 
-        while(!cursor.isAfterLast()) {
+        for(cursor.moveToFirst();!cursor.isAfterLast();cursor.moveToNext()) {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Fouls team = new ELI_Fouls(teamNumber);
 
@@ -672,7 +669,6 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 team.mRedCards = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_RED_CARDS));
             }
             teams.add(team);
-            cursor.moveToNext();
         }
 
 

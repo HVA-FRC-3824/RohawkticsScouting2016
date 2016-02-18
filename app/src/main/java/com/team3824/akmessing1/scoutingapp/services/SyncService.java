@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class SyncService extends NonStopIntentService{
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothSync bluetoothSync;
     private SyncHandler handler;
+    private Handler toastHandler;
 
     private String TAG = "SyncService";
 
@@ -95,7 +97,7 @@ public class SyncService extends NonStopIntentService{
                             } catch (JSONException e) {
                                 Log.e(TAG, e.getMessage());
                             }
-                            Toast.makeText(context, "Match Data Received", Toast.LENGTH_SHORT).show();
+                            writeToast("Match Data Received");
                             break;
                         case Constants.PIT_HEADER:
                             filename = "";
@@ -127,7 +129,7 @@ public class SyncService extends NonStopIntentService{
                             } catch (JSONException e) {
                                 Log.e(TAG, e.getMessage());
                             }
-                            Toast.makeText(context, "Pit Data Received", Toast.LENGTH_SHORT).show();
+                            writeToast("Pit Data Received");
                             break;
                         case Constants.SUPER_HEADER:
                             filename = "";
@@ -157,7 +159,7 @@ public class SyncService extends NonStopIntentService{
                             } catch (JSONException e) {
                                 Log.e(TAG, e.getMessage());
                             }
-                            Toast.makeText(context, "Super Data Received", Toast.LENGTH_SHORT).show();
+                            writeToast("Super Data Received");
                             break;
                         case Constants.DRIVE_TEAM_FEEDBACK_HEADER:
                             try {
@@ -186,7 +188,7 @@ public class SyncService extends NonStopIntentService{
                             } catch (JSONException e) {
                                 Log.e(TAG, e.getMessage());
                             }
-                            Toast.makeText(context, "Drive Team Feedback Data Received", Toast.LENGTH_SHORT).show();
+                            writeToast("Drive Team Feedback Data Received");
                             break;
                         case Constants.FILENAME_HEADER:
                             filename = message.substring(1);
@@ -205,19 +207,19 @@ public class SyncService extends NonStopIntentService{
 
                                 String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(""));
                                 while (!bluetoothSync.write(matchUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Match Data Sent");
 
                                 String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(""));
                                 while (!bluetoothSync.write(pitUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Pit Data Sent");
 
                                 String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(""));
                                 while (!bluetoothSync.write(superUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Super Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Super Data Sent");
 
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(""));
                                 while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Drive Team Feedback Data Sent");
 
                                 while(!bluetoothSync.write("received".getBytes()));
                             }
@@ -228,7 +230,7 @@ public class SyncService extends NonStopIntentService{
                                     while(!bluetoothSync.write((Constants.FILENAME_HEADER + filenames.get(i)).getBytes()));
                                     File file = new File(context.getFilesDir(), filenames.get(i));
                                     while(!bluetoothSync.writeFile(file));
-                                    Toast.makeText(context, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
+                                    writeToast(String.format("Picture %d of %d Sent",i+1,filenames.size()));
                                 }
 
                                 while(!bluetoothSync.write("received".getBytes()));
@@ -241,19 +243,19 @@ public class SyncService extends NonStopIntentService{
 
                                 String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
                                 while (!bluetoothSync.write(matchUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Match Data Sent");
 
                                 String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
                                 while (!bluetoothSync.write(pitUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Pit Data Sent");
 
                                 String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
                                 while (!bluetoothSync.write(superUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Super Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Super Data Sent");
 
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
                                 while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
-                                Toast.makeText(context, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                                writeToast("Drive Team Feedback Data Sent");
 
                                 while(!bluetoothSync.write("received".getBytes()));
                             }
@@ -272,7 +274,7 @@ public class SyncService extends NonStopIntentService{
                                     Log.e(TAG, e.getMessage());
                                 }
                                 Log.d(TAG,String.format("File %s Received", filename));
-                                Toast.makeText(context, String.format("File %s Received", filename), Toast.LENGTH_SHORT).show();
+                                writeToast(String.format("File %s Received", filename));
                             }
                             break;
                     }
@@ -289,6 +291,7 @@ public class SyncService extends NonStopIntentService{
         if(mBluetoothAdapter.getDefaultAdapter().isEnabled()) {
             bluetoothSync.start();
         }
+        toastHandler = new Handler();
     }
 
     @Override
@@ -297,7 +300,7 @@ public class SyncService extends NonStopIntentService{
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(!mBluetoothAdapter.isEnabled())
         {
-            Toast.makeText(context,"Bluetooth is not on",Toast.LENGTH_SHORT).show();
+            writeToast("Bluetooth is not on");
         }
         else {
 
@@ -329,7 +332,7 @@ public class SyncService extends NonStopIntentService{
 
                             String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
                             while (!bluetoothSync.write(matchUpdatedText.getBytes()));
-                            Toast.makeText(context, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                            writeToast("Match Data Sent");
                         }
                         break;
                     case Constants.PIT_SCOUT:
@@ -344,7 +347,7 @@ public class SyncService extends NonStopIntentService{
 
                             String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
                             while (!bluetoothSync.write(pitUpdatedText.getBytes()));
-                            Toast.makeText(context, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                            writeToast("Pit Data Sent");
                         }
                         break;
                     case Constants.SUPER_SCOUT:
@@ -359,19 +362,19 @@ public class SyncService extends NonStopIntentService{
 
                             String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
                             while (!bluetoothSync.write(matchUpdatedText.getBytes()));
-                            Toast.makeText(context, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                            writeToast("Match Data Sent");
 
                             String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
                             while (!bluetoothSync.write(pitUpdatedText.getBytes()));
-                            Toast.makeText(context, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                            writeToast("Pit Data Sent");
 
                             String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
                             while (!bluetoothSync.write(superUpdatedText.getBytes()));
-                            Toast.makeText(context, "Super Data Sent", Toast.LENGTH_SHORT).show();
+                            writeToast("Super Data Sent");
 
                             String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
                             while (!bluetoothSync.write(driveUpdatedText.getBytes()));
-                            Toast.makeText(context, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                            writeToast("Drive Team Feedback Data Sent");
                         }
                         break;
                     case Constants.DRIVE_TEAM:
@@ -387,14 +390,14 @@ public class SyncService extends NonStopIntentService{
 
                             String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
                             while (!bluetoothSync.write(driveUpdatedText.getBytes()));
-                            Toast.makeText(context, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                            writeToast("Drive Team Feedback Data Sent");
 
                             received = false;
                             while (!bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes()));
                             while (!received) {
                                 SystemClock.sleep(250);
-                            };
-                            Toast.makeText(context, "Data Recieved", Toast.LENGTH_SHORT).show();
+                            }
+                            writeToast("Data Recieved");
                             break;
                         }
                     case Constants.STRATEGY:
@@ -415,16 +418,16 @@ public class SyncService extends NonStopIntentService{
                                 SystemClock.sleep(250);
                             }
 
-                            Toast.makeText(context, "Data Recieved", Toast.LENGTH_SHORT).show();
+                            writeToast("Data Recieved");
                         }
                         break;
                 }
 
             }
-            Toast.makeText(context,"Finished syncing",Toast.LENGTH_SHORT).show();
-            bluetoothSync.start();
+            writeToast("Finished syncing");
+                bluetoothSync.start();
+            }
         }
-    }
 
     private boolean timeout()
     {
@@ -456,6 +459,16 @@ public class SyncService extends NonStopIntentService{
             }
         }
         return filenames;
+    }
+    
+    private void writeToast(final String message)
+    {
+        toastHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(SyncService.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

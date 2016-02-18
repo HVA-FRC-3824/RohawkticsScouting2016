@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,10 +34,12 @@ import java.util.Set;
 
 public class AggregateService extends IntentService {
     private String TAG ="AggregateService";
+    private Handler toastHandler;
 
     public AggregateService()
     {
         super("AggregateService");
+        toastHandler = new Handler();
     }
 
     @Override
@@ -271,7 +274,7 @@ public class AggregateService extends IntentService {
         matchScoutDB.close();
         superScoutDB.close();
         Log.d(TAG, "Aggregate Service Finished");
-        Toast.makeText(getApplicationContext(),"Data aggregated",Toast.LENGTH_SHORT).show();
+        writeToast("Data aggregated");
     }
 
     private int set_start(Map<String, ScoutValue> teamStats, String key)
@@ -644,5 +647,15 @@ public class AggregateService extends IntentService {
             Log.d(TAG,e.getMessage());
         }
         return sum;
+    }
+
+    private void writeToast(final String message)
+    {
+        toastHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(AggregateService.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

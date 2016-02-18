@@ -4,7 +4,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.content.Intent;
@@ -114,6 +116,14 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
         button.setOnClickListener(this);
     }
 
+    private class BluetoothOnTask extends AsyncTask<Void,Void,Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+            SystemClock.sleep(2500);
+            startService(new Intent(StartScreen.this, SyncService.class));
+            return null;
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -193,8 +203,9 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 {
                     bluetoothAdapter.enable();
                     findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
-                    startService(new Intent(this, SyncService.class));
+                    new BluetoothOnTask().execute();
                 }
+                break;
         }
     }
 }
