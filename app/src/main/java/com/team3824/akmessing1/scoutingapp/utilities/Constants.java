@@ -48,7 +48,9 @@ public interface Constants {
     public static final String TELEOP_DEFENSE_4 = "teleop_defense_4";
     public static final String TELEOP_DEFENSE_5 = "teleop_defense_5";
 
+    // These 2 arrays must have the same lengths
     public static final String[] TELEOP_DEFENSE_TIMES = {"< 5", "< 10", "> 10","Stuck"};
+    public static final int[] TELEOP_DEFENSE_TIMES_VALUE = {5, 10, 15, 30};
 
     public static final String TELEOP_HIGH_HIT = "teleop_high_hit";
     public static final String TELEOP_HIGH_MISS = "teleop_high_miss";
@@ -71,7 +73,7 @@ public interface Constants {
     public static final String FOUL_RED_CARD = "foul_red_card";
 
     // Pit
-    public static final String PIT_ROBOT_PICTURE = "robotPicture";
+    public static final String PIT_ROBOT_PICTURE = "pit_robot_picture";
     public static final String PIT_ROBOT_WIDTH = "pit_robot_width";
     public static final String PIT_ROBOT_LENGTH = "pit_robot_length";
     public static final String PIT_ROBOT_HEIGHT = "pit_robot_height";
