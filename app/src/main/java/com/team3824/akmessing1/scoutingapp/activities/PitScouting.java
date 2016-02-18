@@ -60,6 +60,7 @@ public class PitScouting extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
         adapter = new FPA_PitScout(getFragmentManager());
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(5);
         tabLayout = (TabLayout)findViewById(R.id.pit_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);

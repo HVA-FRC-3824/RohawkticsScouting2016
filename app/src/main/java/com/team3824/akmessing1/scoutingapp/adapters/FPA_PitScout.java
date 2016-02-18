@@ -4,8 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import com.team3824.akmessing1.scoutingapp.fragments.PitDimensions;
+import com.team3824.akmessing1.scoutingapp.fragments.PitDrivetrain;
+import com.team3824.akmessing1.scoutingapp.fragments.PitNotes;
+import com.team3824.akmessing1.scoutingapp.fragments.PitRobotPicture;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.fragments.PitBasicInfo;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 
 import java.lang.ref.WeakReference;
@@ -17,14 +20,21 @@ import java.util.Map;
 // Setup up page fragments for pit scouting
 public class FPA_PitScout extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "Basic Info" };
+    private String tabTitles[] = new String[] { "Robot Picture", "Dimensions","Drivetrain","Notes" };
 
-    private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
+    private PitRobotPicture pitRobotPicture;
+    private PitDimensions pitDimensions;
+    private PitDrivetrain pitDrivetrain;
+    private PitNotes pitNotes;
 
     private Map<String,ScoutValue> valueMap = null;
 
     public FPA_PitScout(FragmentManager fm) {
         super(fm);
+        pitRobotPicture = new PitRobotPicture();
+        pitDimensions = new PitDimensions();
+        pitDrivetrain = new PitDrivetrain();
+        pitNotes = new PitNotes();
     }
 
     @Override
@@ -43,7 +53,16 @@ public class FPA_PitScout extends FragmentPagerAdapter{
         switch (position)
         {
             case 0:
-                fragment = new PitBasicInfo();
+                fragment = pitRobotPicture;
+                break;
+            case 1:
+                fragment = pitDimensions;
+                break;
+            case 2:
+                fragment = pitDrivetrain;
+                break;
+            case 3:
+                fragment = pitNotes;
                 break;
             default:
                 fragment = null; // There has been a problem!
@@ -54,7 +73,6 @@ public class FPA_PitScout extends FragmentPagerAdapter{
         if(valueMap != null) {
             fragment.setValuesMap(valueMap);
         }
-        fragments.put(position,new WeakReference<>(fragment));
         return fragment;
     }
 
@@ -68,10 +86,10 @@ public class FPA_PitScout extends FragmentPagerAdapter{
     // used to get all the values for saving
     public List<ScoutFragment> getAllFragments(){
         List<ScoutFragment> fragmentList = new ArrayList<>();
-        for(Map.Entry<Integer,WeakReference<ScoutFragment>> entry: fragments.entrySet())
-        {
-            fragmentList.add(entry.getValue().get());
-        }
+        fragmentList.add(pitRobotPicture);
+        fragmentList.add(pitDimensions);
+        fragmentList.add(pitDrivetrain);
+        fragmentList.add(pitNotes);
         return fragmentList;
     }
 

@@ -28,15 +28,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-public class PitBasicInfo extends ScoutFragment{
-    private String TAG = "PitBasicInfo";
+public class PitRobotPicture extends ScoutFragment{
+    private String TAG = "PitRobotPicture";
     private String mCurrentPhotoPath = "";
     private ImageView mImageView;
     private Button mButton;
     View.OnClickListener buttonClick;
     Context context;
 
-    public PitBasicInfo() {
+    public PitRobotPicture() {
         // Required empty public constructor
     }
 
@@ -48,7 +48,7 @@ public class PitBasicInfo extends ScoutFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pit_basic_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_pit_robot_picture, container, false);
 
         context = getContext();
         mImageView = (ImageView)view.findViewById(R.id.robotPicture);

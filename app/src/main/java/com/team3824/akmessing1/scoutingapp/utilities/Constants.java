@@ -2,7 +2,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
-    public static final String VERSION="Version: 1.0.6";
+    public static final String VERSION="Version: 1.0.7";
 
 
     // Message types sent from the Handler
@@ -193,8 +193,20 @@ public interface Constants {
 
     //Bluetooth
     public static final int CONNECTION_TIMEOUT = 1000;
-    public static final int ACKNOWLEDGEMENT_TIMEOUT = 250;
     public static final int CHUNK_SIZE = 4192;
     public static final int HEADER_MSB = 0x10;
     public static final int HEADER_LSB = 0x55;
+
+    public static final char SUPER_HEADER = 'S';
+    public static final char MATCH_HEADER = 'M';
+    public static final char PIT_HEADER = 'P';
+    public static final char DRIVE_TEAM_FEEDBACK_HEADER = 'D';
+    public static final char FILENAME_HEADER = 'F';
+    public static final char FILE_HEADER = 'f';
+    public static final char SCHEDULE_HEADER = 's';
+    public static final String RECEIVE_ALL_HEADER = "RA";
+    public static final char RECEIVE_HEADER = 'R';
+    public static final String RECEIVE_UPDATE_HEADER = "R";
+    public static final String RECEIVE_PICTURE_HEADER = "RP";
+    public static final String RECEIVE_SCHEDULE_HEADER = "RS";
 }
