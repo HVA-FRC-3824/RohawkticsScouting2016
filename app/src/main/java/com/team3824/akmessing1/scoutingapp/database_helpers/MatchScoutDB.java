@@ -227,7 +227,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor;
-        if(lastUpdated == null || lastUpdated == "")
+        if(lastUpdated == null || lastUpdated.equals(""))
         {
             cursor = db.query(true, // distinct
                     tableName, // a. table
@@ -268,22 +268,13 @@ public class MatchScoutDB extends SQLiteOpenHelper {
 
     public Cursor getTeamInfoSince(int teamNumber, String since)
     {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor;
-        if(since != null && since != "") {
-            cursor = db.query(true, // distinct
-                    tableName, // a. table
-                    null, // b. column names
-                    KEY_LAST_UPDATED + " > ? and " + KEY_TEAM_NUMBER + " = ?", // c. selections
-                    new String[]{since, String.valueOf(teamNumber)}, // d. selections args
-                    null, // e. group by
-                    null, // f. having
-                    null, // g. order by
-                    null); // h. limit
-        }
-        else
+        if(since.equals("") || since == null)
         {
-            cursor = db.query(true, // distinct
+            return getTeamInfo(teamNumber);
+        }
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(true, // distinct
                     tableName, // a. table
                     null, // b. column names
                     KEY_TEAM_NUMBER + " = ?", // c. selections
@@ -292,7 +283,6 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                     null, // f. having
                     null, // g. order by
                     null); // h. limit
-        }
         if(cursor != null)
             cursor.moveToFirst();
         return cursor;
@@ -300,10 +290,13 @@ public class MatchScoutDB extends SQLiteOpenHelper {
 
     public Cursor getInfoSince(String since)
     {
+        if(since.equals("") || since == null)
+        {
+            return getAllInfo();
+        }
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor;
-        if(since != null && since != "") {
-            cursor = db.query(true, // distinct
+        Cursor cursor = db.query(true, // distinct
                     tableName, // a. table
                     null, // b. column names
                     KEY_LAST_UPDATED + " > ?", // c. selections
@@ -312,11 +305,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                     null, // f. having
                     null, // g. order by
                     null); // h. limit
-        }
-        else
-        {
-            return getAllInfo();
-        }
+
         if(cursor != null)
             cursor.moveToFirst();
         return cursor;

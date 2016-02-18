@@ -200,15 +200,30 @@ public class SuperScoutDB extends SQLiteOpenHelper {
     public ArrayList<Integer> getMatchesUpdatedSince(String lastUpdated)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(true, // distinct
-                tableName, // a. table
-                new String[]{KEY_MATCH_NUMBER}, // b. column names
-                KEY_LAST_UPDATED+" > ?", // c. selections
-                new String[]{lastUpdated}, // d. selections args
-                null, // e. group by
-                null, // f. having
-                null, // g. order by
-                null); // h. limit
+        Cursor cursor;
+        if(lastUpdated == null || lastUpdated.equals(""))
+        {
+            cursor = db.query(true, // distinct
+                    tableName, // a. table
+                    new String[]{KEY_MATCH_NUMBER}, // b. column names
+                    null, // c. selections
+                    null, // d. selections args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
+        else {
+            cursor = db.query(true, // distinct
+                    tableName, // a. table
+                    new String[]{KEY_MATCH_NUMBER}, // b. column names
+                    KEY_LAST_UPDATED + " > ?", // c. selections
+                    new String[]{lastUpdated}, // d. selections args
+                    null, // e. group by
+                    null, // f. having
+                    null, // g. order by
+                    null); // h. limit
+        }
         if(cursor == null)
         {
             return null;
