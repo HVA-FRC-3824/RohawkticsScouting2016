@@ -22,9 +22,9 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
     ArrayList<String> defensesLists[];
     DefenseAdapter defensesAdapters[];
     Spinner defensesSpinners[];
+    String previousSelection[];
     private int BLUE_2 = 0, BLUE_4=1, BLUE_5 = 2, RED_2 = 3, RED_4=4, RED_5 = 5, BOTH_3 = 6;
     private int BLUE = 0, RED = 3;
-    private int justSet[];
 
     private String SELECT_DEFENSE = "Select Defense";
 
@@ -33,7 +33,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
         defensesLists = new ArrayList[7];
         defensesAdapters = new DefenseAdapter[7];
         defensesSpinners = new Spinner[7];
-        justSet = new int[7];
+        previousSelection = new String[7];
     }
 
     @Override
@@ -50,9 +50,8 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
 
             defensesLists[i] = new ArrayList<>(Arrays.asList(Constants.DEFENSES_LABEL));
             defensesLists[i].set(0, SELECT_DEFENSE);
-            //justSet[i] = 3;
+            previousSelection[i] = SELECT_DEFENSE;
         }
-        //justSet[BOTH_3] = 6;
 
         defensesSpinners[BLUE_2] = (Spinner)view.findViewById(R.id.blue_defense2);
         defensesSpinners[BLUE_4] = (Spinner)view.findViewById(R.id.blue_defense4);
@@ -102,13 +101,6 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
             ScoutValue sv = map.get(Constants.SUPER_DEFENSES[i]);
             if(sv != null) {
                 defensesSpinners[i].setSelection(Arrays.asList(Constants.DEFENSES_LABEL).indexOf(sv.getString()));
-                if(i==6)
-                {
-                    justSet[i] = 6;
-                }
-                else {
-                    justSet[i] = 3;
-                }
             }
         }
         optimizeLists();
@@ -122,7 +114,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
 
         // Both 3
         String both3 = String.valueOf(defensesSpinners[BOTH_3].getSelectedItem());
-        
+
         if (both3.equals(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]) ||
                 both3.equals(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]))
         {
@@ -171,7 +163,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
                 {
                     defensesLists[j].remove(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]);
                     defensesLists[j].remove(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]);
-                    
+
                     defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]);
                     defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]);
                 }
@@ -243,7 +235,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
                 }
             }
         }
-        
+
         for(int i = 0; i < 7; i++) {
             String current = String.valueOf(defensesSpinners[i].getSelectedItem());
             defensesAdapters[i] = new DefenseAdapter(getContext(), R.layout.list_item_string, defensesLists[i],(i==6));
@@ -463,117 +455,52 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
         switch ((int)parent.getId())
         {
             case R.id.blue_defense2:
-                if(justSet[BLUE_4] > 0) {
-                    justSet[BLUE_4]--;
-                }
-                else if(justSet[BLUE_5] > 0) {
-                    justSet[BLUE_5]--;
-                }
-                else if(justSet[BOTH_3] > 0)
+                if(!String.valueOf(defensesSpinners[BLUE_2].getSelectedItem()).equals(previousSelection[BLUE_2]))
                 {
-                    justSet[BOTH_3]--;
-                }
-                else {
                     optimizeLists(BLUE_2, BLUE);
-                    justSet[BLUE_2] = 3;
+                    previousSelection[BLUE_2] = String.valueOf(defensesSpinners[BLUE_2].getSelectedItem());
                 }
                 break;
             case R.id.blue_defense4:
-                if(justSet[BLUE_2] > 0) {
-                    justSet[BLUE_2]--;
-                }
-                else if(justSet[BLUE_5] > 0) {
-                    justSet[BLUE_5]--;
-                }
-                else if(justSet[BOTH_3] > 0)
-                {
-                    justSet[BOTH_3]--;
-                }
-                else
+                if(!String.valueOf(defensesSpinners[BLUE_4].getSelectedItem()).equals(previousSelection[BLUE_4]))
                 {
                     optimizeLists(BLUE_4, BLUE);
-                    justSet[BLUE_4] = 3;
+                    previousSelection[BLUE_4] = String.valueOf(defensesSpinners[BLUE_4].getSelectedItem());
                 }
                 break;
             case R.id.blue_defense5:
-                if(justSet[BLUE_2] > 0) {
-                    justSet[BLUE_2]--;
-                }
-                else if(justSet[BLUE_4] > 0) {
-                    justSet[BLUE_4]--;
-                }
-                else if(justSet[BOTH_3] > 0)
-                {
-                    justSet[BOTH_3]--;
-                }
-                else
+                if(!String.valueOf(defensesSpinners[BLUE_5].getSelectedItem()).equals(previousSelection[BLUE_5]))
                 {
                     optimizeLists(BLUE_5, BLUE);
-                    justSet[BLUE_5] = 3;
+                    previousSelection[BLUE_5] = String.valueOf(defensesSpinners[BLUE_5].getSelectedItem());
                 }
                 break;
             case R.id.red_defense2:
-                if(justSet[RED_4] > 0) {
-                    justSet[RED_4]--;
-                }
-                else if(justSet[RED_5] > 0) {
-                    justSet[RED_5]--;
-                }
-                else if(justSet[BOTH_3] > 0)
+                if(!String.valueOf(defensesSpinners[RED_2].getSelectedItem()).equals(previousSelection[RED_2]))
                 {
-                    justSet[BOTH_3]--;
-                }
-                else {
-                    optimizeLists(RED_2,RED);
-                    justSet[RED_2] = 3;
+                    optimizeLists(RED_2, RED);
+                    previousSelection[RED_2] = String.valueOf(defensesSpinners[RED_2].getSelectedItem());
                 }
                 break;
             case R.id.red_defense4:
-                if(justSet[RED_2] > 0) {
-                    justSet[RED_2]--;
-                }
-                else if(justSet[RED_5] > 0) {
-                    justSet[RED_5]--;
-                }
-                else if(justSet[BOTH_3] > 0)
+                if(!String.valueOf(defensesSpinners[RED_4].getSelectedItem()).equals(previousSelection[RED_4]))
                 {
-                    justSet[BOTH_3]--;
-                }
-                else {
-                    optimizeLists(RED_4,RED);
-                    justSet[RED_4] = 3;
+                    optimizeLists(RED_4, RED);
+                    previousSelection[RED_4] = String.valueOf(defensesSpinners[RED_4].getSelectedItem());
                 }
                 break;
             case R.id.red_defense5:
-                if(justSet[RED_2] > 0) {
-                    justSet[RED_2]--;
-                }
-                else if(justSet[RED_4] > 0) {
-                    justSet[RED_4]--;
-                }
-                else if(justSet[BOTH_3] > 0)
+                if(!String.valueOf(defensesSpinners[RED_5].getSelectedItem()).equals(previousSelection[RED_5]))
                 {
-                    justSet[BOTH_3]--;
-                }
-                else {
-                    optimizeLists(RED_5,RED);
-                    justSet[RED_5] = 3;
+                    optimizeLists(RED_5, RED);
+                    previousSelection[RED_5] = String.valueOf(defensesSpinners[RED_5].getSelectedItem());
                 }
                 break;
             case R.id.defense3:
-                if(justSet[BLUE_2] > 0) {
-                    justSet[BLUE_2]--;
-                }
-                else if(justSet[BLUE_4] > 0) {
-                    justSet[BLUE_4]--;
-                }
-                else if(justSet[BLUE_5] > 0)
+                if(!String.valueOf(defensesSpinners[BOTH_3].getSelectedItem()).equals(previousSelection[BOTH_3]))
                 {
-                    justSet[BLUE_5]--;
-                }
-                else {
                     optimizeListsBoth();
-                    justSet[BOTH_3] = 6;
+                    previousSelection[BOTH_3] = String.valueOf(defensesSpinners[BOTH_3].getSelectedItem());
                 }
                 break;
             default:
