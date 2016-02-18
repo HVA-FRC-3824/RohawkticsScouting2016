@@ -60,9 +60,6 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
     DriveTeamFeedbackDB driveTeamFeedbackDB;
     SyncDB syncDB;
 
-    boolean recieved = false;
-    boolean acknowledged = false;
-
     private class SyncHandler extends android.os.Handler
     {
         String filename = "";
@@ -239,7 +236,18 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                 while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
                                 Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
 
-                            } else {
+                            }
+                            else if(message.equals("RP"))
+                            {
+                                ArrayList<String> filenames = getImageFiles(pitScoutDB.getAllTeamInfo());
+                                for (int i = 0; i < filenames.size(); i++) {
+                                    while(!bluetoothSync.write(("F" + filenames.get(i)).getBytes()));
+                                    File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
+                                    while(!bluetoothSync.writeFile(file));
+                                    Toast.makeText(SyncActivity.this, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else {
                                 filename = "";
                                 selectedAddress = bluetoothSync.getConnectedAddress();
                                 String lastUpdated = syncDB.getLastUpdated(selectedAddress);
@@ -331,7 +339,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                 ((Button) findViewById(R.id.sync_picture_send)).setOnClickListener(this);
                 ((Button) findViewById(R.id.sync_receive_update)).setOnClickListener(this);
                 ((Button) findViewById(R.id.sync_receive_all)).setOnClickListener(this);
-
+                ((Button) findViewById(R.id.sync_picture_receive)).setOnClickListener(this);
                 bluetoothSync.start();
             } else {
                 findViewById(R.id.bluetooth_text).setVisibility(View.VISIBLE);
@@ -341,6 +349,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                 findViewById(R.id.sync_picture_send).setVisibility(View.GONE);
                 findViewById(R.id.sync_receive_update).setVisibility(View.GONE);
                 findViewById(R.id.sync_receive_all).setVisibility(View.GONE);
+                findViewById(R.id.sync_picture_receive).setVisibility(View.GONE);
                 findViewById(R.id.sync_log).setVisibility(View.GONE);
 
 
@@ -356,6 +365,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.sync_picture_send).setVisibility(View.GONE);
             findViewById(R.id.sync_receive_update).setVisibility(View.GONE);
             findViewById(R.id.sync_receive_all).setVisibility(View.GONE);
+            findViewById(R.id.sync_picture_receive).setVisibility(View.GONE);
             findViewById(R.id.sync_log).setVisibility(View.GONE);
         }
     }
@@ -459,7 +469,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.sync_picture_send:
-                ArrayList<String> filenames = getImageFiles(SyncActivity.this.pitScoutDB.getAllTeamInfo());
+                ArrayList<String> filenames = getImageFiles(pitScoutDB.getAllTeamInfo());
                 for (int i = 0; i < filenames.size(); i++) {
                     while(!bluetoothSync.write(("F" + filenames.get(i)).getBytes()));
                     File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
@@ -475,6 +485,11 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.sync_receive_all:
                 if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
                     while (!bluetoothSync.write("RA".getBytes()));
+                }
+                break;
+            case R.id.sync_picture_receive:
+                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
+                    while (!bluetoothSync.write("RP".getBytes()));
                 }
                 break;
         }
