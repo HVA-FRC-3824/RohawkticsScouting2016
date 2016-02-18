@@ -18,7 +18,7 @@ import java.util.Map;
 // Setup up page fragments for pit scouting
 public class FPA_SuperScout extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "Basic Info", "Defenses" };
+    private String tabTitles[] = new String[] { "Defenses", "Basic Info" };
 
     private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
@@ -46,11 +46,11 @@ public class FPA_SuperScout extends FragmentPagerAdapter{
         switch (position)
         {
             case 0:
-                fragment = new SuperBasicInfo();
-                ((SuperBasicInfo)fragment).setTeams(teams);
+                fragment = new SuperDefenses();
                 break;
             case 1:
-                fragment = new SuperDefenses();
+                fragment = new SuperBasicInfo();
+                ((SuperBasicInfo)fragment).setTeams(teams);
                 break;
             default:
                 fragment = null; // There has been a problem!
