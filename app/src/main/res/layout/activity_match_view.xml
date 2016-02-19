@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="* Avg. (Percentage)"
+        android:text="* Avg. # of Shots Made (Percentage)"
         android:id="@+id/textView6"
         android:textColor="#000000"
         android:textSize="20sp"
