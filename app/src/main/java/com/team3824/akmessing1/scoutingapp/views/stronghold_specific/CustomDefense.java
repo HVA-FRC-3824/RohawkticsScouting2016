@@ -90,7 +90,15 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
             String restoreValue = sv.getString();
             try {
                 jsonArray = new JSONArray(restoreValue);
-                if(jsonArray.length() > 0)
+                if(jsonArray.length() > 6)
+                {
+                    timeRadios.setVisibility(GONE);
+                    crossNum.setVisibility(GONE);
+                    submit.setVisibility(GONE);
+                    delete.setVisibility(GONE);
+                    canCrossText.setVisibility(VISIBLE);
+                }
+                else if(jsonArray.length() > 0)
                 {
                     timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(jsonArray.getString(0)));
                     for(int i = 0; i < jsonArray.length(); i++)
@@ -162,6 +170,8 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
                 else
                 {
                     timeRadios.clearCheck();
+                    submit.setText("Submit");
+                    delete.setVisibility(GONE);
                 }
                 break;
         }
