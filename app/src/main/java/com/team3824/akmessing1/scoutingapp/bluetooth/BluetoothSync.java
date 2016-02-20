@@ -309,7 +309,7 @@ public class BluetoothSync {
                     // successful connection or an exception
                     socket = mmServerSocket.accept();
                 } catch (IOException e) {
-                    Log.e(TAG, "Socket accept() failed", e);
+                    Log.e(TAG, "Server Socket accept() failed", e);
                     break;
                 }
 
@@ -342,7 +342,7 @@ public class BluetoothSync {
         }
 
         public void cancel() {
-            Log.d(TAG, "Socket cancel " + this);
+            Log.d(TAG, "Server Socket cancel " + this);
             try {
                 mmServerSocket.close();
             } catch (IOException e) {
@@ -523,6 +523,7 @@ public class BluetoothSync {
                         } else {
                             Log.e(TAG, "Digest did not match.  Corrupt transfer?");
                             mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
+                            mmOutStream.write(digest);
                         }
 
                     }

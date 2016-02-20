@@ -14,6 +14,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 import com.mobeta.android.dslv.DragSortListView;
+import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6;
 import com.team3824.akmessing1.scoutingapp.views.CustomEdittext;
 import com.team3824.akmessing1.scoutingapp.views.CustomNumeric;
@@ -25,6 +30,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class Utilities {
 
@@ -143,6 +150,158 @@ public class Utilities {
         } catch (Exception ex) {
             Log.e(TAG, ex.toString());
             throw new UnsupportedOperationException("MD5 algorithm not available on this device.");
+        }
+    }
+
+    public static void JsonToMatchDB(MatchScoutDB matchScoutDB, String message)
+    {
+        try {
+            JSONArray jsonArray = new JSONArray(message.substring(1));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                HashMap<String, ScoutValue> map = new HashMap<>();
+                Iterator<String> iter = jsonObject.keys();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    try {
+                        Object value = jsonObject.get(key);
+                        if (value instanceof Integer) {
+                            map.put(key, new ScoutValue((int) value));
+                        } else if (value instanceof Float) {
+                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof String) {
+                            map.put(key, new ScoutValue((String) value));
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG,e.getMessage());
+                    }
+                }
+                matchScoutDB.updateMatch(map);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public static void JsonToSuperDB(SuperScoutDB superScoutDB, String message)
+    {
+        try {
+            JSONArray jsonArray = new JSONArray(message.substring(1));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                HashMap<String, ScoutValue> map = new HashMap<>();
+                Iterator<String> iter = jsonObject.keys();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    try {
+                        Object value = jsonObject.get(key);
+                        if (value instanceof Integer) {
+                            map.put(key, new ScoutValue((int) value));
+                        } else if (value instanceof Float) {
+                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof String) {
+                            map.put(key, new ScoutValue((String) value));
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+                superScoutDB.updateMatch(map);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public static void JsonToPitDB(PitScoutDB pitScoutDB, String message)
+    {
+        try {
+            JSONArray jsonArray = new JSONArray(message.substring(1));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                HashMap<String, ScoutValue> map = new HashMap<>();
+                Iterator<String> iter = jsonObject.keys();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    try {
+                        Object value = jsonObject.get(key);
+                        if (value instanceof Integer) {
+                            map.put(key, new ScoutValue((int) value));
+                        } else if (value instanceof Float) {
+                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof String) {
+                            map.put(key, new ScoutValue((String) value));
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+                if(map.get(PitScoutDB.KEY_COMPLETE).getInt() == 1) {
+                    pitScoutDB.updatePit(map);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public static void JsonToStatsDB(StatsDB statsDB, String message)
+    {
+        try {
+            JSONArray jsonArray = new JSONArray(message.substring(1));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                HashMap<String, ScoutValue> map = new HashMap<>();
+                Iterator<String> iter = jsonObject.keys();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    try {
+                        Object value = jsonObject.get(key);
+                        if (value instanceof Integer) {
+                            map.put(key, new ScoutValue((int) value));
+                        } else if (value instanceof Float) {
+                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof String) {
+                            map.put(key, new ScoutValue((String) value));
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+                statsDB.updateStats(map);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public static void JsonToDriveTeamDB(DriveTeamFeedbackDB driveTeamFeedbackDB, String message)
+    {
+        try {
+            JSONArray jsonArray = new JSONArray(message.substring(1));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                HashMap<String, ScoutValue> map = new HashMap<>();
+                Iterator<String> iter = jsonObject.keys();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    try {
+                        Object value = jsonObject.get(key);
+                        if (value instanceof Integer) {
+                            map.put(key, new ScoutValue((int) value));
+                        } else if (value instanceof Float) {
+                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof String) {
+                            map.put(key, new ScoutValue((String) value));
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+                driveTeamFeedbackDB.updateComments(map.get(DriveTeamFeedbackDB.KEY_TEAM_NUMBER).getInt(), map.get(DriveTeamFeedbackDB.KEY_COMMENTS).getString());
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 

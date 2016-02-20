@@ -2,7 +2,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
-    public static final String VERSION="Version: 1.0.9";
+    public static final String VERSION="Version: 1.0.10";
 
     public static final String APP_DATA = "appData";
 
@@ -193,6 +193,7 @@ public interface Constants {
 
     //Bluetooth
     public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int NUM_ATTEMPTS = 5;
     public static final int CHUNK_SIZE = 4192;
     public static final int HEADER_MSB = 0x10;
     public static final int HEADER_LSB = 0x55;

@@ -12,7 +12,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
@@ -71,7 +70,6 @@ public class Server extends AppCompatActivity {
         public void handleMessage(Message msg)
         {
             switch (msg.what) {
-
                 case MessageType.DATA_RECEIVED:
                     String message = new String((byte[]) msg.obj);
                     Log.d(TAG, "Received: " + message);
@@ -80,161 +78,26 @@ public class Server extends AppCompatActivity {
                     switch (message.charAt(0)) {
                         case Constants.MATCH_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            Log.e(TAG,e.getMessage());
-                                        }
-                                    }
-                                    matchScoutDB.updateMatch(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
-                            //Toast.makeText(Server.this, "Match Data Received", Toast.LENGTH_SHORT).show();
+                            Utilities.JsonToMatchDB(matchScoutDB, message);
                             Log.d(TAG, "Match Data Received");
-                            //bluetoothSync.start();
                             break;
                         case Constants.PIT_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            Log.e(TAG, e.getMessage());
-                                        }
-                                    }
-                                    if(map.get(PitScoutDB.KEY_COMPLETE).getInt() == 1) {
-                                        pitScoutDB.updatePit(map);
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
-                            //Toast.makeText(Server.this, "Pit Data Received", Toast.LENGTH_SHORT).show();
+                            Utilities.JsonToPitDB(pitScoutDB,message);
                             Log.d(TAG, "Pit Data Received");
-                            //bluetoothSync.start();
                             break;
                         case Constants.SUPER_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            Log.e(TAG, e.getMessage());
-                                        }
-                                    }
-                                    superScoutDB.updateMatch(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
-                            //Toast.makeText(Server.this, "Super Data Received", Toast.LENGTH_SHORT).show();
+                            Utilities.JsonToSuperDB(superScoutDB,message);
                             Log.d(TAG,"Super Data  Received");
-                            //bluetoothSync.start();
                             break;
                         case Constants.DRIVE_TEAM_FEEDBACK_HEADER:
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            Log.e(TAG, e.getMessage());
-                                        }
-                                    }
-                                    driveTeamFeedbackDB.updateComments(map.get(DriveTeamFeedbackDB.KEY_TEAM_NUMBER).getInt(), map.get(DriveTeamFeedbackDB.KEY_COMMENTS).getString());
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
-                            //Toast.makeText(Server.this, "Drive Team Feedback Data Received", Toast.LENGTH_SHORT).show();
+                            Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB,message);
                             Log.d(TAG,"Drive Team Feedback Data Received");
                             break;
                         case Constants.STATS_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            Log.e(TAG, e.getMessage());
-                                        }
-                                    }
-                                    statsDB.updateStats(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
-                            //Toast.makeText(Server.this, "Stats Data Received", Toast.LENGTH_SHORT).show();
+                            Utilities.JsonToStatsDB(statsDB,message);
                             Log.d(TAG, "Stats Data Received");
                             break;
                         case Constants.SCHEDULE_HEADER:
@@ -254,7 +117,6 @@ public class Server extends AppCompatActivity {
                             } catch (JSONException e) {
                                 Log.e(TAG, e.getMessage());
                             }
-                            //Toast.makeText(Server.this, "Schedule Received", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "Schedule Received");
                             break;
                         case Constants.FILENAME_HEADER:
@@ -268,33 +130,91 @@ public class Server extends AppCompatActivity {
                                 syncDB.updateSync(selectedAddress);
 
                                 String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfo());
-                                while (!bluetoothSync.write(matchUpdatedText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Match Data Sent");
+                                int i;
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(matchUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToMatchDB(matchScoutDB,matchUpdatedText);
+                                    Log.d(TAG,"Match Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Match Data Sent");
+                                }
 
                                 String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfo());
-                                while (!bluetoothSync.write(pitUpdatedText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG,"Pit Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(pitUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS) {
+                                    Utilities.JsonToPitDB(pitScoutDB,pitUpdatedText);
+                                    Log.d(TAG,"Pit Data Requeued");
+                                }
+                                else
+                                {
+                                    Log.d(TAG, "Pit Data Sent");
+                                }
 
                                 String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatches());
-                                while (!bluetoothSync.write(superUpdatedText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Super Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(superUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToSuperDB(superScoutDB,superUpdatedText);
+                                    Log.d(TAG, "Super Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Super Data Sent");
+                                }
 
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllComments());
-                                while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG,"Drive Team Feedback Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(driveUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveUpdatedText);
+                                    Log.d(TAG, "Drive Team Feedback Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Drive Team Feedback Data Sent");
+                                }
 
                                 String statsUpdatedText = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStats());
-                                while(!bluetoothSync.write(statsUpdatedText.getBytes()));
-                                //Toast.makeText(Server.this, "Stats Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Stats Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if(bluetoothSync.write(statsUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToStatsDB(statsDB, statsUpdatedText);
+                                    Log.d(TAG, "Stats Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Stats Data Sent");
+                                }
 
                                 while (!bluetoothSync.write("received".getBytes()));
-
-                                //bluetoothSync.start();
                             }
                             else if(message.equals(Constants.RECEIVE_PICTURE_HEADER))
                             {
@@ -305,10 +225,12 @@ public class Server extends AppCompatActivity {
                                     while(!bluetoothSync.write((Constants.FILENAME_HEADER + filenames.get(i)).getBytes()));
                                     File file = new File(Server.this.getFilesDir(), filenames.get(i));
                                     while(!bluetoothSync.writeFile(file));
-                                    Toast.makeText(Server.this, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG,String.format("Picture %d of %d Sent",i+1,filenames.size()));
                                 }
-
-                                //bluetoothSync.start();
+                                if(filenames.size() == 0)
+                                {
+                                    Log.d(TAG,"No Pictures to send");
+                                }
                             }
                             else if(message.equals(Constants.RECEIVE_SCHEDULE_HEADER))
                             {
@@ -316,9 +238,7 @@ public class Server extends AppCompatActivity {
 
                                 String scheduleText = Constants.SCHEDULE_HEADER + Utilities.CursorToJsonString(scheduleDB.getSchedule());
                                 while (!bluetoothSync.write(scheduleText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Schedule Sent", Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "Schedule Sent");
-                                //bluetoothSync.start();
                             }
                             else {
                                 Log.d(TAG,"Update Request Received");
@@ -328,33 +248,91 @@ public class Server extends AppCompatActivity {
                                 syncDB.updateSync(selectedAddress);
 
                                 String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
-                                while (!bluetoothSync.write(matchUpdatedText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Match Data Sent");
+                                int i;
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(matchUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToMatchDB(matchScoutDB,matchUpdatedText);
+                                    Log.d(TAG,"Match Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Match Data Sent Successfully");
+                                }
 
                                 String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
-                                while (!bluetoothSync.write(pitUpdatedText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG,"Pit Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(pitUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS) {
+                                    Utilities.JsonToPitDB(pitScoutDB,pitUpdatedText);
+                                    Log.d(TAG,"Pit Data Requeued");
+                                }
+                                else
+                                {
+                                    Log.d(TAG, "Pit Data Sent");
+                                }
 
                                 String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-                                while (!bluetoothSync.write(superUpdatedText.getBytes())) ;
-                                //Toast.makeText(Server.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Super Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(superUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToSuperDB(superScoutDB,superUpdatedText);
+                                    Log.d(TAG, "Super Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Super Data Sent");
+                                }
 
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
-                                //while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
-                                Toast.makeText(Server.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Drive Team Feedback Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
+                                {
+                                    if(bluetoothSync.write(driveUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveUpdatedText);
+                                    Log.d(TAG, "Drive Team Feedback Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Drive Team Feedback Data Sent");
+                                }
 
                                 String statsUpdatedText = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStatsSince(lastUpdated));
-                                while(!bluetoothSync.write(statsUpdatedText.getBytes()));
-                                //Toast.makeText(Server.this, "Stats Data Sent", Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "Stats Data Sent");
+                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if(bluetoothSync.write(statsUpdatedText.getBytes()))
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(i == Constants.NUM_ATTEMPTS)
+                                {
+                                    Utilities.JsonToStatsDB(statsDB, statsUpdatedText);
+                                    Log.d(TAG, "Stats Data Requeued");
+                                }
+                                else {
+                                    Log.d(TAG, "Stats Data Sent");
+                                }
 
                                 while (!bluetoothSync.write("received".getBytes()));
-
-                                //bluetoothSync.start();
                             }
                             break;
                         case Constants.FILE_HEADER:
@@ -371,9 +349,6 @@ public class Server extends AppCompatActivity {
                                     Log.e(TAG, e.getMessage());
                                 }
                                 Log.d(TAG, String.format("File %s Received", filename));
-                                //Toast.makeText(Server.this, String.format("File %s Received", filename), Toast.LENGTH_SHORT).show();
-
-                                //bluetoothSync.start();
                             }
                             break;
                     }
@@ -385,7 +360,6 @@ public class Server extends AppCompatActivity {
     ArrayList<String> getImageFiles(Cursor cursor)
     {
         ArrayList<String> filenames = new ArrayList<>();
-        int i = 0;
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
         {
             if(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE) != -1) {
@@ -410,47 +384,44 @@ public class Server extends AppCompatActivity {
                 try {
                     Process process = Runtime.getRuntime().exec("logcat");
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    CircularBuffer buf = new CircularBuffer(25);
+                    CircularBuffer buf = new CircularBuffer(50);
                     String line = "";
                     while (run.get()) {
                         line = bufferedReader.readLine();
-                        if (line != null) {
+                        if (line != null && (line.contains("BluetoothSync") || line.contains("Server"))) {
 
-                            if(line.contains("BluetoothSync") || line.contains("Server")) {
-
-                                char logLevel = ' ';
-                                if (line.length() > 32) {
-                                    logLevel = line.charAt(31);
-                                }
-
-                                switch (logLevel) {
-                                    case 'V':
-                                        line = "<font color='black'>" + line;
-                                        break;
-                                    case 'D':
-                                        line = "<font color='blue'>" + line;
-                                        break;
-                                    case 'I':
-                                        line = "<font color='grey'>" + line;
-                                        break;
-                                    case 'W':
-                                        line = "<font color='#DAA520'>" + line;
-                                        break;
-                                    case 'E':
-                                        line = "<font color='red'>" + line;
-                                        break;
-                                    case 'A':
-                                        line = "<font color='blue'>" + line;
-                                        break;
-                                    default:
-                                        line = "<font color='black'>" + line;
-                                        break;
-                                }
-
-                                line += "</font><br>";
-                                buf.insert(line);
-                                publishProgress(buf.toString());
+                            char logLevel = ' ';
+                            if (line.length() > 32) {
+                                logLevel = line.charAt(31);
                             }
+
+                            switch (logLevel) {
+                                case 'V':
+                                    line = "<font color='black'>" + line;
+                                    break;
+                                case 'D':
+                                    line = "<font color='blue'>" + line;
+                                    break;
+                                case 'I':
+                                    line = "<font color='grey'>" + line;
+                                    break;
+                                case 'W':
+                                    line = "<font color='#DAA520'>" + line;
+                                    break;
+                                case 'E':
+                                    line = "<font color='red'>" + line;
+                                    break;
+                                case 'A':
+                                    line = "<font color='blue'>" + line;
+                                    break;
+                                default:
+                                    line = "<font color='black'>" + line;
+                                    break;
+                            }
+
+                            line += "</font><br>";
+                            buf.insert(line);
+                            publishProgress(buf.toString());
                         }
                         line = null;
                         Thread.sleep(10);
@@ -479,7 +450,7 @@ public class Server extends AppCompatActivity {
         findViewById(android.R.id.content).setKeepScreenOn(true);
 
         logView = (TextView)findViewById(R.id.log);
-        //logView.setMovementMethod(ScrollingMovementMethod.getInstance());
+        logView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
@@ -502,11 +473,11 @@ public class Server extends AppCompatActivity {
             protected void onProgressUpdate(String... values) {
                 logView.setText(Html.fromHtml(values[0]));
 
-                //int scrollAmount = logView.getLayout().getLineTop(logView.getLineCount()) - logView.getHeight();
-                //if (scrollAmount > 0)
-                //    logView.scrollTo(0, scrollAmount);
-                //else
-                //    logView.scrollTo(0, 0);
+                int scrollAmount = logView.getLayout().getLineTop(logView.getLineCount()) - logView.getHeight();
+                if (scrollAmount > 0)
+                    logView.scrollTo(0, scrollAmount);
+                else
+                    logView.scrollTo(0, 0);
 
                 super.onProgressUpdate(values);
             }
