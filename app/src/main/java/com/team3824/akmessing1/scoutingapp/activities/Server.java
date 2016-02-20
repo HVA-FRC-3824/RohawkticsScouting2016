@@ -74,26 +74,36 @@ public class Server extends AppCompatActivity {
                     switch (message.charAt(0)) {
                         case Constants.MATCH_HEADER:
                             filename = "";
-                            Utilities.JsonToMatchDB(matchScoutDB, message);
+                            if(!message.equals(String.format("%c[]",Constants.MATCH_HEADER))){
+                                Utilities.JsonToMatchDB(matchScoutDB, message);
+                            }
                             Log.d(TAG, "Match Data Received");
                             break;
                         case Constants.PIT_HEADER:
                             filename = "";
-                            Utilities.JsonToPitDB(pitScoutDB,message);
+                            if(!message.equals(String.format("%c[]",Constants.PIT_HEADER))) {
+                                Utilities.JsonToPitDB(pitScoutDB, message);
+                            }
                             Log.d(TAG, "Pit Data Received");
                             break;
                         case Constants.SUPER_HEADER:
                             filename = "";
-                            Utilities.JsonToSuperDB(superScoutDB,message);
+                            if(!message.equals(String.format("%c[]",Constants.SUPER_HEADER))) {
+                                Utilities.JsonToSuperDB(superScoutDB, message);
+                            }
                             Log.d(TAG,"Super Data  Received");
                             break;
                         case Constants.DRIVE_TEAM_FEEDBACK_HEADER:
-                            Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB,message);
+                            if(!message.equals(String.format("%c[]",Constants.DRIVE_TEAM_FEEDBACK_HEADER))) {
+                                Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, message);
+                            }
                             Log.d(TAG,"Drive Team Feedback Data Received");
                             break;
                         case Constants.STATS_HEADER:
                             filename = "";
-                            Utilities.JsonToStatsDB(statsDB,message);
+                            if(!message.equals(String.format("%c[]",Constants.STATS_HEADER))) {
+                                Utilities.JsonToStatsDB(statsDB, message);
+                            }
                             Log.d(TAG, "Stats Data Received");
                             break;
                         case Constants.SCHEDULE_HEADER:
@@ -127,87 +137,98 @@ public class Server extends AppCompatActivity {
 
                                 String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfo());
                                 int i;
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(matchUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!matchUpdatedText.equals(String.format("%c[]",Constants.MATCH_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(matchUpdatedText.getBytes())) {
+                                            break;
+                                        }
                                     }
-                                }
-                                if(i == Constants.NUM_ATTEMPTS)
-                                {
-                                    Utilities.JsonToMatchDB(matchScoutDB,matchUpdatedText);
-                                    Log.d(TAG,"Match Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Match Data Sent");
-                                }
-
-                                String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfo());
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(pitUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToMatchDB(matchScoutDB, matchUpdatedText);
+                                        Log.d(TAG, "Match Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Match Data Sent");
                                     }
-                                }
-                                if(i == Constants.NUM_ATTEMPTS) {
-                                    Utilities.JsonToPitDB(pitScoutDB,pitUpdatedText);
-                                    Log.d(TAG,"Pit Data Requeued");
                                 }
                                 else
                                 {
-                                    Log.d(TAG, "Pit Data Sent");
+                                    Log.d(TAG, "No new Match Data to send");
+                                }
+
+                                String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfo());
+                                if(!pitUpdatedText.equals(String.format("%c[]",Constants.PIT_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(pitUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToPitDB(pitScoutDB, pitUpdatedText);
+                                        Log.d(TAG, "Pit Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Pit Data Sent");
+                                    }
+                                }
+                                else
+                                {
+                                    Log.d(TAG,"No new Pit Data to send");
                                 }
 
                                 String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatches());
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(superUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!superUpdatedText.equals(String.format("%c[]",Constants.SUPER_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(superUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToSuperDB(superScoutDB, superUpdatedText);
+                                        Log.d(TAG, "Super Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Super Data Sent");
                                     }
                                 }
-                                if(i == Constants.NUM_ATTEMPTS)
+                                else
                                 {
-                                    Utilities.JsonToSuperDB(superScoutDB,superUpdatedText);
-                                    Log.d(TAG, "Super Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Super Data Sent");
+                                    Log.d(TAG, "No new Super Data to Send");
                                 }
 
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllComments());
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(driveUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!driveUpdatedText.equals(String.format("%c[]",Constants.DRIVE_TEAM_FEEDBACK_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(driveUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveUpdatedText);
+                                        Log.d(TAG, "Drive Team Feedback Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Drive Team Feedback Data Sent");
                                     }
                                 }
-                                if(i == Constants.NUM_ATTEMPTS)
+                                else
                                 {
-                                    Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveUpdatedText);
-                                    Log.d(TAG, "Drive Team Feedback Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Drive Team Feedback Data Sent");
+                                    Log.d(TAG, "No new Drive Team Feedback Data to send");
                                 }
 
                                 String statsUpdatedText = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStats());
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++) {
-                                    if(bluetoothSync.write(statsUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!statsUpdatedText.equals(String.format("%c[]",Constants.STATS_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(statsUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToStatsDB(statsDB, statsUpdatedText);
+                                        Log.d(TAG, "Stats Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Stats Data Sent");
                                     }
                                 }
-                                if(i == Constants.NUM_ATTEMPTS)
+                                else
                                 {
-                                    Utilities.JsonToStatsDB(statsDB, statsUpdatedText);
-                                    Log.d(TAG, "Stats Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Stats Data Sent");
+                                    Log.d(TAG, "No new Stats Data to send");
                                 }
 
                                 while (!bluetoothSync.write("received".getBytes()));
@@ -245,87 +266,98 @@ public class Server extends AppCompatActivity {
 
                                 String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
                                 int i;
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(matchUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!matchUpdatedText.equals(String.format("%c[]",Constants.MATCH_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(matchUpdatedText.getBytes())) {
+                                            break;
+                                        }
                                     }
-                                }
-                                if(i == Constants.NUM_ATTEMPTS)
-                                {
-                                    Utilities.JsonToMatchDB(matchScoutDB,matchUpdatedText);
-                                    Log.d(TAG,"Match Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Match Data Sent Successfully");
-                                }
-
-                                String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(pitUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToMatchDB(matchScoutDB, matchUpdatedText);
+                                        Log.d(TAG, "Match Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Match Data Sent");
                                     }
-                                }
-                                if(i == Constants.NUM_ATTEMPTS) {
-                                    Utilities.JsonToPitDB(pitScoutDB,pitUpdatedText);
-                                    Log.d(TAG,"Pit Data Requeued");
                                 }
                                 else
                                 {
-                                    Log.d(TAG, "Pit Data Sent");
+                                    Log.d(TAG, "No new Match Data to send");
+                                }
+
+                                String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                                if(!pitUpdatedText.equals(String.format("%c[]",Constants.PIT_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(pitUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToPitDB(pitScoutDB, pitUpdatedText);
+                                        Log.d(TAG, "Pit Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Pit Data Sent");
+                                    }
+                                }
+                                else
+                                {
+                                    Log.d(TAG,"No new Pit Data to send");
                                 }
 
                                 String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(superUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!superUpdatedText.equals(String.format("%c[]",Constants.SUPER_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(superUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToSuperDB(superScoutDB, superUpdatedText);
+                                        Log.d(TAG, "Super Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Super Data Sent");
                                     }
                                 }
-                                if(i == Constants.NUM_ATTEMPTS)
+                                else
                                 {
-                                    Utilities.JsonToSuperDB(superScoutDB,superUpdatedText);
-                                    Log.d(TAG, "Super Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Super Data Sent");
+                                    Log.d(TAG, "No new Super Data to Send");
                                 }
 
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++)
-                                {
-                                    if(bluetoothSync.write(driveUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!driveUpdatedText.equals(String.format("%c[]",Constants.DRIVE_TEAM_FEEDBACK_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(driveUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveUpdatedText);
+                                        Log.d(TAG, "Drive Team Feedback Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Drive Team Feedback Data Sent");
                                     }
                                 }
-                                if(i == Constants.NUM_ATTEMPTS)
+                                else
                                 {
-                                    Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveUpdatedText);
-                                    Log.d(TAG, "Drive Team Feedback Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Drive Team Feedback Data Sent");
+                                    Log.d(TAG, "No new Drive Team Feedback Data to send");
                                 }
 
                                 String statsUpdatedText = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStatsSince(lastUpdated));
-                                for(i = 0; i < Constants.NUM_ATTEMPTS; i++) {
-                                    if(bluetoothSync.write(statsUpdatedText.getBytes()))
-                                    {
-                                        break;
+                                if(!statsUpdatedText.equals(String.format("%c[]",Constants.STATS_HEADER))) {
+                                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                        if (bluetoothSync.write(statsUpdatedText.getBytes())) {
+                                            break;
+                                        }
+                                    }
+                                    if (i == Constants.NUM_ATTEMPTS) {
+                                        Utilities.JsonToStatsDB(statsDB, statsUpdatedText);
+                                        Log.d(TAG, "Stats Data Requeued");
+                                    } else {
+                                        Log.d(TAG, "Stats Data Sent");
                                     }
                                 }
-                                if(i == Constants.NUM_ATTEMPTS)
+                                else
                                 {
-                                    Utilities.JsonToStatsDB(statsDB, statsUpdatedText);
-                                    Log.d(TAG, "Stats Data Requeued");
-                                }
-                                else {
-                                    Log.d(TAG, "Stats Data Sent");
+                                    Log.d(TAG, "No new Stats Data to send");
                                 }
 
                                 while (!bluetoothSync.write("received".getBytes()));
