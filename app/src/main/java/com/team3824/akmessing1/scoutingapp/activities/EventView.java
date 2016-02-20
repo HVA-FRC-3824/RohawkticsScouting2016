@@ -234,54 +234,26 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             int totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
             if (totalMatches > -1) {
-                team.cPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.PORTCULLIS_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.PORTCULLIS_INDEX]));
-                team.sPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.PORTCULLIS_INDEX]));
-                team.tPortcullis = (team.sPortcullis == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.PORTCULLIS_INDEX])) / (float)team.sPortcullis;
-
-                team.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX]));
-                team.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.CHEVAL_DE_FRISE_INDEX]));
-                team.tChevalDeFrise = (team.sChevalDeFrise == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.CHEVAL_DE_FRISE_INDEX])) / (float)team.sChevalDeFrise;
-
-                team.cMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.MOAT_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.MOAT_INDEX]));
-                team.sMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.MOAT_INDEX]));
-                team.tMoat = (team.sMoat == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.MOAT_INDEX])) / (float)team.sMoat;
-
-                team.cRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.RAMPARTS_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.RAMPARTS_INDEX]));
-                team.sRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.RAMPARTS_INDEX]));
-                team.tRamparts = (team.sRamparts == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.RAMPARTS_INDEX])) / (float)team.sRamparts;
-
-                team.cDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.DRAWBRIDGE_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.DRAWBRIDGE_INDEX]));
-                team.sDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.DRAWBRIDGE_INDEX]));
-                team.tDrawbridge = (team.sDrawbridge == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.DRAWBRIDGE_INDEX])) / (float)team.sDrawbridge;
-
-                team.cSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.SALLY_PORT_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.SALLY_PORT_INDEX]));
-                team.sSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.SALLY_PORT_INDEX]));
-                team.tSallyPort = (team.sSallyPort == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.SALLY_PORT_INDEX])) / (float)team.sSallyPort;
-
-                team.cRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.ROUGH_TERRAIN_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROUGH_TERRAIN_INDEX]));
-                team.sRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROUGH_TERRAIN_INDEX]));
-                team.tRoughTerrain = (team.sRoughTerrain == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.ROUGH_TERRAIN_INDEX])) / (float)team.sRoughTerrain;
-
-                team.cRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.ROCK_WALL_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROCK_WALL_INDEX]));
-                team.sRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROCK_WALL_INDEX]));
-                team.tRockWall = (team.sRockWall == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.ROCK_WALL_INDEX])) / (float)team.sRockWall;
-
-                team.cLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[Constants.LOW_BAR_INDEX])) +
-                        cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.LOW_BAR_INDEX]));
-                team.sLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.LOW_BAR_INDEX]));
-                team.tLowBar = (team.sLowBar == 0) ? -1 : cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.LOW_BAR_INDEX])) / (float)team.sLowBar;
-
-                team.totalCrosses = team.cPortcullis + team.cChevalDeFrise + team.cMoat +
-                        team.cRamparts + team.cDrawbridge + team.cSallyPort + team.cRoughTerrain +
-                        team.cRockWall + team.cLowBar;
+                for(int i = 0; i < 9; i++)
+                {
+                    team.crosses[i] = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i])) +
+                            cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]));
+                    team.seens[i] = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[i]));
+                    team.notCrosses[i] = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]));
+                    if(team.seens[i] == 0)
+                    {
+                        team.time[i] = -1;
+                    }
+                    else if(team.seens[i] == team.notCrosses[i])
+                    {
+                        team.time[i] = 0;
+                    }
+                    else
+                    {
+                        team.time[i] = ((float)cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]))) / ((float)(team.seens[i] - team.notCrosses[i]));
+                    }
+                    team.totalCrosses += team.crosses[i];
+                }
             }
             teams.add(team);
         }
@@ -291,7 +263,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public int compare(ELI_Defenses lhs, ELI_Defenses rhs) {
                 // tertiary statement make the values 0 if the team has been in no matches
-                float delta = ((lhs.sLowBar == 0)?0:(lhs.totalCrosses/(float)lhs.sLowBar)) - ((rhs.sLowBar == 0)?0:(rhs.totalCrosses/(float)rhs.sLowBar));
+                float delta = ((lhs.seens[Constants.LOW_BAR_INDEX] == 0)?0:(lhs.totalCrosses/(float)lhs.seens[Constants.LOW_BAR_INDEX])) - ((rhs.seens[Constants.LOW_BAR_INDEX] == 0)?0:(rhs.totalCrosses/(float)rhs.seens[Constants.LOW_BAR_INDEX]));
                 if(delta < 0)
                     return 1;
                 else if(delta > 0)
@@ -324,7 +296,19 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 team.mAutoCross = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]));
                 team.mAutoReach = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_REACHED[defense_index]));
                 team.mSeen = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[defense_index]));
-                team.mTime = (team.mSeen == 0)?-1:(float)cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[defense_index]))/(float)team.mSeen;
+                team.mNotCross = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[defense_index]));
+                if(team.mSeen == 0)
+                {
+                    team.mTime = -1;
+                }
+                else if(team.mSeen == team.mNotCross)
+                {
+                    team.mTime = 0;
+                }
+                else
+                {
+                    team.mTime = ((float)cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[defense_index])))/((float)(team.mSeen-team.mNotCross));
+                }
             }
             teams.add(team);
             cursor.moveToNext();
@@ -448,36 +432,12 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
 
 
             if (totalMatches > -1) {
-                team.mDefenses.cPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.PORTCULLIS_INDEX]));
-                team.mDefenses.sPortcullis = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.PORTCULLIS_INDEX]));
-
-                team.mDefenses.cChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.CHEVAL_DE_FRISE_INDEX]));
-                team.mDefenses.sChevalDeFrise = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.CHEVAL_DE_FRISE_INDEX]));
-
-                team.mDefenses.cMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.MOAT_INDEX]));
-                team.mDefenses.sMoat = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.MOAT_INDEX]));
-
-                team.mDefenses.cRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.RAMPARTS_INDEX]));
-                team.mDefenses.sRamparts = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.RAMPARTS_INDEX]));
-
-                team.mDefenses.cDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.DRAWBRIDGE_INDEX]));
-                team.mDefenses.sDrawbridge = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.DRAWBRIDGE_INDEX]));
-
-                team.mDefenses.cSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.SALLY_PORT_INDEX]));
-                team.mDefenses.sSallyPort = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.SALLY_PORT_INDEX]));
-
-                team.mDefenses.cRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROUGH_TERRAIN_INDEX]));
-                team.mDefenses.sRoughTerrain = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROUGH_TERRAIN_INDEX]));
-
-                team.mDefenses.cRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.ROCK_WALL_INDEX]));
-                team.mDefenses.sRockWall = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.ROCK_WALL_INDEX]));
-
-                team.mDefenses.cLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[Constants.LOW_BAR_INDEX]));
-                team.mDefenses.sLowBar = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[Constants.LOW_BAR_INDEX]));
-
-                team.mDefenses.totalCrosses = team.mDefenses.cPortcullis + team.mDefenses.cChevalDeFrise + team.mDefenses.cMoat +
-                        team.mDefenses.cRamparts + team.mDefenses.cDrawbridge + team.mDefenses.cSallyPort + team.mDefenses.cRoughTerrain +
-                        team.mDefenses.cRockWall + team.mDefenses.cLowBar;
+                for(int i = 0; i < 9; i++)
+                {
+                    team.mDefenses.crosses[i] = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]));
+                    team.mDefenses.seens[i] = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[i]));
+                    team.mDefenses.totalCrosses += team.mDefenses.crosses[i];
+                }
 
                 team.mHigh.mAutoMade = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_HIT));
                 team.mHigh.mAutoTaken = cursor.getInt(cursor.getColumnIndex(Constants.TOTAL_AUTO_HIGH_MISS)) + team.mHigh.mAutoMade;
@@ -495,10 +455,10 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
         Collections.sort(teams, new Comparator<ELI_Auto>() {
             @Override
             public int compare(ELI_Auto lhs, ELI_Auto rhs) {
-                if(lhs.mDefenses.sLowBar == 0 && rhs.mDefenses.sLowBar == 0) {
+                if(lhs.mDefenses.seens[Constants.LOW_BAR_INDEX] == 0 && rhs.mDefenses.seens[Constants.LOW_BAR_INDEX] == 0) {
                     return 0;
                 }
-                else if(lhs.mDefenses.sLowBar == 0)
+                else if(lhs.mDefenses.seens[Constants.LOW_BAR_INDEX] == 0)
                 {
                     if(rhs.mDefenses.totalCrosses > 0 || rhs.mLow.mAutoMade > 0 || rhs.mHigh.mAutoMade > 0)
                     {
@@ -509,7 +469,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                         return 0;
                     }
                 }
-                else if(rhs.mDefenses.sLowBar == 0)
+                else if(rhs.mDefenses.seens[Constants.LOW_BAR_INDEX] == 0)
                 {
                     if(lhs.mDefenses.totalCrosses > 0 || lhs.mLow.mAutoMade > 0 || lhs.mHigh.mAutoMade > 0)
                     {
@@ -522,8 +482,8 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 }
                 else
                 {
-                    float delta = ((rhs.mDefenses.totalCrosses*10.0f + rhs.mHigh.mAutoMade * 10.0f + rhs.mLow.mAutoMade * 5.0f) / (float)rhs.mDefenses.sLowBar) -
-                            ((lhs.mDefenses.totalCrosses*10.0f + lhs.mHigh.mAutoMade * 10.0f + lhs.mLow.mAutoMade * 5.0f) / (float)lhs.mDefenses.sLowBar);
+                    float delta = ((rhs.mDefenses.totalCrosses*10.0f + rhs.mHigh.mAutoMade * 10.0f + rhs.mLow.mAutoMade * 5.0f) / (float)rhs.mDefenses.seens[Constants.LOW_BAR_INDEX]) -
+                            ((lhs.mDefenses.totalCrosses*10.0f + lhs.mHigh.mAutoMade * 10.0f + lhs.mLow.mAutoMade * 5.0f) / (float)lhs.mDefenses.seens[Constants.LOW_BAR_INDEX]);
                     if(delta < 0)
                         return -1;
                     else if(delta > 0)

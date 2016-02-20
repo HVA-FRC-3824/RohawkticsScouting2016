@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -216,12 +217,20 @@ public class MatchTeamFragment extends Fragment {
 
                 for (int i = 0; i < 9; i++) {
                     Defense defense = new Defense();
-                    if(statsMap.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt() > 0) {
-                        defense.mTime = statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() / (float) statsMap.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt();
+                    float seen = statsMap.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt();
+                    float notCross = statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]).getInt();
+
+                    if(seen == 0)
+                    {
+                        defense.mTime = -1;
+                    }
+                    else if(seen == notCross)
+                    {
+                        defense.mTime = 0;
                     }
                     else
                     {
-                        defense.mTime  = -1;
+                        defense.mTime = ((float)statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt()) / (seen - notCross);
                     }
                     defense.mDefenseIndex = i;
                     defenses.add(defense);
@@ -231,8 +240,20 @@ public class MatchTeamFragment extends Fragment {
                 Collections.sort(defenses, new Comparator<Defense>() {
                     @Override
                     public int compare(Defense lhs, Defense rhs) {
-                        if(rhs.mTime > -1 && lhs.mTime > -1) {
+                        if(rhs.mTime > 0 && lhs.mTime > 0) {
                             return Float.compare(lhs.mTime, rhs.mTime);
+                        }
+                        else if(rhs.mTime > 0)
+                        {
+                            return 1;
+                        }
+                        else if(lhs.mTime > 0)
+                        {
+                            return -1;
+                        }
+                        else if(lhs.mTime == 0 && rhs.mTime == 0)
+                        {
+                            return 0;
                         }
                         else if(rhs.mTime > -1)
                         {
@@ -249,24 +270,24 @@ public class MatchTeamFragment extends Fragment {
                     }
                 });
 
-                if(defenses.get(0).mTime != -1)
+                if(defenses.get(0).mTime > 0)
                 {
                     String bestDefenseString = "";
                     for(int i = 0; i < Constants.NUM_BEST; i++)
                     {
-                        Defense defense = defenses.get(0);
+                        Defense defense = defenses.get(i);
                         String defenseString = Constants.DEFENSES_LABEL[defense.mDefenseIndex];
-                        if(defense.mTime > -1)
+                        if(defense.mTime > 0)
                         {
-                            defenseString += String.format(" (< %d s)",defense.mTime);
+                            defenseString += String.format(" (< %.1f s)",defense.mTime);
                         }
                         else if(defense.mTime == 0)
                         {
-                            defenseString += "(NC)";
+                            defenseString += " (NC)";
                         }
                         else
                         {
-                            defenseString += "(NS)";
+                            defenseString += " (NS)";
                         }
 
                         defenseString = String.format("%d. %s\n",i+1,defenseString);
@@ -280,17 +301,17 @@ public class MatchTeamFragment extends Fragment {
                     {
                         Defense defense = defenses.get(defenses.size()-1-i);
                         String defenseString = Constants.DEFENSES_LABEL[defense.mDefenseIndex];
-                        if(defense.mTime > -1)
+                        if(defense.mTime > 0)
                         {
-                            defenseString += String.format(" (< %d s)",defense.mTime);
+                            defenseString += String.format(" (< %.1f s)",defense.mTime);
                         }
                         else if(defense.mTime == 0)
                         {
-                            defenseString += "(NC)";
+                            defenseString += " (NC)";
                         }
                         else
                         {
-                            defenseString += "(NS)";
+                            defenseString += " (NS)";
                         }
 
                         defenseString = String.format("%d. %s\n",defenses.size()-i,defenseString);

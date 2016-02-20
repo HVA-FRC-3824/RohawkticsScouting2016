@@ -457,7 +457,17 @@ public class TeamVisuals extends Fragment {
         entries = new ArrayList<>();
         if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_TIME[0]) && map.get(Constants.TOTAL_MATCHES).getInt() > 0) {
             for (int i = 0; i < 9; i++) {
-                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt() / map.get(Constants.TOTAL_MATCHES).getInt(), i));
+                float time = map.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt();
+                float seen = map.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt();
+                float notCross = map.get(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]).getInt();
+                if(seen > 0 && seen != notCross)
+                {
+                    entries.add(new Entry(time / (seen - notCross), i));
+                }
+                else
+                {
+                    entries.add(new Entry(0.0f, i));
+                }
             }
         }
         mTime = new RadarDataSet(entries,"Time");

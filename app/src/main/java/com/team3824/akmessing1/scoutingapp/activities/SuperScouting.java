@@ -91,7 +91,7 @@ public class SuperScouting extends AppCompatActivity {
             adapter.setValueMap(map);
         }
 
-        if(scheduleDB.getNumMatches() != matchNumber+1)
+        if(scheduleDB.getNumMatches() > matchNumber)
             nextMatch = true;
 
         Utilities.setupUI(this,findViewById(android.R.id.content));

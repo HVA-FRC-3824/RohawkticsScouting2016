@@ -51,6 +51,9 @@ public interface Constants {
 
     // These 2 arrays must have the same lengths
     public static final String[] TELEOP_DEFENSE_TIMES = {"< 5", "< 10", "> 10","Stuck"};
+
+    // For version 11
+//    public static final String[] TELEOP_DEFENSE_TIMES = {"< 5s", "< 10s", "> 10s","Stuck"};
     public static final int[] TELEOP_DEFENSE_TIMES_VALUE = {5, 10, 15, 30};
 
     public static final String TELEOP_HIGH_HIT = "teleop_high_hit";
@@ -140,6 +143,9 @@ public interface Constants {
     public static final String[] TOTAL_DEFENSES_TELEOP_CROSSED = {"total_teleop_low_bar", "total_teleop_portcullis",
             "total_teleop_cheval_de_frise","total_teleop_moat","total_teleop_ramparts","total_teleop_drawbridge",
             "total_teleop_sally_port","total_teleop_rock_wall","total_teleop_rough_terrain"};
+    public static final String[] TOTAL_DEFENSES_TELEOP_NOT_CROSSED = {"total_teleop_not_low_bar", "total_teleop_not_portcullis",
+            "total_teleop_not_cheval_de_frise","total_teleop_not_moat","total_teleop_not_ramparts","total_teleop_not_drawbridge",
+            "total_teleop_not_sally_port","total_teleop_not_rock_wall","total_teleop_not_rough_terrain"};
     public static final String[] TOTAL_DEFENSES_TELEOP_CROSSED_POINTS = {"total_teleop_points_low_bar", "total_teleop_points_portcullis",
             "total_teleop_points_cheval_de_frise","total_teleop_points_moat","total_teleop_points_ramparts","total_teleop_points_drawbridge",
             "total_teleop_points_sally_port","total_teleop_points_rock_wall","total_teleop_points_rough_terrain"};
@@ -213,4 +219,7 @@ public interface Constants {
     public static final String RECEIVE_UPDATE_HEADER = "R";
     public static final String RECEIVE_PICTURE_HEADER = "RP";
     public static final String RECEIVE_SCHEDULE_HEADER = "RS";
+    public static final char PING_HEADER = 'p';
+    public static final String PING = "ping";
+    public static final String PONG = "pong";
 }

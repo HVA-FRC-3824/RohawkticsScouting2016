@@ -131,6 +131,7 @@ public class AggregateService extends IntentService {
 
             //Teleop
             int[] totalTeleopDefenses = set_start_array(teamStats, "teleop");
+            int[] totalTeleopNotCross = set_start_array(teamStats, "not");
             int[] totalTeleopDefensesPoints = set_start_array(teamStats, "teleop_points");
             int[] totalDefensesSeen = set_start_array(teamStats, "seen");
             int[] totalDefensesTime = set_start_array(teamStats, "time");
@@ -202,6 +203,7 @@ public class AggregateService extends IntentService {
 
                     //Teleop
                     increment_array(teamCursor, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
+                    increment_array(teamCursor, totalTeleopNotCross, defense2, defense3, defense4, defense5, "not");
                     increment_array(teamCursor, totalTeleopDefensesPoints, defense2, defense3, defense4, defense5, "teleop_points");
                     increment_array(teamCursor, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
                     totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
@@ -235,6 +237,7 @@ public class AggregateService extends IntentService {
                 newTeamStats.put(Constants.TOTAL_DEFENSES_AUTO_REACHED[j], new ScoutValue(totalDefenseReaches[j]));
                 newTeamStats.put(Constants.TOTAL_DEFENSES_AUTO_CROSSED[j], new ScoutValue(totalDefenseCrosses[j]));
                 newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[j], new ScoutValue(totalTeleopDefenses[j]));
+                newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[j],new ScoutValue(totalTeleopNotCross[j]));
                 newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[j], new ScoutValue(totalTeleopDefensesPoints[j]));
                 newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_TIME[j], new ScoutValue(totalDefensesTime[j]));
             }
@@ -308,6 +311,9 @@ public class AggregateService extends IntentService {
                 case "teleop":
                     array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]);
                     break;
+                case "not":
+                    array[i] = set_start(teamStats,Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]);
+                    break;
                 case "teleop_points":
                     array[i] = set_start(teamStats, Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]);
                     break;
@@ -329,8 +335,6 @@ public class AggregateService extends IntentService {
 
     private void increment_array(Cursor cursor, int[] array, String defense2, String defense3, String defense4, String defense5, String type)
     {
-        Log.d(TAG,"increment");
-
         List defensesList = Arrays.asList(Constants.DEFENSES);
 
         int index;
@@ -440,6 +444,22 @@ public class AggregateService extends IntentService {
 
                 index = defensesList.indexOf(defense5);
                 array[index] += stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5)));
+                break;
+            case "not":
+                index = Constants.LOW_BAR_INDEX;
+                array[index] += (stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_1))) > 0) ? 0 : 1;
+
+                index = defensesList.indexOf(defense2);
+                array[index] += (stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_2))) > 0) ? 0 : 1;
+
+                index = defensesList.indexOf(defense3);
+                array[index] += (stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_3))) > 0) ? 0 : 1;
+
+                index = defensesList.indexOf(defense4);
+                array[index] += (stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_4))) > 0) ? 0 : 1;
+
+                index = defensesList.indexOf(defense5);
+                array[index] += (stringToCount(cursor.getString(cursor.getColumnIndex(Constants.TELEOP_DEFENSE_5))) > 0) ? 0 : 1;
                 break;
             case "teleop_points":
                 if(cursor.getString(cursor.getColumnIndex(Constants.AUTO_REACH_CROSS)).equals("Cross"))

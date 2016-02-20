@@ -55,14 +55,22 @@ public class OffensivePick extends ScoutPick {
             int defenseWeight = 0;
             for (int i = 0; i < 9; i++) {
                 float time = statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]));
-                if (time < 5 && time > 0) {
-                    defenseWeight+=5;
-                    defensesFast += Constants.DEFENSES_ABREV[i] + ", ";
-                }
-                else if(time >= 5 && time < 10)
+                float seen = statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[i]));
+                float notCrossed = statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]));
+
+                if (seen > 0 && seen != notCrossed )
                 {
-                    defenseWeight+=2;
-                    defensesMedium += Constants.DEFENSES_ABREV[i] + ", ";
+                    float avgTime = time / (seen - notCrossed);
+                    if(avgTime <= 5 && avgTime > 0) {
+                        defenseWeight += 5;
+                        defensesFast += Constants.DEFENSES_ABREV[i] + ", ";
+
+                    }
+                    else if(avgTime > 5 && avgTime < 10)
+                    {
+                        defenseWeight+=2;
+                        defensesMedium += Constants.DEFENSES_ABREV[i] + ", ";
+                    }
                 }
             }
             if(defensesFast.length() > 2) {
@@ -71,15 +79,10 @@ public class OffensivePick extends ScoutPick {
             if(defensesMedium.length() > 2) {
                 defensesMedium = defensesMedium.substring(0, defensesMedium.length() - 2);
             }
-            if (statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.DRAWBRIDGE_INDEX])) < 5 && statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.DRAWBRIDGE_INDEX])) > 0) {
-                defenseWeight += 5;
-            }
-            if (statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.SALLY_PORT_INDEX])) < 5 && statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[Constants.SALLY_PORT_INDEX])) > 0) {
-                defenseWeight += 5;
-            }
+
             team.setMapElement(Constants.OFFENSIVE_PICKABILITY, new ScoutValue(((int)averagePoints)+defenseWeight));
 
-            String bottomText = String.format("Offense Pickability: %d Avg Points: %.2f Fast Defense: ",team.getMapElement(Constants.OFFENSIVE_PICKABILITY).getInt(),averagePoints);
+            String bottomText = String.format("Offense Pickability: %d Avg Points: %.2f \nFast Defense: ",team.getMapElement(Constants.OFFENSIVE_PICKABILITY).getInt(),averagePoints);
             if(defensesFast == "")
             {
                 bottomText += "None";

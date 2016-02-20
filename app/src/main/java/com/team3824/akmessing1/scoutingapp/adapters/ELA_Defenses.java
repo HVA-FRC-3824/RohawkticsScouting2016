@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.list_items.ELI_Defenses;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 import java.util.ArrayList;
 
@@ -69,31 +70,31 @@ public class ELA_Defenses extends ArrayAdapter<ELI_Defenses>{
             textView.setText(String.valueOf(team.mTeamNumber));
 
             textView = (TextView)convertView.findViewById(R.id.event_Portcullis);
-            textView.setText(create_text(team.cPortcullis,team.sPortcullis,team.tPortcullis));
+            textView.setText(create_text(team.crosses[Constants.PORTCULLIS_INDEX],team.seens[Constants.PORTCULLIS_INDEX],team.time[Constants.PORTCULLIS_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Cheval_de_Frise);
-            textView.setText(create_text(team.cChevalDeFrise,team.sChevalDeFrise,team.tChevalDeFrise));
+            textView.setText(create_text(team.crosses[Constants.CHEVAL_DE_FRISE_INDEX],team.seens[Constants.CHEVAL_DE_FRISE_INDEX],team.time[Constants.CHEVAL_DE_FRISE_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Moat);
-            textView.setText(create_text(team.cMoat,team.sMoat,team.tMoat));
+            textView.setText(create_text(team.crosses[Constants.MOAT_INDEX],team.seens[Constants.MOAT_INDEX],team.time[Constants.MOAT_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Ramparts);
-            textView.setText(create_text(team.cRamparts,team.sRamparts, team.tRamparts));
+            textView.setText(create_text(team.crosses[Constants.RAMPARTS_INDEX],team.seens[Constants.RAMPARTS_INDEX], team.time[Constants.RAMPARTS_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Drawbridge);
-            textView.setText(create_text(team.cDrawbridge,team.sDrawbridge,team.tDrawbridge));
+            textView.setText(create_text(team.crosses[Constants.DRAWBRIDGE_INDEX],team.seens[Constants.DRAWBRIDGE_INDEX],team.time[Constants.DRAWBRIDGE_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Sally_Port);
-            textView.setText(create_text(team.cSallyPort,team.sSallyPort,team.tSallyPort));
+            textView.setText(create_text(team.crosses[Constants.SALLY_PORT_INDEX],team.seens[Constants.SALLY_PORT_INDEX],team.time[Constants.SALLY_PORT_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Rough_Terrain);
-            textView.setText(create_text(team.cRoughTerrain,team.sRoughTerrain,team.tRoughTerrain));
+            textView.setText(create_text(team.crosses[Constants.ROUGH_TERRAIN_INDEX],team.seens[Constants.ROUGH_TERRAIN_INDEX],team.time[Constants.ROUGH_TERRAIN_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Rock_Wall);
-            textView.setText(create_text(team.cRockWall,team.sRockWall,team.tRockWall));
+            textView.setText(create_text(team.crosses[Constants.ROCK_WALL_INDEX],team.seens[Constants.ROCK_WALL_INDEX],team.time[Constants.ROCK_WALL_INDEX]));
 
             textView = (TextView)convertView.findViewById(R.id.event_Low_Bar);
-            textView.setText(create_text(team.cLowBar,team.sLowBar,team.tLowBar));
+            textView.setText(create_text(team.crosses[Constants.LOW_BAR_INDEX],team.seens[Constants.LOW_BAR_INDEX],team.time[Constants.LOW_BAR_INDEX]));
         }
 
         return convertView;

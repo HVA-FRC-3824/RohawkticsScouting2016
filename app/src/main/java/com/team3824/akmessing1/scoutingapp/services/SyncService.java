@@ -70,7 +70,14 @@ public class SyncService extends IntentService{
             switch (msg.what) {
                 case MessageType.DATA_RECEIVED:
                     String message = new String((byte[]) msg.obj);
-                    Log.d(TAG, "Received: " + message);
+                    if(message.length() > 30)
+                    {
+                        Log.d(TAG, String.format("Received: %s ... %s",message.substring(0,15),message.substring(message.length()-15)));
+                    }
+                    else
+                    {
+                        Log.d(TAG, String.format("Received: %s",message));
+                    }
                     if (message.length() == 0)
                         return;
                     switch (message.charAt(0)) {
@@ -336,6 +343,20 @@ public class SyncService extends IntentService{
                                 writeToast(String.format("File %s Received", filename));
                             }
                             break;
+                        case Constants.PING_HEADER:
+                            if(message.equals(Constants.PING))
+                            {
+                                Log.d(TAG, "Ping Received, sending Pong");
+                                for (int i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if (bluetoothSync.write(Constants.PONG.getBytes())) {
+                                        break;
+                                    }
+                                }
+                            }
+                            else if(message.equals(Constants.PONG))
+                            {
+                                Log.d(TAG, "Pong Received");
+                            }
                     }
                     break;
             }
@@ -394,28 +415,91 @@ public class SyncService extends IntentService{
                     String connectedAddress = bluetoothSync.getConnectedAddress();
                     String lastUpdated = syncDB.getLastUpdated(connectedAddress);
                     syncDB.updateSync(connectedAddress);
-
+                    int i;
                     switch (userType) {
                         case Constants.MATCH_SCOUT:
                             String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
-                            while (!bluetoothSync.write(matchUpdatedText.getBytes())) ;
-                            writeToast("Match Data Sent");
+                            if(!matchUpdatedText.equals(String.format("%c[]",Constants.MATCH_HEADER))) {
+                                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if (bluetoothSync.write(matchUpdatedText.getBytes())) {
+                                        break;
+                                    }
+                                }
+                                if (i == Constants.NUM_ATTEMPTS) {
+                                    Utilities.JsonToMatchDB(matchScoutDB, matchUpdatedText);
+                                    Log.d(TAG, "Match Data Requeued");
+                                } else {
+                                    Log.d(TAG, "Match Data Sent");
+                                    writeToast("Match Data Sent");
+                                }
+                            }
+                            else
+                            {
+                                Log.d(TAG, "No new Match Data to send");
+                            }
                             break;
                         case Constants.PIT_SCOUT:
                             String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
-                            while (!bluetoothSync.write(pitUpdatedText.getBytes())) ;
-                            writeToast("Pit Data Sent");
+                            if(!pitUpdatedText.equals(String.format("%c[]",Constants.PIT_HEADER))) {
+                                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if (bluetoothSync.write(pitUpdatedText.getBytes())) {
+                                        break;
+                                    }
+                                }
+                                if (i == Constants.NUM_ATTEMPTS) {
+                                    Utilities.JsonToPitDB(pitScoutDB, pitUpdatedText);
+                                    Log.d(TAG, "Pit Data Requeued");
+                                } else {
+                                    Log.d(TAG, "Pit Data Sent");
+                                    writeToast("Pit Data Sent");
+                                }
+                            }
+                            else
+                            {
+                                Log.d(TAG,"No new Pit Data to send");
+                            }
                             break;
                         case Constants.SUPER_SCOUT:
                             String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-                            while (!bluetoothSync.write(superUpdatedText.getBytes())) ;
-                            writeToast("Super Data Sent");
+                            if(!superUpdatedText.equals(String.format("%c[]",Constants.SUPER_HEADER))) {
+                                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if (bluetoothSync.write(superUpdatedText.getBytes())) {
+                                        break;
+                                    }
+                                }
+                                if (i == Constants.NUM_ATTEMPTS) {
+                                    Utilities.JsonToSuperDB(superScoutDB, superUpdatedText);
+                                    Log.d(TAG, "Super Data Requeued");
+                                } else {
+                                    Log.d(TAG, "Super Data Sent");
+                                    writeToast("Super Data Sent");
+                                }
+                            }
+                            else
+                            {
+                                Log.d(TAG, "No new Super Data to Send");
+                            }
                             break;
                         case Constants.DRIVE_TEAM:
                             String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
-                            while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
-                            writeToast("Drive Team Feedback Data Sent");
-
+                            if(!driveUpdatedText.equals(String.format("%c[]",Constants.DRIVE_TEAM_FEEDBACK_HEADER))) {
+                                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if (bluetoothSync.write(driveUpdatedText.getBytes())) {
+                                        break;
+                                    }
+                                }
+                                if (i == Constants.NUM_ATTEMPTS) {
+                                    Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveUpdatedText);
+                                    Log.d(TAG, "Drive Team Feedback Data Requeued");
+                                } else {
+                                    Log.d(TAG, "Drive Team Feedback Data Sent");
+                                    writeToast("Drive Team Feedback Data Sent");
+                                }
+                            }
+                            else
+                            {
+                                Log.d(TAG, "No new Drive Team Feedback Data to send");
+                            }
                             received = false;
                             while (!bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes())) ;
                             while (!received) {

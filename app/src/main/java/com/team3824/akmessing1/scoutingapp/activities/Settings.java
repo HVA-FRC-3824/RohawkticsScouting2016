@@ -187,7 +187,7 @@ public class Settings extends AppCompatActivity {
 
             }
 
-            if(type.equals(Constants.SERVER) || type.equals(Constants.ADMIN)) {
+            if(type.equals(Constants.SERVER) || type.equals(Constants.ADMIN) || type.equals(Constants.DRIVE_TEAM) || type.equals(Constants.STRATEGY)) {
                 if(PendingIntents.aggregatePIntent == null) {
                     Log.d(TAG,"Creating Aggregate Service");
                     Intent intent = new Intent(this, AggregateService.class);

@@ -82,6 +82,8 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
             }
             case Constants.SERVER:{
                 setupButton(R.id.server_button);
+                setupButton(R.id.sync_button);
+                setupButton(R.id.aggregate_button);
                 break;
             }
             case Constants.ADMIN: {

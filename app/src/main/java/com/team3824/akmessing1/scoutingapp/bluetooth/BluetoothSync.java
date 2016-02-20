@@ -48,6 +48,7 @@ public class BluetoothSync {
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
     public String connectedAddress = "";
+    public String connectedName = "";
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -90,6 +91,15 @@ public class BluetoothSync {
         return "";
     }
 
+    public synchronized String getConnectedName()
+    {
+        if(mState == STATE_CONNECTED)
+        {
+            return connectedName;
+        }
+        return "";
+    }
+
 
     /**
      * Start the chat service. Specifically start AcceptThread to begin a
@@ -119,6 +129,7 @@ public class BluetoothSync {
         }
 
         connectedAddress = "";
+        connectedName = "";
     }
 
     /**
@@ -149,6 +160,7 @@ public class BluetoothSync {
         setState(STATE_CONNECTING);
 
         connectedAddress = "";
+        connectedName = "";
     }
 
     /**
@@ -185,6 +197,7 @@ public class BluetoothSync {
 
         setState(STATE_CONNECTED);
         connectedAddress = device.getAddress();
+        connectedName = device.getName();
     }
 
     /**
@@ -209,6 +222,8 @@ public class BluetoothSync {
         }
 
         setState(STATE_NONE);
+        connectedAddress = "";
+        connectedName = "";
     }
 
     /**
@@ -470,7 +485,7 @@ public class BluetoothSync {
                         while (true) {
                             if (waitingForHeader) {
                                 header = (byte)mmInStream.read();
-                                Log.v(TAG, "Received Header Byte: " + header);
+                                //Log.v(TAG, "Received Header Byte: " + header);
                                 headerBytes[headerIndex++] = header;
 
                                 if (headerIndex == 22) {
@@ -543,7 +558,14 @@ public class BluetoothSync {
          * @param buffer The bytes to write
          */
         public boolean write(byte[] buffer) {
-            Log.d(TAG,"Sending: "+new String(buffer));
+            String tempBuffer = new String(buffer);
+            if(buffer.length > 30)
+            {
+                Log.d(TAG, String.format("Sending: %s ... %s",tempBuffer.substring(0,15),tempBuffer.substring(tempBuffer.length()-15)));
+            }
+            else {
+                Log.d(TAG, String.format("Sending: %s",tempBuffer));
+            }
             mSubstate = SUBSTATE_SENDING;
             try {
                 mHandler.sendEmptyMessage(MessageType.SENDING_DATA);

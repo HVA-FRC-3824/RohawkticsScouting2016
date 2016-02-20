@@ -29,9 +29,16 @@ public class BreacherPick extends ScoutPick{
             int numDefenseFast = 0;
             for (int i = 0; i < 9; i++) {
                 float time = statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]));
-                if (time < 5 && time > 0) {
-                    numDefenseFast++;
-                    defensesFast += Constants.DEFENSES_ABREV[i] + ", ";
+                float seen = statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_SEEN[i]));
+                float notCrossed = statsCursor.getFloat(statsCursor.getColumnIndex(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]));
+
+                if (seen > 0 && seen != notCrossed )
+                {
+                    float avgTime = time / (seen - notCrossed);
+                    if(avgTime <= 5 && avgTime > 0) {
+                        numDefenseFast++;
+                        defensesFast += Constants.DEFENSES_ABREV[i] + ", ";
+                    }
                 }
             }
             if(defensesFast.length() > 2) {

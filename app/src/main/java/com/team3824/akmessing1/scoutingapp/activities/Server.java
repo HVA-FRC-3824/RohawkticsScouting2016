@@ -1,6 +1,7 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
@@ -22,6 +24,7 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
+import com.team3824.akmessing1.scoutingapp.services.AggregateService;
 import com.team3824.akmessing1.scoutingapp.utilities.CircularBuffer;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.MessageType;
@@ -50,6 +53,8 @@ public class Server extends AppCompatActivity {
     BluetoothSync bluetoothSync;
     SyncHandler handler;
 
+    LogCatTask logCatTask;
+
     MatchScoutDB matchScoutDB;
     PitScoutDB pitScoutDB;
     SuperScoutDB superScoutDB;
@@ -68,7 +73,13 @@ public class Server extends AppCompatActivity {
             switch (msg.what) {
                 case MessageType.DATA_RECEIVED:
                     String message = new String((byte[]) msg.obj);
-                    Log.d(TAG, "Received: " + message);
+                    if(message.length() > 30)
+                    {
+                        Log.d(TAG, String.format("Received: %s ... %s",message.substring(0,15),message.substring(message.length()-15)));
+                    }
+                    else {
+                        Log.d(TAG, String.format("Received: %s",message));
+                    }
                     if (message.length() == 0)
                         return;
                     switch (message.charAt(0)) {
@@ -379,6 +390,20 @@ public class Server extends AppCompatActivity {
                                 Log.d(TAG, String.format("File %s Received", filename));
                             }
                             break;
+                        case Constants.PING_HEADER:
+                            if(message.equals(Constants.PING))
+                            {
+                                Log.d(TAG, "Ping Received, sending Pong");
+                                for (int i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                                    if (bluetoothSync.write(Constants.PONG.getBytes())) {
+                                        break;
+                                    }
+                                }
+                            }
+                            else if(message.equals(Constants.PONG))
+                            {
+                                Log.d(TAG, "Pong Received");
+                            }
                     }
                     break;
             }
@@ -405,60 +430,73 @@ public class Server extends AppCompatActivity {
 
     public class LogCatTask extends AsyncTask<Void, String, Void> {
         public AtomicBoolean run = new AtomicBoolean(true);
-
+        Process process;
         @Override
-        protected Void doInBackground(Void... params) {
-            while(true) {
-                try {
-                    Process process = Runtime.getRuntime().exec("logcat");
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    CircularBuffer buf = new CircularBuffer(50);
-                    String line = "";
-                    while (run.get()) {
-                        line = bufferedReader.readLine();
-                        if (line != null && (line.contains("BluetoothSync") || line.contains("Server"))) {
+        protected Void doInBackground(Void... params)
+        {
+            try
+            {
+                process = Runtime.getRuntime().exec("logcat");
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                CircularBuffer buf = new CircularBuffer(50);
+                String line = "";
+                while (run.get())
+                {
+                    line = bufferedReader.readLine();
+                    if (line != null && (line.contains("BluetoothSync") || line.contains("Server") || line.contains("AggregateService")))
+                    {
 
-                            char logLevel = ' ';
-                            if (line.length() > 32) {
-                                logLevel = line.charAt(31);
-                            }
-
-                            switch (logLevel) {
-                                case 'V':
-                                    line = "<font color='black'>" + line;
-                                    break;
-                                case 'D':
-                                    line = "<font color='blue'>" + line;
-                                    break;
-                                case 'I':
-                                    line = "<font color='grey'>" + line;
-                                    break;
-                                case 'W':
-                                    line = "<font color='#DAA520'>" + line;
-                                    break;
-                                case 'E':
-                                    line = "<font color='red'>" + line;
-                                    break;
-                                case 'A':
-                                    line = "<font color='blue'>" + line;
-                                    break;
-                                default:
-                                    line = "<font color='black'>" + line;
-                                    break;
-                            }
-
-                            line += "</font><br>";
-                            buf.insert(line);
-                            publishProgress(buf.toString());
+                        char logLevel = ' ';
+                        if (line.length() > 32) {
+                            logLevel = line.charAt(31);
                         }
-                        line = null;
-                        Thread.sleep(10);
+
+                        switch (logLevel) {
+                            case 'V':
+                                line = "<font color='black'>" + line;
+                                break;
+                            case 'D':
+                                line = "<font color='blue'>" + line;
+                                break;
+                            case 'I':
+                                line = "<font color='grey'>" + line;
+                                break;
+                            case 'W':
+                                line = "<font color='#DAA520'>" + line;
+                                break;
+                            case 'E':
+                                line = "<font color='red'>" + line;
+                                break;
+                            case 'A':
+                                line = "<font color='blue'>" + line;
+                                break;
+                            default:
+                                line = "<font color='black'>" + line;
+                                break;
+                        }
+
+                        line += "</font><br>";
+                        buf.insert(line);
+                        publishProgress(buf.toString());
                     }
-                } catch (Exception ex) {
-                    Log.d(TAG, ex.getMessage());
+                    line = null;
+                    Thread.sleep(10);
                 }
             }
+            catch (Exception ex)
+            {
+                Log.d(TAG, ex.getMessage());
+            }
+
+            return null;
         }
+
+        @Override
+        protected void onCancelled() {
+            run.set(false);
+            process.destroy();
+        }
+
     }
 
     @Override
@@ -480,6 +518,16 @@ public class Server extends AppCompatActivity {
         logView = (TextView)findViewById(R.id.log);
         logView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
+        Button button = (Button)findViewById(R.id.aggregate_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Server.this, AggregateService.class);
+                intent.putExtra(Constants.UPDATE,false);
+                startService(intent);
+            }
+        });
+
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
@@ -496,7 +544,7 @@ public class Server extends AppCompatActivity {
 
         bluetoothSync.start();
 
-        LogCatTask logCatTask = new LogCatTask(){
+        logCatTask = new LogCatTask(){
             @Override
             protected void onProgressUpdate(String... values) {
                 logView.setText(Html.fromHtml(values[0]));
@@ -517,6 +565,10 @@ public class Server extends AppCompatActivity {
     public void onDestroy(){
         if (bluetoothSync != null){
             bluetoothSync.stop();
+        }
+        if(logCatTask != null)
+        {
+            logCatTask.cancel(true);
         }
         super.onDestroy();
     }
