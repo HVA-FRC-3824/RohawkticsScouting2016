@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -86,7 +87,13 @@ public class StatsDB extends SQLiteOpenHelper {
     public void addColumn(String columnName, String columnType)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        try {
+            db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        }
+        catch (SQLException e)
+        {
+            Log.d(TAG,e.getMessage());
+        }
     }
 
     public void createTeamList(JSONArray array)
@@ -122,7 +129,7 @@ public class StatsDB extends SQLiteOpenHelper {
     public void removeTeamNumber(int teamNumber)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(tableName,KEY_TEAM_NUMBER+" = ?",new String[]{String.valueOf(teamNumber)});
+        db.delete(tableName, KEY_TEAM_NUMBER + " = ?", new String[]{String.valueOf(teamNumber)});
     }
 
     public void updateStats(Map<String, ScoutValue> map)
@@ -199,7 +206,7 @@ public class StatsDB extends SQLiteOpenHelper {
                     break;
             }
         }
-        db.replace(tableName,null,cvs);
+        db.replace(tableName, null, cvs);
     }
 
     public Cursor getStats()
@@ -209,6 +216,24 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // b. column names
                 null, // c. selections
                 null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                KEY_TEAM_NUMBER, // g. order by
+                null); // h. limit
+        if (cursor != null)
+            cursor.moveToFirst();
+        return cursor;
+    }
+
+    public Cursor getStatsSince(String since)
+    {
+        if(since.equals("") || since == null)
+            return getStats();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                KEY_LAST_UPDATED + " > ?", // c. selections
+                new String[]{since}, // d. selections args
                 null, // e. group by
                 null, // f. having
                 KEY_TEAM_NUMBER, // g. order by

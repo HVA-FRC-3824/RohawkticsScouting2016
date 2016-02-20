@@ -3,23 +3,26 @@ package com.team3824.akmessing1.scoutingapp.activities;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
+import com.team3824.akmessing1.scoutingapp.services.SyncService;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.MessageType;
@@ -46,7 +49,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-public class SyncActivity extends AppCompatActivity implements View.OnClickListener{
+public class SyncActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemSelectedListener{
     private static String TAG = "SyncActivity";
     private BluetoothAdapter mBluetoothAdapter = null;
     Object[] pairedDevices;
@@ -55,11 +58,14 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
     private SyncHandler handler;
     private String selectedAddress;
 
+    Spinner pairedSpinner, actionSpinner;
+
     MatchScoutDB matchScoutDB;
     PitScoutDB pitScoutDB;
     SuperScoutDB superScoutDB;
     DriveTeamFeedbackDB driveTeamFeedbackDB;
     ScheduleDB scheduleDB;
+    StatsDB statsDB;
     SyncDB syncDB;
 
     private class SyncHandler extends android.os.Handler
@@ -213,6 +219,36 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Received", Toast.LENGTH_SHORT).show();
                             break;
+                        case Constants.STATS_HEADER:
+                            filename = "";
+                            try {
+                                JSONArray jsonArray = new JSONArray(message.substring(1));
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    HashMap<String, ScoutValue> map = new HashMap<>();
+                                    Iterator<String> iter = jsonObject.keys();
+                                    while (iter.hasNext()) {
+                                        String key = iter.next();
+                                        try {
+                                            Object value = jsonObject.get(key);
+                                            if (value instanceof Integer) {
+                                                map.put(key, new ScoutValue((int) value));
+                                            } else if (value instanceof Float) {
+                                                map.put(key, new ScoutValue((float) value));
+                                            } else if (value instanceof String) {
+                                                map.put(key, new ScoutValue((String) value));
+                                            }
+                                        } catch (JSONException e) {
+                                            // Something went wrong!
+                                        }
+                                    }
+                                    statsDB.updateStats(map);
+                                }
+                            } catch (JSONException e) {
+                                Log.e(TAG, e.getMessage());
+                            }
+                            Toast.makeText(SyncActivity.this, "Stats Data Received", Toast.LENGTH_SHORT).show();
+                            break;
                         case Constants.SCHEDULE_HEADER:
                             filename = "";
                             try {
@@ -241,7 +277,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                 selectedAddress = bluetoothSync.getConnectedAddress();
                                 syncDB.updateSync(selectedAddress);
 
-                                String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(""));
+                                String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(""));
                                 while (!bluetoothSync.write(matchUpdatedText.getBytes())) ;
                                 Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
 
@@ -256,6 +292,11 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(""));
                                 while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
                                 Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+
+                                String statsUpdatedText = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStats());
+                                while(!bluetoothSync.write(statsUpdatedText.getBytes()));
+                                Toast.makeText(SyncActivity.this, "Stats Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Stats Data Sent");
 
                             }
                             else if(message.equals(Constants.RECEIVE_PICTURE_HEADER))
@@ -280,7 +321,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                 String lastUpdated = syncDB.getLastUpdated(selectedAddress);
                                 syncDB.updateSync(selectedAddress);
 
-                                String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
+                                String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
                                 while (!bluetoothSync.write(matchUpdatedText.getBytes())) ;
                                 Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
 
@@ -295,6 +336,10 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                 String driveUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
                                 while (!bluetoothSync.write(driveUpdatedText.getBytes())) ;
                                 Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+
+                                String statsUpdatedText = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStatsSince(lastUpdated));
+                                while(!bluetoothSync.write(statsUpdatedText.getBytes()));
+                                Toast.makeText(SyncActivity.this, "Stats Data Sent", Toast.LENGTH_SHORT).show();
                             }
                             break;
                         case Constants.FILE_HEADER:
@@ -334,22 +379,34 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         if(mBluetoothAdapter != null) {
             if (mBluetoothAdapter.isEnabled()) {
                 ArrayAdapter<String> pairedDevicesArrayAdapter =
-                        new ArrayAdapter<String>(this, R.layout.list_item_device_name);
+                        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item);
 
                 // Find and set up the ListView for paired devices
-                ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
-                pairedListView.setAdapter(pairedDevicesArrayAdapter);
-                pairedListView.setOnItemClickListener(mDeviceClickListener);
+                pairedSpinner = (Spinner) findViewById(R.id.paired_devices);
+                pairedSpinner.setAdapter(pairedDevicesArrayAdapter);
+                pairedSpinner.setOnItemSelectedListener(this);
 
                 // Get a set of currently paired devices
                 Set<BluetoothDevice> pairedDevicesSet = mBluetoothAdapter.getBondedDevices();
                 pairedDevices = pairedDevicesSet.toArray();
+                pairedDevicesArrayAdapter.add("None");
                 if (pairedDevices.length > 0) {
                     for (int i = 0; i < pairedDevices.length; i++) {
                         BluetoothDevice bluetoothDevice = (BluetoothDevice)pairedDevices[i];
-                        pairedDevicesArrayAdapter.add(bluetoothDevice.getName() + "\n" + bluetoothDevice.getAddress());
+                        pairedDevicesArrayAdapter.add(String.format("%s - %s",bluetoothDevice.getName(),bluetoothDevice.getAddress()));
                     }
                 }
+
+                ArrayAdapter<String> actionArrayAdapter =
+                        new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item);
+                actionSpinner = (Spinner)findViewById(R.id.action);
+                actionSpinner.setAdapter(actionArrayAdapter);
+                actionArrayAdapter.addAll("None", "Send Update", "Send All", "Send Pictures",
+                        "Send Schedule", "Receive Update", "Receive All", "Receive Pictures",
+                        "Receive Schedule");
+                actionSpinner.setOnItemSelectedListener(this);
+
+
                 handler = new SyncHandler();
                 bluetoothSync = new BluetoothSync(handler, false);
 
@@ -360,31 +417,20 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                 superScoutDB = new SuperScoutDB(this, eventID);
                 driveTeamFeedbackDB = new DriveTeamFeedbackDB(this,eventID);
                 scheduleDB = new ScheduleDB(this,eventID);
+                statsDB = new StatsDB(this, eventID);
                 syncDB = new SyncDB(this, eventID);
 
-                ((Button) findViewById(R.id.sync_send_update)).setOnClickListener(this);
-                ((Button) findViewById(R.id.sync_send_all)).setOnClickListener(this);
-                ((Button) findViewById(R.id.sync_picture_send)).setOnClickListener(this);
-                ((Button) findViewById(R.id.sync_schedule_send)).setOnClickListener(this);
-                ((Button) findViewById(R.id.sync_receive_update)).setOnClickListener(this);
-                ((Button) findViewById(R.id.sync_receive_all)).setOnClickListener(this);
-                ((Button) findViewById(R.id.sync_picture_receive)).setOnClickListener(this);
-                ((Button) findViewById(R.id.sync_schedule_receive)).setOnClickListener(this);
+                ((Button) findViewById(R.id.execute_action)).setOnClickListener(this);
+                ((Button) findViewById(R.id.start_service)).setOnClickListener(this);
+
                 bluetoothSync.start();
             } else {
                 findViewById(R.id.bluetooth_text).setVisibility(View.VISIBLE);
                 findViewById(R.id.paired_devices).setVisibility(View.GONE);
-                findViewById(R.id.sync_send_update).setVisibility(View.GONE);
-                findViewById(R.id.sync_send_all).setVisibility(View.GONE);
-                findViewById(R.id.sync_picture_send).setVisibility(View.GONE);
-                findViewById(R.id.sync_schedule_send).setVisibility(View.GONE);
-                findViewById(R.id.sync_receive_update).setVisibility(View.GONE);
-                findViewById(R.id.sync_receive_all).setVisibility(View.GONE);
-                findViewById(R.id.sync_picture_receive).setVisibility(View.GONE);
-                findViewById(R.id.sync_schedule_receive).setVisibility(View.GONE);
+                findViewById(R.id.execute_action).setVisibility(View.GONE);
+                findViewById(R.id.action).setVisibility(View.GONE);
+                findViewById(R.id.start_service).setVisibility(View.GONE);
                 findViewById(R.id.sync_log).setVisibility(View.GONE);
-
-
             }
         }
         else
@@ -392,45 +438,20 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.bluetooth_text).setVisibility(View.VISIBLE);
             ((TextView)findViewById(R.id.bluetooth_text)).setText("No Bluetooth on this device");
             findViewById(R.id.paired_devices).setVisibility(View.GONE);
-            findViewById(R.id.sync_send_update).setVisibility(View.GONE);
-            findViewById(R.id.sync_send_all).setVisibility(View.GONE);
-            findViewById(R.id.sync_picture_send).setVisibility(View.GONE);
-            findViewById(R.id.sync_schedule_send).setVisibility(View.GONE);
-            findViewById(R.id.sync_receive_update).setVisibility(View.GONE);
-            findViewById(R.id.sync_receive_all).setVisibility(View.GONE);
-            findViewById(R.id.sync_picture_receive).setVisibility(View.GONE);
-            findViewById(R.id.sync_schedule_receive).setVisibility(View.GONE);
+            findViewById(R.id.execute_action).setVisibility(View.GONE);
+            findViewById(R.id.action).setVisibility(View.GONE);
+            findViewById(R.id.start_service).setVisibility(View.GONE);
             findViewById(R.id.sync_log).setVisibility(View.GONE);
         }
     }
 
-    /**
-     * The on-click listener for all devices in the ListViews
-     */
-    private AdapterView.OnItemClickListener mDeviceClickListener
-            = new AdapterView.OnItemClickListener() {
-        public void onItemClick(AdapterView<?> av, View v, int position, long arg3) {
-            // Get the device MAC address, which is the last 17 chars in the View
-            String info = ((TextView) v).getText().toString();
-            selectedAddress = info.substring(info.length() - 17);
-            for(int i = 0; i < av.getChildCount(); i++) {
-                ((TextView)av.getChildAt(i)).setTextColor(Color.BLACK);
-                ((TextView)av.getChildAt(i)).setBackgroundColor(Color.WHITE);
-            }
-            v.setBackgroundColor(Color.BLUE);
-            ((TextView) v).setTextColor(Color.WHITE);
-            bluetoothSync.connect(((BluetoothDevice) pairedDevices[position]), false);
-            long time = SystemClock.currentThreadTimeMillis();
-            while(SystemClock.currentThreadTimeMillis() < time + Constants.CONNECTION_TIMEOUT && bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED);
-            if(bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
-            {
-                v.setBackgroundColor(Color.WHITE);
-                ((TextView) v).setTextColor(Color.BLACK);
-                textView.setText("Connection failed");
-                bluetoothSync.start();
-            }
+    @Override
+    public void onDestroy(){
+        if (bluetoothSync != null){
+            bluetoothSync.stop();
         }
-    };
+        super.onDestroy();
+    }
 
     ArrayList<String> getImageFiles(Cursor cursor)
     {
@@ -458,83 +479,175 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.back:
                 this.finish();
                 break;
-            case R.id.sync_send_update:
-                Log.d(TAG, "Sending");
-                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    String lastUpdated = syncDB.getLastUpdated(selectedAddress);
-                    syncDB.updateSync(selectedAddress);
+            case R.id.execute_action:
+                if(pairedSpinner.getSelectedItemPosition() > 0 && actionSpinner.getSelectedItemPosition() > 0)
+                {
+                    int position = actionSpinner.getSelectedItemPosition();
+                    if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
+                        String text;
+                        switch (position) {
+                            case 0: //None
+                                Log.e(TAG,"This should never happen...");
+                                break;
+                            case 1: //Send Update
+                                Log.d(TAG, "Sending Update");
+                                String lastUpdated = syncDB.getLastUpdated(selectedAddress);
+                                syncDB.updateSync(selectedAddress);
 
-                    String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(lastUpdated));
-                    while (!bluetoothSync.write(matchUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                                text = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Match Data Sent");
 
-                    String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
-                    while (!bluetoothSync.write(pitUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                                text = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Pit Data Sent");
 
-                    String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-                    while (!bluetoothSync.write(superUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
+                                text = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Super Data Sent");
 
-                    String driverUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
-                    while (!bluetoothSync.write(driverUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                                text = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Drive Team Feedback Data Sent");
+
+                                text = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStatsSince(lastUpdated));
+                                while(!bluetoothSync.write(text.getBytes()));
+                                Toast.makeText(SyncActivity.this, "Stats Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Stats Data Sent");
+                                break;
+                            case 2: //Send All
+                                Log.d(TAG, "Sending All");
+                                syncDB.updateSync(selectedAddress);
+
+                                text = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(""));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Match Data Sent");
+
+                                text = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(""));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Pit Data Sent");
+
+                                text = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(""));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Super Data Sent");
+
+                                text = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(""));
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Drive Team Feedback Data Sent");
+
+                                text = Constants.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStats());
+                                while(!bluetoothSync.write(text.getBytes()));
+                                Toast.makeText(SyncActivity.this, "Stats Data Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Stats Data Sent");
+                                break;
+                            case 3: //Send Pictures
+                                Log.d(TAG,"Sending Pictures");
+                                ArrayList<String> filenames = getImageFiles(pitScoutDB.getAllTeamInfo());
+                                for (int i = 0; i < filenames.size(); i++) {
+                                    while(!bluetoothSync.write((Constants.FILENAME_HEADER + filenames.get(i)).getBytes()));
+                                    File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
+                                    while(!bluetoothSync.writeFile(file));
+                                    Toast.makeText(SyncActivity.this, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG,String.format("Picture %d of %d Sent",i+1,filenames.size()));
+                                }
+                                break;
+                            case 4: //Send Schedule
+                                Log.d(TAG,"Sending Schedule");
+                                text = Constants.SCHEDULE_HEADER + Utilities.CursorToJsonString(scheduleDB.getSchedule());
+                                while (!bluetoothSync.write(text.getBytes())) ;
+                                Toast.makeText(SyncActivity.this, "Schedule Sent", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG,"Schedule Sent");
+                                break;
+                            case 5: //Receive Update
+                                Log.d(TAG,"Requesting Update");
+                                while (!bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes()));
+                                break;
+                            case 6: //Receive All
+                                Log.d(TAG,"Requesting All");
+                                while (!bluetoothSync.write(Constants.RECEIVE_ALL_HEADER.getBytes()));
+                                break;
+                            case 7: //Receive Pictures
+                                Log.d(TAG, "Requesting Picture");
+                                while (!bluetoothSync.write(Constants.RECEIVE_PICTURE_HEADER.getBytes()));
+                                break;
+                            case 8: //Receive Schedule
+                                Log.d(TAG,"Requesting Schedule");
+                                while (!bluetoothSync.write(Constants.RECEIVE_SCHEDULE_HEADER.getBytes()));
+                                break;
+                        }
+                    }
                 }
                 break;
-            case R.id.sync_send_all:
-                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    syncDB.updateSync(selectedAddress);
-
-                    String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getInfoSince(""));
-                    while (!bluetoothSync.write(matchUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Match Data Sent", Toast.LENGTH_SHORT).show();
-
-                    String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(""));
-                    while (!bluetoothSync.write(pitUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Pit Data Sent", Toast.LENGTH_SHORT).show();
-
-                    String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(""));
-                    while (!bluetoothSync.write(superUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Super Data Sent", Toast.LENGTH_SHORT).show();
-
-                    String driverUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(""));
-                    while (!bluetoothSync.write(driverUpdatedText.getBytes()));
-                    Toast.makeText(SyncActivity.this, "Drive Team Feedback Data Sent", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.sync_picture_send:
-                ArrayList<String> filenames = getImageFiles(pitScoutDB.getAllTeamInfo());
-                for (int i = 0; i < filenames.size(); i++) {
-                    while(!bluetoothSync.write((Constants.FILENAME_HEADER + filenames.get(i)).getBytes()));
-                    File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
-                    while(!bluetoothSync.writeFile(file));
-                    Toast.makeText(SyncActivity.this, String.format("Picture %d of %d Sent",i+1,filenames.size()), Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.sync_schedule_send:
-                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    String scheduleText = Constants.SCHEDULE_HEADER + Utilities.CursorToJsonString(scheduleDB.getSchedule());
-                    while (!bluetoothSync.write(scheduleText.getBytes())) ;
-                    Toast.makeText(SyncActivity.this, "Schedule Sent", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.sync_receive_update:
-                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    while (!bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes()));
-                }
-                break;
-            case R.id.sync_receive_all:
-                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    while (!bluetoothSync.write(Constants.RECEIVE_ALL_HEADER.getBytes()));
-                }
-                break;
-            case R.id.sync_picture_receive:
-                if (bluetoothSync.getState() == BluetoothSync.STATE_CONNECTED) {
-                    while (!bluetoothSync.write(Constants.RECEIVE_SCHEDULE_HEADER.getBytes()));
-                }
-                break;
-            case R.id.sync_schedule_receive:
+            case R.id.start_service:
+                Log.d(TAG, "Start Service");
+                Intent intent = new Intent(this, SyncService.class);
+                startService(intent);
                 break;
         }
+    }
+
+    private class ConnectionTask extends AsyncTask<BluetoothDevice,Void,Void>
+    {
+
+        @Override
+        protected void onPreExecute()
+        {
+            textView.setTextColor(Color.CYAN);
+            textView.setText("Attempting to connect");
+        }
+
+        @Override
+        protected Void doInBackground(BluetoothDevice... params) {
+            bluetoothSync.connect((params[0]), false);
+            long time = System.currentTimeMillis();
+            //Log.d(TAG, String.format("Time: %d", time));
+            long newTime = time;
+            while (newTime < time + Constants.CONNECTION_TIMEOUT && bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
+                newTime = System.currentTimeMillis();
+                //Log.d(TAG, String.format("New Time: %d", newTime));
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            if (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
+                textView.setTextColor(Color.RED);
+                textView.setText("Connection failed");
+                pairedSpinner.setSelection(0);
+                bluetoothSync.start();
+            }
+            else
+            {
+                textView.setTextColor(Color.GREEN);
+                textView.setText("Connnected");
+            }
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(parent.getId() == R.id.paired_devices)
+        {
+            String info = String.valueOf(pairedSpinner.getSelectedItem());
+            if(!info.equals("None")) {
+                selectedAddress = info.substring(info.length() - 17);
+                new ConnectionTask().execute((BluetoothDevice)pairedDevices[position-1]);
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

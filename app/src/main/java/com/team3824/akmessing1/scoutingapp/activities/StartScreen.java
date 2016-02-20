@@ -80,6 +80,10 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.aggregate_button);
                 break;
             }
+            case Constants.SERVER:{
+                setupButton(R.id.server_button);
+                break;
+            }
             case Constants.ADMIN: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.scoutMatch_button);
@@ -191,6 +195,10 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.teamlist_button:
                 intent = new Intent(this, TeamListBuilder.class);
+                startActivity(intent);
+                break;
+            case R.id.server_button:
+                intent = new Intent(this, Server.class);
                 startActivity(intent);
                 break;
             case R.id.bluetooth_button:

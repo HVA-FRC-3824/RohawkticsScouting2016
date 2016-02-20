@@ -152,6 +152,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="Server"
+                android:id="@+id/server_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Settings"
                 android:id="@+id/settings_button"
                 android:background="@color/navy_blue"

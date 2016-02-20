@@ -2,7 +2,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
-    public static final String VERSION="Version: 1.0.8";
+    public static final String VERSION="Version: 1.0.9";
 
     public static final String APP_DATA = "appData";
 
@@ -18,6 +18,7 @@ public interface Constants {
     public static final String SUPER_SCOUT = "Super Scout";
     public static final String DRIVE_TEAM = "Drive Team";
     public static final String STRATEGY = "Strategy";
+    public static final String SERVER = "Server";
     public static final String ADMIN = "Admin";
 
     //Alliance Colors
@@ -191,15 +192,18 @@ public interface Constants {
     public static final int NUM_WORST = 2;
 
     //Bluetooth
-    public static final int CONNECTION_TIMEOUT = 1000;
+    public static final int CONNECTION_TIMEOUT = 10000;
     public static final int CHUNK_SIZE = 4192;
     public static final int HEADER_MSB = 0x10;
     public static final int HEADER_LSB = 0x55;
+
+    public static final String SERVER_NAME = "3824_Server";
 
     public static final char SUPER_HEADER = 'S';
     public static final char MATCH_HEADER = 'M';
     public static final char PIT_HEADER = 'P';
     public static final char DRIVE_TEAM_FEEDBACK_HEADER = 'D';
+    public static final char STATS_HEADER = 'A';
     public static final char FILENAME_HEADER = 'F';
     public static final char FILE_HEADER = 'f';
     public static final char SCHEDULE_HEADER = 's';

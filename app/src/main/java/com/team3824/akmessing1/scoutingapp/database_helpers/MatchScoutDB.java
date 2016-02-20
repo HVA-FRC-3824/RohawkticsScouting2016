@@ -3,6 +3,7 @@ package com.team3824.akmessing1.scoutingapp.database_helpers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -66,7 +67,13 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public void addColumn(String columnName, String columnType)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        try {
+            db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        }
+        catch(SQLException e)
+        {
+            e.getMessage();
+        }
     }
 
     // Store data in the database for a specific match and team
@@ -288,7 +295,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getInfoSince(String since)
+    public Cursor getAllInfoSince(String since)
     {
         if(since.equals("") || since == null)
         {

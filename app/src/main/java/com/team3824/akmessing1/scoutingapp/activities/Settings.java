@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.PendingIntents;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
@@ -39,9 +40,6 @@ import java.util.Arrays;
 public class Settings extends AppCompatActivity {
 
     private String TAG = "Settings";
-
-    static PendingIntent aggregatePIntent = null;
-    static PendingIntent syncPIntent = null;
 
     // Populate the settings fields with their respective values
     @Override
@@ -66,7 +64,7 @@ public class Settings extends AppCompatActivity {
 
 
         Spinner typeSelector = (Spinner)findViewById(R.id.typeSelector);
-        String[] types = new String[]{Constants.MATCH_SCOUT, Constants.PIT_SCOUT, Constants.SUPER_SCOUT, Constants.DRIVE_TEAM, Constants.STRATEGY, Constants.ADMIN};
+        String[] types = new String[]{Constants.MATCH_SCOUT, Constants.PIT_SCOUT, Constants.SUPER_SCOUT, Constants.DRIVE_TEAM, Constants.STRATEGY, Constants.SERVER, Constants.ADMIN};
         ArrayAdapter<String> adapter0 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
         typeSelector.setAdapter(adapter0);
         typeSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -189,39 +187,52 @@ public class Settings extends AppCompatActivity {
 
             }
 
-            if(type.equals(Constants.DRIVE_TEAM) || type.equals(Constants.STRATEGY) || type.equals(Constants.ADMIN)) {
-                if (aggregatePIntent == null) {
+            if(type.equals(Constants.SERVER) || type.equals(Constants.ADMIN)) {
+                if(PendingIntents.aggregatePIntent == null) {
                     Log.d(TAG,"Creating Aggregate Service");
                     Intent intent = new Intent(this, AggregateService.class);
-                    intent.putExtra(Constants.UPDATE,true);
+                    intent.putExtra(Constants.UPDATE, false);
                     startService(intent);
-                    aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
+                    PendingIntents.aggregatePIntent = PendingIntent.getService(this, 0, intent, 0);
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
                     // Run every 30 minutes afterward
-                    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, aggregatePIntent);
+                    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, PendingIntents.aggregatePIntent);
                 }
             }
             else
             {
-                if (aggregatePIntent != null)
+                if (PendingIntents.aggregatePIntent != null)
                 {
                     Log.d(TAG,"Removing Aggregate Service");
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.cancel(aggregatePIntent);
-                    aggregatePIntent = null;
+                    alarmManager.cancel(PendingIntents.aggregatePIntent);
+                    PendingIntents.aggregatePIntent = null;
                 }
             }
 
-            if(BluetoothAdapter.getDefaultAdapter() != null) {
-                if (syncPIntent == null) {
-                    Log.d(TAG, "Creating Sync Service");
+            if(!type.equals(Constants.SERVER))
+            {
+                if(PendingIntents.syncPIntent == null) {
+                    Log.d(TAG,"Creating Sync Service");
                     Intent intent = new Intent(this, SyncService.class);
                     startService(intent);
-                    syncPIntent = PendingIntent.getService(this, 0, intent, 0);
+                    PendingIntents.syncPIntent = PendingIntent.getService(this, 0, intent, 0);
                     AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-                    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_HALF_HOUR, AlarmManager.INTERVAL_HALF_HOUR, syncPIntent);
+                    // Run every 30 minutes afterward
+                    alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, AlarmManager.INTERVAL_FIFTEEN_MINUTES, AlarmManager.INTERVAL_FIFTEEN_MINUTES, PendingIntents.syncPIntent);
                 }
             }
+            else
+            {
+                if (PendingIntents.syncPIntent != null)
+                {
+                    Log.d(TAG,"Removing Sync Service");
+                    AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.cancel(PendingIntents.syncPIntent);
+                    PendingIntents.syncPIntent = null;
+                }
+            }
+
             Toast toast =Toast.makeText(this, "Saved", Toast.LENGTH_SHORT);
             toast.show();
 

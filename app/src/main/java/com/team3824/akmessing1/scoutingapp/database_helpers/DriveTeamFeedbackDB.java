@@ -3,6 +3,7 @@ package com.team3824.akmessing1.scoutingapp.database_helpers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -56,7 +57,13 @@ public class DriveTeamFeedbackDB extends SQLiteOpenHelper {
     public void addColumn(String columnName, String columnType)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        try {
+            db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+        }
+        catch(SQLException e)
+        {
+            e.getMessage();
+        }
     }
 
     public void updateComments(int teamNumber, String comment)
@@ -89,6 +96,23 @@ public class DriveTeamFeedbackDB extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
         return cursor.getString(cursor.getColumnIndex(KEY_COMMENTS));
+    }
+
+    public Cursor getAllComments()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                null, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+
+        if(cursor != null)
+            cursor.moveToFirst();
+        return cursor;
     }
 
     public Cursor getAllCommentsSince(String since)

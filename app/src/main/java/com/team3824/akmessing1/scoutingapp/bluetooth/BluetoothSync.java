@@ -60,6 +60,7 @@ public class BluetoothSync {
         mSecure = secure;
     }
 
+
     /**
      * Set the current state of the chat connection
      *
@@ -126,7 +127,7 @@ public class BluetoothSync {
      * @param device The BluetoothDevice to connect
      */
     public synchronized void connect(BluetoothDevice device, boolean secure) {
-        Log.d(TAG, "connect to: " + device);
+        Log.d(TAG, String.format("Attempting to connect to: %s - %s",device.getName(),device.getAddress()));
 
         // Cancel any thread attempting to make a connection
         if (mState == STATE_CONNECTING) {
@@ -158,7 +159,7 @@ public class BluetoothSync {
      */
     public synchronized void connected(BluetoothSocket socket, BluetoothDevice
             device, String socketType) {
-        Log.d(TAG, "connected");
+        Log.d(TAG, "Connected");
 
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
@@ -319,7 +320,9 @@ public class BluetoothSync {
                             case STATE_LISTEN:
                             case STATE_CONNECTING:
                                 // Situation normal. Start the connected thread.
-                                connected(socket, socket.getRemoteDevice(), socketType);
+                                BluetoothDevice device = socket.getRemoteDevice();
+                                Log.d(TAG, String.format("Accepted connection from: %s - %s",device.getName(),device.getAddress()));
+                                connected(socket, device, socketType);
                                 break;
                             case STATE_NONE:
                             case STATE_CONNECTED:
@@ -390,6 +393,7 @@ public class BluetoothSync {
                 // successful connection or an exception
                 mmSocket.connect();
             } catch (IOException e) {
+                Log.d(TAG,e.getMessage());
                 // Close the socket
                 try {
                     mmSocket.close();
@@ -455,7 +459,6 @@ public class BluetoothSync {
             try {
                 while (mState == STATE_CONNECTED) {
                     if (mmInStream.available() > 0 && mSubstate == SUBSTATE_RECEIVING) {
-
                         boolean waitingForHeader = true;
                         ByteArrayOutputStream dataOutputStream = new ByteArrayOutputStream();
                         byte[] headerBytes = new byte[22];
@@ -527,7 +530,10 @@ public class BluetoothSync {
                 }
             } catch (IOException e) {
                 Log.e(TAG,e.toString());
+                cancel();
+                BluetoothSync.this.start();
             }
+
         }
 
         /**
@@ -561,31 +567,29 @@ public class BluetoothSync {
                 byte[] incomingDigest = new byte[16];
                 int incomingIndex = 0;
 
-                try {
-                    while (true) {
-                        byte header = (byte)mmInStream.read();
-                        incomingDigest[incomingIndex++] = header;
-                        if (incomingIndex == 16) {
-                            if (Utilities.digestMatch(buffer, incomingDigest)) {
-                                Log.v(TAG, "Digest matched OK.  Data was received OK.");
-                                mHandler.sendEmptyMessage(MessageType.DATA_SENT_OK);
-                                mSubstate = SUBSTATE_RECEIVING;
-                                return true;
-                            } else {
-                                Log.e(TAG, "Digest did not match.  Might want to resend.");
-                                mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
-                                mSubstate = SUBSTATE_RECEIVING;
-                                return false;
-                            }
+                while (true) {
+                    byte header = (byte)mmInStream.read();
+                    incomingDigest[incomingIndex++] = header;
+                    if (incomingIndex == 16) {
+                        if (Utilities.digestMatch(buffer, incomingDigest)) {
+                            Log.v(TAG, "Digest matched OK.  Data was received OK.");
+                            mHandler.sendEmptyMessage(MessageType.DATA_SENT_OK);
+                            mSubstate = SUBSTATE_RECEIVING;
+                            return true;
+                        } else {
+                            Log.e(TAG, "Digest did not match.  Might want to resend.");
+                            mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
+                            mSubstate = SUBSTATE_RECEIVING;
+                            return false;
                         }
                     }
-                } catch (Exception ex) {
-                    Log.e(TAG, ex.toString());
                 }
+
 
             }
             catch (Exception ex) {
                 Log.e(TAG, ex.toString());
+                cancel();
             }
             mSubstate = SUBSTATE_RECEIVING;
             return false;
@@ -635,6 +639,7 @@ public class BluetoothSync {
             }
             catch (Exception ex) {
                 Log.e(TAG, ex.toString());
+                cancel();
             }
             mSubstate = SUBSTATE_RECEIVING;
             return false;
@@ -644,6 +649,13 @@ public class BluetoothSync {
 
         public void cancel() {
             try {
+                // Hack to break the pipe and get the other side to close
+                mmOutStream.write("x".getBytes());
+            } catch (IOException e) {
+                Log.d(TAG,e.getMessage());
+            }
+
+            try{
                 mmSocket.close();
             } catch (IOException e) {
                 Log.e(TAG, "close() of connect socket failed", e);

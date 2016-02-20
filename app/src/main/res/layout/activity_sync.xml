@@ -19,69 +19,27 @@
         android:visibility="gone"
         android:layout_gravity="center_horizontal" />
 
-
-    <ListView
+    <Spinner
         android:id="@+id/paired_devices"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:stackFromBottom="true"
-        />
+        android:id="@+id/action"/>
 
     <Button
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Send Update"
-        android:id="@+id/sync_send_update"
-        android:layout_weight=".5" />
+        android:layout_height="wrap_content"
+        android:text="Execute"
+        android:id="@+id/execute_action" />
 
     <Button
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Send All"
-        android:id="@+id/sync_send_all"
-        android:layout_weight=".5" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Send Pictures"
-        android:id="@+id/sync_picture_send"
-        android:layout_weight=".5" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Send Schedule"
-        android:id="@+id/sync_schedule_send"
-        android:layout_weight=".5" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Receive Update"
-        android:id="@+id/sync_receive_update"
-        android:layout_weight=".5" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Receive All"
-        android:id="@+id/sync_receive_all"
-        android:layout_weight=".5" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Receive Pictures"
-        android:id="@+id/sync_picture_receive"
-        android:layout_weight=".5" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="Receive Schedule"
-        android:id="@+id/sync_schedule_receive"
-        android:layout_weight=".5" />
+        android:layout_height="wrap_content"
+        android:text="Start Service"
+        android:id="@+id/start_service" />
 
     <TextView
         android:layout_width="fill_parent"
