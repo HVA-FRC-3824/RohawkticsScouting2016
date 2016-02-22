@@ -53,9 +53,6 @@ public class SyncService extends IntentService{
     DriveTeamFeedbackDB driveTeamFeedbackDB;
     StatsDB statsDB;
     SyncDB syncDB;
-
-    boolean first = true;
-
     boolean received = false;
 
     private class SyncHandler extends android.os.Handler
@@ -83,156 +80,40 @@ public class SyncService extends IntentService{
                     switch (message.charAt(0)) {
                         case Constants.MATCH_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    matchScoutDB.updateMatch(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
+                            if(!message.equals(String.format("%c[]",Constants.MATCH_HEADER))){
+                                Utilities.JsonToMatchDB(matchScoutDB, message);
                             }
                             writeToast("Match Data Received");
                             Log.d(TAG,"Match Data Received");
                             break;
                         case Constants.PIT_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    if(map.get(PitScoutDB.KEY_COMPLETE).getInt() == 1) {
-                                        pitScoutDB.updatePit(map);
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
+                            if(!message.equals(String.format("%c[]",Constants.PIT_HEADER))) {
+                                Utilities.JsonToPitDB(pitScoutDB, message);
                             }
                             writeToast("Pit Data Received");
                             Log.d(TAG,"Pit Data Received");
                             break;
                         case Constants.SUPER_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    superScoutDB.updateMatch(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
+                            if(!message.equals(String.format("%c[]",Constants.SUPER_HEADER))) {
+                                Utilities.JsonToSuperDB(superScoutDB, message);
                             }
                             writeToast("Super Data Received");
                             Log.d(TAG,"Super Data Received");
                             break;
                         case Constants.DRIVE_TEAM_FEEDBACK_HEADER:
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    driveTeamFeedbackDB.updateComments(map.get(DriveTeamFeedbackDB.KEY_TEAM_NUMBER).getInt(), map.get(DriveTeamFeedbackDB.KEY_COMMENTS).getString());
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
+                            filename = "";
+                            if(!message.equals(String.format("%c[]",Constants.DRIVE_TEAM_FEEDBACK_HEADER))) {
+                                Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, message);
                             }
                             writeToast("Drive Team Feedback Data Received");
                             Log.d(TAG,"Drive Team Feedback Data Received");
                             break;
                         case Constants.STATS_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    statsDB.updateStats(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
+                            if(!message.equals(String.format("%c[]",Constants.STATS_HEADER))) {
+                                Utilities.JsonToStatsDB(statsDB, message);
                             }
                             writeToast("Stats Data Received");
                             Log.d(TAG,"Stats Data Received");
@@ -400,7 +281,7 @@ public class SyncService extends IntentService{
 
                 for (BluetoothDevice device : devices) {
                     String connectedName = device.getName();
-                    if (!connectedName.equals("3824_Server")) {
+                    if (!connectedName.equals(Constants.SERVER_NAME)) {
                         continue;
                     }
                     Log.d(TAG, String.format("Connecting to %s", connectedName));
@@ -506,21 +387,34 @@ public class SyncService extends IntentService{
                                 Log.d(TAG, "No new Drive Team Feedback Data to send");
                             }
                             received = false;
-                            while (!bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes())) ;
-                            while (!received) {
-                                SystemClock.sleep(250);
+                            for(i = 0; i < 5; i++) {
+                                if(bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes()))
+                                {
+                                    break;
+                                }
                             }
-                            writeToast("Data Received");
+                            if(i < 5) {
+                                while (!received) {
+                                    SystemClock.sleep(250);
+                                }
+                                writeToast("Data Received");
+                            }
                             break;
                         case Constants.STRATEGY:
                         case Constants.ADMIN:
                             received = false;
-                            while (!bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes())) ;
-                            while (!received) {
-                                SystemClock.sleep(250);
+                            for(i = 0; i < 5; i++) {
+                                if(bluetoothSync.write(Constants.RECEIVE_UPDATE_HEADER.getBytes()))
+                                {
+                                    break;
+                                }
                             }
-
-                            writeToast("Data Received");
+                            if(i < 5) {
+                                while (!received) {
+                                    SystemClock.sleep(250);
+                                }
+                                writeToast("Data Received");
+                            }
                             break;
                     }
                     bluetoothSync.stop();

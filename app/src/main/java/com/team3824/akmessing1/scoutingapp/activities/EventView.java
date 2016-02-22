@@ -125,7 +125,7 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
                 goal(cursor,"low");
                 break;
             case 13: // Driver Ability
-                ability(cursor,Constants.DRIVE_ABILITY_RANKING);
+                ability(cursor,Constants.DRIVER_ABILITY_RANKING);
                 break;
             case 14: // Defense Ability
                 ability(cursor,Constants.DEFENSE_ABILITY_RANKING);

@@ -18,7 +18,7 @@ public class DefensivePick extends ScoutPick{
             int numberOfTeams = statsCursor.getCount();
 
             String bottomText = "";
-            String driverRank = statsCursor.getString(statsCursor.getColumnIndex(Constants.DRIVE_ABILITY_RANKING));
+            String driverRank = statsCursor.getString(statsCursor.getColumnIndex(Constants.DRIVER_ABILITY_RANKING));
             bottomText += "Driver Rank: " + driverRank;
             if (driverRank.charAt(0) == 'T') {
                 driverRank = driverRank.substring(1);

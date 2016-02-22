@@ -46,7 +46,7 @@ public class BreacherPick extends ScoutPick{
             }
             team.setMapElement(Constants.BREACHER_PICKABILITY, new ScoutValue(((int)avgDefensePoints)+numDefenseFast*5));
 
-            String bottomText = String.format("Breacher Pickability: %d Avg Defense Points: %.2f Fast Defenses: ",team.getMapElement(Constants.BREACHER_PICKABILITY).getInt(),avgDefensePoints);
+            String bottomText = String.format("Breacher Pickability: %d Avg Defense Points: %.2f\nFast Defenses: ",team.getMapElement(Constants.BREACHER_PICKABILITY).getInt(),avgDefensePoints);
             if(defensesFast == "")
             {
                 bottomText += "None";

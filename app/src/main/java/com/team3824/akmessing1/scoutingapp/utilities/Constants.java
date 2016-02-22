@@ -2,7 +2,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
-    public static final String VERSION="Version: 1.0.10";
+    public static final String VERSION="Version: 1.0.11";
 
     public static final String APP_DATA = "appData";
 
@@ -49,11 +49,8 @@ public interface Constants {
     public static final String TELEOP_DEFENSE_4 = "teleop_defense_4";
     public static final String TELEOP_DEFENSE_5 = "teleop_defense_5";
 
-    // These 2 arrays must have the same lengths
-    public static final String[] TELEOP_DEFENSE_TIMES = {"< 5", "< 10", "> 10","Stuck"};
-
-    // For version 11
-//    public static final String[] TELEOP_DEFENSE_TIMES = {"< 5s", "< 10s", "> 10s","Stuck"};
+    // These two arrays must have the same length
+    public static final String[] TELEOP_DEFENSE_TIMES = {"< 5s", "< 10s", "> 10s","Stuck"};
     public static final int[] TELEOP_DEFENSE_TIMES_VALUE = {5, 10, 15, 30};
 
     public static final String TELEOP_HIGH_HIT = "teleop_high_hit";
@@ -123,7 +120,7 @@ public interface Constants {
 
 
     // Ability Rankings
-    public static final String DRIVE_ABILITY_RANKING = "super_drive_ability_ranking";
+    public static final String DRIVER_ABILITY_RANKING = "super_drive_ability_ranking";
     public static final String DEFENSE_ABILITY_RANKING = "super_defense_ability_ranking";
 
     // Totals
@@ -192,10 +189,6 @@ public interface Constants {
     public static final int RED1_INDEX = 3;
     public static final int RED2_INDEX = 4;
     public static final int RED3_INDEX = 5;
-
-    // Match View
-    public static final int NUM_BEST = 2;
-    public static final int NUM_WORST = 2;
 
     //Bluetooth
     public static final int CONNECTION_TIMEOUT = 10000;

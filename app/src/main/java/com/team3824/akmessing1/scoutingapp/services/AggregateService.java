@@ -21,16 +21,11 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Set;
 
 public class AggregateService extends IntentService {
     private String TAG ="AggregateService";
@@ -80,9 +75,9 @@ public class AggregateService extends IntentService {
 
                 // Normal updateStats method does not seem to give the table enough time to update
                 // the columns for the following loop
-                if(!statsDB.hasColumn(Constants.DRIVE_ABILITY_RANKING))
+                if(!statsDB.hasColumn(Constants.DRIVER_ABILITY_RANKING))
                 {
-                    statsDB.addColumn(Constants.DRIVE_ABILITY_RANKING,"TEXT");
+                    statsDB.addColumn(Constants.DRIVER_ABILITY_RANKING,"TEXT");
                 }
                 if(!statsDB.hasColumn(Constants.DEFENSE_ABILITY_RANKING))
                 {
@@ -95,7 +90,7 @@ public class AggregateService extends IntentService {
                 for (int i = 0; i < teamNumbers.size(); i++) {
                     map = new HashMap<>();
                     map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers.get(i)));
-                    map.put(Constants.DRIVE_ABILITY_RANKING, new ScoutValue(driveAbilityRanking[i]));
+                    map.put(Constants.DRIVER_ABILITY_RANKING, new ScoutValue(driveAbilityRanking[i]));
                     statsDB.updateStats(map);
                 }
 

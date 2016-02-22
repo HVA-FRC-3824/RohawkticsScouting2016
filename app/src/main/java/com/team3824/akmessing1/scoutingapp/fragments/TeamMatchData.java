@@ -260,7 +260,7 @@ public class TeamMatchData extends Fragment {
                     break;
             }
             ((TextView) view.findViewById(R.id.defense_ability)).setText(ranking);
-            ranking = statsMap.get(Constants.DRIVE_ABILITY_RANKING).getString();
+            ranking = statsMap.get(Constants.DRIVER_ABILITY_RANKING).getString();
             switch(ranking.charAt(ranking.length()-1))
             {
                 case '1':
@@ -326,6 +326,27 @@ public class TeamMatchData extends Fragment {
             ((TextView) linearLayout.findViewById(R.id.event_red_cards)).setText("0");
         }
 
+        //Setup Misc
+        linearLayout = (LinearLayout)view.findViewById(R.id.misc_header);
+        linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
+        ((TextView)linearLayout.findViewById(R.id.event_teamNum)).setText("DQs");
+        ((TextView)linearLayout.findViewById(R.id.event_challenge)).setText("Didn't Show Up");
+        ((TextView)linearLayout.findViewById(R.id.event_scale)).setText("Stopped Working");
+
+        linearLayout = (LinearLayout)view.findViewById(R.id.misc);
+        linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
+        if(hasPlayed) {
+            ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DQ).getInt()));
+            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DIDNT_SHOW_UP).getInt()));
+            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(statsMap.get(Constants.TOTAL_STOPPED).getInt()));
+        }
+        else
+        {
+            ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText("0");
+        }
+
         statsDB.close();
         return view;
     }
@@ -351,10 +372,4 @@ public class TeamMatchData extends Fragment {
             ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
     }
-
-    public void setupShooterRow()
-    {
-
-    }
-
 }

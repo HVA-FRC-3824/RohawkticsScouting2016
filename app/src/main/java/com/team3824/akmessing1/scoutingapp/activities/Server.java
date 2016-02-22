@@ -106,6 +106,7 @@ public class Server extends AppCompatActivity {
                             Log.d(TAG,"Super Data  Received");
                             break;
                         case Constants.DRIVE_TEAM_FEEDBACK_HEADER:
+                            filename = "";
                             if(!message.equals(String.format("%c[]",Constants.DRIVE_TEAM_FEEDBACK_HEADER))) {
                                 Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, message);
                             }

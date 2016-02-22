@@ -82,7 +82,7 @@ public class OffensivePick extends ScoutPick {
 
             team.setMapElement(Constants.OFFENSIVE_PICKABILITY, new ScoutValue(((int)averagePoints)+defenseWeight));
 
-            String bottomText = String.format("Offense Pickability: %d Avg Points: %.2f \nFast Defense: ",team.getMapElement(Constants.OFFENSIVE_PICKABILITY).getInt(),averagePoints);
+            String bottomText = String.format("Offense Pickability: %d Avg Points: %.2f\nFast Defense: ",team.getMapElement(Constants.OFFENSIVE_PICKABILITY).getInt(),averagePoints);
             if(defensesFast == "")
             {
                 bottomText += "None";

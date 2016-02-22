@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -305,8 +304,8 @@ public class MatchTeamFragment extends Fragment {
                 }
 
                 textView = (TextView) view.findViewById(R.id.driver_ability);
-                if (statsMap.containsKey(Constants.DRIVE_ABILITY_RANKING)) {
-                    String ranking = statsMap.get(Constants.DRIVE_ABILITY_RANKING).getString();
+                if (statsMap.containsKey(Constants.DRIVER_ABILITY_RANKING)) {
+                    String ranking = statsMap.get(Constants.DRIVER_ABILITY_RANKING).getString();
                     if (ranking.charAt(ranking.length() - 1) == '1')
                         ranking += "st";
                     else if (ranking.charAt(ranking.length() - 1) == '2')

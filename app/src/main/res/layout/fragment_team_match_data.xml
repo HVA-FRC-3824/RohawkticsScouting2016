@@ -182,5 +182,21 @@
             layout="@layout/list_item_event_fouls"
             android:id="@+id/fouls"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Misc:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <include
+            layout="@layout/list_item_event_endgame"
+            android:id="@+id/misc_header"/>
+
+        <include
+            layout="@layout/list_item_event_endgame"
+            android:id="@+id/misc"/>
+
     </LinearLayout>
 </ScrollView>
