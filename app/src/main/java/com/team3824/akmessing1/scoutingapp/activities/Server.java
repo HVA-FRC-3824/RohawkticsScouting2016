@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
@@ -429,18 +430,21 @@ public class Server extends AppCompatActivity {
     }
 
     public class LogCatTask extends AsyncTask<Void, String, Void> {
-        public AtomicBoolean run = new AtomicBoolean(true);
         Process process;
+        private String TAG = "LogCatTask";
         @Override
         protected Void doInBackground(Void... params)
         {
             try
             {
+                Runtime.getRuntime().exec("logcat -c");
                 process = Runtime.getRuntime().exec("logcat");
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 CircularBuffer buf = new CircularBuffer(50);
+                buf.insert("Log Started...<br>");
+                publishProgress(buf.toString());
                 String line = "";
-                while (run.get())
+                while (!isCancelled())
                 {
                     line = bufferedReader.readLine();
                     if (line != null && (line.contains("BluetoothSync") || line.contains("Server") || line.contains("AggregateService")))
@@ -480,7 +484,7 @@ public class Server extends AppCompatActivity {
                         publishProgress(buf.toString());
                     }
                     line = null;
-                    Thread.sleep(10);
+                    //Thread.sleep(10);
                 }
             }
             catch (Exception ex)
@@ -492,9 +496,26 @@ public class Server extends AppCompatActivity {
         }
 
         @Override
+        protected void onProgressUpdate(String... values) {
+            logView.setText(Html.fromHtml(values[0]));
+
+            int scrollAmount = logView.getLayout().getLineTop(logView.getLineCount()) - logView.getHeight();
+            if (scrollAmount > 0)
+                logView.scrollTo(0, scrollAmount);
+            else
+                logView.scrollTo(0, 0);
+
+            super.onProgressUpdate(values);
+        }
+
+        @Override
         protected void onCancelled() {
-            run.set(false);
-            process.destroy();
+            Log.d(TAG,"Canceling Log Task");
+            if(process != null) {
+                Log.d(TAG,"Destroying process");
+                process.destroy();
+            }
+            super.onCancelled();
         }
 
     }
@@ -542,23 +563,9 @@ public class Server extends AppCompatActivity {
         statsDB = new StatsDB(this, eventID);
         syncDB = new SyncDB(this, eventID);
 
-        bluetoothSync.start();
-
-        logCatTask = new LogCatTask(){
-            @Override
-            protected void onProgressUpdate(String... values) {
-                logView.setText(Html.fromHtml(values[0]));
-
-                int scrollAmount = logView.getLayout().getLineTop(logView.getLineCount()) - logView.getHeight();
-                if (scrollAmount > 0)
-                    logView.scrollTo(0, scrollAmount);
-                else
-                    logView.scrollTo(0, 0);
-
-                super.onProgressUpdate(values);
-            }
-        };
+        logCatTask = new LogCatTask();
         logCatTask.execute();
+        bluetoothSync.start();
     }
 
     @Override
