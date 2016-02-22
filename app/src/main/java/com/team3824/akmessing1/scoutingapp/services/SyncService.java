@@ -405,11 +405,16 @@ public class SyncService extends IntentService{
                     }
                     Log.d(TAG, String.format("Connecting to %s", connectedName));
 
-                    while(true) {
+                    int j;
+                    for(j = 0; j < 5; j++) {
                         bluetoothSync.connect(device, false);
                         if (timeout()) {
                             break;
                         }
+                    }
+                    if(j == 5)
+                    {
+                        continue;
                     }
 
                     String connectedAddress = bluetoothSync.getConnectedAddress();
