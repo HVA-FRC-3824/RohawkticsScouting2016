@@ -46,9 +46,12 @@ public class CustomCardinalRank6 extends CustomScoutView implements DragSortList
         listView.setFloatViewManager(new SimpleFloatViewManager(listView));
     }
 
-    public void setArray(final ArrayList<Integer> array)
+    public void setArray(ArrayList<Integer> array)
     {
-        adapter = new CardinalRankListAdapter(context,R.layout.list_item_cardinal_rank,array);
+        ArrayList<Integer> copy = new ArrayList<>();
+        for(int i = 0; i < array.size(); i++)
+            copy.add(array.get(i).intValue());
+        adapter = new CardinalRankListAdapter(context,R.layout.list_item_cardinal_rank,copy);
         listView.setAdapter(adapter);
         listView.setDropListener(this);
 

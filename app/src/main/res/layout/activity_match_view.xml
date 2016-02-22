@@ -123,20 +123,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Best Defenses:"
+                android:text="Defenses Cross Ability:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
-                android:id="@+id/best_defenses_blue"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Worst Defenses:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:id="@+id/worst_defenses_blue"/>
+                android:id="@+id/defenses_blue"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -157,7 +148,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Defense Ability:"
+                android:text="Defensive Ability:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
@@ -301,20 +292,11 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Best Defenses:"
+                android:text="Defenses Cross Ability:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
-                android:id="@+id/best_defenses_red"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Worst Defenses:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:id="@+id/worst_defenses_red"/>
+                android:id="@+id/defenses_red"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -335,7 +317,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Defense Ability:"
+                android:text="Defensive Ability:"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />

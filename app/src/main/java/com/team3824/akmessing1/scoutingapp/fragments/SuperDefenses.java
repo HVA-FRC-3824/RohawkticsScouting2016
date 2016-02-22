@@ -296,6 +296,30 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
             }
         }
 
+        int opposite = (offset == BLUE)?RED:BLUE;
+
+        for(int i = 0; i < 3; i++)
+        {
+            current = String.valueOf(defensesSpinners[i+opposite].getSelectedItem());
+            if (current.equals(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX])) {
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.PORTCULLIS_INDEX]);
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.CHEVAL_DE_FRISE_INDEX]);
+            } else if (current.equals(Constants.DEFENSES_LABEL[Constants.MOAT_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.RAMPARTS_INDEX])) {
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.MOAT_INDEX]);
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.RAMPARTS_INDEX]);
+            } else if (current.equals(Constants.DEFENSES_LABEL[Constants.DRAWBRIDGE_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.SALLY_PORT_INDEX])) {
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.DRAWBRIDGE_INDEX]);
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.SALLY_PORT_INDEX]);
+            } else if (current.equals(Constants.DEFENSES_LABEL[Constants.ROCK_WALL_INDEX]) ||
+                    current.equals(Constants.DEFENSES_LABEL[Constants.ROUGH_TERRAIN_INDEX])) {
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.ROCK_WALL_INDEX]);
+                defensesLists[BOTH_3].remove(Constants.DEFENSES_LABEL[Constants.ROUGH_TERRAIN_INDEX]);
+            }
+        }
+
         current = String.valueOf(defensesSpinners[BOTH_3].getSelectedItem());
 
         for(int i = 0; i < 3; i++)

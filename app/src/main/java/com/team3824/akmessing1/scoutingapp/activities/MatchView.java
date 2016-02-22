@@ -60,24 +60,14 @@ public class MatchView extends AppCompatActivity {
         tv = (TextView)findViewById(R.id.teleop_low_goal_red);
         tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
 
-        tv = (TextView)findViewById(R.id.best_defenses_blue);
-        String text = "Best Defenses:";
-        for(int i = 0; i < Constants.NUM_BEST-1; i++)
+        tv = (TextView)findViewById(R.id.defenses_blue);
+        String text = "Defenses Cross Ability:";
+        for(int i = 0; i < 8; i++)
             text += "\n";
         tv.setText(text);
-        tv = (TextView)findViewById(R.id.best_defenses_red);
-        text = "Best Defenses:";
-        for(int i = 0; i < Constants.NUM_BEST-1; i++)
-            text += "\n";
-        tv.setText(text);
-        tv = (TextView)findViewById(R.id.worst_defenses_blue);
-        text = "Worst Defenses:";
-        for(int i = 0; i < Constants.NUM_WORST-1; i++)
-            text += "\n";
-        tv.setText(text);
-        tv = (TextView)findViewById(R.id.worst_defenses_red);
-        text = "Worst Defenses:";
-        for(int i = 0; i < Constants.NUM_WORST-1; i++)
+        tv = (TextView)findViewById(R.id.defenses_red);
+        text = "Defenses Cross Ability:";
+        for(int i = 0; i < 8; i++)
             text += "\n";
         tv.setText(text);
 

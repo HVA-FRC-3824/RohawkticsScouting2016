@@ -210,7 +210,7 @@ public class MatchTeamFragment extends Fragment {
                 int mCanScale = statsMap.get(Constants.TOTAL_SCALE).getInt();
                 textView.setText(String.valueOf(mCanScale));
 
-                textView = (TextView) view.findViewById(R.id.best_defenses);
+                textView = (TextView) view.findViewById(R.id.defenses);
 
 
                 ArrayList<Defense> defenses = new ArrayList<>();
@@ -272,14 +272,14 @@ public class MatchTeamFragment extends Fragment {
 
                 if(defenses.get(0).mTime > 0)
                 {
-                    String bestDefenseString = "";
-                    for(int i = 0; i < Constants.NUM_BEST; i++)
+                    String DefenseString = "";
+                    for(int i = 0; i < 9; i++)
                     {
                         Defense defense = defenses.get(i);
                         String defenseString = Constants.DEFENSES_LABEL[defense.mDefenseIndex];
                         if(defense.mTime > 0)
                         {
-                            defenseString += String.format(" (< %.1f s)",defense.mTime);
+                            defenseString += String.format(" (~ %.1f s)",defense.mTime);
                         }
                         else if(defense.mTime == 0)
                         {
@@ -291,48 +291,17 @@ public class MatchTeamFragment extends Fragment {
                         }
 
                         defenseString = String.format("%d. %s\n",i+1,defenseString);
-                        bestDefenseString += defenseString;
+                        DefenseString += defenseString;
                     }
-                    bestDefenseString = bestDefenseString.substring(0,bestDefenseString.length()-1);
-                    textView.setText(bestDefenseString);
-
-                    String worstDefenseString = "";
-                    for(int i = 0; i < Constants.NUM_WORST; i++)
-                    {
-                        Defense defense = defenses.get(defenses.size()-1-i);
-                        String defenseString = Constants.DEFENSES_LABEL[defense.mDefenseIndex];
-                        if(defense.mTime > 0)
-                        {
-                            defenseString += String.format(" (< %.1f s)",defense.mTime);
-                        }
-                        else if(defense.mTime == 0)
-                        {
-                            defenseString += " (NC)";
-                        }
-                        else
-                        {
-                            defenseString += " (NS)";
-                        }
-
-                        defenseString = String.format("%d. %s\n",defenses.size()-i,defenseString);
-                        worstDefenseString += defenseString;
-                    }
-                    worstDefenseString = worstDefenseString.substring(0,worstDefenseString.length()-1);
-                    textView = (TextView)view.findViewById(R.id.worst_defenses);
-                    textView.setText(worstDefenseString);
+                    DefenseString = DefenseString.substring(0,DefenseString.length()-1);
+                    textView.setText(DefenseString);
                 }
                 else
                 {
                     String bestDefenseString = "None";
-                    for(int i = 0; i < Constants.NUM_BEST-1; i++);
+                    for(int i = 0; i < 8; i++);
                         bestDefenseString += "\n";
                     textView.setText(bestDefenseString);
-
-                    textView = (TextView)view.findViewById(R.id.worst_defenses);
-                    String worstDefenseString = "None";
-                    for(int i = 0; i < Constants.NUM_WORST-1; i++)
-                        worstDefenseString += "\n";
-                    textView.setText(worstDefenseString);
                 }
 
                 textView = (TextView) view.findViewById(R.id.driver_ability);
@@ -370,16 +339,9 @@ public class MatchTeamFragment extends Fragment {
                 }
             }
             else {
-                textView = (TextView) view.findViewById(R.id.best_defenses);
+                textView = (TextView) view.findViewById(R.id.defenses);
                 String spacing = "";
-                for(int i = 0; i < Constants.NUM_BEST-1; i++)
-                    spacing += "\n";
-
-                textView.setText(spacing);
-
-                textView = (TextView) view.findViewById(R.id.worst_defenses);
-                spacing = "";
-                for(int i = 0; i < Constants.NUM_WORST-1; i++)
+                for(int i = 0; i < 8; i++)
                     spacing += "\n";
 
                 textView.setText(spacing);
@@ -390,16 +352,9 @@ public class MatchTeamFragment extends Fragment {
             textView = (TextView) view.findViewById(R.id.total_matches);
             textView.setText("0");
 
-            textView = (TextView) view.findViewById(R.id.best_defenses);
+            textView = (TextView) view.findViewById(R.id.defenses);
             String spacing = "";
-            for(int i = 0; i < Constants.NUM_BEST-1; i++)
-                spacing += "\n";
-
-            textView.setText(spacing);
-
-            textView = (TextView) view.findViewById(R.id.worst_defenses);
-            spacing = "";
-            for(int i = 0; i < Constants.NUM_WORST-1; i++)
+            for(int i = 0; i < 8; i++)
                 spacing += "\n";
 
             textView.setText(spacing);

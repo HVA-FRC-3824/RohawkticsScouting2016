@@ -503,13 +503,15 @@ public class EventView extends AppCompatActivity implements AdapterView.OnItemSe
     {
         ArrayList<ELI_Ability> teams = new ArrayList<>();
 
-        for(cursor.moveToFirst(); !cursor.isAfterLast();cursor.moveToNext())
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
         {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
             ELI_Ability team = new ELI_Ability(teamNumber);
 
             int totalMatches = cursor.getColumnIndex(Constants.TOTAL_MATCHES);
 
+            //For debugging
+            //if(cursor.getColumnIndex(ability) > -1){
             if (totalMatches > -1) {
                 team.mRank = cursor.getString(cursor.getColumnIndex(ability));
             }

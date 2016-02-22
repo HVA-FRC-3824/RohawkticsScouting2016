@@ -60,11 +60,11 @@ public class AggregateService extends IntentService {
         if(update)
         {
             lastUpdated = statsDB.getLastUpdatedTime();
+            Log.d(TAG, "Last Time Updated: "+lastUpdated);
         }
         else {
             lastUpdated = "";
         }
-        Log.d(TAG, "Last Time Updated: "+lastUpdated);
         ArrayList<Integer> matchesUpdated;
 
         matchesUpdated = superScoutDB.getMatchesUpdatedSince(lastUpdated);
@@ -89,6 +89,7 @@ public class AggregateService extends IntentService {
                     statsDB.addColumn(Constants.DEFENSE_ABILITY_RANKING,"TEXT");
                 }
 
+                Log.d(TAG,"Calculating Cardinal Rank for Driver Ability");
                 String[] driveAbilityRanking = SchulzeMethod.CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DRIVE_ABILITY, this);
                 HashMap<String, ScoutValue> map;
                 for (int i = 0; i < teamNumbers.size(); i++) {
@@ -100,6 +101,7 @@ public class AggregateService extends IntentService {
 
                 matchCursor.moveToFirst();
 
+                Log.d(TAG, "Calculating Cardinal Rank for Defense Ability");
                 String[] defenseAbilityRanking = SchulzeMethod.CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DEFENSE_ABILITY, this);
                 for (int i = 0; i < teamNumbers.size(); i++) {
                     map = new HashMap<>();
@@ -271,6 +273,8 @@ public class AggregateService extends IntentService {
             newTeamStats.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamsUpdated.get(i)));
 
             statsDB.updateStats(newTeamStats);
+            Log.d(TAG,String.format("Updated %d",teamsUpdated.get(i)));
+
         }
 
         statsDB.close();
@@ -401,7 +405,6 @@ public class AggregateService extends IntentService {
                 }
                 break;
             case "cross":
-                Log.d(TAG,cursor.getString(cursor.getColumnIndex(Constants.AUTO_REACH_CROSS)));
                 if(cursor.getString(cursor.getColumnIndex(Constants.AUTO_REACH_CROSS)).equals("Cross"))
                 {
                     switch(cursor.getString(cursor.getColumnIndex(Constants.AUTO_START_POSITION)))

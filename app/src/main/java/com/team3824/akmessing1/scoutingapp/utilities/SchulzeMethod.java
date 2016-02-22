@@ -134,9 +134,10 @@ public class SchulzeMethod {
         int rank = 1;
         for(int i = 0; i < sortedRanking.size(); i++)
         {
-            boolean tied = false;
             int currentTeamNumber = sortedRanking.get(i);
             int currentTeamNumberIndex = teamNumbers.indexOf(currentTeamNumber);
+
+            Log.d(TAG,String.format("CTN: %d",currentTeamNumber));
             if(i > 0)
             {
                 int previousTeamNumber = sortedRanking.get(i-1);
@@ -144,29 +145,42 @@ public class SchulzeMethod {
 
                 if(strongestPathMatrix[currentTeamNumberIndex][previousTeamNumberIndex] == strongestPathMatrix[previousTeamNumberIndex][currentTeamNumberIndex])
                 {
-                    tied = true;
+                    output[currentTeamNumberIndex] = "T"+String.valueOf(rank);
+                    Log.d(TAG,teamNumbers.get(currentTeamNumberIndex)+": "+output[currentTeamNumberIndex]);
+                    continue;
                 }
             }
-            if(!tied && i < ranking.size()-1)
+            else if(i == 0)
             {
                 int nextTeamNumber = sortedRanking.get(i+1);
                 int nextTeamNumberIndex = teamNumbers.indexOf(nextTeamNumber);
 
                 if(strongestPathMatrix[currentTeamNumberIndex][nextTeamNumberIndex] == strongestPathMatrix[nextTeamNumberIndex][currentTeamNumberIndex])
                 {
-                    tied = true;
+                    output[currentTeamNumberIndex] = "T"+String.valueOf(rank);
+                    Log.d(TAG,teamNumbers.get(currentTeamNumberIndex)+": "+output[currentTeamNumberIndex]);
+                    continue;
                 }
             }
-            if(tied)
+
+            if(i < sortedRanking.size() - 1)
             {
-                output[currentTeamNumberIndex] = "T"+String.valueOf(rank);
+                int nextTeamNumber = sortedRanking.get(i+1);
+                int nextTeamNumberIndex = teamNumbers.indexOf(nextTeamNumber);
+
+                if(strongestPathMatrix[currentTeamNumberIndex][nextTeamNumberIndex] == strongestPathMatrix[nextTeamNumberIndex][currentTeamNumberIndex])
+                {
+                    rank = i+1;
+                    output[currentTeamNumberIndex] = "T"+String.valueOf(rank);
+                    Log.d(TAG,teamNumbers.get(currentTeamNumberIndex)+": "+output[currentTeamNumberIndex]);
+                    continue;
+                }
             }
-            else
-            {
-                rank = i+1;
-                output[currentTeamNumberIndex] = String.valueOf(rank);
-            }
-            Log.i(TAG,teamNumbers.get(currentTeamNumberIndex)+": "+output[currentTeamNumberIndex]);
+
+            rank = i+1;
+            output[currentTeamNumberIndex] = String.valueOf(rank);
+
+            Log.d(TAG,teamNumbers.get(currentTeamNumberIndex)+": "+output[currentTeamNumberIndex]);
         }
         rank = sortedRanking.size()+1;
         for(int i = 0; i < teamNumbers.size(); i++)
@@ -174,7 +188,7 @@ public class SchulzeMethod {
             if(sortedRanking.indexOf(teamNumbers.get(i)) == -1)
             {
                 output[i] = "T"+ String.valueOf(rank);
-                Log.i(TAG,teamNumbers.get(i)+": "+output[i]);
+                Log.d(TAG,teamNumbers.get(i)+": "+output[i]);
             }
         }
 

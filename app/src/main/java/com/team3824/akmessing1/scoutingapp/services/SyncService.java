@@ -375,7 +375,7 @@ public class SyncService extends IntentService{
     protected void onHandleIntent(Intent intent) {
         Context context = getApplicationContext();
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(!mBluetoothAdapter.isEnabled())
+        if(mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled())
         {
             writeToast("Bluetooth is not on");
             Log.d(TAG,"Bluetooth is not on");
