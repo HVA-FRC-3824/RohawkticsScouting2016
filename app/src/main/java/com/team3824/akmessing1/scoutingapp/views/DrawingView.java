@@ -134,4 +134,11 @@ public class DrawingView extends View {
         drawCanvas = new Canvas(canvasBitmap);
         invalidate();
     }
+
+    public void load(Bitmap bitmap)
+    {
+        canvasBitmap = bitmap;
+        drawCanvas = new Canvas(canvasBitmap);
+        invalidate();
+    }
 }

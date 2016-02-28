@@ -5,10 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -43,7 +45,7 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
         drawView = (DrawingView)findViewById(R.id.drawing);
 
         LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
-        currPaint = (ImageButton)paintLayout.getChildAt(5); //black
+        currPaint = (ImageButton)paintLayout.getChildAt(3); //black
         currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed, null));
 
         extraSmallBrush = 5;
@@ -59,13 +61,13 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
 
         newBtn = (ImageButton)findViewById(R.id.new_btn);
         newBtn.setOnClickListener(this);
-/*
+
         saveBtn = (ImageButton)findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(this);
 
         openBtn = (ImageButton)findViewById(R.id.open_btn);
         openBtn.setOnClickListener(this);
-*/
+
         Button backBtn = (Button)findViewById(R.id.back_btn);
         backBtn.setOnClickListener(this);
 
@@ -182,29 +184,29 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
                 newDialog.setTitle("New drawing");
                 newDialog.setMessage("Start new strategy (you will lose the current strategy)?");
-                newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which){
+                newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                         drawView.startNew();
                         dialog.dismiss();
                     }
                 });
-                newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which){
+                newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
                 newDialog.show();
                 break;
-/*
+
             case R.id.save_btn:
                 AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
                 saveDialog.setTitle("Save strategy");
-                saveDialog.setMessage("Save strategy to device Gallery?");
+                //saveDialog.setMessage("Save strategy to device Gallery?");
                 saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int which){
                         drawView.setDrawingCacheEnabled(true);
                         Bitmap saveImage = drawView.getDrawingCache();
-                        String imageName = "strategy_"+UUID.randomUUID().toString()+".png";
+                        String imageName = "strategy.png";
                         FileOutputStream fos = null;
                         try {
                             fos = openFileOutput(imageName, Context.MODE_WORLD_WRITEABLE);
@@ -231,9 +233,29 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 saveDialog.show();
                 break;
             case R.id.open_btn:
-                // TODO: allow image that is saved to be opened
+                AlertDialog.Builder openDialog = new AlertDialog.Builder(this);
+                openDialog.setTitle("Load last strategy");
+                openDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int which){
+                        String imageName = "strategy.png";
+                        try {
+                            Bitmap loadImage = BitmapFactory.decodeStream(openFileInput(imageName));
+                            drawView.load(loadImage.copy(Bitmap.Config.ARGB_8888,true));
+                        }
+                        catch(FileNotFoundException ex)
+                        {
+                            Log.d(TAG,ex.getMessage());
+                        }
+                    }
+                });
+                openDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int which){
+                        dialog.cancel();
+                    }
+                });
+                openDialog.show();
                 break;
-*/
+
             case R.id.back_btn:
                 this.finish();
                 break;

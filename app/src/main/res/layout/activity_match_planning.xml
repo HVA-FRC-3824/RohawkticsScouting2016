@@ -38,7 +38,6 @@
             android:contentDescription="Erase"
             android:src="@drawable/eraser"
             android:layout_gravity="right" />
-        <!--
         <ImageButton
             android:id="@+id/save_btn"
             android:layout_width="wrap_content"
@@ -53,7 +52,6 @@
             android:contentDescription="Open"
             android:src="@drawable/open"
             android:layout_gravity="right" />
-        -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,7 +78,7 @@
             android:layout_height="wrap_content"
             android:text="Category D\nRock Wall (RW)\nRough Terrain (RT)"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginRight="30dp"
             android:textAlignment="center" />
         <LinearLayout
             android:layout_width="wrap_content"
@@ -94,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal">
+<!--
                 <ImageButton
                     android:layout_width="@dimen/large_brush"
                     android:layout_height="@dimen/large_brush"
@@ -103,7 +102,7 @@
                     android:onClick="paintClicked"
                     android:src="@drawable/paint"
                     android:tag="#FF660000" />
-
+-->
                 <ImageButton
                     android:layout_width="@dimen/large_brush"
                     android:layout_height="@dimen/large_brush"
@@ -123,7 +122,7 @@
                     android:onClick="paintClicked"
                     android:src="@drawable/paint"
                     android:tag="#FFFF6600" />
-
+<!--
                 <ImageButton
                     android:layout_width="@dimen/large_brush"
                     android:layout_height="@dimen/large_brush"
@@ -133,7 +132,7 @@
                     android:onClick="paintClicked"
                     android:src="@drawable/paint"
                     android:tag="#FFFFCC00" />
-
+-->
                 <ImageButton
                     android:layout_width="@dimen/large_brush"
                     android:layout_height="@dimen/large_brush"
@@ -172,7 +171,7 @@
                     android:onClick="paintClicked"
                     android:src="@drawable/paint"
                     android:tag="#FF0000FF" />
-
+<!--
                 <ImageButton
                     android:layout_width="@dimen/large_brush"
                     android:layout_height="@dimen/large_brush"
@@ -192,7 +191,7 @@
                     android:onClick="paintClicked"
                     android:src="@drawable/paint"
                     android:tag="#FFFF6666" />
-
+-->
                 <ImageButton
                     android:layout_width="@dimen/large_brush"
                     android:layout_height="@dimen/large_brush"

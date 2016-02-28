@@ -119,153 +119,27 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                     switch (message.charAt(0)) {
                         case Constants.MATCH_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    matchScoutDB.updateMatch(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
+                            Utilities.JsonToMatchDB(matchScoutDB,message);
                             rotateText(CYAN, "Match Data Received");
                             break;
                         case Constants.PIT_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    if(map.get(PitScoutDB.KEY_COMPLETE).getInt() == 1) {
-                                        pitScoutDB.updatePit(map);
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
+                            Utilities.JsonToPitDB(pitScoutDB,message);
                             rotateText(CYAN, "Pit Data Received");
                             break;
                         case Constants.SUPER_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    superScoutDB.updateMatch(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
+                            Utilities.JsonToSuperDB(superScoutDB,message);
                             rotateText(CYAN, "Super Data Received");
                             break;
                         case Constants.DRIVE_TEAM_FEEDBACK_HEADER:
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    driveTeamFeedbackDB.updateComments(map.get(DriveTeamFeedbackDB.KEY_TEAM_NUMBER).getInt(), map.get(DriveTeamFeedbackDB.KEY_COMMENTS).getString());
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
+                            filename = "";
+                            Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB,message);
                             rotateText(CYAN, "Drive Team Feedback Data Received");
                             break;
                         case Constants.STATS_HEADER:
                             filename = "";
-                            try {
-                                JSONArray jsonArray = new JSONArray(message.substring(1));
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    HashMap<String, ScoutValue> map = new HashMap<>();
-                                    Iterator<String> iter = jsonObject.keys();
-                                    while (iter.hasNext()) {
-                                        String key = iter.next();
-                                        try {
-                                            Object value = jsonObject.get(key);
-                                            if (value instanceof Integer) {
-                                                map.put(key, new ScoutValue((int) value));
-                                            } else if (value instanceof Float) {
-                                                map.put(key, new ScoutValue((float) value));
-                                            } else if (value instanceof String) {
-                                                map.put(key, new ScoutValue((String) value));
-                                            }
-                                        } catch (JSONException e) {
-                                            // Something went wrong!
-                                        }
-                                    }
-                                    statsDB.updateStats(map);
-                                }
-                            } catch (JSONException e) {
-                                Log.e(TAG, e.getMessage());
-                            }
+                            Utilities.JsonToStatsDB(statsDB,message);
                             rotateText(CYAN, "Stats Data Received");
                             break;
                         case Constants.SCHEDULE_HEADER:
@@ -608,15 +482,20 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
                                 rotateText(BLUE,"Stats Data Sent");
                                 break;
                             case 4: //Send Pictures
+
+                                //TODO: Needs to become async task
+
                                 Log.d(TAG,"Sending Pictures");
                                 rotateText(BLUE,"Sending Pictures");
                                 ArrayList<String> filenames = getImageFiles(pitScoutDB.getAllTeamInfo());
                                 for (int i = 0; i < filenames.size(); i++) {
-                                    while(!bluetoothSync.write((Constants.FILENAME_HEADER + filenames.get(i)).getBytes()));
                                     File file = new File(SyncActivity.this.getFilesDir(), filenames.get(i));
-                                    while(!bluetoothSync.writeFile(file));
-                                    Log.d(TAG,String.format("Picture %d of %d Sent",i+1,filenames.size()));
-                                    rotateText(BLACK,String.format("Picture %d of %d Sent",i+1,filenames.size()));
+                                    if(file.exists()) {
+                                        while(!bluetoothSync.write((Constants.FILENAME_HEADER + filenames.get(i)).getBytes()));
+                                        while (!bluetoothSync.writeFile(file)) ;
+                                        Log.d(TAG, String.format("Picture %d of %d Sent", i + 1, filenames.size()));
+                                        rotateText(BLACK, String.format("Picture %d of %d Sent", i + 1, filenames.size()));
+                                    }
                                 }
                                 break;
                             case 5: //Send Schedule

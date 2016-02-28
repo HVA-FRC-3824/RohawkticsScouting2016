@@ -105,7 +105,7 @@ public class Utilities {
                 try {
                     switch (cursor.getType(i)) {
                         case Cursor.FIELD_TYPE_FLOAT:
-                            jsonObject.put(cursor.getColumnName(i), cursor.getFloat(i));
+                            jsonObject.put(cursor.getColumnName(i), (double) cursor.getFloat(i));
                             break;
                         case Cursor.FIELD_TYPE_STRING:
                             jsonObject.put(cursor.getColumnName(i), cursor.getString(i));
@@ -167,8 +167,8 @@ public class Utilities {
                         Object value = jsonObject.get(key);
                         if (value instanceof Integer) {
                             map.put(key, new ScoutValue((int) value));
-                        } else if (value instanceof Float) {
-                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof Double) {
+                            map.put(key, new ScoutValue((float)((double)value)));
                         } else if (value instanceof String) {
                             map.put(key, new ScoutValue((String) value));
                         }
@@ -197,8 +197,8 @@ public class Utilities {
                         Object value = jsonObject.get(key);
                         if (value instanceof Integer) {
                             map.put(key, new ScoutValue((int) value));
-                        } else if (value instanceof Float) {
-                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof Double) {
+                            map.put(key, new ScoutValue((float)((double)value)));
                         } else if (value instanceof String) {
                             map.put(key, new ScoutValue((String) value));
                         }
@@ -227,8 +227,8 @@ public class Utilities {
                         Object value = jsonObject.get(key);
                         if (value instanceof Integer) {
                             map.put(key, new ScoutValue((int) value));
-                        } else if (value instanceof Float) {
-                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof Double) {
+                            map.put(key, new ScoutValue((float)((double)value)));
                         } else if (value instanceof String) {
                             map.put(key, new ScoutValue((String) value));
                         }
@@ -259,8 +259,8 @@ public class Utilities {
                         Object value = jsonObject.get(key);
                         if (value instanceof Integer) {
                             map.put(key, new ScoutValue((int) value));
-                        } else if (value instanceof Float) {
-                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof Double) {
+                            map.put(key, new ScoutValue((float)((double)value)));
                         } else if (value instanceof String) {
                             map.put(key, new ScoutValue((String) value));
                         }
@@ -289,8 +289,8 @@ public class Utilities {
                         Object value = jsonObject.get(key);
                         if (value instanceof Integer) {
                             map.put(key, new ScoutValue((int) value));
-                        } else if (value instanceof Float) {
-                            map.put(key, new ScoutValue((float) value));
+                        } else if (value instanceof Double) {
+                            map.put(key, new ScoutValue((float)((double)value)));
                         } else if (value instanceof String) {
                             map.put(key, new ScoutValue((String) value));
                         }

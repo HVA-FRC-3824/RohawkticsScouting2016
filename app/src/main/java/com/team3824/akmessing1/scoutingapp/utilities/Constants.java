@@ -2,7 +2,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
-    public static final String VERSION="Version: 1.0.11";
+    public static final String VERSION="Version: 1.0.12";
 
     public static final String APP_DATA = "appData";
 
