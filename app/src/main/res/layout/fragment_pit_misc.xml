@@ -17,4 +17,12 @@
         android:id="@+id/pit_number_cims"
         app:label="Number of CIMs:"
         app:key="pit_number_cims"/>
+
+    <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pit_programming_language"
+        app:label="Programming Language"
+        app:key="pit_programming_language"
+        app:spinner_values="@array/programming_dropdown"/>
 </LinearLayout>

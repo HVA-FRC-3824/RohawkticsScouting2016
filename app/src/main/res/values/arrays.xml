@@ -55,7 +55,6 @@
         <item>Fouls</item>
     </string-array>
 
-
     <string-array name="defense_type_dropdown">
         <item>Portcullis</item>
         <item>Cheval de Frise</item>
@@ -75,6 +74,13 @@
         <item>StatsDB</item>
         <item>SyncDB</item>
         <item>ScheduleDB</item>
+    </string-array>
+
+    <string-array name="programming_dropdown">
+        <item>Java</item>
+        <item>C++</item>
+        <item>Lab View</item>
+        <item>Other</item>
     </string-array>
 
 </resources>

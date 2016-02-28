@@ -9,8 +9,8 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 
-public class PitDrivetrain extends ScoutFragment{
-    public PitDrivetrain(){}
+public class PitMisc extends ScoutFragment{
+    public PitMisc(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class PitDrivetrain extends ScoutFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pit_drivetrain, container, false);
+        View view = inflater.inflate(R.layout.fragment_pit_misc, container, false);
 
         // restore all values from the database
         if(valueMap != null) {

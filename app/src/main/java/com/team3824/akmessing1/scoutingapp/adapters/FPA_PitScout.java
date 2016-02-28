@@ -5,26 +5,24 @@ import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
 import com.team3824.akmessing1.scoutingapp.fragments.PitDimensions;
-import com.team3824.akmessing1.scoutingapp.fragments.PitDrivetrain;
+import com.team3824.akmessing1.scoutingapp.fragments.PitMisc;
 import com.team3824.akmessing1.scoutingapp.fragments.PitNotes;
 import com.team3824.akmessing1.scoutingapp.fragments.PitRobotPicture;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 // Setup up page fragments for pit scouting
 public class FPA_PitScout extends FragmentPagerAdapter{
 
-    private String tabTitles[] = new String[] { "Robot Picture", "Dimensions","Drivetrain","Notes" };
+    private String tabTitles[] = new String[] { "Robot Picture", "Dimensions","Misc","Notes" };
 
     private PitRobotPicture pitRobotPicture;
     private PitDimensions pitDimensions;
-    private PitDrivetrain pitDrivetrain;
+    private PitMisc pitMisc;
     private PitNotes pitNotes;
 
     private Map<String,ScoutValue> valueMap = null;
@@ -33,7 +31,7 @@ public class FPA_PitScout extends FragmentPagerAdapter{
         super(fm);
         pitRobotPicture = new PitRobotPicture();
         pitDimensions = new PitDimensions();
-        pitDrivetrain = new PitDrivetrain();
+        pitMisc = new PitMisc();
         pitNotes = new PitNotes();
     }
 
@@ -59,7 +57,7 @@ public class FPA_PitScout extends FragmentPagerAdapter{
                 fragment = pitDimensions;
                 break;
             case 2:
-                fragment = pitDrivetrain;
+                fragment = pitMisc;
                 break;
             case 3:
                 fragment = pitNotes;
@@ -88,7 +86,7 @@ public class FPA_PitScout extends FragmentPagerAdapter{
         List<ScoutFragment> fragmentList = new ArrayList<>();
         fragmentList.add(pitRobotPicture);
         fragmentList.add(pitDimensions);
-        fragmentList.add(pitDrivetrain);
+        fragmentList.add(pitMisc);
         fragmentList.add(pitNotes);
         return fragmentList;
     }
