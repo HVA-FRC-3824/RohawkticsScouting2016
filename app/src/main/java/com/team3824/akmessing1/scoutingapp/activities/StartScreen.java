@@ -36,17 +36,20 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
             case Constants.MATCH_SCOUT: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.scoutMatch_button);
+                setupButton(R.id.syncMatch_button);
                 break;
             }
             case Constants.PIT_SCOUT: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.scoutPit_button);
+                setupButton(R.id.syncPit_button);
+                setupButton(R.id.picture_transer_button);
                 break;
             }
             case Constants.SUPER_SCOUT: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.superScout_button);
-                setupButton(R.id.sync_button);
+                setupButton(R.id.syncSuper_button);
                 break;
             }
             case Constants.DRIVE_TEAM: {
@@ -55,8 +58,7 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.viewTeam_button);
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.viewEvent_button);
-                setupButton(R.id.sync_button);
-                setupButton(R.id.aggregate_button);
+                setupButton(R.id.syncDriveTeam_button);
                 setupButton(R.id.feedback_button);
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if(bluetoothAdapter != null) {
@@ -76,31 +78,49 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.viewEvent_button);
                 setupButton(R.id.viewPickList_button);
-                setupButton(R.id.sync_button);
-                setupButton(R.id.aggregate_button);
+                setupButton(R.id.syncStrategy_button);
                 break;
             }
             case Constants.SERVER:{
                 setupButton(R.id.server_button);
-                setupButton(R.id.sync_button);
-                setupButton(R.id.aggregate_button);
+                setupButton(R.id.upload_download_button);
                 break;
             }
             case Constants.ADMIN: {
                 setupButton(R.id.matchSchedule_button);
+
                 setupButton(R.id.scoutMatch_button);
+                setupButton(R.id.syncMatch_button);
+
                 setupButton(R.id.scoutPit_button);
+                setupButton(R.id.syncPit_button);
+
                 setupButton(R.id.superScout_button);
+                setupButton(R.id.syncSuper_button);
+
+                setupButton(R.id.feedback_button);
+                setupButton(R.id.syncDriveTeam_button);
+
                 setupButton(R.id.matchPlanning_button);
+
                 setupButton(R.id.viewTeam_button);
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.viewEvent_button);
                 setupButton(R.id.viewPickList_button);
+
+
                 setupButton(R.id.sync_button);
                 setupButton(R.id.aggregate_button);
-                setupButton(R.id.feedback_button);
+
+
                 setupButton(R.id.database_button);
+                setupButton(R.id.file_button);
+                setupButton(R.id.upload_download_button);
+                setupButton(R.id.picture_transer_button);
                 setupButton(R.id.teamlist_button);
+
+
+
                 bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if(bluetoothAdapter != null) {
                     setupButton(R.id.bluetooth_button);
@@ -149,18 +169,30 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
                 intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_SCOUTING);
                 startActivity(intent);
                 break;
+            case R.id.syncMatch_button:
+                //TODO: Fill in
+                break;
             case R.id.scoutPit_button:
                 intent = new Intent(this, PitList.class);
                 startActivity(intent);
+                break;
+            case R.id.syncPit_button:
+                //TODO: Fill in
                 break;
             case R.id.superScout_button:
                 intent = new Intent(this, MatchList.class);
                 intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
                 startActivity(intent);
                 break;
+            case R.id.syncSuper_button:
+                //TODO: Fill in
+                break;
             case R.id.feedback_button:
                 intent = new Intent(this, OurMatchList.class);
                 startActivity(intent);
+                break;
+            case R.id.syncDriveTeam_button:
+                //TODO: Fill in
                 break;
             case R.id.matchPlanning_button:
                 intent = new Intent(this, MatchPlanning.class);
@@ -194,6 +226,15 @@ public class StartScreen extends AppCompatActivity implements View.OnClickListen
             case R.id.database_button:
                 intent = new Intent(this, DatabaseManagement.class);
                 startActivity(intent);
+                break;
+            case R.id.file_button:
+                //TODO: Fill in
+                break;
+            case R.id.upload_download_button:
+                //TODO: Fill in
+                break;
+            case R.id.picture_transer_button:
+                //TODO: Fill in
                 break;
             case R.id.teamlist_button:
                 intent = new Intent(this, TeamListBuilder.class);
