@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,14 +41,15 @@ public class PitList extends AppCompatActivity {
         });
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        int pitGroupNumber = sharedPreferences.getInt(Constants.PIT_GROUP_NUMBER,1);
 
         PitScoutDB pitScoutDB = new PitScoutDB(this,eventID);
-        displayListView(pitScoutDB);
+        displayListView(pitScoutDB, pitGroupNumber);
         pitScoutDB.close();
     }
 
     // Setup list view with the schedule
-    private void displayListView(PitScoutDB pitScoutDB)
+    private void displayListView(PitScoutDB pitScoutDB, int pitGroupNumber)
     {
         Cursor cursor = pitScoutDB.getAllTeams();
 
@@ -60,7 +62,24 @@ public class PitList extends AppCompatActivity {
 
             // Add buttons
 
-            for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+            int numTeams = cursor.getCount();
+            int numGroupTeams = numTeams / 6;
+            int extra = numTeams % 6;
+
+            int startPosition = numGroupTeams * (pitGroupNumber - 1);
+            int endPosition = numGroupTeams*pitGroupNumber;
+
+            if(extra > 0) {
+                startPosition += pitGroupNumber - 1;
+                endPosition += pitGroupNumber;
+            }
+
+            for(cursor.moveToPosition(startPosition); !cursor.isAfterLast(); cursor.moveToNext()){
+                int position = cursor.getPosition();
+                Log.d(TAG, String.valueOf(position));
+                if(position == endPosition) {
+                    break;
+                }
 
                 Button button = new Button(this);
                 button.setLayoutParams(lp);

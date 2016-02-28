@@ -11,6 +11,7 @@ public interface Constants {
     public static final String USER_TYPE = "user_type";
     public static final String ALLIANCE_COLOR = "alliance_color";
     public static final String ALLIANCE_NUMBER = "alliance_number";
+    public static final String PIT_GROUP_NUMBER = "pit_group_number";
 
     //User Types
     public static final String MATCH_SCOUT = "Match Scout";
