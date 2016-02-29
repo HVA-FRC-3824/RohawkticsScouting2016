@@ -208,11 +208,8 @@ public interface Constants {
     public static final char FILENAME_HEADER = 'F';
     public static final char FILE_HEADER = 'f';
     public static final char SCHEDULE_HEADER = 's';
-    public static final String RECEIVE_ALL_HEADER = "RA";
-    public static final char RECEIVE_HEADER = 'R';
-    public static final String RECEIVE_UPDATE_HEADER = "R";
-    public static final String RECEIVE_PICTURE_HEADER = "RP";
-    public static final String RECEIVE_SCHEDULE_HEADER = "RS";
+    public static final char REQUEST_HEADER = 'R';
+    public static final char RECEIVE_HEADER = 'r';
     public static final char PING_HEADER = 'p';
     public static final String PING = "ping";
     public static final String PONG = "pong";

@@ -275,6 +275,7 @@ public class BluetoothSync {
      * Indicate that the connection was lost and notify the UI Activity.
      */
     private void connectionLost() {
+        mHandler.sendEmptyMessage(MessageType.CONNECTION_LOST);
         Log.e(TAG,"Connection Lost");
         // Start the service over to restart listening mode
         BluetoothSync.this.start();

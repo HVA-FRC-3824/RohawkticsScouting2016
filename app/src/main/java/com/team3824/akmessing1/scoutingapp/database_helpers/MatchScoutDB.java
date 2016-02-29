@@ -81,8 +81,6 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = getWritableDatabase();
 
-
-
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
                 KEY_TEAM_NUMBER + " = ? AND " + KEY_MATCH_NUMBER + " = ?", // c. selections

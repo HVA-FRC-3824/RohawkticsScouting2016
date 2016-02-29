@@ -1,6 +1,8 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +21,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothHandler;
+import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
@@ -32,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SuperScouting extends AppCompatActivity {
 
@@ -131,7 +138,9 @@ public class SuperScouting extends AppCompatActivity {
         return true;
     }
 
-    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
+    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, String, Void> {
+
+        BluetoothSync bluetoothSync;
 
         @Override
         protected Void doInBackground(Map<String, ScoutValue>... maps) {
@@ -148,7 +157,86 @@ public class SuperScouting extends AppCompatActivity {
             data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
             // Store values to the database
             superScoutDB.updateMatch(data);
+
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+                bluetoothSync = new BluetoothSync(new BluetoothHandler(),false);
+                Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
+                BluetoothDevice server = null;
+                for (BluetoothDevice device : devices) {
+                    String connectedName = device.getName();
+                    if (connectedName.equals(Constants.SERVER_NAME)) {
+                        server = device;
+                        break;
+                    }
+                }
+
+                if (server == null) {
+                    publishProgress("Cannot find Server in Paired Devices List");
+                    return null;
+                }
+
+                int i;
+                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                    bluetoothSync.connect(server, false);
+                    if (timeout()) {
+                        break;
+                    }
+                }
+                if (i == Constants.NUM_ATTEMPTS) {
+                    bluetoothSync.stop();
+                    publishProgress("Connection to Server Failed");
+                    return null;
+                }
+
+                SyncDB syncDB = new SyncDB(SuperScouting.this,eventId);
+                String connectedAddress = bluetoothSync.getConnectedAddress();
+                String lastUpdated = syncDB.getSuperLastUpdated(connectedAddress);
+                syncDB.updateSuperSync(connectedAddress);
+
+                String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+                if (!superUpdatedText.equals(String.format("%c[]", Constants.SUPER_HEADER))) {
+                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                        if (bluetoothSync.write(superUpdatedText.getBytes())) {
+                            break;
+                        } else {
+                            publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                        }
+                    }
+                    if (i == Constants.NUM_ATTEMPTS) {
+                        Utilities.JsonToSuperDB(superScoutDB, superUpdatedText);
+                        publishProgress("Super Data Requeued");
+                    } else {
+                        publishProgress("Super Data Sent");
+                    }
+                } else {
+                    publishProgress("No new Super Data to send");
+                }
+
+                bluetoothSync.stop();
+            }
             return null;
+        }
+
+        private boolean timeout()
+        {
+            long time = SystemClock.currentThreadTimeMillis();
+            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+            {
+                if(SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values)
+        {
+            String text = values[0];
+            Log.d(TAG, text);
+            Toast.makeText(SuperScouting.this, text,Toast.LENGTH_SHORT).show();
         }
     }
 

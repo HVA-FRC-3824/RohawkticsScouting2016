@@ -1,6 +1,8 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +22,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothHandler;
+import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
@@ -30,6 +37,7 @@ import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class MatchScouting extends AppCompatActivity {
@@ -160,7 +168,9 @@ public class MatchScouting extends AppCompatActivity {
         return true;
     }
 
-    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
+    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, String, Void> {
+
+        BluetoothSync bluetoothSync;
 
         @Override
         protected Void doInBackground(Map<String, ScoutValue>... maps) {
@@ -172,7 +182,86 @@ public class MatchScouting extends AppCompatActivity {
             data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
             // Store values to the database
             matchScoutDB.updateMatch(data);
+
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+                bluetoothSync = new BluetoothSync(new BluetoothHandler(),false);
+                Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
+                BluetoothDevice server = null;
+                for (BluetoothDevice device : devices) {
+                    String connectedName = device.getName();
+                    if (connectedName.equals(Constants.SERVER_NAME)) {
+                        server = device;
+                        break;
+                    }
+                }
+
+                if (server == null) {
+                    publishProgress("Cannot find Server in Paired Devices List");
+                    return null;
+                }
+
+                int i;
+                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                    bluetoothSync.connect(server, false);
+                    if (timeout()) {
+                        break;
+                    }
+                }
+                if (i == Constants.NUM_ATTEMPTS) {
+                    bluetoothSync.stop();
+                    publishProgress("Connection to Server Failed");
+                    return null;
+                }
+
+                SyncDB syncDB = new SyncDB(MatchScouting.this,eventId);
+                String connectedAddress = bluetoothSync.getConnectedAddress();
+                String lastUpdated = syncDB.getMatchLastUpdated(connectedAddress);
+                syncDB.updateMatchSync(connectedAddress);
+
+                String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
+                if (!matchUpdatedText.equals(String.format("%c[]", Constants.MATCH_HEADER))) {
+                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                        if (bluetoothSync.write(matchUpdatedText.getBytes())) {
+                            break;
+                        } else {
+                            publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                        }
+                    }
+                    if (i == Constants.NUM_ATTEMPTS) {
+                        Utilities.JsonToMatchDB(matchScoutDB, matchUpdatedText);
+                        publishProgress("Match Data Requeued");
+                    } else {
+                        publishProgress("Match Data Sent");
+                    }
+                } else {
+                    publishProgress("No new Match Data to send");
+                }
+
+                bluetoothSync.stop();
+            }
             return null;
+        }
+
+        private boolean timeout()
+        {
+            long time = SystemClock.currentThreadTimeMillis();
+            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
+            {
+                if(SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values)
+        {
+            String text = values[0];
+            Log.d(TAG, text);
+            Toast.makeText(MatchScouting.this, text,Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -364,7 +453,7 @@ public class MatchScouting extends AppCompatActivity {
                     error += fragment.writeContentsToMap(data);
                 }
 
-                if(error.equals("")) {
+                if (error.equals("")) {
                     Log.d(TAG, "Saving values");
                     new SaveTask().execute(data);
 
@@ -373,9 +462,7 @@ public class MatchScouting extends AppCompatActivity {
                     intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
                     intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
                 }
             }

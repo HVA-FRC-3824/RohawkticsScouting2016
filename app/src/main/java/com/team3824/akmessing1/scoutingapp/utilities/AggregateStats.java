@@ -1,19 +1,9 @@
-package com.team3824.akmessing1.scoutingapp.services;
+package com.team3824.akmessing1.scoutingapp.utilities;
 
-import android.app.IntentService;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
-import com.team3824.akmessing1.scoutingapp.utilities.SchulzeMethod;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
@@ -21,265 +11,236 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public class AggregateService extends IntentService {
-    private String TAG ="AggregateService";
-    private Handler toastHandler;
+public class AggregateStats {
 
-    public AggregateService()
+    public static void updateTeams(Set<Integer> teams, MatchScoutDB matchScoutDB, SuperScoutDB superScoutDB,
+                            ScheduleDB scheduleDB, StatsDB statsDB)
     {
-        super("AggregateService");
-        toastHandler = new Handler();
+        for(Integer team: teams)
+        {
+            updateTeam(team, matchScoutDB, superScoutDB, scheduleDB, statsDB);
+        }
     }
 
-    @Override
-    protected void onHandleIntent(Intent intent)
+    public static void updateTeam(int team, MatchScoutDB matchScoutDB, SuperScoutDB superScoutDB,
+                           ScheduleDB scheduleDB, StatsDB statsDB)
     {
-        Log.d(TAG, "Aggregate Service Started");
-        Context context = getApplicationContext();
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
-        PitScoutDB pitScoutDB = new PitScoutDB(context,eventID);
-        SuperScoutDB superScoutDB = new SuperScoutDB(context, eventID);
-        MatchScoutDB matchScoutDB = new MatchScoutDB(context, eventID);
-        ScheduleDB scheduleDB = new ScheduleDB(context,eventID);
-        StatsDB statsDB = new StatsDB(context, eventID);
+        Cursor teamInfo = matchScoutDB.getTeamInfo(team);
 
-        String lastUpdated;
-        boolean update = intent.getBooleanExtra(Constants.UPDATE, false);
-        if(update)
+        //Might change for update feature
+        Map<String, ScoutValue> teamStats = new HashMap<>();
+
+        // Calculate metrics and insert in map
+
+        //Auto
+        int[] totalStartPosition = set_start_array(teamStats,"start");
+        int[] totalDefenseReaches = set_start_array(teamStats, "reach");
+        int[] totalDefenseCrosses = set_start_array(teamStats, "cross");
+        int totalAutoHighGoalHit = set_start(teamStats,Constants.TOTAL_AUTO_HIGH_HIT);
+        int totalAutoHighGoalMiss = set_start(teamStats,Constants.TOTAL_AUTO_HIGH_MISS);
+        int totalAutoLowGoalHit = set_start(teamStats, Constants.TOTAL_AUTO_LOW_HIT);
+        int totalAutoLowGoalMiss = set_start(teamStats, Constants.TOTAL_AUTO_LOW_MISS);
+
+
+        //Teleop
+        int[] totalTeleopDefenses = set_start_array(teamStats, "teleop");
+        int[] totalTeleopNotCross = set_start_array(teamStats, "not");
+        int[] totalTeleopDefensesPoints = set_start_array(teamStats, "teleop_points");
+        int[] totalDefensesSeen = set_start_array(teamStats, "seen");
+        int[] totalDefensesTime = set_start_array(teamStats, "time");
+        int totalTeleopHighGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_HIT);
+        int totalTeleopHighGoalMiss = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_MISS);
+        int totalTeleopLowGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_LOW_HIT);
+        int totalTeleopLowGoalMiss = set_start(teamStats,Constants.TOTAL_TELEOP_LOW_MISS);
+
+        //Endgame
+        int totalChallenge = set_start(teamStats,Constants.TOTAL_CHALLENGE);
+        int totalScale = set_start(teamStats,Constants.TOTAL_SCALE);
+
+        //Post
+        int totalDQ = set_start(teamStats,Constants.TOTAL_DQ);
+        int totalStopped = set_start(teamStats,Constants.TOTAL_STOPPED);
+        int totalDidntShowUp = set_start(teamStats,Constants.TOTAL_DIDNT_SHOW_UP);
+
+        //Fouls
+        int totalFouls = set_start(teamStats,Constants.TOTAL_FOULS);
+        int totalTechFouls = set_start(teamStats,Constants.TOTAL_TECH_FOULS);
+        int totalYellowCards = set_start(teamStats,Constants.TOTAL_YELLOW_CARDS);
+        int totalRedCards = set_start(teamStats,Constants.TOTAL_RED_CARDS);
+
+
+        int totalMatches = set_start(teamStats,Constants.TOTAL_MATCHES);
+
+        for(teamInfo.moveToFirst(); !teamInfo.isAfterLast(); teamInfo.moveToNext())
         {
-            lastUpdated = statsDB.getLastUpdatedTime();
-            Log.d(TAG, "Last Time Updated: "+lastUpdated);
-        }
-        else {
-            lastUpdated = "";
-        }
-        ArrayList<Integer> matchesUpdated;
+            int matchNumber = teamInfo.getInt(teamInfo.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER));
+            Map<String, ScoutValue> superMatch = superScoutDB.getMatchInfo(matchNumber);
+            // If superscout has not yet recorded the match change the update time so that this
+            // match can be aggregated later
+            if(superMatch != null) {
+                totalMatches++;
 
-        matchesUpdated = superScoutDB.getMatchesUpdatedSince(lastUpdated);
+                Cursor match = scheduleDB.getMatch(matchNumber);
 
-
-        if(matchesUpdated == null || matchesUpdated.size() > 0)
-        {
-            Cursor matchCursor;
-            matchCursor = superScoutDB.getAllMatches();
-
-            ArrayList<Integer> teamNumbers = pitScoutDB.getTeamNumbers();
-            if(matchCursor.getCount() > 0) {
-
-                // Normal updateStats method does not seem to give the table enough time to update
-                // the columns for the following loop
-                if(!statsDB.hasColumn(Constants.DRIVER_ABILITY_RANKING))
-                {
-                    statsDB.addColumn(Constants.DRIVER_ABILITY_RANKING,"TEXT");
-                }
-                if(!statsDB.hasColumn(Constants.DEFENSE_ABILITY_RANKING))
-                {
-                    statsDB.addColumn(Constants.DEFENSE_ABILITY_RANKING,"TEXT");
+                String defense2, defense3, defense4, defense5;
+                defense3 = superMatch.get(Constants.DEFENSE_3).getString().toLowerCase().replace(" ", "_");
+                if (match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE1)) == team ||
+                        match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE2)) == team ||
+                        match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE3)) == team) {
+                    defense2 = superMatch.get(Constants.BLUE_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
+                    defense4 = superMatch.get(Constants.BLUE_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
+                    defense5 = superMatch.get(Constants.BLUE_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
+                } else {
+                    defense2 = superMatch.get(Constants.RED_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
+                    defense4 = superMatch.get(Constants.RED_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
+                    defense5 = superMatch.get(Constants.RED_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
                 }
 
-                Log.d(TAG,"Calculating Cardinal Rank for Driver Ability");
-                String[] driveAbilityRanking = SchulzeMethod.CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DRIVE_ABILITY, this);
-                HashMap<String, ScoutValue> map;
-                for (int i = 0; i < teamNumbers.size(); i++) {
-                    map = new HashMap<>();
-                    map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers.get(i)));
-                    map.put(Constants.DRIVER_ABILITY_RANKING, new ScoutValue(driveAbilityRanking[i]));
-                    statsDB.updateStats(map);
-                }
+                increment_array(teamInfo, totalDefensesSeen, defense2, defense3, defense4, defense5, "seen");
 
-                matchCursor.moveToFirst();
+                //Auto
+                increment_array(teamInfo, totalStartPosition, defense2, defense3, defense4, defense5, "start");
+                increment_array(teamInfo, totalDefenseReaches, defense2, defense3, defense4, defense5, "reach");
+                increment_array(teamInfo, totalDefenseCrosses, defense2, defense3, defense4, defense5, "cross");
+                totalAutoHighGoalHit += teamInfo.getInt(teamInfo.getColumnIndex(Constants.AUTO_HIGH_HIT));
+                totalAutoHighGoalMiss += teamInfo.getInt(teamInfo.getColumnIndex(Constants.AUTO_HIGH_MISS));
+                totalAutoLowGoalHit += teamInfo.getInt(teamInfo.getColumnIndex(Constants.AUTO_LOW_HIT));
+                totalAutoLowGoalMiss += teamInfo.getInt(teamInfo.getColumnIndex(Constants.AUTO_LOW_MISS));
 
-                Log.d(TAG, "Calculating Cardinal Rank for Defense Ability");
-                String[] defenseAbilityRanking = SchulzeMethod.CardinalRankCalc(teamNumbers, matchCursor, eventID, Constants.SUPER_DEFENSE_ABILITY, this);
-                for (int i = 0; i < teamNumbers.size(); i++) {
-                    map = new HashMap<>();
-                    map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumbers.get(i)));
-                    map.put(Constants.DEFENSE_ABILITY_RANKING, new ScoutValue(defenseAbilityRanking[i]));
-                    statsDB.updateStats(map);
-                }
+                //Teleop
+                increment_array(teamInfo, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
+                increment_array(teamInfo, totalTeleopNotCross, defense2, defense3, defense4, defense5, "not");
+                increment_array(teamInfo, totalTeleopDefensesPoints, defense2, defense3, defense4, defense5, "teleop_points");
+                increment_array(teamInfo, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
+                totalTeleopHighGoalHit += teamInfo.getInt(teamInfo.getColumnIndex(Constants.TELEOP_HIGH_HIT));
+                totalTeleopHighGoalMiss += teamInfo.getInt(teamInfo.getColumnIndex(Constants.TELEOP_HIGH_MISS));
+                totalTeleopLowGoalHit += teamInfo.getInt(teamInfo.getColumnIndex(Constants.TELEOP_LOW_HIT));
+                totalTeleopLowGoalMiss += teamInfo.getInt(teamInfo.getColumnIndex(Constants.TELEOP_LOW_MISS));
+
+                //Endgame
+                totalChallenge += (teamInfo.getString(teamInfo.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Challenge")) ? 1 : 0;
+                totalScale += (teamInfo.getString(teamInfo.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Scale")) ? 1 : 0;
+
+                //Post
+                totalDQ += teamInfo.getInt(teamInfo.getColumnIndex(Constants.POST_DQ));
+                totalStopped += teamInfo.getInt(teamInfo.getColumnIndex(Constants.POST_STOPPED));
+                totalDidntShowUp += teamInfo.getInt(teamInfo.getColumnIndex(Constants.POST_DIDNT_SHOW_UP));
+
+                //Fouls
+                totalFouls += teamInfo.getInt(teamInfo.getColumnIndex(Constants.FOUL_STANDARD));
+                totalTechFouls += teamInfo.getInt(teamInfo.getColumnIndex(Constants.FOUL_TECH));
+                totalYellowCards += teamInfo.getInt(teamInfo.getColumnIndex(Constants.FOUL_YELLOW_CARD));
+                totalRedCards += teamInfo.getInt(teamInfo.getColumnIndex(Constants.FOUL_RED_CARD));
             }
         }
 
-        ArrayList<Integer> teamsUpdated = matchScoutDB.getTeamsUpdatedSince(lastUpdated);
-        for(int i = 0; i < teamsUpdated.size(); i++)
+        HashMap<String, ScoutValue> newTeamStats = new HashMap<>();
+
+        for(int j = 0; j < 9; j++)
         {
-            Cursor teamCursor = matchScoutDB.getTeamInfoSince(teamsUpdated.get(i), lastUpdated);
-            Map<String, ScoutValue> teamStats = (update)?statsDB.getTeamStats(teamsUpdated.get(i)):
-                    new HashMap<String,ScoutValue>();
-
-            // Calculate metrics and insert in map
-
-            //Auto
-            int[] totalStartPosition = set_start_array(teamStats,"start");
-            int[] totalDefenseReaches = set_start_array(teamStats, "reach");
-            int[] totalDefenseCrosses = set_start_array(teamStats, "cross");
-            int totalAutoHighGoalHit = set_start(teamStats,Constants.TOTAL_AUTO_HIGH_HIT);
-            int totalAutoHighGoalMiss = set_start(teamStats,Constants.TOTAL_AUTO_HIGH_MISS);
-            int totalAutoLowGoalHit = set_start(teamStats, Constants.TOTAL_AUTO_LOW_HIT);
-            int totalAutoLowGoalMiss = set_start(teamStats, Constants.TOTAL_AUTO_LOW_MISS);
-
-
-            //Teleop
-            int[] totalTeleopDefenses = set_start_array(teamStats, "teleop");
-            int[] totalTeleopNotCross = set_start_array(teamStats, "not");
-            int[] totalTeleopDefensesPoints = set_start_array(teamStats, "teleop_points");
-            int[] totalDefensesSeen = set_start_array(teamStats, "seen");
-            int[] totalDefensesTime = set_start_array(teamStats, "time");
-            int totalTeleopHighGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_HIT);
-            int totalTeleopHighGoalMiss = set_start(teamStats,Constants.TOTAL_TELEOP_HIGH_MISS);
-            int totalTeleopLowGoalHit = set_start(teamStats,Constants.TOTAL_TELEOP_LOW_HIT);
-            int totalTeleopLowGoalMiss = set_start(teamStats,Constants.TOTAL_TELEOP_LOW_MISS);
-
-            //Endgame
-            int totalChallenge = set_start(teamStats,Constants.TOTAL_CHALLENGE);
-            int totalScale = set_start(teamStats,Constants.TOTAL_SCALE);
-
-            //Post
-            int totalDQ = set_start(teamStats,Constants.TOTAL_DQ);
-            int totalStopped = set_start(teamStats,Constants.TOTAL_STOPPED);
-            int totalDidntShowUp = set_start(teamStats,Constants.TOTAL_DIDNT_SHOW_UP);
-
-            //Fouls
-            int totalFouls = set_start(teamStats,Constants.TOTAL_FOULS);
-            int totalTechFouls = set_start(teamStats,Constants.TOTAL_TECH_FOULS);
-            int totalYellowCards = set_start(teamStats,Constants.TOTAL_YELLOW_CARDS);
-            int totalRedCards = set_start(teamStats,Constants.TOTAL_RED_CARDS);
-
-
-            int totalMatches = set_start(teamStats,Constants.TOTAL_MATCHES);
-
-            for(teamCursor.moveToFirst(); !teamCursor.isAfterLast(); teamCursor.moveToNext())
-            {
-                int matchNumber = teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER));
-                Map<String, ScoutValue> superMatch = superScoutDB.getMatchInfo(matchNumber);
-                // If superscout has not yet recorded the match change the update time so that this
-                // match can be aggregated later
-                if(superMatch == null) {
-                    Map<String, ScoutValue> matchTeam = new HashMap<>();
-                    matchTeam.put(MatchScoutDB.KEY_ID,new ScoutValue(teamCursor.getString(teamCursor.getColumnIndex(MatchScoutDB.KEY_ID))));
-                    matchTeam.put(MatchScoutDB.KEY_TEAM_NUMBER,new ScoutValue(teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_TEAM_NUMBER))));
-                    matchTeam.put(MatchScoutDB.KEY_MATCH_NUMBER,new ScoutValue(teamCursor.getInt(teamCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))));
-                    matchScoutDB.updateMatch(matchTeam);
-                }
-                else{
-                    totalMatches++;
-
-                    Cursor match = scheduleDB.getMatch(matchNumber);
-
-                    String defense2, defense3, defense4, defense5;
-                    defense3 = superMatch.get(Constants.DEFENSE_3).getString().toLowerCase().replace(" ", "_");
-                    if (match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE1)) == teamsUpdated.get(i) ||
-                            match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE2)) == teamsUpdated.get(i) ||
-                            match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE3)) == teamsUpdated.get(i)) {
-                        defense2 = superMatch.get(Constants.BLUE_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
-                        defense4 = superMatch.get(Constants.BLUE_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
-                        defense5 = superMatch.get(Constants.BLUE_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
-                    } else {
-                        defense2 = superMatch.get(Constants.RED_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
-                        defense4 = superMatch.get(Constants.RED_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
-                        defense5 = superMatch.get(Constants.RED_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
-                    }
-
-                    increment_array(teamCursor, totalDefensesSeen, defense2, defense3, defense4, defense5, "seen");
-
-                    //Auto
-                    increment_array(teamCursor, totalStartPosition, defense2, defense3, defense4, defense5, "start");
-                    increment_array(teamCursor, totalDefenseReaches, defense2, defense3, defense4, defense5, "reach");
-                    increment_array(teamCursor, totalDefenseCrosses, defense2, defense3, defense4, defense5, "cross");
-                    totalAutoHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_HIGH_HIT));
-                    totalAutoHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_HIGH_MISS));
-                    totalAutoLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_LOW_HIT));
-                    totalAutoLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.AUTO_LOW_MISS));
-
-                    //Teleop
-                    increment_array(teamCursor, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
-                    increment_array(teamCursor, totalTeleopNotCross, defense2, defense3, defense4, defense5, "not");
-                    increment_array(teamCursor, totalTeleopDefensesPoints, defense2, defense3, defense4, defense5, "teleop_points");
-                    increment_array(teamCursor, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
-                    totalTeleopHighGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_HIT));
-                    totalTeleopHighGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_HIGH_MISS));
-                    totalTeleopLowGoalHit += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_HIT));
-                    totalTeleopLowGoalMiss += teamCursor.getInt(teamCursor.getColumnIndex(Constants.TELEOP_LOW_MISS));
-
-                    //Endgame
-                    totalChallenge += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Challenge")) ? 1 : 0;
-                    totalScale += (teamCursor.getString(teamCursor.getColumnIndex(Constants.ENDGAME_CHALLENGE_SCALE)).equals("Scale")) ? 1 : 0;
-
-                    //Post
-                    totalDQ += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_DQ));
-                    totalStopped += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_STOPPED));
-                    totalDidntShowUp += teamCursor.getInt(teamCursor.getColumnIndex(Constants.POST_DIDNT_SHOW_UP));
-
-                    //Fouls
-                    totalFouls += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_STANDARD));
-                    totalTechFouls += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_TECH));
-                    totalYellowCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_YELLOW_CARD));
-                    totalRedCards += teamCursor.getInt(teamCursor.getColumnIndex(Constants.FOUL_RED_CARD));
-                }
-            }
-
-            HashMap<String, ScoutValue> newTeamStats = new HashMap<>();
-
-            for(int j = 0; j < 9; j++)
-            {
-                newTeamStats.put(Constants.TOTAL_DEFENSES_STARTED[j], new ScoutValue(totalStartPosition[j]));
-                newTeamStats.put(Constants.TOTAL_DEFENSES_SEEN[j], new ScoutValue(totalDefensesSeen[j]));
-                newTeamStats.put(Constants.TOTAL_DEFENSES_AUTO_REACHED[j], new ScoutValue(totalDefenseReaches[j]));
-                newTeamStats.put(Constants.TOTAL_DEFENSES_AUTO_CROSSED[j], new ScoutValue(totalDefenseCrosses[j]));
-                newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[j], new ScoutValue(totalTeleopDefenses[j]));
-                newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[j],new ScoutValue(totalTeleopNotCross[j]));
-                newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[j], new ScoutValue(totalTeleopDefensesPoints[j]));
-                newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_TIME[j], new ScoutValue(totalDefensesTime[j]));
-            }
-            newTeamStats.put(Constants.TOTAL_DEFENSES_STARTED[9], new ScoutValue(totalStartPosition[9]));
-            newTeamStats.put(Constants.TOTAL_DEFENSES_STARTED[10], new ScoutValue(totalStartPosition[10]));
-
-            newTeamStats.put(Constants.TOTAL_AUTO_HIGH_HIT, new ScoutValue(totalAutoHighGoalHit));
-            newTeamStats.put(Constants.TOTAL_AUTO_HIGH_MISS, new ScoutValue(totalAutoHighGoalMiss));
-            newTeamStats.put(Constants.TOTAL_AUTO_LOW_HIT, new ScoutValue(totalAutoLowGoalHit));
-            newTeamStats.put(Constants.TOTAL_AUTO_LOW_MISS, new ScoutValue(totalAutoLowGoalMiss));
-
-            newTeamStats.put(Constants.TOTAL_TELEOP_HIGH_HIT, new ScoutValue(totalTeleopHighGoalHit));
-            newTeamStats.put(Constants.TOTAL_TELEOP_HIGH_MISS, new ScoutValue(totalTeleopHighGoalMiss));
-            newTeamStats.put(Constants.TOTAL_TELEOP_LOW_HIT, new ScoutValue(totalTeleopLowGoalHit));
-            newTeamStats.put(Constants.TOTAL_TELEOP_LOW_MISS, new ScoutValue(totalTeleopLowGoalMiss));
-
-            newTeamStats.put(Constants.TOTAL_CHALLENGE, new ScoutValue(totalChallenge));
-            newTeamStats.put(Constants.TOTAL_SCALE, new ScoutValue(totalScale));
-
-            newTeamStats.put(Constants.TOTAL_DQ, new ScoutValue(totalDQ));
-            newTeamStats.put(Constants.TOTAL_STOPPED, new ScoutValue(totalStopped));
-            newTeamStats.put(Constants.TOTAL_DIDNT_SHOW_UP, new ScoutValue(totalDidntShowUp));
-
-            newTeamStats.put(Constants.TOTAL_FOULS, new ScoutValue(totalFouls));
-            newTeamStats.put(Constants.TOTAL_TECH_FOULS, new ScoutValue(totalTechFouls));
-            newTeamStats.put(Constants.TOTAL_YELLOW_CARDS, new ScoutValue(totalYellowCards));
-            newTeamStats.put(Constants.TOTAL_RED_CARDS, new ScoutValue(totalRedCards));
-
-            newTeamStats.put(Constants.TOTAL_MATCHES, new ScoutValue(totalMatches));
-
-            newTeamStats.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(teamsUpdated.get(i)));
-
-            statsDB.updateStats(newTeamStats);
-            Log.d(TAG,String.format("Updated %d",teamsUpdated.get(i)));
-
+            newTeamStats.put(Constants.TOTAL_DEFENSES_STARTED[j], new ScoutValue(totalStartPosition[j]));
+            newTeamStats.put(Constants.TOTAL_DEFENSES_SEEN[j], new ScoutValue(totalDefensesSeen[j]));
+            newTeamStats.put(Constants.TOTAL_DEFENSES_AUTO_REACHED[j], new ScoutValue(totalDefenseReaches[j]));
+            newTeamStats.put(Constants.TOTAL_DEFENSES_AUTO_CROSSED[j], new ScoutValue(totalDefenseCrosses[j]));
+            newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[j], new ScoutValue(totalTeleopDefenses[j]));
+            newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[j],new ScoutValue(totalTeleopNotCross[j]));
+            newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[j], new ScoutValue(totalTeleopDefensesPoints[j]));
+            newTeamStats.put(Constants.TOTAL_DEFENSES_TELEOP_TIME[j], new ScoutValue(totalDefensesTime[j]));
         }
+        newTeamStats.put(Constants.TOTAL_DEFENSES_STARTED[9], new ScoutValue(totalStartPosition[9]));
+        newTeamStats.put(Constants.TOTAL_DEFENSES_STARTED[10], new ScoutValue(totalStartPosition[10]));
 
-        statsDB.close();
-        matchScoutDB.close();
-        superScoutDB.close();
-        Log.d(TAG, "Aggregate Service Finished");
-        writeToast("Data aggregated");
+        newTeamStats.put(Constants.TOTAL_AUTO_HIGH_HIT, new ScoutValue(totalAutoHighGoalHit));
+        newTeamStats.put(Constants.TOTAL_AUTO_HIGH_MISS, new ScoutValue(totalAutoHighGoalMiss));
+        newTeamStats.put(Constants.TOTAL_AUTO_LOW_HIT, new ScoutValue(totalAutoLowGoalHit));
+        newTeamStats.put(Constants.TOTAL_AUTO_LOW_MISS, new ScoutValue(totalAutoLowGoalMiss));
+
+        newTeamStats.put(Constants.TOTAL_TELEOP_HIGH_HIT, new ScoutValue(totalTeleopHighGoalHit));
+        newTeamStats.put(Constants.TOTAL_TELEOP_HIGH_MISS, new ScoutValue(totalTeleopHighGoalMiss));
+        newTeamStats.put(Constants.TOTAL_TELEOP_LOW_HIT, new ScoutValue(totalTeleopLowGoalHit));
+        newTeamStats.put(Constants.TOTAL_TELEOP_LOW_MISS, new ScoutValue(totalTeleopLowGoalMiss));
+
+        newTeamStats.put(Constants.TOTAL_CHALLENGE, new ScoutValue(totalChallenge));
+        newTeamStats.put(Constants.TOTAL_SCALE, new ScoutValue(totalScale));
+
+        newTeamStats.put(Constants.TOTAL_DQ, new ScoutValue(totalDQ));
+        newTeamStats.put(Constants.TOTAL_STOPPED, new ScoutValue(totalStopped));
+        newTeamStats.put(Constants.TOTAL_DIDNT_SHOW_UP, new ScoutValue(totalDidntShowUp));
+
+        newTeamStats.put(Constants.TOTAL_FOULS, new ScoutValue(totalFouls));
+        newTeamStats.put(Constants.TOTAL_TECH_FOULS, new ScoutValue(totalTechFouls));
+        newTeamStats.put(Constants.TOTAL_YELLOW_CARDS, new ScoutValue(totalYellowCards));
+        newTeamStats.put(Constants.TOTAL_RED_CARDS, new ScoutValue(totalRedCards));
+
+        newTeamStats.put(Constants.TOTAL_MATCHES, new ScoutValue(totalMatches));
+
+        newTeamStats.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(team));
+
+        statsDB.updateStats(newTeamStats);
     }
 
-    private int set_start(Map<String, ScoutValue> teamStats, String key)
+    public static void updateSuper(Set<Integer> matches, MatchScoutDB matchScoutDB, SuperScoutDB superScoutDB,
+                            ScheduleDB scheduleDB, StatsDB statsDB)
+    {
+        Set<Integer> teams = new HashSet<>();
+        for(Integer matchNum: matches)
+        {
+            Cursor match = scheduleDB.getMatch(matchNum);
+            int team = match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE1));
+            if(!teams.contains(team) && matchScoutDB.getTeamMatchInfo(team,matchNum) != null)
+            {
+
+                updateTeam(team, matchScoutDB,superScoutDB,scheduleDB,statsDB);
+                teams.add(team);
+            }
+
+            match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE2));
+            if(!teams.contains(team) && matchScoutDB.getTeamMatchInfo(team,matchNum) != null)
+            {
+                updateTeam(team,matchScoutDB,superScoutDB,scheduleDB,statsDB);
+                teams.add(team);
+            }
+
+            match.getInt(match.getColumnIndex(ScheduleDB.KEY_BLUE3));
+            if(!teams.contains(team) && matchScoutDB.getTeamMatchInfo(team,matchNum) != null)
+            {
+                updateTeam(team,matchScoutDB,superScoutDB,scheduleDB,statsDB);
+                teams.add(team);
+            }
+
+            match.getInt(match.getColumnIndex(ScheduleDB.KEY_RED1));
+            if(!teams.contains(team) && matchScoutDB.getTeamMatchInfo(team,matchNum) != null)
+            {
+                updateTeam(team,matchScoutDB,superScoutDB,scheduleDB,statsDB);
+                teams.add(team);
+            }
+
+            match.getInt(match.getColumnIndex(ScheduleDB.KEY_RED2));
+            if(!teams.contains(team) && matchScoutDB.getTeamMatchInfo(team,matchNum) != null)
+            {
+                updateTeam(team,matchScoutDB,superScoutDB,scheduleDB,statsDB);
+                teams.add(team);
+            }
+
+            match.getInt(match.getColumnIndex(ScheduleDB.KEY_RED3));
+            if(!teams.contains(team) && matchScoutDB.getTeamMatchInfo(team,matchNum) != null)
+            {
+                updateTeam(team,matchScoutDB,superScoutDB,scheduleDB,statsDB);
+                teams.add(team);
+            }
+        }
+    }
+
+
+
+    private static int set_start(Map<String, ScoutValue> teamStats, String key)
     {
         if(teamStats.containsKey(key))
             return teamStats.get(key).getInt();
@@ -287,7 +248,7 @@ public class AggregateService extends IntentService {
             return 0;
     }
 
-    private int[] set_start_array(Map<String, ScoutValue> teamStats, String type)
+    private static int[] set_start_array(Map<String, ScoutValue> teamStats, String type)
     {
         int[] array;
         if(type.equals("start"))
@@ -332,7 +293,7 @@ public class AggregateService extends IntentService {
         return array;
     }
 
-    private void increment_array(Cursor cursor, int[] array, String defense2, String defense3, String defense4, String defense5, String type)
+    private static void increment_array(Cursor cursor, int[] array, String defense2, String defense3, String defense4, String defense5, String type)
     {
         List defensesList = Arrays.asList(Constants.DEFENSES);
 
@@ -630,18 +591,17 @@ public class AggregateService extends IntentService {
         }
     }
 
-    private int stringToCount(String jsonText)
+    private static int stringToCount(String jsonText)
     {
         try {
             JSONArray jsonArray = new JSONArray(jsonText);
             return jsonArray.length();
         } catch (JSONException e) {
-            Log.d(TAG,e.getMessage());
         }
         return 0;
     }
 
-    private int stringToTime(String jsonText)
+    private static int stringToTime(String jsonText)
     {
         int sum = 0;
         try{
@@ -662,18 +622,9 @@ public class AggregateService extends IntentService {
                 sum /= jsonArray.length();
             }
         } catch (JSONException e){
-            Log.d(TAG,e.getMessage());
         }
         return sum;
     }
 
-    private void writeToast(final String message)
-    {
-        toastHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(AggregateService.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+
 }

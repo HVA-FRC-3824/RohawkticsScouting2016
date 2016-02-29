@@ -35,12 +35,6 @@
         android:text="Execute"
         android:id="@+id/execute_action" />
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Start Service"
-        android:id="@+id/start_service" />
-
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"

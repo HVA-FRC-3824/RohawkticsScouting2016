@@ -149,7 +149,7 @@ public class DriveTeamFeedback extends AppCompatActivity{
                 // Store values to the database
                 driveTeamFeedbackDB.updateComments(team1, String.valueOf(commentEditText1.getText()));
                 driveTeamFeedbackDB.updateComments(team2, String.valueOf(commentEditText2.getText()));
-                // Go to the next match
+
                 Intent intent = new Intent(DriveTeamFeedback.this, StartScreen.class);
                 startActivity(intent);
             }
