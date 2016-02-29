@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import com.team3824.akmessing1.scoutingapp.fragments.TeamSchedule;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamMatchData;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamNotes;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 public class FPA_TeamView extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "Visuals","Pit Data", "Match Data", "Notes" };
+    private String tabTitles[] = new String[] { "Visuals","Pit Data", "Match Data", "Notes", "Schedule" };
 
     private Map<Integer,WeakReference<Fragment>> fragments = new HashMap<>();
 
@@ -55,6 +56,9 @@ public class FPA_TeamView extends FragmentPagerAdapter {
                 break;
             case 3:
                 fragment = new TeamNotes();
+                break;
+            case 4:
+                fragment = new TeamSchedule();
                 break;
             default:
                 fragment = null; // There has been a problem!

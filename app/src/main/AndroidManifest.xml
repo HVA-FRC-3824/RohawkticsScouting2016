@@ -33,9 +33,11 @@
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.Settings"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchSchedule"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="sensorLandscape"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.ScheduleBuilder"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="sensorLandscape"/>
         <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchScouting"
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
