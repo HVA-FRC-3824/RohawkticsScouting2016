@@ -1,7 +1,6 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,8 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothHandler;
-import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
+import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothHandler;
+import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothSync;
 import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;

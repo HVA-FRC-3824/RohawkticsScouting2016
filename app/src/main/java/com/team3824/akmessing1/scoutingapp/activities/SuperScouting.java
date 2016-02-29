@@ -21,9 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothHandler;
-import com.team3824.akmessing1.scoutingapp.bluetooth.BluetoothSync;
-import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothHandler;
+import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothSync;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;

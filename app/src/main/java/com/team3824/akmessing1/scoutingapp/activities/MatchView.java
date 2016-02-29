@@ -113,9 +113,7 @@ public class MatchView extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.back:
-                intent = new Intent(this,MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.MATCH_VIEWING);
-                startActivity(intent);
+                this.finish();
                 break;
             case R.id.previous:
                 intent = new Intent(this,MatchView.class);

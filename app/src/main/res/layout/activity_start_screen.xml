@@ -59,14 +59,13 @@
                 android:background="@color/navy_blue" />
 
 <!-- Match Scouting -->
-
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Scout Match"
                 android:textColor="@color/white"
-                android:id="@+id/scoutMatches_button"
+                android:id="@+id/scoutMatch_button"
                 android:visibility="gone"
                 android:background="@color/navy_blue" />
 
@@ -79,6 +78,7 @@
                 android:id="@+id/syncMatch_button"
                 android:visibility="gone"
                 android:background="@color/navy_blue" />
+
 <!-- Pit Scouting -->
             <Button
                 android:layout_width="fill_parent"
@@ -134,7 +134,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Sync with Server"
+                android:text="Sync Comments with Server"
                 android:textColor="@color/white"
                 android:id="@+id/syncDriveTeam_button"
                 android:visibility="gone"

@@ -80,13 +80,19 @@ public interface Constants {
     public static final String PIT_ROBOT_LENGTH = "pit_robot_length";
     public static final String PIT_ROBOT_HEIGHT = "pit_robot_height";
     public static final String PIT_ROBOT_WEIGHT = "pit_robot_weight";
-    public static final String PIT_NOTES = "pit_notes";
     public static final String PIT_DRIVETRAIN = "pit_drivetrain";
     public static final String PIT_NUMBER_OF_CIMS = "pit_number_cims";
+    public static final String PIT_PROGRAMMING_LANGUAGE = "pit_programming_language";
+    public static final String PIT_NOTES = "pit_notes";
+
 
     // Super
-    public static final String SUPER_DEFENSE_ABILITY = "super_defense_ability";
-    public static final String SUPER_DRIVE_ABILITY = "super_drive_ability";
+
+    public static final String SUPER_EVASION_ABILITY = "super_evasion_ability";
+    public static final String SUPER_BLOCKING_ABILITY = "super_block_ability";
+    public static final String SUPER_SPEED = "super_speed";
+    public static final String SUPER_PUSHING_ABILITY = "super_pushing_ability";
+    public static final String SUPER_DRIVER_CONTROL = "super_driver_control";
     public static final String SUPER_NOTES = "super_notes";
 
     public static final String RED_DEFENSE_2 = "red_defense2";

@@ -19,7 +19,7 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
-import com.team3824.akmessing1.scoutingapp.views.CustomCardinalRank6;
+import com.team3824.akmessing1.scoutingapp.views.CustomOrdinalRank;
 import com.team3824.akmessing1.scoutingapp.views.CustomEdittext;
 import com.team3824.akmessing1.scoutingapp.views.CustomNumeric;
 
@@ -40,7 +40,7 @@ public class Utilities {
     public static void setupUI(final Activity activity, View view) {
 
         //Set up touch listener for non-text box views to hide keyboard.
-        if(!(view instanceof CustomEdittext) && !(view instanceof CustomNumeric) && !(view instanceof CustomCardinalRank6) && !(view instanceof DragSortListView)) {
+        if(!(view instanceof CustomEdittext) && !(view instanceof CustomNumeric) && !(view instanceof CustomOrdinalRank) && !(view instanceof DragSortListView)) {
 
             view.setOnTouchListener(new View.OnTouchListener() {
 

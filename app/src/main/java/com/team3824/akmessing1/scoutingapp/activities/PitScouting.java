@@ -26,6 +26,7 @@ import com.team3824.akmessing1.scoutingapp.adapters.FPA_PitScout;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -130,6 +131,18 @@ public class PitScouting extends AppCompatActivity {
         @Override
         protected Void doInBackground(Map<String, ScoutValue>... maps) {
             Map<String, ScoutValue> data = maps[0];
+
+            // Change picture filename to use event id and team number
+            String picture_filename = data.get(Constants.PIT_ROBOT_PICTURE).getString();
+            File picture = new File(getFilesDir(), picture_filename);
+            if(picture.exists())
+            {
+                String newPathName = String.format("%s_%d.jpg",eventId,teamNumber);
+                File newPath = new File(getFilesDir(),newPathName);
+                picture.renameTo(newPath);
+                data.remove(Constants.PIT_ROBOT_PICTURE);
+                data.put(Constants.PIT_ROBOT_PICTURE,new ScoutValue(newPathName));
+            }
 
             PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
             // Add the team and match numbers
