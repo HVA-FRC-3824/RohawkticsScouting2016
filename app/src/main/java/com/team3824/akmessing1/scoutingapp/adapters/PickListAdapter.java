@@ -14,26 +14,37 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.activities.TeamView;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.list_items.Team;
-import com.team3824.akmessing1.scoutingapp.activities.TeamView;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+/**
+ * Adapter for the list view that holds all the teams for a given picklist
+ */
 public class PickListAdapter extends ArrayAdapter<Team> {
 
-    private ArrayList<Team> teams;
     String pickType;
     Context context;
     StatsDB statsDB;
     Comparator<Team> comparator;
+    private ArrayList<Team> teams;
 
+    /**
+     * @param context
+     * @param textViewResourceId
+     * @param teams
+     * @param pickType           The tag for the type of pick.
+     * @param statsDB            The database helper for the stats database table
+     * @param comparator         The comparator to use to sort the teams
+     */
     public PickListAdapter(Context context, int textViewResourceId, ArrayList<Team> teams, String pickType, StatsDB statsDB, Comparator<Team> comparator) {
         super(context, textViewResourceId, teams);
         this.context = context;
@@ -43,35 +54,38 @@ public class PickListAdapter extends ArrayAdapter<Team> {
         this.comparator = comparator;
     }
 
-    public void add(int to, Team team)
-    {
-        teams.add(to,team);
+    /**
+     * @param to   Position to add the team to
+     * @param team Team to add
+     */
+    public void add(int to, Team team) {
+        teams.add(to, team);
     }
 
+    /**
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-        if(convertView == null)
-        {
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item_pick, null);
         }
 
         final Team t = teams.get(position);
-        if(t != null)
-        {
-            if(t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-            {
+        if (t != null) {
+            // Sets color of row based on if the team has been picked or not
+            if (t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0) {
                 convertView.setBackgroundColor(Color.RED);
-            }
-            else
-            {
+            } else {
                 convertView.setBackgroundColor(Color.GREEN);
             }
 
-            ScoutValue robotPicture = t.getMapElement(Constants.PIT_ROBOT_PICTURE);
-
-            Button button = (Button)convertView.findViewById(R.id.pick_view_team);
+            // Set up view team button
+            Button button = (Button) convertView.findViewById(R.id.pick_view_team);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,37 +95,33 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 }
             });
 
-            button = (Button)convertView.findViewById(R.id.team_picked);
-            if(t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
-            {
+            // Set up picked/unpicked button
+            button = (Button) convertView.findViewById(R.id.team_picked);
+            if (t.getMapElement(StatsDB.KEY_PICKED).getInt() > 0) {
                 button.setText("Unpicked");
                 button.setBackgroundColor(Color.GREEN);
-            }
-            else
-            {
+            } else {
                 button.setText("Picked");
                 button.setBackgroundColor(Color.RED);
             }
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Button b = (Button)v;
+                    Button b = (Button) v;
                     String text = String.valueOf(b.getText());
-                    if(text.equals("Picked")) {
+                    if (text.equals("Picked")) {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(1));
                         teams.remove(t);
                         teams.add(t);
                         HashMap<String, ScoutValue> map = new HashMap<>();
-                        map.put(StatsDB.KEY_TEAM_NUMBER,new ScoutValue(t.getTeamNumber()));
-                        map.put(StatsDB.KEY_PICKED,new ScoutValue(1));
+                        map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(t.getTeamNumber()));
+                        map.put(StatsDB.KEY_PICKED, new ScoutValue(1));
                         statsDB.updateStats(map);
-                    }
-                    else
-                    {
+                    } else {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(0));
                         Collections.sort(teams, comparator);
                         HashMap<String, ScoutValue> map = new HashMap<>();
-                        map.put(StatsDB.KEY_TEAM_NUMBER,new ScoutValue(t.getTeamNumber()));
+                        map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(t.getTeamNumber()));
                         map.put(StatsDB.KEY_PICKED, new ScoutValue(0));
                         statsDB.updateStats(map);
                     }
@@ -119,19 +129,22 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 }
             });
 
-            ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView);
-            if(robotPicture != null)
-            {
+            // Set up thumbnail
+            //TODO: change to be based on the event id and the team number
+            //TODO: use thumbnail creator?
+            ScoutValue robotPicture = t.getMapElement(Constants.PIT_ROBOT_PICTURE);
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
+            if (robotPicture != null) {
                 String imagePath = robotPicture.getString();
-                if(imagePath != "") {
-                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() +"/"+ imagePath),
+                if (imagePath != "") {
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + imagePath),
                             64, 64);
                     imageView.setImageBitmap(thumbnail);
                 }
             }
 
-            if(t.containsMapElement(Constants.TOTAL_YELLOW_CARDS))
-            {
+            //Add whether they received a yellow card or a red card
+            if (t.containsMapElement(Constants.TOTAL_YELLOW_CARDS)) {
                 if (t.getMapElement(Constants.TOTAL_YELLOW_CARDS).getInt() > 0) {
                     convertView.findViewById(R.id.yellow_card).setVisibility(View.VISIBLE);
                 }
@@ -141,12 +154,14 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 }
             }
 
+            //TODO: Add flag for if they stopped moving/didn't show up (Maybe how many times)
+
             int teamNumber = t.getTeamNumber();
             String nickname = t.getNickname();
-            TextView topText = (TextView)convertView.findViewById(R.id.topText);
-            topText.setText(String.format("%d - %s",teamNumber,nickname));
+            TextView topText = (TextView) convertView.findViewById(R.id.topText);
+            topText.setText(String.format("%d - %s", teamNumber, nickname));
 
-            TextView bottomText = (TextView)convertView.findViewById(R.id.bottomText);
+            TextView bottomText = (TextView) convertView.findViewById(R.id.bottomText);
             bottomText.setText(t.getMapElement(Constants.BOTTOM_TEXT).getString());
 
         }
@@ -154,8 +169,10 @@ public class PickListAdapter extends ArrayAdapter<Team> {
         return convertView;
     }
 
-    public void sort()
-    {
-        Collections.sort(teams,comparator);
+    /**
+     * Sorts the teams
+     */
+    public void sort() {
+        Collections.sort(teams, comparator);
     }
 }

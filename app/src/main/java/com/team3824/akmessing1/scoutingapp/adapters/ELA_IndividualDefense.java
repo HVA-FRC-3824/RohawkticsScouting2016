@@ -12,18 +12,31 @@ import com.team3824.akmessing1.scoutingapp.list_items.ELI_IndividualDefense;
 
 import java.util.ArrayList;
 
-public class ELA_IndividualDefense extends ArrayAdapter<ELI_IndividualDefense>{
+/**
+ * Adapter for the Event List when an individual defense is used to compare teams
+ */
+public class ELA_IndividualDefense extends ArrayAdapter<ELI_IndividualDefense> {
 
     ArrayList<ELI_IndividualDefense> mTeams;
     Context mContext;
 
-    public ELA_IndividualDefense(Context context, int textViewResourceId, ArrayList<ELI_IndividualDefense> teams)
-    {
-        super(context, textViewResourceId,teams);
+    /**
+     * @param context
+     * @param textViewResourceId
+     * @param teams
+     */
+    public ELA_IndividualDefense(Context context, int textViewResourceId, ArrayList<ELI_IndividualDefense> teams) {
+        super(context, textViewResourceId, teams);
         mTeams = teams;
         mContext = context;
     }
 
+    /**
+     * @param position
+     * @param convertView
+     * @param parentView
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parentView) {
         if (convertView == null) {
@@ -35,38 +48,37 @@ public class ELA_IndividualDefense extends ArrayAdapter<ELI_IndividualDefense>{
 
         team.mRank = position;
         TextView textView;
-        if(team.mTeamNumber == -1)
-        {
-            textView = (TextView)convertView.findViewById(R.id.event_rank);
+
+        //Header row
+        if (team.mTeamNumber == -1) {
+            textView = (TextView) convertView.findViewById(R.id.event_rank);
             textView.setText("Rank");
-            textView = (TextView)convertView.findViewById(R.id.event_teamNum);
+            textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText("Team Number");
-            textView = (TextView)convertView.findViewById(R.id.event_cross);
+            textView = (TextView) convertView.findViewById(R.id.event_cross);
             textView.setText("Auto Cross");
-            textView = (TextView)convertView.findViewById(R.id.event_reach);
+            textView = (TextView) convertView.findViewById(R.id.event_reach);
             textView.setText("Auto Reach");
-            textView = (TextView)convertView.findViewById(R.id.event_seen);
+            textView = (TextView) convertView.findViewById(R.id.event_seen);
             textView.setText("Seen");
-            textView = (TextView)convertView.findViewById(R.id.event_teleop_cross);
+            textView = (TextView) convertView.findViewById(R.id.event_teleop_cross);
             textView.setText("Teleop Cross");
-            textView = (TextView)convertView.findViewById(R.id.event_time);
+            textView = (TextView) convertView.findViewById(R.id.event_time);
             textView.setText("Time (s)");
-        }
-        else
-        {
-            textView = (TextView)convertView.findViewById(R.id.event_rank);
+        } else {
+            textView = (TextView) convertView.findViewById(R.id.event_rank);
             textView.setText(String.valueOf(position));
-            textView = (TextView)convertView.findViewById(R.id.event_teamNum);
+            textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText(String.valueOf(team.mTeamNumber));
-            textView = (TextView)convertView.findViewById(R.id.event_cross);
+            textView = (TextView) convertView.findViewById(R.id.event_cross);
             textView.setText(String.valueOf(team.mAutoCross));
-            textView = (TextView)convertView.findViewById(R.id.event_reach);
+            textView = (TextView) convertView.findViewById(R.id.event_reach);
             textView.setText(String.valueOf(team.mAutoReach));
-            textView = (TextView)convertView.findViewById(R.id.event_seen);
+            textView = (TextView) convertView.findViewById(R.id.event_seen);
             textView.setText(String.valueOf(team.mSeen));
-            textView = (TextView)convertView.findViewById(R.id.event_teleop_cross);
+            textView = (TextView) convertView.findViewById(R.id.event_teleop_cross);
             textView.setText(String.valueOf(team.mTeleopCross));
-            textView = (TextView)convertView.findViewById(R.id.event_time);
+            textView = (TextView) convertView.findViewById(R.id.event_time);
             textView.setText(String.valueOf(team.mTime));
         }
 

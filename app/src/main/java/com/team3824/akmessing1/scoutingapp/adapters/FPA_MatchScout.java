@@ -4,13 +4,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchAuto;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchEndgame;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchFouls;
-import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchPost;
 import com.team3824.akmessing1.scoutingapp.fragments.MatchTeleop;
+import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -18,21 +18,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Setup up page fragments for match scouting
-public class FPA_MatchScout extends FragmentPagerAdapter{
+/**
+ * Adapter that contains the fragments for match scouting
+ */
+public class FPA_MatchScout extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "Autonomous", "Teleop","EndGame","Post-Match","Fouls" };
+    private String tabTitles[] = new String[]{"Autonomous", "Teleop", "Endgame", "Post-Match", "Fouls"};
     private MatchAuto matchAuto;
     private MatchTeleop matchTeleop;
     private MatchPost matchPost;
     private MatchFouls matchFouls;
     private MatchEndgame matchEndgame;
 
+    private Map<Integer, WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
-    private Map<Integer,WeakReference<ScoutFragment>> fragments = new HashMap<>();
+    private Map<String, ScoutValue> valueMap = null;
 
-    private Map<String,ScoutValue> valueMap = null;
-
+    /**
+     * @param fm
+     */
     public FPA_MatchScout(FragmentManager fm) {
         super(fm);
         matchAuto = new MatchAuto();
@@ -42,21 +46,31 @@ public class FPA_MatchScout extends FragmentPagerAdapter{
         matchFouls = new MatchFouls();
     }
 
+    /**
+     * @param position the position of the tab
+     * @return The title of the tab
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         return tabTitles[position];
     }
 
+    /**
+     * @return The number of tabs
+     */
     @Override
     public int getCount() {
         return tabTitles.length;
     }
 
+    /**
+     * @param position the position of the tab
+     * @return the fragment that corresponds to the tab
+     */
     @Override
     public Fragment getItem(int position) {
-        ScoutFragment fragment;
-        switch (position)
-        {
+        ScoutFragment fragment = null;
+        switch (position) {
             case 0:
                 fragment = matchAuto;
                 break;
@@ -73,26 +87,31 @@ public class FPA_MatchScout extends FragmentPagerAdapter{
                 fragment = matchFouls;
                 break;
             default:
-                fragment = null; // There has been a problem!
-                break;
+                assert false;
         }
 
         // sets the value map for restoring values
-        if(valueMap != null) {
+        if (valueMap != null) {
             fragment.setValuesMap(valueMap);
         }
         return fragment;
     }
 
-    // sets the value map for restoring values
-    public void setValueMap(Map<String, ScoutValue> map)
-    {
+    /**
+     * sets the value map for restoring previous values to the fields
+     *
+     * @param map The map containing the previous values
+     */
+    public void setValueMap(Map<String, ScoutValue> map) {
         valueMap = map;
     }
 
-    // returns all the fragments
-    // used to get all the values for saving
-    public List<ScoutFragment> getAllFragments(){
+    /**
+     * Used to get all the values for saving
+     *
+     * @return all the fragments
+     */
+    public List<ScoutFragment> getAllFragments() {
         List<ScoutFragment> fragmentList = new ArrayList<>();
         fragmentList.add(matchAuto);
         fragmentList.add(matchTeleop);

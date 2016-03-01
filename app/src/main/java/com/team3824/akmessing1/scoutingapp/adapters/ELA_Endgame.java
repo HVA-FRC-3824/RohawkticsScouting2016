@@ -12,18 +12,31 @@ import com.team3824.akmessing1.scoutingapp.list_items.ELI_Endgame;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for the Event List when endgame is used to compare teams
+ */
 public class ELA_Endgame extends ArrayAdapter<ELI_Endgame> {
 
     ArrayList<ELI_Endgame> mTeams;
     Context mContext;
 
-    public ELA_Endgame(Context context, int textViewResourceId, ArrayList<ELI_Endgame> teams)
-    {
-        super(context, textViewResourceId,teams);
+    /**
+     * @param context
+     * @param textViewResourceId
+     * @param teams
+     */
+    public ELA_Endgame(Context context, int textViewResourceId, ArrayList<ELI_Endgame> teams) {
+        super(context, textViewResourceId, teams);
         mTeams = teams;
         mContext = context;
     }
 
+    /**
+     * @param position
+     * @param convertView
+     * @param parentView
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parentView) {
         if (convertView == null) {
@@ -35,26 +48,25 @@ public class ELA_Endgame extends ArrayAdapter<ELI_Endgame> {
 
         team.mRank = position;
         TextView textView;
-        if(team.mTeamNumber == -1)
-        {
-            textView = (TextView)convertView.findViewById(R.id.event_rank);
+
+        //Header row
+        if (team.mTeamNumber == -1) {
+            textView = (TextView) convertView.findViewById(R.id.event_rank);
             textView.setText("Rank");
-            textView = (TextView)convertView.findViewById(R.id.event_teamNum);
+            textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText("Team Number");
-            textView = (TextView)convertView.findViewById(R.id.event_challenge);
+            textView = (TextView) convertView.findViewById(R.id.event_challenge);
             textView.setText("Challenge");
-            textView = (TextView)convertView.findViewById(R.id.event_scale);
+            textView = (TextView) convertView.findViewById(R.id.event_scale);
             textView.setText("Scale");
-        }
-        else
-        {
-            textView = (TextView)convertView.findViewById(R.id.event_rank);
+        } else {
+            textView = (TextView) convertView.findViewById(R.id.event_rank);
             textView.setText(String.valueOf(team.mRank));
-            textView = (TextView)convertView.findViewById(R.id.event_teamNum);
+            textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText(String.valueOf(team.mTeamNumber));
-            textView = (TextView)convertView.findViewById(R.id.event_challenge);
+            textView = (TextView) convertView.findViewById(R.id.event_challenge);
             textView.setText(String.valueOf(team.mChallenge));
-            textView = (TextView)convertView.findViewById(R.id.event_scale);
+            textView = (TextView) convertView.findViewById(R.id.event_scale);
             textView.setText(String.valueOf(team.mScale));
         }
 

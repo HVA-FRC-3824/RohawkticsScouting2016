@@ -1,50 +1,61 @@
 package com.team3824.akmessing1.scoutingapp.adapters;
 
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 
-import com.team3824.akmessing1.scoutingapp.fragments.TeamSchedule;
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamMatchData;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamNotes;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamPitData;
+import com.team3824.akmessing1.scoutingapp.fragments.TeamSchedule;
 import com.team3824.akmessing1.scoutingapp.fragments.TeamVisuals;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Adapter that contains the fragments for the team view
+ */
 public class FPA_TeamView extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "Visuals","Pit Data", "Match Data", "Notes", "Schedule" };
-
-    private Map<Integer,WeakReference<Fragment>> fragments = new HashMap<>();
+    private String tabTitles[] = new String[]{"Visuals", "Pit Data", "Match Data", "Notes", "Schedule"};
 
     private int teamNumber;
 
+    /**
+     * @param fm
+     * @param teamNumber
+     */
     public FPA_TeamView(FragmentManager fm, int teamNumber) {
 
         super(fm);
         this.teamNumber = teamNumber;
     }
 
+    /**
+     * @param position the position of the tab
+     * @return The title of the tab
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         return tabTitles[position];
     }
 
+    /**
+     * @return The number of tabs
+     */
     @Override
     public int getCount() {
         return tabTitles.length;
     }
 
+    /**
+     * @param position the position of the tab
+     * @return the fragment that corresponds to the tab
+     */
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment;
-        switch (position)
-        {
+        Fragment fragment = null;
+        switch (position) {
             case 0:
                 fragment = new TeamVisuals();
                 break;
@@ -61,13 +72,11 @@ public class FPA_TeamView extends FragmentPagerAdapter {
                 fragment = new TeamSchedule();
                 break;
             default:
-                fragment = null; // There has been a problem!
-                break;
+                assert false;
         }
         Bundle args = new Bundle();
         args.putInt(Constants.TEAM_NUMBER, teamNumber);
         fragment.setArguments(args);
-        fragments.put(position,new WeakReference<>(fragment));
         return fragment;
     }
 }

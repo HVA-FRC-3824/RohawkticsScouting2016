@@ -8,25 +8,30 @@ import com.team3824.akmessing1.scoutingapp.fragments.PitDimensions;
 import com.team3824.akmessing1.scoutingapp.fragments.PitMisc;
 import com.team3824.akmessing1.scoutingapp.fragments.PitNotes;
 import com.team3824.akmessing1.scoutingapp.fragments.PitRobotPicture;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-// Setup up page fragments for pit scouting
-public class FPA_PitScout extends FragmentPagerAdapter{
+/**
+ * Adapter that contains the fragments for pit scouting
+ */
+public class FPA_PitScout extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[] { "Robot Picture", "Dimensions","Misc","Notes" };
+    private String tabTitles[] = new String[]{"Robot Picture", "Dimensions", "Misc", "Notes"};
 
     private PitRobotPicture pitRobotPicture;
     private PitDimensions pitDimensions;
     private PitMisc pitMisc;
     private PitNotes pitNotes;
 
-    private Map<String,ScoutValue> valueMap = null;
+    private Map<String, ScoutValue> valueMap = null;
 
+    /**
+     * @param fm
+     */
     public FPA_PitScout(FragmentManager fm) {
         super(fm);
         pitRobotPicture = new PitRobotPicture();
@@ -35,21 +40,31 @@ public class FPA_PitScout extends FragmentPagerAdapter{
         pitNotes = new PitNotes();
     }
 
+    /**
+     * @param position the position of the tab
+     * @return The title of the tab
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         return tabTitles[position];
     }
 
+    /**
+     * @return The number of tabs
+     */
     @Override
     public int getCount() {
         return tabTitles.length;
     }
 
+    /**
+     * @param position the position of the tab
+     * @return the fragment that corresponds to the tab
+     */
     @Override
     public Fragment getItem(int position) {
-        ScoutFragment fragment;
-        switch (position)
-        {
+        ScoutFragment fragment = null;
+        switch (position) {
             case 0:
                 fragment = pitRobotPicture;
                 break;
@@ -63,26 +78,31 @@ public class FPA_PitScout extends FragmentPagerAdapter{
                 fragment = pitNotes;
                 break;
             default:
-                fragment = null; // There has been a problem!
-                break;
+                assert false;
         }
 
         // sets the value map for restoring values
-        if(valueMap != null) {
+        if (valueMap != null) {
             fragment.setValuesMap(valueMap);
         }
         return fragment;
     }
 
-    // sets the value map for restoring values
-    public void setValueMap(Map<String, ScoutValue> map)
-    {
+    /**
+     * sets the value map for restoring previous values to the fields
+     *
+     * @param map The map containing the previous values
+     */
+    public void setValueMap(Map<String, ScoutValue> map) {
         valueMap = map;
     }
 
-    // returns all the fragments
-    // used to get all the values for saving
-    public List<ScoutFragment> getAllFragments(){
+    /**
+     * Used to get all the values for saving
+     *
+     * @return all the fragments
+     */
+    public List<ScoutFragment> getAllFragments() {
         List<ScoutFragment> fragmentList = new ArrayList<>();
         fragmentList.add(pitRobotPicture);
         fragmentList.add(pitDimensions);

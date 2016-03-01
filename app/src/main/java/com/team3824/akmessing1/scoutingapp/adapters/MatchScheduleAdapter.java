@@ -8,219 +8,182 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.list_items.Match;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 import java.util.ArrayList;
 
-public class MatchScheduleAdapter extends ArrayAdapter<Match>{
+/**
+ * Adapter for the match schedule. Highlight teams based on if we will play with them, against them,
+ * or both.
+ */
+public class MatchScheduleAdapter extends ArrayAdapter<Match> {
+    ArrayList<Match> matches;
     private String TAG = "MatchScheduleAdapter";
 
-    ArrayList<Match> matches;
-
-    public MatchScheduleAdapter(Context context, int textViewResourceId, ArrayList<Match> matches)
-    {
-        super(context,textViewResourceId,matches);
+    /**
+     * @param context
+     * @param textViewResourceId
+     * @param matches
+     */
+    public MatchScheduleAdapter(Context context, int textViewResourceId, ArrayList<Match> matches) {
+        super(context, textViewResourceId, matches);
         this.matches = matches;
     }
 
+    /**
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-        if(convertView == null)
-        {
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item_schedule_match, null);
         }
 
         Match match = matches.get(position);
 
-        TextView textView = (TextView)convertView.findViewById(R.id.schedule_matchNum);
+        TextView textView = (TextView) convertView.findViewById(R.id.schedule_matchNum);
         textView.setText(String.valueOf(match.matchNumber));
-        if(match.teams[Constants.BLUE1_INDEX] == 3824 || match.teams[Constants.BLUE2_INDEX] == 3824 ||
-        match.teams[Constants.BLUE3_INDEX] == 3824 || match.teams[Constants.RED1_INDEX] == 3824 ||
-        match.teams[Constants.RED2_INDEX] == 3824 || match.teams[Constants.RED3_INDEX] == 3824)
-        {
+
+        // Sets the match number textview to blue if we are in the match, white otherwise.
+        if (match.teams[Constants.BLUE1_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.BLUE2_INDEX] == Constants.OUR_TEAM_NUMBER ||
+                match.teams[Constants.BLUE3_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.RED1_INDEX] == Constants.OUR_TEAM_NUMBER ||
+                match.teams[Constants.RED2_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.RED3_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        }
-        else
-        {
+        } else {
             textView.setBackgroundColor(Color.WHITE);
             textView.setTextColor(Color.BLACK);
         }
 
-        textView = (TextView)convertView.findViewById(R.id.schedule_blue1);
+        // Highlights teams based on if they are a future ally, future opponent, both, or us.
+        textView = (TextView) convertView.findViewById(R.id.schedule_blue1);
         textView.setText(String.valueOf(match.teams[Constants.BLUE1_INDEX]));
-        if(match.teams[Constants.BLUE1_INDEX] == 3824)
-        {
+        if (match.teams[Constants.BLUE1_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        }
-        else if(match.futureAlly[Constants.BLUE1_INDEX] && match.futureOpponent[Constants.BLUE1_INDEX])
-        {
+        } else if (match.futureAlly[Constants.BLUE1_INDEX] && match.futureOpponent[Constants.BLUE1_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureAlly[Constants.BLUE1_INDEX])
-        {
+        } else if (match.futureAlly[Constants.BLUE1_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureOpponent[Constants.BLUE1_INDEX])
-        {
+        } else if (match.futureOpponent[Constants.BLUE1_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
         // Fixes weird bug...
-        else
-        {
+        else {
             textView.setBackgroundColor(Color.WHITE);
             textView.setTextColor(Color.BLACK);
         }
 
-        textView = (TextView)convertView.findViewById(R.id.schedule_blue2);
+        textView = (TextView) convertView.findViewById(R.id.schedule_blue2);
         textView.setText(String.valueOf(match.teams[Constants.BLUE2_INDEX]));
-        if(match.teams[Constants.BLUE2_INDEX] == 3824)
-        {
+        if (match.teams[Constants.BLUE2_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        }
-        else if(match.futureAlly[Constants.BLUE2_INDEX] && match.futureOpponent[Constants.BLUE2_INDEX])
-        {
+        } else if (match.futureAlly[Constants.BLUE2_INDEX] && match.futureOpponent[Constants.BLUE2_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureAlly[Constants.BLUE2_INDEX])
-        {
+        } else if (match.futureAlly[Constants.BLUE2_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureOpponent[Constants.BLUE2_INDEX])
-        {
+        } else if (match.futureOpponent[Constants.BLUE2_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
         // Fixes weird bug...
-        else
-        {
+        else {
             textView.setBackgroundColor(Color.WHITE);
             textView.setTextColor(Color.BLACK);
         }
 
-        textView = (TextView)convertView.findViewById(R.id.schedule_blue3);
+        textView = (TextView) convertView.findViewById(R.id.schedule_blue3);
         textView.setText(String.valueOf(match.teams[Constants.BLUE3_INDEX]));
-        if(match.teams[Constants.BLUE3_INDEX] == 3824)
-        {
+        if (match.teams[Constants.BLUE3_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        }
-        else if(match.futureAlly[Constants.BLUE3_INDEX] && match.futureOpponent[Constants.BLUE3_INDEX])
-        {
+        } else if (match.futureAlly[Constants.BLUE3_INDEX] && match.futureOpponent[Constants.BLUE3_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureAlly[Constants.BLUE3_INDEX])
-        {
+        } else if (match.futureAlly[Constants.BLUE3_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureOpponent[Constants.BLUE3_INDEX])
-        {
+        } else if (match.futureOpponent[Constants.BLUE3_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
         // Fixes weird bug...
-        else
-        {
+        else {
             textView.setBackgroundColor(Color.WHITE);
             textView.setTextColor(Color.BLACK);
         }
 
-        textView = (TextView)convertView.findViewById(R.id.schedule_red1);
+        textView = (TextView) convertView.findViewById(R.id.schedule_red1);
         textView.setText(String.valueOf(match.teams[Constants.RED1_INDEX]));
-        if(match.teams[Constants.RED1_INDEX] == 3824)
-        {
+        if (match.teams[Constants.RED1_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        }
-        else if(match.futureAlly[Constants.RED1_INDEX] && match.futureOpponent[Constants.RED1_INDEX])
-        {
+        } else if (match.futureAlly[Constants.RED1_INDEX] && match.futureOpponent[Constants.RED1_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureAlly[Constants.RED1_INDEX])
-        {
+        } else if (match.futureAlly[Constants.RED1_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureOpponent[Constants.RED1_INDEX])
-        {
+        } else if (match.futureOpponent[Constants.RED1_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
         // Fixes weird bug...
-        else
-        {
+        else {
             textView.setBackgroundColor(Color.WHITE);
             textView.setTextColor(Color.BLACK);
         }
 
-        textView = (TextView)convertView.findViewById(R.id.schedule_red2);
+        textView = (TextView) convertView.findViewById(R.id.schedule_red2);
         textView.setText(String.valueOf(match.teams[Constants.RED2_INDEX]));
-        if(match.teams[Constants.RED2_INDEX] == 3824)
-        {
+        if (match.teams[Constants.RED2_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        }
-        else if(match.futureAlly[Constants.RED2_INDEX] && match.futureOpponent[Constants.RED2_INDEX])
-        {
+        } else if (match.futureAlly[Constants.RED2_INDEX] && match.futureOpponent[Constants.RED2_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureAlly[Constants.RED2_INDEX])
-        {
+        } else if (match.futureAlly[Constants.RED2_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureOpponent[Constants.RED2_INDEX])
-        {
+        } else if (match.futureOpponent[Constants.RED2_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
         // Fixes weird bug...
-        else
-        {
+        else {
             textView.setBackgroundColor(Color.WHITE);
             textView.setTextColor(Color.BLACK);
         }
 
-        textView = (TextView)convertView.findViewById(R.id.schedule_red3);
+        textView = (TextView) convertView.findViewById(R.id.schedule_red3);
         textView.setText(String.valueOf(match.teams[Constants.RED3_INDEX]));
-        if(match.teams[Constants.RED3_INDEX] == 3824)
-        {
+        if (match.teams[Constants.RED3_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        }
-        else if(match.futureAlly[Constants.RED3_INDEX] && match.futureOpponent[Constants.RED3_INDEX])
-        {
+        } else if (match.futureAlly[Constants.RED3_INDEX] && match.futureOpponent[Constants.RED3_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureAlly[Constants.RED3_INDEX])
-        {
+        } else if (match.futureAlly[Constants.RED3_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        }
-        else if(match.futureOpponent[Constants.RED3_INDEX])
-        {
+        } else if (match.futureOpponent[Constants.RED3_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
         // Fixes weird bug...
-        else
-        {
+        else {
             textView.setBackgroundColor(Color.WHITE);
             textView.setTextColor(Color.BLACK);
         }

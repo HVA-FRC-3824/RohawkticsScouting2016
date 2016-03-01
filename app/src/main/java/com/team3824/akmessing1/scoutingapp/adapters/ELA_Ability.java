@@ -12,17 +12,31 @@ import com.team3824.akmessing1.scoutingapp.list_items.ELI_Ability;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for the Event List when an ability or qualitative metric is used to compare teams
+ */
 public class ELA_Ability extends ArrayAdapter<ELI_Ability> {
 
     ArrayList<ELI_Ability> mTeams;
     Context mContext;
 
+    /**
+     * @param context
+     * @param textViewResourceId
+     * @param teams
+     */
     public ELA_Ability(Context context, int textViewResourceId, ArrayList<ELI_Ability> teams) {
         super(context, textViewResourceId, teams);
         mTeams = teams;
         mContext = context;
     }
 
+    /**
+     * @param position
+     * @param convertView
+     * @param parentView
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parentView) {
         if (convertView == null) {
@@ -38,9 +52,7 @@ public class ELA_Ability extends ArrayAdapter<ELI_Ability> {
             textView.setText("Rank");
             textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText("Team Number");
-        }
-        else
-        {
+        } else {
             textView = (TextView) convertView.findViewById(R.id.event_rank);
             textView.setText(team.mRank);
             textView = (TextView) convertView.findViewById(R.id.event_teamNum);
