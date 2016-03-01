@@ -1,31 +1,38 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
-import com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment;
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
-public class MatchView extends AppCompatActivity {
+/**
+ *  Activity to view highlights of all six teams competing in a given match
+ */
+public class MatchView extends Activity {
 
     private static final String TAG = "MatchView";
 
     private boolean prevMatch, nextMatch;
     private int matchNumber;
 
+    /**
+     * Sets up each of the team fragments and fixes some of the labels
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,96 +45,107 @@ public class MatchView extends AppCompatActivity {
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.match_view_toolbar);
-        setSupportActionBar(toolbar);
+        setActionBar(toolbar);
 
         setTitle("Match Number: " + matchNumber);
 
-        TextView tv = (TextView)findViewById(R.id.auto_high_goal_blue);
-        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
-        tv = (TextView)findViewById(R.id.auto_low_goal_blue);
-        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
-        tv = (TextView)findViewById(R.id.teleop_high_goal_blue);
-        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
-        tv = (TextView)findViewById(R.id.teleop_low_goal_blue);
-        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
+        TextView tv = (TextView) findViewById(R.id.auto_high_goal_blue);
+        tv.setText("\t\tHigh goal" + Html.fromHtml("<sup>*</sup") + ":");
+        tv = (TextView) findViewById(R.id.auto_low_goal_blue);
+        tv.setText("\t\tLow goal" + Html.fromHtml("<sup>*</sup") + ":");
+        tv = (TextView) findViewById(R.id.teleop_high_goal_blue);
+        tv.setText("\t\tHigh goal" + Html.fromHtml("<sup>*</sup") + ":");
+        tv = (TextView) findViewById(R.id.teleop_low_goal_blue);
+        tv.setText("\t\tLow goal" + Html.fromHtml("<sup>*</sup") + ":");
 
-        tv = (TextView)findViewById(R.id.auto_high_goal_red);
-        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
-        tv = (TextView)findViewById(R.id.auto_low_goal_red);
-        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
-        tv = (TextView)findViewById(R.id.teleop_high_goal_red);
-        tv.setText("\t\tHigh goal"+ Html.fromHtml("<sup>*</sup")+":");
-        tv = (TextView)findViewById(R.id.teleop_low_goal_red);
-        tv.setText("\t\tLow goal"+ Html.fromHtml("<sup>*</sup")+":");
+        tv = (TextView) findViewById(R.id.auto_high_goal_red);
+        tv.setText("\t\tHigh goal" + Html.fromHtml("<sup>*</sup") + ":");
+        tv = (TextView) findViewById(R.id.auto_low_goal_red);
+        tv.setText("\t\tLow goal" + Html.fromHtml("<sup>*</sup") + ":");
+        tv = (TextView) findViewById(R.id.teleop_high_goal_red);
+        tv.setText("\t\tHigh goal" + Html.fromHtml("<sup>*</sup") + ":");
+        tv = (TextView) findViewById(R.id.teleop_low_goal_red);
+        tv.setText("\t\tLow goal" + Html.fromHtml("<sup>*</sup") + ":");
 
-        tv = (TextView)findViewById(R.id.defenses_blue);
+        tv = (TextView) findViewById(R.id.defenses_blue);
         String text = "Defenses Cross Ability:";
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
             text += "\n";
         tv.setText(text);
-        tv = (TextView)findViewById(R.id.defenses_red);
+        tv = (TextView) findViewById(R.id.defenses_red);
         text = "Defenses Cross Ability:";
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
             text += "\n";
         tv.setText(text);
 
-        ScheduleDB scheduleDB = new ScheduleDB(this,eventId);
+        ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
         Cursor cursor = scheduleDB.getMatch(matchNumber);
         FragmentManager fm = getFragmentManager();
         MatchTeamFragment blue1 = (MatchTeamFragment) fm.findFragmentById(R.id.blue1);
-        blue1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)),this);
+        blue1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)), this);
         MatchTeamFragment blue2 = (MatchTeamFragment) fm.findFragmentById(R.id.blue2);
-        blue2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)),this);
+        blue2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)), this);
         MatchTeamFragment blue3 = (MatchTeamFragment) fm.findFragmentById(R.id.blue3);
-        blue3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)),this);
+        blue3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)), this);
         MatchTeamFragment red1 = (MatchTeamFragment) fm.findFragmentById(R.id.red1);
-        red1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)),this);
+        red1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)), this);
         MatchTeamFragment red2 = (MatchTeamFragment) fm.findFragmentById(R.id.red2);
-        red2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)),this);
+        red2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)), this);
         MatchTeamFragment red3 = (MatchTeamFragment) fm.findFragmentById(R.id.red3);
-        red3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)),this);
+        red3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)), this);
 
         prevMatch = matchNumber != 1;
         Cursor nextCursor = scheduleDB.getMatch(matchNumber + 1);
         nextMatch = nextCursor != null;
     }
 
+    /**
+     *  Creates the overflow menu for the toolbar
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.match_overflow, menu);
-        if(!prevMatch) {
+        if (!prevMatch) {
             menu.removeItem(R.id.previous);
         }
-        if(!nextMatch) {
+        if (!nextMatch) {
             menu.removeItem(R.id.next);
         }
         return true;
     }
 
+    /**
+     *  Implements the overflow menu actions
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.home:
-                intent = new Intent(this,StartScreen.class);
+                intent = new Intent(this, HomeScreen.class);
                 startActivity(intent);
                 break;
             case R.id.back:
                 this.finish();
                 break;
             case R.id.previous:
-                intent = new Intent(this,MatchView.class);
-                intent.putExtra(Constants.MATCH_NUMBER,matchNumber-1);
+                intent = new Intent(this, MatchView.class);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
                 startActivity(intent);
                 break;
             case R.id.next:
-                intent = new Intent(this,MatchView.class);
-                intent.putExtra(Constants.MATCH_NUMBER,matchNumber+1);
+                intent = new Intent(this, MatchView.class);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
                 startActivity(intent);
                 break;
-            // Shouldn't be one
             default:
-                super.onOptionsItemSelected(item);
+                assert false;
         }
         return true;
     }

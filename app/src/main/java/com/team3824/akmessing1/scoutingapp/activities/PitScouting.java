@@ -144,7 +144,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *
+     *  The action that happens when the home button is pressed. Brings up dialog with options to save
+     *  and takes user to the home screen.
      */
     private void home_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
@@ -195,7 +196,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *
+     *  The action that happens when the back button is pressed. Brings up dialog with options to save
+     *  and takes user to the team list.
      */
     private void back_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
@@ -247,7 +249,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *
+     *  The action that happens when the previous team button is pressed. Brings up dialog with options to save
+     *  and takes user to pit scout the previous team.
      */
     private void previous_press() {
         Log.d(TAG, "previous team pressed");
@@ -303,7 +306,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *
+     *  The action that happens when the next team button is pressed. Brings up dialog with options to save
+     *  and takes user to pit scout the next team.
      */
     private void next_press() {
         Log.d(TAG, "next team pressed");
@@ -359,8 +363,9 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *
+     *  Resets the page and the entry in the database.
      */
+    //TODO: Shouldn't be needed any more because of the pit group system, so remove
     private void reset() {
         Log.d(TAG, "team delete pressed");
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
@@ -388,7 +393,7 @@ public class PitScouting extends Activity {
     }
 
     /**
-     * 
+     * Asynchronous Task to save the data to the database.
      */
     private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
 

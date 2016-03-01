@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.team3824.akmessing1.scoutingapp" >
+    package="com.team3824.akmessing1.scoutingapp">
 
-    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="23" android:maxSdkVersion="23" />
+    <uses-sdk
+        android:maxSdkVersion="23"
+        android:minSdkVersion="23"
+        android:targetSdkVersion="23" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
@@ -16,76 +23,97 @@
         android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name="com.team3824.akmessing1.scoutingapp.activities.StartScreen"
+            android:name=".activities.HomeScreen"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="sensorLandscape">
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchList"
+        <activity
+            android:name=".activities.MatchList"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.Settings"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchSchedule"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="sensorLandscape"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.ScheduleBuilder"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="sensorLandscape"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchScouting"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.PitScouting"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.PitList"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.PickList"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.TeamList"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.TeamView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="sensorLandscape"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchView"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.SuperScouting"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.SyncActivity"
+        <activity
+            android:name=".activities.Settings"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.EventView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="sensorLandscape"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.DriveTeamFeedback"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:screenOrientation="sensorLandscape"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.OurMatchList"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.MatchPlanning"
+        <activity
+            android:name=".activities.MatchSchedule"
             android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.DatabaseManagement"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.ScheduleBuilder"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.MatchScouting"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.PitScouting"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.PitList"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name="com.team3824.akmessing1.scoutingapp.activities.TeamListBuilder"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.PickList"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".activities.Server"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".activities.FileView"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.TeamList"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.TeamView"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.MatchView"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.SuperScouting"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.SyncActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.EventView"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.DriveTeamFeedback"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.OurMatchList"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.MatchPlanning"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.DatabaseManagement"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.TeamListBuilder"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.Server"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.FileView"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

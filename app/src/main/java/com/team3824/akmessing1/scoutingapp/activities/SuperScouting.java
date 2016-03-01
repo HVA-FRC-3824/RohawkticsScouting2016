@@ -21,17 +21,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.adapters.FPA_SuperScout;
+import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
+import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothHandler;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothSync;
-import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
-import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
-import com.team3824.akmessing1.scoutingapp.adapters.FPA_SuperScout;
-import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ *  Activity that holds all the fragments for super scouting
+ */
 public class SuperScouting extends AppCompatActivity {
 
     final private String TAG = "SuperScouting";
@@ -55,6 +58,11 @@ public class SuperScouting extends AppCompatActivity {
 
     private boolean nextMatch = false;
 
+    /**
+     * Sets up the view page, pager adapter, and tab layout
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,36 +93,48 @@ public class SuperScouting extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.super_view_pager);
         adapter = new FPA_SuperScout(getFragmentManager(), arrayList);
         viewPager.setAdapter(adapter);
-        tabLayout = (TabLayout)findViewById(R.id.super_tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.super_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
         // Get data from super scout db
-        SuperScoutDB superScoutDB = new SuperScoutDB(this,eventId);
+        SuperScoutDB superScoutDB = new SuperScoutDB(this, eventId);
         Map<String, ScoutValue> map = superScoutDB.getMatchInfo(matchNumber);
-        if(map != null) {
+        if (map != null) {
             adapter.setValueMap(map);
         }
 
-        if(scheduleDB.getNumMatches() > matchNumber)
+        if (scheduleDB.getNumMatches() > matchNumber)
             nextMatch = true;
 
-        Utilities.setupUI(this,findViewById(android.R.id.content));
+        Utilities.setupUI(this, findViewById(android.R.id.content));
     }
 
+    /**
+     * Creates the overflow menu
+     *
+     * @param menu The menu to be filled
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.match_overflow, menu);
-        if(matchNumber == 1) {
+        if (matchNumber == 1) {
             menu.removeItem(R.id.previous);
         }
-        if(!nextMatch) {
+        if (!nextMatch) {
             menu.removeItem(R.id.next);
         }
         return true;
     }
 
+    /**
+     * Implements the actions that happen when a menu item is selected
+     *
+     * @param item The menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -130,17 +150,250 @@ public class SuperScouting extends AppCompatActivity {
             case R.id.next:
                 next_press();
                 break;
-            // Shouldn't be one
             default:
-                super.onOptionsItemSelected(item);
+                assert false;
         }
         return true;
     }
 
+    /**
+     * Brings up a dialog box asking the user if they want to save. If so a task is started to save
+     * and send the data to the server tablet. The user is then brought to the home screen.
+     */
+    private void home_pres() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
+                }
+
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    new SaveTask().execute(data);
+
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, HomeScreen.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, HomeScreen.class);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * Brings up a dialog box asking the user if they want to save. If so a task is started to save
+     * and send the data to the server tablet. The user is then brought to the match list screen.
+     */
+    private void back_press() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
+                }
+
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    new SaveTask().execute(data);
+
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, MatchList.class);
+                    intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, MatchList.class);
+                intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * Brings up a dialog box asking the user if they want to save. If so a task is started to save
+     * and send the data to the server tablet. The previous match super scouting is then brought up.
+     */
+    private void previous_press() {
+        Log.d(TAG, "previous match pressed");
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
+                }
+
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    new SaveTask().execute(data);
+
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * Brings up a dialog box asking the user if they want to save. If so a task is started to save
+     * and send the data to the server tablet. The next match super scouting is then brought up.
+     */
+    private void next_press() {
+        Log.d(TAG, "next match pressed");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
+        builder.setTitle("Save match data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                Map<String, ScoutValue> data = new HashMap<>();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
+                }
+
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    new SaveTask().execute(data);
+
+                    // Go to the next match
+                    Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     *  Asynchronous Task that saves the data in the database and attempts to send to the server
+     *  tablet
+     */
     private class SaveTask extends AsyncTask<Map<String, ScoutValue>, String, Void> {
 
         BluetoothSync bluetoothSync;
 
+        /**
+         * Saves the data to the database and attempts to send to the server tablet
+         * @param maps The data
+         * @return nothing
+         */
         @Override
         protected Void doInBackground(Map<String, ScoutValue>... maps) {
             Map<String, ScoutValue> data = maps[0];
@@ -158,8 +411,8 @@ public class SuperScouting extends AppCompatActivity {
             superScoutDB.updateMatch(data);
 
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if(bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
-                bluetoothSync = new BluetoothSync(new BluetoothHandler(),false);
+            if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+                bluetoothSync = new BluetoothSync(new BluetoothHandler(), false);
                 Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
                 BluetoothDevice server = null;
                 for (BluetoothDevice device : devices) {
@@ -188,7 +441,7 @@ public class SuperScouting extends AppCompatActivity {
                     return null;
                 }
 
-                SyncDB syncDB = new SyncDB(SuperScouting.this,eventId);
+                SyncDB syncDB = new SyncDB(SuperScouting.this, eventId);
                 String connectedAddress = bluetoothSync.getConnectedAddress();
                 String lastUpdated = syncDB.getSuperLastUpdated(connectedAddress);
                 syncDB.updateSuperSync(connectedAddress);
@@ -217,247 +470,31 @@ public class SuperScouting extends AppCompatActivity {
             return null;
         }
 
-        private boolean timeout()
-        {
+        /**
+         * Timeout for connecting to the Server
+         *
+         * @return Whether the connection timed out or not
+         */
+        private boolean timeout() {
             long time = SystemClock.currentThreadTimeMillis();
-            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED)
-            {
-                if(SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT)
-                {
+            while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
+                if (SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT) {
                     return false;
                 }
             }
             return true;
         }
 
+        /**
+         * Displays the progress
+         * @param values The text to display
+         */
         @Override
-        protected void onProgressUpdate(String... values)
-        {
+        protected void onProgressUpdate(String... values) {
             String text = values[0];
             Log.d(TAG, text);
-            Toast.makeText(SuperScouting.this, text,Toast.LENGTH_SHORT).show();
+            Toast.makeText(SuperScouting.this, text, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void home_pres()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
-        builder.setTitle("Save match data?");
-
-        // Save option
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                // Collect values from all the custom elements
-                List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
-                String error = "";
-                for (ScoutFragment fragment : fragmentList) {
-                    error += fragment.writeContentsToMap(data);
-                }
-
-                if(error.equals("")) {
-                    Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
-
-                    // Go to the next match
-                    Intent intent = new Intent(SuperScouting.this, StartScreen.class);
-                    startActivity(intent);
-                }
-                else
-                {
-                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        // Cancel Option
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Dialogbox goes away
-            }
-        });
-
-        // Continue w/o Saving Option
-        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, StartScreen.class);
-                startActivity(intent);
-            }
-        });
-        builder.show();
-    }
-
-    private void back_press()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
-        builder.setTitle("Save match data?");
-
-        // Save option
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                // Collect values from all the custom elements
-                List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
-                String error = "";
-                for (ScoutFragment fragment : fragmentList) {
-                    error += fragment.writeContentsToMap(data);
-                }
-
-                if(error.equals("")) {
-                    Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
-
-                    // Go to the next match
-                    Intent intent = new Intent(SuperScouting.this, MatchList.class);
-                    intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
-                    startActivity(intent);
-                }
-                else
-                {
-                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        // Cancel Option
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Dialogbox goes away
-            }
-        });
-
-        // Continue w/o Saving Option
-        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.SUPER_SCOUTING);
-                startActivity(intent);
-            }
-        });
-        builder.show();
-    }
-
-    private void previous_press()
-    {
-        Log.d(TAG,"previous match pressed");
-        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
-        builder.setTitle("Save match data?");
-
-        // Save option
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                // Collect values from all the custom elements
-                List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
-                String error = "";
-                for (ScoutFragment fragment : fragmentList) {
-                    error += fragment.writeContentsToMap(data);
-                }
-
-                if(error.equals("")) {
-                    Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
-
-                    // Go to the next match
-                    Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
-                    startActivity(intent);
-                }
-                else
-                {
-                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        // Cancel Option
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Dialogbox goes away
-            }
-        });
-
-        // Continue w/o Saving Option
-        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
-                startActivity(intent);
-            }
-        });
-        builder.show();
-    }
-
-    private void next_press()
-    {
-        Log.d(TAG, "next match pressed");
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(SuperScouting.this);
-        builder.setTitle("Save match data?");
-
-        // Save option
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                // Collect values from all the custom elements
-                List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
-                String error = "";
-                for (ScoutFragment fragment : fragmentList) {
-                    error += fragment.writeContentsToMap(data);
-                }
-
-                if(error.equals("")) {
-                    Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
-
-                    // Go to the next match
-                    Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
-                    startActivity(intent);
-                }
-                else
-                {
-                    Toast.makeText(SuperScouting.this,String.format("Error: %s",error),Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        // Cancel Option
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Dialogbox goes away
-            }
-        });
-
-        // Continue w/o Saving Option
-        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
-                startActivity(intent);
-            }
-        });
-        builder.show();
     }
 
 

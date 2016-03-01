@@ -23,6 +23,7 @@ import java.util.ArrayList;
 /**
  * Activity that displays buttons for each of our matches that lead to the drive team feedback activity
  */
+//TODO: Merge with MatchList
 public class OurMatchList extends Activity {
     /**
      * Sets up buttons for each of our matches that lead to the drive team feedback activity.
