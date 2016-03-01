@@ -1,35 +1,31 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.views.DrawingView;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.UUID;
 
-public class MatchPlanning extends AppCompatActivity implements View.OnClickListener{
+/**
+ *  Activity where the user can draw on a canvas where the background is the field. Includes features
+ *  for multiple colors, multiple size brushes, erasers, and save/recovery of a drawing.
+ */
+public class MatchPlanning extends Activity implements View.OnClickListener {
 
     private String TAG = "MatchPlanning";
 
@@ -37,15 +33,20 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
     private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn, openBtn;
     private float extraSmallBrush, smallBrush, mediumBrush, largeBrush;
 
+    /**
+     * Sets up the draw, erase, new, save, and load buttons
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_planning);
 
-        drawView = (DrawingView)findViewById(R.id.drawing);
+        drawView = (DrawingView) findViewById(R.id.drawing);
 
-        LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
-        currPaint = (ImageButton)paintLayout.getChildAt(3); //black
+        LinearLayout paintLayout = (LinearLayout) findViewById(R.id.paint_colors);
+        currPaint = (ImageButton) paintLayout.getChildAt(3); //black
         currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed, null));
 
         extraSmallBrush = 5;
@@ -53,53 +54,61 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
         mediumBrush = 20;
         largeBrush = 30;
 
-        drawBtn = (ImageButton)findViewById(R.id.draw_btn);
+        drawBtn = (ImageButton) findViewById(R.id.draw_btn);
         drawBtn.setOnClickListener(this);
 
-        eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
+        eraseBtn = (ImageButton) findViewById(R.id.erase_btn);
         eraseBtn.setOnClickListener(this);
 
-        newBtn = (ImageButton)findViewById(R.id.new_btn);
+        newBtn = (ImageButton) findViewById(R.id.new_btn);
         newBtn.setOnClickListener(this);
 
-        saveBtn = (ImageButton)findViewById(R.id.save_btn);
+        saveBtn = (ImageButton) findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(this);
 
-        openBtn = (ImageButton)findViewById(R.id.open_btn);
+        openBtn = (ImageButton) findViewById(R.id.open_btn);
         openBtn.setOnClickListener(this);
 
-        Button backBtn = (Button)findViewById(R.id.back_btn);
+        Button backBtn = (Button) findViewById(R.id.back_btn);
         backBtn.setOnClickListener(this);
 
         drawView.setBrushSize(extraSmallBrush);
     }
 
-    public void paintClicked(View view)
-    {
+    /**
+     *  Changes the color for the Draw View and sets the color button to pressed
+     *
+     * @param view
+     */
+    public void paintClicked(View view) {
         drawView.setErase(false);
         drawView.setBrushSize(drawView.getLastBrushSize());
-        if(view!=currPaint){
-            ImageButton imgView = (ImageButton)view;
+        if (view != currPaint) {
+            ImageButton imgView = (ImageButton) view;
             String color = view.getTag().toString();
             drawView.setColor(color);
-            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed,null));
-            currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint,null));
-            currPaint=(ImageButton)view;
+            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed, null));
+            currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint, null));
+            currPaint = (ImageButton) view;
         }
     }
 
-
+    /**
+     *  Implements the actions for the various buttons
+     *
+     * @param view
+     */
     @Override
-    public void onClick(View view)
-    {
-        switch(view.getId())
-        {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.draw_btn:
                 drawView.setErase(false);
                 final Dialog brushDialog = new Dialog(this);
                 brushDialog.setTitle("Brush size:");
                 brushDialog.setContentView(R.layout.dialog_brush_chooser);
-                ImageButton extraSmallBtn = (ImageButton)brushDialog.findViewById(R.id.extra_small_brush);
+
+                // extra small button sets the size of the brush to extra small
+                ImageButton extraSmallBtn = (ImageButton) brushDialog.findViewById(R.id.extra_small_brush);
                 extraSmallBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -108,7 +117,9 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                         brushDialog.dismiss();
                     }
                 });
-                ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
+
+                // small button sets the size of the brush to small
+                ImageButton smallBtn = (ImageButton) brushDialog.findViewById(R.id.small_brush);
                 smallBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -117,7 +128,9 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                         brushDialog.dismiss();
                     }
                 });
-                ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
+
+                // medium button sets the size of the brush to medium
+                ImageButton mediumBtn = (ImageButton) brushDialog.findViewById(R.id.medium_brush);
                 mediumBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -127,7 +140,8 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                     }
                 });
 
-                ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
+                // large button sets the size of the brush to large
+                ImageButton largeBtn = (ImageButton) brushDialog.findViewById(R.id.large_brush);
                 largeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -142,7 +156,9 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 final Dialog eraser_brushDialog = new Dialog(this);
                 eraser_brushDialog.setTitle("Eraser size:");
                 eraser_brushDialog.setContentView(R.layout.dialog_brush_chooser);
-                ImageButton eraser_extraSmallBtn = (ImageButton)eraser_brushDialog.findViewById(R.id.extra_small_brush);
+
+                // extra small button sets the size of the eraser brush to extra small
+                ImageButton eraser_extraSmallBtn = (ImageButton) eraser_brushDialog.findViewById(R.id.extra_small_brush);
                 eraser_extraSmallBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -151,8 +167,10 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                         eraser_brushDialog.dismiss();
                     }
                 });
-                ImageButton eraser_smallBtn = (ImageButton)eraser_brushDialog.findViewById(R.id.small_brush);
-                eraser_smallBtn.setOnClickListener(new View.OnClickListener(){
+
+                // small button sets the size of the eraser brush to small
+                ImageButton eraser_smallBtn = (ImageButton) eraser_brushDialog.findViewById(R.id.small_brush);
+                eraser_smallBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         drawView.setErase(true);
@@ -160,7 +178,9 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                         eraser_brushDialog.dismiss();
                     }
                 });
-                ImageButton eraser_mediumBtn = (ImageButton)eraser_brushDialog.findViewById(R.id.medium_brush);
+
+                // medium button sets the size of the eraser brush to medium
+                ImageButton eraser_mediumBtn = (ImageButton) eraser_brushDialog.findViewById(R.id.medium_brush);
                 eraser_mediumBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -169,7 +189,9 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                         eraser_brushDialog.dismiss();
                     }
                 });
-                ImageButton eraser_largeBtn = (ImageButton)eraser_brushDialog.findViewById(R.id.large_brush);
+
+                // large button sets the size of the eraser brush to large
+                ImageButton eraser_largeBtn = (ImageButton) eraser_brushDialog.findViewById(R.id.large_brush);
                 eraser_largeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -180,76 +202,79 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
                 });
                 eraser_brushDialog.show();
                 break;
+
             case R.id.new_btn:
                 AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
                 newDialog.setTitle("New drawing");
                 newDialog.setMessage("Start new strategy (you will lose the current strategy)?");
+
                 newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         drawView.startNew();
                         dialog.dismiss();
                     }
                 });
+
                 newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
+
                 newDialog.show();
                 break;
 
+            // Saves drawn image to file
             case R.id.save_btn:
                 AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
                 saveDialog.setTitle("Save strategy");
-                //saveDialog.setMessage("Save strategy to device Gallery?");
-                saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which){
+                saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                         drawView.setDrawingCacheEnabled(true);
                         Bitmap saveImage = drawView.getDrawingCache();
                         String imageName = "strategy.png";
                         FileOutputStream fos = null;
                         try {
                             fos = openFileOutput(imageName, Context.MODE_WORLD_WRITEABLE);
-                            saveImage.compress(Bitmap.CompressFormat.PNG,100,fos);
+                            saveImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
                         } catch (FileNotFoundException e) {
                             Log.d(TAG, e.getMessage());
                         }
-                        if(fos != null)
-                        {
+                        if (fos != null) {
                             try {
                                 fos.close();
                             } catch (IOException e) {
-                                Log.d(TAG,e.getMessage());
+                                Log.d(TAG, e.getMessage());
                             }
                         }
                         drawView.destroyDrawingCache();
                     }
                 });
-                saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which){
+                saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
                 saveDialog.show();
                 break;
+
+            // Recovers the last saved drawn image
             case R.id.open_btn:
                 AlertDialog.Builder openDialog = new AlertDialog.Builder(this);
                 openDialog.setTitle("Load last strategy");
-                openDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which){
+                openDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                         String imageName = "strategy.png";
                         try {
                             Bitmap loadImage = BitmapFactory.decodeStream(openFileInput(imageName));
-                            drawView.load(loadImage.copy(Bitmap.Config.ARGB_8888,true));
-                        }
-                        catch(FileNotFoundException ex)
-                        {
-                            Log.d(TAG,ex.getMessage());
+                            drawView.load(loadImage.copy(Bitmap.Config.ARGB_8888, true));
+                        } catch (FileNotFoundException ex) {
+                            Log.d(TAG, ex.getMessage());
                         }
                     }
                 });
-                openDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int which){
+                openDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
@@ -258,6 +283,10 @@ public class MatchPlanning extends AppCompatActivity implements View.OnClickList
 
             case R.id.back_btn:
                 this.finish();
+                break;
+
+            default:
+                assert false;
                 break;
         }
 

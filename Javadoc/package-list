@@ -1,0 +1,12 @@
+com.team3824.akmessing1.scoutingapp.activities
+com.team3824.akmessing1.scoutingapp.adapters
+com.team3824.akmessing1.scoutingapp.database_helpers
+com.team3824.akmessing1.scoutingapp.fragments
+com.team3824.akmessing1.scoutingapp.list_items
+com.team3824.akmessing1.scoutingapp.services
+com.team3824.akmessing1.scoutingapp.utilities
+com.team3824.akmessing1.scoutingapp.utilities.bluetooth
+com.team3824.akmessing1.scoutingapp.utilities.file_manager
+com.team3824.akmessing1.scoutingapp.views
+com.team3824.akmessing1.scoutingapp.views.rebound_rumble_specific
+com.team3824.akmessing1.scoutingapp.views.stronghold_specific

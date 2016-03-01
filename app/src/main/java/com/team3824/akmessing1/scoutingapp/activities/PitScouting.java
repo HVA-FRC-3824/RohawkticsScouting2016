@@ -1,5 +1,6 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,20 +11,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
-import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
-import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.FPA_PitScout;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.io.File;
@@ -32,7 +31,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class PitScouting extends AppCompatActivity {
+/**
+ * Activity that holds the fragments for pit scouting
+ */
+public class PitScouting extends Activity {
 
     final private String TAG = "PitScouting";
 
@@ -47,13 +49,18 @@ public class PitScouting extends AppCompatActivity {
     private int prevTeamNumber = -1;
     private int nextTeamNumber = -1;
 
+    /**
+     * Sets up the view pager, pager adapter, and tab layout
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pit_scouting);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.pit_scouting_toolbar);
-        setSupportActionBar(toolbar);
+        setActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
         teamNumber = extras.getInt(Constants.TEAM_NUMBER);
@@ -64,18 +71,17 @@ public class PitScouting extends AppCompatActivity {
         adapter = new FPA_PitScout(getFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(5);
-        tabLayout = (TabLayout)findViewById(R.id.pit_tab_layout);
+        tabLayout = (TabLayout) findViewById(R.id.pit_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
-        userType = sharedPreferences.getString(Constants.USER_TYPE,"");
+        userType = sharedPreferences.getString(Constants.USER_TYPE, "");
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
         Map<String, ScoutValue> map = pitScoutDB.getTeamMap(teamNumber);
-        if(map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0)
-        {
+        if (map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0) {
             adapter.setValueMap(map);
         }
 
@@ -86,22 +92,33 @@ public class PitScouting extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates the overflow menu for the toolbar
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.team_overflow, menu);
-        if(prevTeamNumber == -1) {
+        if (prevTeamNumber == -1) {
             menu.removeItem(R.id.previous);
         }
-        if(nextTeamNumber == -1) {
+        if (nextTeamNumber == -1) {
             menu.removeItem(R.id.next);
         }
-        if(!userType.equals(Constants.ADMIN))
-        {
+        if (!userType.equals(Constants.ADMIN)) {
             menu.removeItem(R.id.reset);
         }
         return true;
     }
 
+    /**
+     * Implements the actions that happen when a option is selected from the overflow menu
+     *
+     * @param item The item that was selected from the overflow menu
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -119,42 +136,17 @@ public class PitScouting extends AppCompatActivity {
                 break;
             case R.id.reset:
                 reset();
-            // Shouldn't be one
+                // Shouldn't be one
             default:
                 super.onOptionsItemSelected(item);
         }
         return true;
     }
 
-    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Map<String, ScoutValue>... maps) {
-            Map<String, ScoutValue> data = maps[0];
-
-            // Change picture filename to use event id and team number
-            String picture_filename = data.get(Constants.PIT_ROBOT_PICTURE).getString();
-            File picture = new File(getFilesDir(), picture_filename);
-            if(picture.exists())
-            {
-                String newPathName = String.format("%s_%d.jpg",eventId,teamNumber);
-                File newPath = new File(getFilesDir(),newPathName);
-                picture.renameTo(newPath);
-                data.remove(Constants.PIT_ROBOT_PICTURE);
-                data.put(Constants.PIT_ROBOT_PICTURE,new ScoutValue(newPathName));
-            }
-
-            PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-            // Add the team and match numbers
-            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-            // Store values to the database
-            pitScoutDB.updatePit(data);
-            return null;
-        }
-    }
-
-    private void home_press()
-    {
+    /**
+     *
+     */
+    private void home_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
         builder.setTitle("Save pit data?");
 
@@ -171,15 +163,13 @@ public class PitScouting extends AppCompatActivity {
                     error += fragment.writeContentsToMap(data);
                 }
 
-                if(error.equals("")) {
+                if (error.equals("")) {
                     Log.d(TAG, "Saving values");
                     new SaveTask().execute(data);
 
-                    Intent intent = new Intent(PitScouting.this, StartScreen.class);
+                    Intent intent = new Intent(PitScouting.this, HomeScreen.class);
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
                 }
             }
@@ -197,15 +187,17 @@ public class PitScouting extends AppCompatActivity {
         builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(PitScouting.this, StartScreen.class);
+                Intent intent = new Intent(PitScouting.this, HomeScreen.class);
                 startActivity(intent);
             }
         });
         builder.show();
     }
 
-    private void back_press()
-    {
+    /**
+     *
+     */
+    private void back_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
         builder.setTitle("Save pit data?");
 
@@ -222,16 +214,14 @@ public class PitScouting extends AppCompatActivity {
                     error += fragment.writeContentsToMap(data);
                 }
 
-                if(error.equals("")) {
+                if (error.equals("")) {
                     Log.d(TAG, "Saving values");
                     // Add the team and match numbers
                     new SaveTask().execute(data);
 
                     Intent intent = new Intent(PitScouting.this, PitList.class);
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
                 }
             }
@@ -256,9 +246,10 @@ public class PitScouting extends AppCompatActivity {
         builder.show();
     }
 
-
-    private void previous_press()
-    {
+    /**
+     *
+     */
+    private void previous_press() {
         Log.d(TAG, "previous team pressed");
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
         builder.setTitle("Save pit data?");
@@ -276,7 +267,7 @@ public class PitScouting extends AppCompatActivity {
                     error += fragment.writeContentsToMap(data);
                 }
 
-                if(error.equals("")) {
+                if (error.equals("")) {
                     Log.d(TAG, "Saving values");
                     new SaveTask().execute(data);
 
@@ -284,9 +275,7 @@ public class PitScouting extends AppCompatActivity {
                     Intent intent = new Intent(PitScouting.this, PitScouting.class);
                     intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
                 }
             }
@@ -313,8 +302,10 @@ public class PitScouting extends AppCompatActivity {
         builder.show();
     }
 
-    private void next_press()
-    {
+    /**
+     *
+     */
+    private void next_press() {
         Log.d(TAG, "next team pressed");
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
         builder.setTitle("Save pit data?");
@@ -332,7 +323,7 @@ public class PitScouting extends AppCompatActivity {
                     error += fragment.writeContentsToMap(data);
                 }
 
-                if(error.equals("")) {
+                if (error.equals("")) {
                     Log.d(TAG, "Saving values");
                     new SaveTask().execute(data);
 
@@ -340,9 +331,7 @@ public class PitScouting extends AppCompatActivity {
                     Intent intent = new Intent(PitScouting.this, PitScouting.class);
                     intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
                 }
             }
@@ -369,9 +358,11 @@ public class PitScouting extends AppCompatActivity {
         builder.show();
     }
 
-    private void reset()
-    {
-        Log.d(TAG,"team delete pressed");
+    /**
+     *
+     */
+    private void reset() {
+        Log.d(TAG, "team delete pressed");
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
         builder.setTitle("Reset pit data?");
 
@@ -382,7 +373,7 @@ public class PitScouting extends AppCompatActivity {
                 pitScoutDB.resetTeam(teamNumber);
                 Map<String, ScoutValue> map = new Hashtable<String, ScoutValue>();
                 Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER,teamNumber);
+                intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
                 startActivity(intent);
             }
         });
@@ -394,6 +385,35 @@ public class PitScouting extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    /**
+     * 
+     */
+    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Map<String, ScoutValue>... maps) {
+            Map<String, ScoutValue> data = maps[0];
+
+            // Change picture filename to use event id and team number
+            String picture_filename = data.get(Constants.PIT_ROBOT_PICTURE).getString();
+            File picture = new File(getFilesDir(), picture_filename);
+            if (picture.exists()) {
+                String newPathName = String.format("%s_%d.jpg", eventId, teamNumber);
+                File newPath = new File(getFilesDir(), newPathName);
+                picture.renameTo(newPath);
+                data.remove(Constants.PIT_ROBOT_PICTURE);
+                data.put(Constants.PIT_ROBOT_PICTURE, new ScoutValue(newPathName));
+            }
+
+            PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+            // Add the team and match numbers
+            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+            // Store values to the database
+            pitScoutDB.updatePit(data);
+            return null;
+        }
     }
 
 }
