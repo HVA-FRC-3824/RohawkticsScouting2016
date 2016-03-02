@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp.views.rebound_rumble_specific;
+package com.team3824.akmessing1.scoutingapp.views.recycle_rush_specific;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import org.json.JSONArray;

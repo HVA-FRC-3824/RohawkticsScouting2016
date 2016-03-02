@@ -44,6 +44,7 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
 
     String pickType = "";
     ArrayList<Team> teams;
+    Map<Integer, Team> teamsMap;
 
     Button save;
 
@@ -66,12 +67,14 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
         list = (DragSortListView) view.findViewById(R.id.pick_list);
 
         teams = new ArrayList<>();
+        teamsMap = new HashMap<>();
         sharedPref = getActivity().getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        statsDB = new StatsDB(getContext(),sharedPref.getString(Constants.EVENT_ID, ""));
+        String eventId = sharedPref.getString(Constants.EVENT_ID, "");
+        statsDB = new StatsDB(getContext(),eventId);
         Cursor statsCursor = statsDB.getStats();
         PitScoutDB pitScoutDB = new PitScoutDB(getContext(),sharedPref.getString(Constants.EVENT_ID,""));
 
-        saveFile = new File(getContext().getFilesDir(), pickType + "ranking.txt");
+        saveFile = new File(getContext().getFilesDir(), String.format("%s_%s_ranking.txt",eventId,pickType));
         if(saveFile.exists())
         {
             try {
@@ -115,6 +118,7 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
             team = setupTeam(team,statsCursor);
 
             teams.add(team);
+            teamsMap.put(team.getTeamNumber(),team);
         }
 
         if(rankingJSON != null)
@@ -278,5 +282,43 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
                 }
                 break;
         }
+    }
+
+    /**
+     * Gets a list of which teams have been picked
+     * @return A list of which teams have been picked
+     */
+    public ArrayList<Integer> getPicked()
+    {
+        ArrayList<Integer> picked = new ArrayList<>();
+        for(Team team: teams)
+        {
+            if(team.getMapElement(StatsDB.KEY_PICKED).getInt() > 0)
+            {
+                picked.add(team.getTeamNumber());
+            }
+        }
+        Collections.sort(picked);
+        return picked;
+    }
+
+    /**
+     * Updates the list of team with which ones are picked/unpicked
+     *
+     * @param picked A list of the teams that need to updated to picked
+     * @param unpicked A list of the teams that need to be updated to unpicked
+     */
+    public void setPickedUnpicked(ArrayList<Integer> picked, ArrayList<Integer> unpicked)
+    {
+        for(int i = 0; i < picked.size(); i++)
+        {
+            teamsMap.get(picked.get(i)).setMapElement(StatsDB.KEY_PICKED,new ScoutValue(1));
+        }
+        for(int i = 0; i < unpicked.size(); i++)
+        {
+            teamsMap.get(unpicked.get(i)).setMapElement(StatsDB.KEY_PICKED,new ScoutValue(0));
+        }
+        adapter.sort();
+        adapter.notifyDataSetChanged();
     }
 }

@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp.views.rebound_rumble_specific;
+package com.team3824.akmessing1.scoutingapp.views.recycle_rush_specific;
 
 import android.content.Context;
 import android.content.res.TypedArray;
