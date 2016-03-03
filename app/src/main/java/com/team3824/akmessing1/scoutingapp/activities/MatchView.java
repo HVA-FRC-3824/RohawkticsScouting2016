@@ -39,7 +39,7 @@ public class MatchView extends Activity {
         setContentView(R.layout.activity_match_view);
 
         Bundle extras = getIntent().getExtras();
-        matchNumber = extras.getInt(Constants.MATCH_NUMBER);
+        matchNumber = extras.getInt(Constants.MATCH_NUMBER,-1);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
@@ -47,7 +47,13 @@ public class MatchView extends Activity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.match_view_toolbar);
         setActionBar(toolbar);
 
-        setTitle("Match Number: " + matchNumber);
+        if(matchNumber > 0) {
+            setTitle("Match Number: " + matchNumber);
+        }
+        else
+        {
+            setTitle(extras.getString(Constants.MATCH_TYPE));
+        }
 
         TextView tv = (TextView) findViewById(R.id.auto_high_goal_blue);
         tv.setText("\t\tHigh goal" + Html.fromHtml("<sup>*</sup") + ":");
@@ -78,24 +84,45 @@ public class MatchView extends Activity {
             text += "\n";
         tv.setText(text);
 
-        ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
-        Cursor cursor = scheduleDB.getMatch(matchNumber);
-        FragmentManager fm = getFragmentManager();
-        MatchTeamFragment blue1 = (MatchTeamFragment) fm.findFragmentById(R.id.blue1);
-        blue1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)), this);
-        MatchTeamFragment blue2 = (MatchTeamFragment) fm.findFragmentById(R.id.blue2);
-        blue2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)), this);
-        MatchTeamFragment blue3 = (MatchTeamFragment) fm.findFragmentById(R.id.blue3);
-        blue3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)), this);
-        MatchTeamFragment red1 = (MatchTeamFragment) fm.findFragmentById(R.id.red1);
-        red1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)), this);
-        MatchTeamFragment red2 = (MatchTeamFragment) fm.findFragmentById(R.id.red2);
-        red2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)), this);
-        MatchTeamFragment red3 = (MatchTeamFragment) fm.findFragmentById(R.id.red3);
-        red3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)), this);
+        Cursor nextCursor = null;
 
-        prevMatch = matchNumber != 1;
-        Cursor nextCursor = scheduleDB.getMatch(matchNumber + 1);
+        if(matchNumber > 0) {
+            ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
+            Cursor cursor = scheduleDB.getMatch(matchNumber);
+            FragmentManager fm = getFragmentManager();
+            MatchTeamFragment blue1 = (MatchTeamFragment) fm.findFragmentById(R.id.blue1);
+            blue1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)), this);
+            MatchTeamFragment blue2 = (MatchTeamFragment) fm.findFragmentById(R.id.blue2);
+            blue2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)), this);
+            MatchTeamFragment blue3 = (MatchTeamFragment) fm.findFragmentById(R.id.blue3);
+            blue3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)), this);
+            MatchTeamFragment red1 = (MatchTeamFragment) fm.findFragmentById(R.id.red1);
+            red1.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)), this);
+            MatchTeamFragment red2 = (MatchTeamFragment) fm.findFragmentById(R.id.red2);
+            red2.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)), this);
+            MatchTeamFragment red3 = (MatchTeamFragment) fm.findFragmentById(R.id.red3);
+            red3.setTeamNumber(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)), this);
+
+             nextCursor = scheduleDB.getMatch(matchNumber + 1);
+        }
+        else
+        {
+            FragmentManager fm = getFragmentManager();
+            MatchTeamFragment blue1 = (MatchTeamFragment) fm.findFragmentById(R.id.blue1);
+            blue1.setTeamNumber(extras.getInt(Constants.BLUE1), this);
+            MatchTeamFragment blue2 = (MatchTeamFragment) fm.findFragmentById(R.id.blue2);
+            blue2.setTeamNumber(extras.getInt(Constants.BLUE2), this);
+            MatchTeamFragment blue3 = (MatchTeamFragment) fm.findFragmentById(R.id.blue3);
+            blue3.setTeamNumber(extras.getInt(Constants.BLUE3), this);
+            MatchTeamFragment red1 = (MatchTeamFragment) fm.findFragmentById(R.id.red1);
+            red1.setTeamNumber(extras.getInt(Constants.RED1), this);
+            MatchTeamFragment red2 = (MatchTeamFragment) fm.findFragmentById(R.id.red2);
+            red2.setTeamNumber(extras.getInt(Constants.RED2), this);
+            MatchTeamFragment red3 = (MatchTeamFragment) fm.findFragmentById(R.id.red3);
+            red3.setTeamNumber(extras.getInt(Constants.RED3), this);
+        }
+
+        prevMatch = matchNumber > 1;
         nextMatch = nextCursor != null;
     }
 

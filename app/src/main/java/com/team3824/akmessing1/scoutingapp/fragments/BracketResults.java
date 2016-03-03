@@ -2,6 +2,7 @@ package com.team3824.akmessing1.scoutingapp.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.activities.MatchView;
 import com.team3824.akmessing1.scoutingapp.adapters.BracketResultsAdapter;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
@@ -32,7 +34,7 @@ import java.util.Arrays;
 /**
  *
  */
-public class BracketResults extends Fragment implements AdapterView.OnItemSelectedListener {
+public class BracketResults extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private final String TAG = "BracketResults";
     private final int SEMI_1_INDEX = 0;
@@ -53,6 +55,8 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
     TextView textViews[];
     String previous[];
     Button buttons[];
+
+    Context context;
 
     public BracketResults() {
     }
@@ -75,7 +79,7 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bracket_results, container, false);
 
-        Context context = getContext();
+        context = getContext();
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
@@ -102,9 +106,16 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
 
         buttons = new Button[3];
         buttons[0] = (Button) view.findViewById(R.id.s_1v2);
+        buttons[0].setOnClickListener(this);
         buttons[1] = (Button) view.findViewById(R.id.s_3v4);
+        buttons[1].setOnClickListener(this);
         buttons[2] = (Button) view.findViewById(R.id.f_1v2);
+        buttons[2].setOnClickListener(this);
 
+        ((Button)view.findViewById(R.id.q_1v8)).setOnClickListener(this);
+        ((Button)view.findViewById(R.id.q_2v7)).setOnClickListener(this);
+        ((Button)view.findViewById(R.id.q_3v6)).setOnClickListener(this);
+        ((Button)view.findViewById(R.id.q_4v5)).setOnClickListener(this);
 
         previous = new String[6];
 
@@ -237,7 +248,7 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 } else {
                     buttons[0].setVisibility(View.GONE);
                 }
-                
+
                 break;
             case R.id.s_alliance2:
                 if (!previous[SEMI_2_INDEX].equals(SELECT_ALLIANCE)) {
@@ -368,5 +379,240 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        Intent intent;
+        String redSide, blueSide;
+        int space;
+        switch (v.getId())
+        {
+            case R.id.q_1v8:
+                intent = new Intent(context, MatchView.class);
+                intent.putExtra(Constants.MATCH_TYPE, "Quarterfinal 1");
+
+                redSide = alliances[Constants.ALLIANCE_1_INDEX];
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space+1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+
+                blueSide = alliances[Constants.ALLIANCE_8_INDEX];
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space+1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+
+                startActivity(intent);
+                break;
+            case R.id.q_2v7:
+                intent = new Intent(context, MatchView.class);
+                intent.putExtra(Constants.MATCH_TYPE,"Quarterfinal 3");
+
+                redSide = alliances[Constants.ALLIANCE_2_INDEX];
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space+1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+
+                blueSide = alliances[Constants.ALLIANCE_7_INDEX];
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space+1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+
+                startActivity(intent);
+                break;
+            case R.id.q_3v6:
+                intent = new Intent(context, MatchView.class);
+                intent.putExtra(Constants.MATCH_TYPE,"Quarterfinal 4");
+
+                redSide = alliances[Constants.ALLIANCE_3_INDEX];
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space+1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+
+                blueSide = alliances[Constants.ALLIANCE_6_INDEX];
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space+1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+
+                startActivity(intent);
+                break;
+            case R.id.q_4v5:
+                intent = new Intent(context, MatchView.class);
+                intent.putExtra(Constants.MATCH_TYPE,"Quarterfinal 2");
+
+                redSide = alliances[Constants.ALLIANCE_4_INDEX];
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space+1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+
+                blueSide = alliances[Constants.ALLIANCE_5_INDEX];
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space+1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+
+                startActivity(intent);
+                break;
+            case R.id.s_1v2:
+                intent = new Intent(context, MatchView.class);
+                intent.putExtra(Constants.MATCH_TYPE,"Semifinal 1");
+
+                redSide = String.valueOf(spinners[SEMI_1_INDEX].getSelectedItem());
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space+1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+
+                blueSide = String.valueOf(spinners[SEMI_2_INDEX].getSelectedItem());
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space+1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+
+                startActivity(intent);
+                break;
+            case R.id.s_3v4:
+                intent = new Intent(context, MatchView.class);
+                intent.putExtra(Constants.MATCH_TYPE,"Semifinal 2");
+
+                redSide = String.valueOf(spinners[SEMI_3_INDEX].getSelectedItem());
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space+1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+
+                blueSide = String.valueOf(spinners[SEMI_4_INDEX].getSelectedItem());
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space+1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+
+                startActivity(intent);
+                break;
+            case R.id.f_1v2:
+                intent = new Intent(context, MatchView.class);
+                intent.putExtra(Constants.MATCH_TYPE,"Final");
+
+                redSide = String.valueOf(spinners[FINAL_1_INDEX].getSelectedItem());
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space+1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+
+                blueSide = String.valueOf(spinners[FINAL_2_INDEX].getSelectedItem());
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space+1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+
+                startActivity(intent);
+                break;
+        }
     }
 }

@@ -288,4 +288,12 @@ public interface Constants {
     public static final int CAPTAIN_OFFSET = 0;
     public static final int FIRST_PICK_OFFSET = 8;
     public static final int SECOND_PICK_OFFSET = 16;
+
+    public static final String MATCH_TYPE = "match_type";
+    public static final String BLUE1 = "blue1";
+    public static final String BLUE2 = "blue2";
+    public static final String BLUE3 = "blue3";
+    public static final String RED1 = "red1";
+    public static final String RED2 = "red2";
+    public static final String RED3 = "red3";
 }

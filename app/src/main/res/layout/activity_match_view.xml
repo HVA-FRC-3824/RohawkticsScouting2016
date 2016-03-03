@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/columbia_blue">
 
-    <android.support.v7.widget.Toolbar
+    <android.widget.Toolbar
         android:id="@+id/match_view_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
