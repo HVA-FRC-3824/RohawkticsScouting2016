@@ -35,7 +35,9 @@ public interface Constants {
     public static final String MATCH_SCOUTING = "match_scouting";
     public static final String SUPER_SCOUTING = "super_scouting";
     public static final String MATCH_VIEWING = "match_viewing";
-    public static final String UPDATE = "update";
+    public static final String DRIVE_TEAM_FEEDBACK = "drive_team_feedback";
+    public static final String PIT_SCOUTING = "pit_scouting";
+    public static final String TEAM_VIEWING = "team_view";
 
     // Auto
     public static final String AUTO_START_POSITION = "auto_start_position";
@@ -296,4 +298,7 @@ public interface Constants {
     public static final String RED1 = "red1";
     public static final String RED2 = "red2";
     public static final String RED3 = "red3";
+
+    public static final int DNP = 0;
+    public static final int DECLINE = 1;
 }

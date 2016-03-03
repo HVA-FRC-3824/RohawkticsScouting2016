@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.views.CustomScoutView;
 
@@ -12,23 +13,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 // abstract base class for each of the match scouting fragments
+
+/**
+ *
+ */
 public abstract class ScoutFragment extends Fragment {
 
     private String TAG = "ScoutFragment";
-    protected Map<String, ScoutValue> valueMap;
+    protected ScoutMap valueMap;
 
     public ScoutFragment()
     {
-        valueMap = new HashMap<>();
+        valueMap = new ScoutMap();
     }
 
-    public void setValuesMap(Map<String, ScoutValue> map)
+    /**
+     *
+     * @param map
+     */
+    public void setValuesMap(ScoutMap map)
     {
         valueMap = map;
     }
 
     // Recursive functions to get all the values and store them in a map
-    public String writeContentsToMap(Map<String, ScoutValue> map)
+
+    /**
+     *
+     * @param map
+     * @return
+     */
+    public String writeContentsToMap(ScoutMap map)
     {
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
@@ -53,7 +68,13 @@ public abstract class ScoutFragment extends Fragment {
         return error;
     }
 
-    public String writeContentsToMap(Map<String, ScoutValue> map, ViewGroup viewGroup)
+    /**
+     *
+     * @param map
+     * @param viewGroup
+     * @return
+     */
+    public String writeContentsToMap(ScoutMap map, ViewGroup viewGroup)
     {
         String error = "";
         int childCount = viewGroup.getChildCount();
@@ -69,7 +90,12 @@ public abstract class ScoutFragment extends Fragment {
     }
 
     // Recursive function to get all the values from a map and populate the fields
-    public void restoreContentsFromMap(Map<String, ScoutValue> map) {
+
+    /**
+     *
+     * @param map
+     */
+    public void restoreContentsFromMap(ScoutMap map) {
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
         if (vg == null) {
@@ -89,7 +115,12 @@ public abstract class ScoutFragment extends Fragment {
         }
     }
 
-    public void restoreContentsFromMap(Map<String, ScoutValue> map, ViewGroup viewGroup) {
+    /**
+     *
+     * @param map
+     * @param viewGroup
+     */
+    public void restoreContentsFromMap(ScoutMap map, ViewGroup viewGroup) {
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = viewGroup.getChildAt(i);
@@ -101,6 +132,9 @@ public abstract class ScoutFragment extends Fragment {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void onDestroyView()
     {

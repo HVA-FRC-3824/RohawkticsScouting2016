@@ -64,6 +64,10 @@ public class PickList extends Activity implements ViewPager.OnPageChangeListener
      */
     @Override
     public void onPageSelected(int position) {
+
+        if(position > 3)
+            return;
+
         if(previousPage != position)
         {
             ArrayList<Integer> teamsPicked1 = adapter.getPicked(previousPage);
@@ -84,8 +88,6 @@ public class PickList extends Activity implements ViewPager.OnPageChangeListener
             unpicked.removeAll(teamsPicked1);
 
             adapter.setPickedUnpicked(position,picked,unpicked);
-
-
 
             previousPage = position;
         }

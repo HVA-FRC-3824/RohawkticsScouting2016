@@ -80,11 +80,46 @@ public class MatchList extends Activity {
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4, 4, 4, 4);
 
+            if(nextPage.equals(Constants.MATCH_SCOUTING) || nextPage.equals(Constants.SUPER_SCOUTING))
+            {
+                Button button = new Button(this);
+                button.setLayoutParams(lp);
+                button.setText("Practice Match");
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = null;
+                        if(nextPage.equals(Constants.MATCH_SCOUTING))
+                        {
+                            intent = new Intent(MatchList.this, MatchScouting.class);
+                        }
+                        else if(nextPage.equals(Constants.SUPER_SCOUTING))
+                        {
+                            intent = new Intent(MatchList.this, MatchScouting.class);
+                        }
+                        intent.putExtra(Constants.MATCH_NUMBER,-1);
+                        startActivity(intent);
+                    }
+                });
+                linearLayout.addView(button);
+            }
+
             // Add buttons
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
-                final int matchNumber = cursor.getInt(0);
+                final int matchNumber = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_MATCH_NUMBER));
+                if(nextPage.equals(Constants.DRIVE_TEAM_FEEDBACK) &&
+                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)) != Constants.OUR_TEAM_NUMBER &&
+                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)) != Constants.OUR_TEAM_NUMBER &&
+                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)) != Constants.OUR_TEAM_NUMBER &&
+                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)) != Constants.OUR_TEAM_NUMBER &&
+                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)) != Constants.OUR_TEAM_NUMBER &&
+                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)) != Constants.OUR_TEAM_NUMBER)
+                {
+                    continue;
+                }
+
                 int tempTeamNumber = -1; // fixes issue with final and possible noninitialization
                 if (nextPage.equals(Constants.MATCH_SCOUTING)) {
                     tempTeamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
@@ -113,6 +148,10 @@ public class MatchList extends Activity {
                             intent = new Intent(MatchList.this, SuperScouting.class);
                         } else if (nextPage.equals(Constants.MATCH_VIEWING)) {
                             intent = new Intent(MatchList.this, MatchView.class);
+                        } else if(nextPage.equals(Constants.DRIVE_TEAM_FEEDBACK)){
+                            intent = new Intent(MatchList.this, DriveTeamFeedback.class);
+                        } else {
+                            assert false;
                         }
                         intent.putExtra(Constants.MATCH_NUMBER, matchNumber);
                         startActivity(intent);

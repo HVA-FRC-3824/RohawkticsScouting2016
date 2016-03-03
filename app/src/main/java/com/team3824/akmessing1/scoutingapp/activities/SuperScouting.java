@@ -28,6 +28,7 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothHandler;
@@ -40,7 +41,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *  Activity that holds all the fragments for super scouting
+ * Activity that holds all the fragments for super scouting
  */
 public class SuperScouting extends AppCompatActivity {
 
@@ -57,6 +58,7 @@ public class SuperScouting extends AppCompatActivity {
     private ArrayList<Integer> arrayList;
 
     private boolean nextMatch = false;
+    private boolean practice = false;
 
     /**
      * Sets up the view page, pager adapter, and tab layout
@@ -73,7 +75,12 @@ public class SuperScouting extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         matchNumber = extras.getInt(Constants.MATCH_NUMBER);
-        setTitle("Match Number: " + matchNumber);
+        if (matchNumber > 0) {
+            setTitle("Match Number: " + matchNumber);
+        } else {
+            practice = true;
+            setTitle("Practice Match");
+        }
 
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
@@ -100,7 +107,7 @@ public class SuperScouting extends AppCompatActivity {
 
         // Get data from super scout db
         SuperScoutDB superScoutDB = new SuperScoutDB(this, eventId);
-        Map<String, ScoutValue> map = superScoutDB.getMatchInfo(matchNumber);
+        ScoutMap map = superScoutDB.getMatchInfo(matchNumber);
         if (map != null) {
             adapter.setValueMap(map);
         }
@@ -120,7 +127,7 @@ public class SuperScouting extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.match_overflow, menu);
-        if (matchNumber == 1) {
+        if (matchNumber == 1 || practice) {
             menu.removeItem(R.id.previous);
         }
         if (!nextMatch) {
@@ -171,7 +178,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -179,7 +186,9 @@ public class SuperScouting extends AppCompatActivity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
+                    if (!practice) {
+                        new SaveTask().execute(data);
+                    }
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, HomeScreen.class);
@@ -225,7 +234,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -233,7 +242,9 @@ public class SuperScouting extends AppCompatActivity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
+                    if (!practice) {
+                        new SaveTask().execute(data);
+                    }
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, MatchList.class);
@@ -282,7 +293,7 @@ public class SuperScouting extends AppCompatActivity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -290,11 +301,17 @@ public class SuperScouting extends AppCompatActivity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
+                    if (!practice) {
+                        new SaveTask().execute(data);
+                    }
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    if (practice) {
+                        intent.putExtra(Constants.MATCH_NUMBER, -1);
+                    } else {
+                        intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    }
                     startActivity(intent);
                 } else {
                     Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -316,7 +333,11 @@ public class SuperScouting extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                if (practice) {
+                    intent.putExtra(Constants.MATCH_NUMBER, -1);
+                } else {
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                }
                 startActivity(intent);
             }
         });
@@ -335,78 +356,99 @@ public class SuperScouting extends AppCompatActivity {
 
         // Save option
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                // Collect values from all the custom elements
-                List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
-                String error = "";
-                for (ScoutFragment fragment : fragmentList) {
-                    error += fragment.writeContentsToMap(data);
+                        // Collect values from all the custom elements
+                        List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                        ScoutMap data = new ScoutMap();
+                        String error = "";
+                        for (ScoutFragment fragment : fragmentList) {
+                            error += fragment.writeContentsToMap(data);
+                        }
+
+                        if (error.equals("")) {
+                            Log.d(TAG, "Saving values");
+                            if (!practice) {
+                                new SaveTask().execute(data);
+                            }
+
+                            // Go to the next match
+                            Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                            if (practice) {
+                                intent.putExtra(Constants.MATCH_NUMBER, -1);
+                            } else {
+                                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                            }
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
 
-                if (error.equals("")) {
-                    Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
-
-                    // Go to the next match
-                    Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        );
 
         // Cancel Option
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Dialogbox goes away
-            }
-        });
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener()
+
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Dialogbox goes away
+                    }
+                }
+
+        );
 
         // Continue w/o Saving Option
-        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Go to the next match
-                Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
-                startActivity(intent);
-            }
-        });
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener()
+
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Go to the next match
+                        Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
+                        if (practice) {
+                            intent.putExtra(Constants.MATCH_NUMBER, -1);
+                        } else {
+                            intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                        }
+                        startActivity(intent);
+                    }
+                }
+
+        );
         builder.show();
     }
 
     /**
-     *  Asynchronous Task that saves the data in the database and attempts to send to the server
-     *  tablet
+     * Asynchronous Task that saves the data in the database and attempts to send to the server
+     * tablet
      */
-    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, String, Void> {
+    private class SaveTask extends AsyncTask<ScoutMap, String, Void> {
 
         BluetoothSync bluetoothSync;
 
         /**
          * Saves the data to the database and attempts to send to the server tablet
+         *
          * @param maps The data
          * @return nothing
          */
         @Override
-        protected Void doInBackground(Map<String, ScoutValue>... maps) {
-            Map<String, ScoutValue> data = maps[0];
+        protected Void doInBackground(ScoutMap... maps) {
+            ScoutMap data = maps[0];
 
             // Add the team and match numbers
             SuperScoutDB superScoutDB = new SuperScoutDB(SuperScouting.this, eventId);
-            data.put(SuperScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-            data.put(SuperScoutDB.KEY_BLUE1, new ScoutValue(arrayList.get(0)));
-            data.put(SuperScoutDB.KEY_BLUE2, new ScoutValue(arrayList.get(1)));
-            data.put(SuperScoutDB.KEY_BLUE3, new ScoutValue(arrayList.get(2)));
-            data.put(SuperScoutDB.KEY_RED1, new ScoutValue(arrayList.get(3)));
-            data.put(SuperScoutDB.KEY_RED2, new ScoutValue(arrayList.get(4)));
-            data.put(SuperScoutDB.KEY_RED3, new ScoutValue(arrayList.get(5)));
+            data.put(SuperScoutDB.KEY_MATCH_NUMBER, matchNumber);
+            data.put(SuperScoutDB.KEY_BLUE1, arrayList.get(0));
+            data.put(SuperScoutDB.KEY_BLUE2, arrayList.get(1));
+            data.put(SuperScoutDB.KEY_BLUE3, arrayList.get(2));
+            data.put(SuperScoutDB.KEY_RED1, arrayList.get(3));
+            data.put(SuperScoutDB.KEY_RED2, arrayList.get(4));
+            data.put(SuperScoutDB.KEY_RED3, arrayList.get(5));
             // Store values to the database
             superScoutDB.updateMatch(data);
 
@@ -487,6 +529,7 @@ public class SuperScouting extends AppCompatActivity {
 
         /**
          * Displays the progress
+         *
          * @param values The text to display
          */
         @Override

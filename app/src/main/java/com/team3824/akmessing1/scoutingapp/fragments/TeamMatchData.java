@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.list_items.ELI_Points;
@@ -42,7 +43,7 @@ public class TeamMatchData extends Fragment {
         SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         StatsDB statsDB = new StatsDB(activity,eventID);
-        Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
+        ScoutMap statsMap = statsDB.getTeamStats(teamNumber);
 
         // Setup Points header row
         LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.points_header);
@@ -68,40 +69,40 @@ public class TeamMatchData extends Fragment {
         boolean hasPlayed = statsMap.containsKey(Constants.TOTAL_MATCHES);
 
         if(hasPlayed) {
-            float totalMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
+            float totalMatches = statsMap.getInt(Constants.TOTAL_MATCHES);
             ((TextView)view.findViewById(R.id.num_matches)).setText(String.valueOf((int)totalMatches));
 
-            team.mHighPoints = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() * 5 +
-                    statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt() * 10;
+            team.mHighPoints = statsMap.getInt(Constants.TOTAL_TELEOP_HIGH_HIT) * 5 +
+                    statsMap.getInt(Constants.TOTAL_AUTO_HIGH_HIT) * 10;
 
-            team.mLowPoints = statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt() * 2 +
-                    statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt() * 5;
+            team.mLowPoints = statsMap.getInt(Constants.TOTAL_TELEOP_LOW_HIT) * 2 +
+                    statsMap.getInt(Constants.TOTAL_AUTO_LOW_HIT) * 5;
 
-            team.mEndgamePoints = statsMap.get(Constants.TOTAL_CHALLENGE).getInt() * 5 +
-                    statsMap.get(Constants.TOTAL_SCALE).getInt() * 15;
+            team.mEndgamePoints = statsMap.getInt(Constants.TOTAL_CHALLENGE) * 5 +
+                    statsMap.getInt(Constants.TOTAL_SCALE) * 15;
 
             for (int i = 0; i < 9; i++) {
-                team.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 2;
-                team.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt() * 10;
-                team.mDefensePoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]).getInt() * 5;
+                team.mDefensePoints += statsMap.getInt(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]) * 2;
+                team.mDefensePoints += statsMap.getInt(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]) * 10;
+                team.mDefensePoints += statsMap.getInt(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]) * 5;
             }
 
-            team.mTeleopPoints = statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() * 5 +
-                    statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt() * 2;
+            team.mTeleopPoints = statsMap.getInt(Constants.TOTAL_TELEOP_HIGH_HIT) * 5 +
+                    statsMap.getInt(Constants.TOTAL_TELEOP_LOW_HIT) * 2;
             for (int i = 0; i < 9; i++) {
-                team.mTeleopPoints += statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]).getInt() * 5;
+                team.mTeleopPoints += statsMap.getInt(Constants.TOTAL_DEFENSES_TELEOP_CROSSED_POINTS[i]) * 5;
             }
 
-            team.mAutoPoints = statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt() * 10 +
-                    statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt() * 5;
+            team.mAutoPoints = statsMap.getInt(Constants.TOTAL_AUTO_HIGH_HIT) * 10 +
+                    statsMap.getInt(Constants.TOTAL_AUTO_LOW_HIT) * 5;
             for (int i = 0; i < 9; i++) {
-                team.mAutoPoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt() * 2;
-                team.mAutoPoints += statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt() * 10;
+                team.mAutoPoints += statsMap.getInt(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]) * 2;
+                team.mAutoPoints += statsMap.getInt(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]) * 10;
             }
 
 
-            team.mFoulPoints = statsMap.get(Constants.TOTAL_FOULS).getInt() * -5 +
-                    statsMap.get(Constants.TOTAL_TECH_FOULS).getInt() * -5;
+            team.mFoulPoints = statsMap.getInt(Constants.TOTAL_FOULS) * -5 +
+                    statsMap.getInt(Constants.TOTAL_TECH_FOULS) * -5;
 
             team.mTotalPoints = team.mEndgamePoints + team.mTeleopPoints + team.mAutoPoints + team.mFoulPoints;
 
@@ -195,14 +196,14 @@ public class TeamMatchData extends Fragment {
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         ((TextView)linearLayout.findViewById(R.id.event_teamNum)).setText("High");
         if(hasPlayed) {
-            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText(String.valueOf(statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText(String.valueOf(statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt() + statsMap.get(Constants.TOTAL_AUTO_HIGH_MISS).getInt()));
-            float percent = (statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt()+statsMap.get(Constants.TOTAL_AUTO_HIGH_MISS).getInt() > 0) ? statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt() / (float)(statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt()+statsMap.get(Constants.TOTAL_AUTO_HIGH_MISS).getInt()) : 0.0f;
+            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_AUTO_HIGH_HIT)));
+            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_AUTO_HIGH_HIT) + statsMap.getInt(Constants.TOTAL_AUTO_HIGH_MISS)));
+            float percent = (statsMap.get(Constants.TOTAL_AUTO_HIGH_HIT).getInt()+statsMap.getInt(Constants.TOTAL_AUTO_HIGH_MISS) > 0) ? statsMap.getInt(Constants.TOTAL_AUTO_HIGH_HIT) / (float)(statsMap.getInt(Constants.TOTAL_AUTO_HIGH_HIT)+statsMap.getInt(Constants.TOTAL_AUTO_HIGH_MISS)) : 0.0f;
             percent *= 100.0;
             ((TextView) linearLayout.findViewById(R.id.event_auto_percentage)).setText(String.format("%.1f%%", percent));
             ((TextView) linearLayout.findViewById(R.id.event_teleop_made)).setText(String.valueOf(statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt()));
             ((TextView) linearLayout.findViewById(R.id.event_teleop_taken)).setText(String.valueOf(statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt()+statsMap.get(Constants.TOTAL_TELEOP_HIGH_MISS).getInt()));
-            percent = (statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt()+statsMap.get(Constants.TOTAL_TELEOP_HIGH_MISS).getInt() > 0) ? statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt() / (float)(statsMap.get(Constants.TOTAL_TELEOP_HIGH_HIT).getInt()+statsMap.get(Constants.TOTAL_TELEOP_HIGH_MISS).getInt()) : 0.0f;
+            percent = (statsMap.getInt(Constants.TOTAL_TELEOP_HIGH_HIT)+statsMap.getInt(Constants.TOTAL_TELEOP_HIGH_MISS) > 0) ? statsMap.getFloat(Constants.TOTAL_TELEOP_HIGH_HIT) / (statsMap.getFloat(Constants.TOTAL_TELEOP_HIGH_HIT)+statsMap.getFloat(Constants.TOTAL_TELEOP_HIGH_MISS)) : 0.0f;
             percent *= 100.0;
             ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText(String.format("%.1f%%",percent));
         }
@@ -221,14 +222,14 @@ public class TeamMatchData extends Fragment {
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         ((TextView)linearLayout.findViewById(R.id.event_teamNum)).setText("Low");
         if(hasPlayed) {
-            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText(String.valueOf(statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText(String.valueOf(statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt() + statsMap.get(Constants.TOTAL_AUTO_LOW_MISS).getInt()));
-            float percent = (statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt()+statsMap.get(Constants.TOTAL_AUTO_LOW_MISS).getInt() > 0) ? statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt() / (float)(statsMap.get(Constants.TOTAL_AUTO_LOW_HIT).getInt()+statsMap.get(Constants.TOTAL_AUTO_LOW_MISS).getInt()) : 0.0f;
+            ((TextView) linearLayout.findViewById(R.id.event_auto_made)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_AUTO_LOW_HIT)));
+            ((TextView) linearLayout.findViewById(R.id.event_auto_taken)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_AUTO_LOW_HIT) + statsMap.getInt(Constants.TOTAL_AUTO_LOW_MISS)));
+            float percent = (statsMap.getInt(Constants.TOTAL_AUTO_LOW_HIT)+statsMap.getInt(Constants.TOTAL_AUTO_LOW_MISS) > 0) ? statsMap.getFloat(Constants.TOTAL_AUTO_LOW_HIT) / (statsMap.getFloat(Constants.TOTAL_AUTO_LOW_HIT)+statsMap.getFloat(Constants.TOTAL_AUTO_LOW_MISS)) : 0.0f;
             percent *= 100.0;
             ((TextView) linearLayout.findViewById(R.id.event_auto_percentage)).setText(String.format("%.1f%%", percent));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_made)).setText(String.valueOf(statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_taken)).setText(String.valueOf(statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt()+statsMap.get(Constants.TOTAL_TELEOP_LOW_MISS).getInt()));
-            percent = (statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt()+statsMap.get(Constants.TOTAL_TELEOP_LOW_MISS).getInt() > 0) ? statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt() / (float)(statsMap.get(Constants.TOTAL_TELEOP_LOW_HIT).getInt()+statsMap.get(Constants.TOTAL_TELEOP_LOW_MISS).getInt()) : 0.0f;
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_made)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_TELEOP_LOW_HIT)));
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_taken)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_TELEOP_LOW_HIT)+statsMap.getInt(Constants.TOTAL_TELEOP_LOW_MISS)));
+            percent = (statsMap.getInt(Constants.TOTAL_TELEOP_LOW_HIT)+statsMap.getInt(Constants.TOTAL_TELEOP_LOW_MISS) > 0) ? statsMap.getInt(Constants.TOTAL_TELEOP_LOW_HIT) / (statsMap.getFloat(Constants.TOTAL_TELEOP_LOW_HIT)+statsMap.getFloat(Constants.TOTAL_TELEOP_LOW_MISS)) : 0.0f;
             percent *= 100.0;
             ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText(String.format("%.1f%%",percent));
         }
@@ -260,7 +261,7 @@ public class TeamMatchData extends Fragment {
                     break;
             }
             ((TextView) view.findViewById(R.id.defense_ability)).setText(ranking);
-            ranking = statsMap.get(Constants.DRIVER_ABILITY_RANKING).getString();
+            ranking = statsMap.getString(Constants.DRIVER_ABILITY_RANKING);
             switch(ranking.charAt(ranking.length()-1))
             {
                 case '1':
@@ -291,8 +292,8 @@ public class TeamMatchData extends Fragment {
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
         if(hasPlayed) {
-            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.get(Constants.TOTAL_CHALLENGE).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(statsMap.get(Constants.TOTAL_SCALE).getInt()));
+            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_CHALLENGE)));
+            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_SCALE)));
         }
         else
         {
@@ -313,10 +314,10 @@ public class TeamMatchData extends Fragment {
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
         if(hasPlayed) {
-            ((TextView) linearLayout.findViewById(R.id.event_fouls)).setText(String.valueOf(statsMap.get(Constants.TOTAL_FOULS).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_tech_fouls)).setText(String.valueOf(statsMap.get(Constants.TOTAL_TECH_FOULS).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_yellow_cards)).setText(String.valueOf(statsMap.get(Constants.TOTAL_YELLOW_CARDS).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_red_cards)).setText(String.valueOf(statsMap.get(Constants.TOTAL_RED_CARDS).getInt()));
+            ((TextView) linearLayout.findViewById(R.id.event_fouls)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_FOULS)));
+            ((TextView) linearLayout.findViewById(R.id.event_tech_fouls)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_TECH_FOULS)));
+            ((TextView) linearLayout.findViewById(R.id.event_yellow_cards)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_YELLOW_CARDS)));
+            ((TextView) linearLayout.findViewById(R.id.event_red_cards)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_RED_CARDS)));
         }
         else
         {
@@ -336,9 +337,9 @@ public class TeamMatchData extends Fragment {
         linearLayout = (LinearLayout)view.findViewById(R.id.misc);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         if(hasPlayed) {
-            ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DQ).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DIDNT_SHOW_UP).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(statsMap.get(Constants.TOTAL_STOPPED).getInt()));
+            ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_DQ)));
+            ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_DIDNT_SHOW_UP)));
+            ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(statsMap.getInt(Constants.TOTAL_STOPPED)));
         }
         else
         {
@@ -352,16 +353,16 @@ public class TeamMatchData extends Fragment {
     }
 
 
-    public void setupDefenseRow(LinearLayout linearLayout, Map<String,ScoutValue> statsMap, boolean hasPlayed, int defense_index)
+    public void setupDefenseRow(LinearLayout linearLayout, ScoutMap statsMap, boolean hasPlayed, int defense_index)
     {
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         ((TextView)linearLayout.findViewById(R.id.event_teamNum)).setText(Constants.DEFENSES_LABEL[defense_index]);
         if(hasPlayed) {
-            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[defense_index]).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DEFENSES_SEEN[defense_index]).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(String.valueOf(statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]).getInt()));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText(String.valueOf((statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]).getInt() > 0) ? statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[defense_index]).getInt() : -1));
+            ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(statsMap.getString(Constants.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]));
+            ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(statsMap.getString(Constants.TOTAL_DEFENSES_AUTO_REACHED[defense_index]));
+            ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(statsMap.getString(Constants.TOTAL_DEFENSES_SEEN[defense_index]));
+            ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(statsMap.getString(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]));
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText((statsMap.getInt(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]) > 0) ? statsMap.getString(Constants.TOTAL_DEFENSES_TELEOP_TIME[defense_index]) : "-1");
         }
         else
         {

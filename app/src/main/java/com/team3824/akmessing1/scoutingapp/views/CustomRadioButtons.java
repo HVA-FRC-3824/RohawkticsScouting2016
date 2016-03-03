@@ -9,6 +9,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Arrays;
@@ -53,21 +54,21 @@ public class CustomRadioButtons extends CustomScoutView {
     }
 
     @Override
-    public String writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
         if(radios.getCheckedRadioButtonId() != -1) {
-            map.put(key, new ScoutValue(resourceStrings[radios.getCheckedRadioButtonId()]));
+            map.put(key, resourceStrings[radios.getCheckedRadioButtonId()]);
         }
         else
         {
-            map.put(key, new ScoutValue(""));
+            map.put(key, "");
         }
 
         return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map) {
+    public void restoreFromMap(ScoutMap map) {
         ScoutValue sv = map.get(key);
         if (sv != null) {
             String selectedString = sv.getString();

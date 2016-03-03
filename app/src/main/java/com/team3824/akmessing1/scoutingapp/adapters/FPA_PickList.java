@@ -6,8 +6,8 @@ import android.support.v13.app.FragmentPagerAdapter;
 
 import com.team3824.akmessing1.scoutingapp.fragments.BreacherPick;
 import com.team3824.akmessing1.scoutingapp.fragments.DefensivePick;
+import com.team3824.akmessing1.scoutingapp.fragments.DNP;
 import com.team3824.akmessing1.scoutingapp.fragments.OffensivePick;
-import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.fragments.ShooterPick;
 
 import java.util.ArrayList;
@@ -17,12 +17,14 @@ import java.util.ArrayList;
  */
 public class FPA_PickList extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[]{"Offensive Pick", "Shooter Pick", "Breacher Pick", "Defensive Pick"};
+    private String tabTitles[] = new String[]{"Offensive Pick", "Shooter Pick", "Breacher Pick", "Defensive Pick", "DNP List", "Decline List"};
 
     OffensivePick offensivePick;
     ShooterPick shooterPick;
     BreacherPick breacherPick;
     DefensivePick defensivePick;
+    DNP doNotPick;
+    DNP declinePick;
 
     /**
      * @param fm
@@ -33,6 +35,10 @@ public class FPA_PickList extends FragmentPagerAdapter {
         shooterPick = new ShooterPick();
         breacherPick = new BreacherPick();
         defensivePick = new DefensivePick();
+        doNotPick = new DNP();
+        doNotPick.setDNP();
+        declinePick = new DNP();
+        declinePick.setDecline();
     }
 
     /**
@@ -58,7 +64,7 @@ public class FPA_PickList extends FragmentPagerAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        ScoutFragment fragment = null;
+        Fragment fragment = null;
         switch (position) {
             case 0:
                 fragment = offensivePick;
@@ -71,6 +77,12 @@ public class FPA_PickList extends FragmentPagerAdapter {
                 break;
             case 3:
                 fragment = defensivePick;
+                break;
+            case 4:
+                fragment = doNotPick;
+                break;
+            case 5:
+                fragment = declinePick;
                 break;
             default:
                 assert false;

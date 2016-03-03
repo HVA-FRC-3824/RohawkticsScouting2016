@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.text.SimpleDateFormat;
@@ -104,7 +105,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
      *
      * @param map
      */
-    public void updateMatch(Map<String, ScoutValue> map) {
+    public void updateMatch(ScoutMap map) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.query(tableName, // a. table
@@ -122,13 +123,13 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 if (!map.containsKey(cursor.getColumnName(i))) {
                     switch (cursor.getType(i)) {
                         case Cursor.FIELD_TYPE_FLOAT:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                            map.put(cursor.getColumnName(i), cursor.getFloat(i));
                             break;
                         case Cursor.FIELD_TYPE_INTEGER:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                            map.put(cursor.getColumnName(i), cursor.getInt(i));
                             break;
                         case Cursor.FIELD_TYPE_STRING:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                            map.put(cursor.getColumnName(i), cursor.getString(i));
                             break;
                     }
 
@@ -184,7 +185,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
      * @param matchNum
      * @return
      */
-    public Map<String, ScoutValue> getMatchInfo(int matchNum) {
+    public ScoutMap getMatchInfo(int matchNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -199,20 +200,20 @@ public class SuperScoutDB extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
         // Setup map
-        Map<String, ScoutValue> map = new HashMap<>();
+        ScoutMap map = new ScoutMap();
         for (int i = 1; i < cursor.getColumnCount(); i++) {
             switch (cursor.getType(i)) {
                 case Cursor.FIELD_TYPE_FLOAT:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getFloat(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                    map.put(cursor.getColumnName(i), cursor.getFloat(i));
                     break;
                 case Cursor.FIELD_TYPE_INTEGER:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getInt(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                    map.put(cursor.getColumnName(i), cursor.getInt(i));
                     break;
                 case Cursor.FIELD_TYPE_STRING:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                    map.put(cursor.getColumnName(i), cursor.getString(i));
                     break;
             }
         }

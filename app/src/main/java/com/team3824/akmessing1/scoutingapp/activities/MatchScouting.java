@@ -28,6 +28,7 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothHandler;
@@ -57,6 +58,8 @@ public class MatchScouting extends Activity {
     private int nextTeamNumber = -1;
     private String eventId;
 
+    private boolean practice = false;
+
     /**
      *  Sets up the view pager, pager adapter, and tab layout.
      *
@@ -71,10 +74,16 @@ public class MatchScouting extends Activity {
 
         // Get Match Number and Team Number from the intent
         Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt(Constants.TEAM_NUMBER);
         matchNumber = extras.getInt(Constants.MATCH_NUMBER);
-
-        setTitle("Match Number: " + matchNumber + " Team Number: " + teamNumber);
+        if(matchNumber > 0) {
+            teamNumber = extras.getInt(Constants.TEAM_NUMBER);
+            setTitle("Match Number: " + matchNumber + " Team Number: " + teamNumber);
+        }
+        else
+        {
+            practice = true;
+            setTitle("Practice Match");
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         allianceColor = sharedPreferences.getString(Constants.ALLIANCE_COLOR, "");
@@ -99,14 +108,14 @@ public class MatchScouting extends Activity {
         // (basically if updating)
         eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         MatchScoutDB matchScoutDB = new MatchScoutDB(this, eventId);
-        Map<String, ScoutValue> map = matchScoutDB.getTeamMatchInfo(teamNumber, matchNumber);
+        ScoutMap map = matchScoutDB.getTeamMatchInfo(teamNumber, matchNumber);
         if (map != null) {
             adapter.setValueMap(map);
         }
 
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
         // First match doesn't need a previous menu option
-        if (matchNumber != 1) {
+        if (!practice && matchNumber != 1) {
             Cursor prevCursor = scheduleDB.getMatch(matchNumber - 1);
             int allianceNum = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
             prevTeamNumber = prevCursor.getInt(prevCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
@@ -116,10 +125,17 @@ public class MatchScouting extends Activity {
         }
 
         // Determine if the last match or not
-        Cursor nextCursor = scheduleDB.getMatch(matchNumber + 1);
+        Cursor nextCursor = null;
+        if(!practice) {
+            nextCursor = scheduleDB.getMatch(matchNumber + 1);
+        }
 
         //Last match doesn't need a next button
-        if (nextCursor != null && nextCursor.getCount() > 0) {
+        if(practice)
+        {
+            nextTeamNumber = 0;
+        }
+        else if (nextCursor != null && nextCursor.getCount() > 0) {
             int allianceNum = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
             nextTeamNumber = nextCursor.getInt(nextCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
             Log.d(TAG, "Next Team: " + nextTeamNumber);
@@ -191,7 +207,7 @@ public class MatchScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -199,7 +215,9 @@ public class MatchScouting extends Activity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
+                    if(!practice) {
+                        new SaveTask().execute(data);
+                    }
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, HomeScreen.class);
@@ -246,7 +264,7 @@ public class MatchScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -254,7 +272,9 @@ public class MatchScouting extends Activity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
+                    if(!practice) {
+                        new SaveTask().execute(data);
+                    }
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchList.class);
@@ -303,7 +323,7 @@ public class MatchScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -311,12 +331,20 @@ public class MatchScouting extends Activity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
+                    if(!practice) {
+                        new SaveTask().execute(data);
+                    }
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                    intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    if(practice) {
+                        intent.putExtra(Constants.MATCH_NUMBER, -1);
+                    }
+                    else
+                    {
+                        intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
+                        intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    }
                     startActivity(intent);
                 } else {
                     Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -338,8 +366,14 @@ public class MatchScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                if(practice)
+                {
+                    intent.putExtra(Constants.MATCH_NUMBER, -1);
+                }
+                else {
+                    intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                }
                 startActivity(intent);
             }
         });
@@ -363,7 +397,7 @@ public class MatchScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -371,12 +405,18 @@ public class MatchScouting extends Activity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    new SaveTask().execute(data);
+                    if (!practice) {
+                        new SaveTask().execute(data);
+                    }
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                    intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                    if (practice) {
+                        intent.putExtra(Constants.MATCH_NUMBER, -1);
+                    } else {
+                        intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                        intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                    }
                     startActivity(intent);
                 } else {
                     Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -398,8 +438,14 @@ public class MatchScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                if(practice)
+                {
+                    intent.putExtra(Constants.MATCH_NUMBER, -1);
+                }
+                else {
+                    intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                }
                 startActivity(intent);
             }
         });
@@ -409,18 +455,18 @@ public class MatchScouting extends Activity {
     /**
      * Asynchronous Task to save the data to the database and attempt to send to the server.
      */
-    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, String, Void> {
+    private class SaveTask extends AsyncTask<ScoutMap, String, Void> {
 
         BluetoothSync bluetoothSync;
 
         @Override
-        protected Void doInBackground(Map<String, ScoutValue>... maps) {
-            Map<String, ScoutValue> data = maps[0];
+        protected Void doInBackground(ScoutMap... maps) {
+            ScoutMap data = maps[0];
 
             MatchScoutDB matchScoutDB = new MatchScoutDB(MatchScouting.this, eventId);
-            data.put(MatchScoutDB.KEY_MATCH_NUMBER, new ScoutValue(matchNumber));
-            data.put(MatchScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-            data.put(MatchScoutDB.KEY_ID, new ScoutValue(String.format("%d_%d", matchNumber, teamNumber)));
+            data.put(MatchScoutDB.KEY_MATCH_NUMBER, matchNumber);
+            data.put(MatchScoutDB.KEY_TEAM_NUMBER, teamNumber);
+            data.put(MatchScoutDB.KEY_ID, String.format("%d_%d", matchNumber, teamNumber));
             // Store values to the database
             matchScoutDB.updateMatch(data);
 

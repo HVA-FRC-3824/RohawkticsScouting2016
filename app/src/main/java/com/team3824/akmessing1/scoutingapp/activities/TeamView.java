@@ -81,7 +81,6 @@ public class TeamView extends Activity {
         if (nextTeamNumber == -1) {
             menu.removeItem(R.id.next);
         }
-        menu.removeItem(R.id.reset);
         return true;
     }
 

@@ -8,6 +8,7 @@ import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.fragments.SuperDefenses;
 import com.team3824.akmessing1.scoutingapp.fragments.SuperNotes;
 import com.team3824.akmessing1.scoutingapp.fragments.SuperQualitative;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.lang.ref.WeakReference;
@@ -25,7 +26,7 @@ public class FPA_SuperScout extends FragmentPagerAdapter {
 
     private Map<Integer, WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
-    private Map<String, ScoutValue> valueMap = null;
+    private ScoutMap valueMap = null;
     private ArrayList<Integer> teams;
 
     /**
@@ -88,7 +89,7 @@ public class FPA_SuperScout extends FragmentPagerAdapter {
      *
      * @param map The map containing the previous values
      */
-    public void setValueMap(Map<String, ScoutValue> map) {
+    public void setValueMap(ScoutMap map) {
         valueMap = map;
     }
 

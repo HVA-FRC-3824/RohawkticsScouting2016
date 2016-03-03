@@ -9,11 +9,10 @@ import com.team3824.akmessing1.scoutingapp.fragments.PitMisc;
 import com.team3824.akmessing1.scoutingapp.fragments.PitNotes;
 import com.team3824.akmessing1.scoutingapp.fragments.PitRobotPicture;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Adapter that contains the fragments for pit scouting
@@ -27,7 +26,7 @@ public class FPA_PitScout extends FragmentPagerAdapter {
     private PitMisc pitMisc;
     private PitNotes pitNotes;
 
-    private Map<String, ScoutValue> valueMap = null;
+    private ScoutMap valueMap = null;
 
     /**
      * @param fm
@@ -93,7 +92,7 @@ public class FPA_PitScout extends FragmentPagerAdapter {
      *
      * @param map The map containing the previous values
      */
-    public void setValueMap(Map<String, ScoutValue> map) {
+    public void setValueMap(ScoutMap map) {
         valueMap = map;
     }
 

@@ -22,6 +22,7 @@ import com.team3824.akmessing1.scoutingapp.adapters.FPA_PitScout;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
@@ -80,7 +81,7 @@ public class PitScouting extends Activity {
         eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
         userType = sharedPreferences.getString(Constants.USER_TYPE, "");
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
-        Map<String, ScoutValue> map = pitScoutDB.getTeamMap(teamNumber);
+        ScoutMap map = pitScoutDB.getTeamMap(teamNumber);
         if (map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0) {
             adapter.setValueMap(map);
         }
@@ -107,9 +108,6 @@ public class PitScouting extends Activity {
         if (nextTeamNumber == -1) {
             menu.removeItem(R.id.next);
         }
-        if (!userType.equals(Constants.ADMIN)) {
-            menu.removeItem(R.id.reset);
-        }
         return true;
     }
 
@@ -134,11 +132,8 @@ public class PitScouting extends Activity {
             case R.id.next:
                 next_press();
                 break;
-            case R.id.reset:
-                reset();
-                // Shouldn't be one
             default:
-                super.onOptionsItemSelected(item);
+                assert false;
         }
         return true;
     }
@@ -158,7 +153,7 @@ public class PitScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -210,7 +205,7 @@ public class PitScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -221,7 +216,8 @@ public class PitScouting extends Activity {
                     // Add the team and match numbers
                     new SaveTask().execute(data);
 
-                    Intent intent = new Intent(PitScouting.this, PitList.class);
+                    Intent intent = new Intent(PitScouting.this, TeamList.class);
+                    intent.putExtra(Constants.NEXT_PAGE,Constants.PIT_SCOUTING);
                     startActivity(intent);
                 } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -241,7 +237,8 @@ public class PitScouting extends Activity {
         builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent2 = new Intent(PitScouting.this, PitList.class);
+                Intent intent2 = new Intent(PitScouting.this, TeamList.class);
+                intent2.putExtra(Constants.NEXT_PAGE,Constants.PIT_SCOUTING);
                 startActivity(intent2);
             }
         });
@@ -264,7 +261,7 @@ public class PitScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -321,7 +318,7 @@ public class PitScouting extends Activity {
 
                 // Collect values from all the custom elements
                 List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                Map<String, ScoutValue> data = new HashMap<>();
+                ScoutMap data = new ScoutMap();
                 String error = "";
                 for (ScoutFragment fragment : fragmentList) {
                     error += fragment.writeContentsToMap(data);
@@ -363,43 +360,13 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *  Resets the page and the entry in the database.
-     */
-    //TODO: Shouldn't be needed any more because of the pit group system, so remove
-    private void reset() {
-        Log.d(TAG, "team delete pressed");
-        AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
-        builder.setTitle("Reset pit data?");
-
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
-                pitScoutDB.resetTeam(teamNumber);
-                Map<String, ScoutValue> map = new Hashtable<String, ScoutValue>();
-                Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
-                startActivity(intent);
-            }
-        });
-
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        builder.show();
-    }
-
-    /**
      * Asynchronous Task to save the data to the database.
      */
-    private class SaveTask extends AsyncTask<Map<String, ScoutValue>, Void, Void> {
+    private class SaveTask extends AsyncTask<ScoutMap, Void, Void> {
 
         @Override
-        protected Void doInBackground(Map<String, ScoutValue>... maps) {
-            Map<String, ScoutValue> data = maps[0];
+        protected Void doInBackground(ScoutMap... maps) {
+            ScoutMap data = maps[0];
 
             // Change picture filename to use event id and team number
             String picture_filename = data.get(Constants.PIT_ROBOT_PICTURE).getString();
@@ -409,12 +376,12 @@ public class PitScouting extends Activity {
                 File newPath = new File(getFilesDir(), newPathName);
                 picture.renameTo(newPath);
                 data.remove(Constants.PIT_ROBOT_PICTURE);
-                data.put(Constants.PIT_ROBOT_PICTURE, new ScoutValue(newPathName));
+                data.put(Constants.PIT_ROBOT_PICTURE, newPathName);
             }
 
             PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
             // Add the team and match numbers
-            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
+            data.put(PitScoutDB.KEY_TEAM_NUMBER, teamNumber);
             // Store values to the database
             pitScoutDB.updatePit(data);
             return null;

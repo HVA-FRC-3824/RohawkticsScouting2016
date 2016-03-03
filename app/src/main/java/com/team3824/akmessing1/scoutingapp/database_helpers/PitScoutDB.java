@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import org.json.JSONArray;
@@ -162,7 +163,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
      * Update the data in the pit database table for a team
      * @param map The data
      */
-    public void updatePit(Map<String, ScoutValue> map) {
+    public void updatePit(ScoutMap map) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.query(tableName, // a. table
@@ -173,7 +174,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        map.put(KEY_COMPLETE, new ScoutValue(1));
+        map.put(KEY_COMPLETE, 1);
         String[] columnNames = cursor.getColumnNames();
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -181,13 +182,13 @@ public class PitScoutDB extends SQLiteOpenHelper {
                 if (!map.containsKey(cursor.getColumnName(i))) {
                     switch (cursor.getType(i)) {
                         case Cursor.FIELD_TYPE_INTEGER:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                            map.put(cursor.getColumnName(i), cursor.getInt(i));
                             break;
                         case Cursor.FIELD_TYPE_FLOAT:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                            map.put(cursor.getColumnName(i), cursor.getFloat(i));
                             break;
                         case Cursor.FIELD_TYPE_STRING:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                            map.put(cursor.getColumnName(i), cursor.getString(i));
                             break;
                     }
                 }
@@ -358,7 +359,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
      * @param teamNum
      * @return
      */
-    public Map<String, ScoutValue> getTeamMap(int teamNum) {
+    public ScoutMap getTeamMap(int teamNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -374,25 +375,25 @@ public class PitScoutDB extends SQLiteOpenHelper {
         }
         if (cursor.getCount() == 0) {
             Log.d(TAG, "No rows came back");
-            return new HashMap<>();
+            return new ScoutMap();
         }
 
         // Setup map
-        Map<String, ScoutValue> map = new HashMap<>();
+        ScoutMap map = new ScoutMap();
         cursor.moveToFirst();
         for (int i = 1; i < cursor.getColumnCount(); i++) {
             switch (cursor.getType(i)) {
                 case Cursor.FIELD_TYPE_FLOAT:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getFloat(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                    map.put(cursor.getColumnName(i), cursor.getFloat(i));
                     break;
                 case Cursor.FIELD_TYPE_INTEGER:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getInt(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                    map.put(cursor.getColumnName(i), cursor.getInt(i));
                     break;
                 case Cursor.FIELD_TYPE_STRING:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                    map.put(cursor.getColumnName(i), cursor.getString(i));
                     break;
             }
         }

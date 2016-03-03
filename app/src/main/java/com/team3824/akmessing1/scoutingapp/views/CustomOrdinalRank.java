@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.adapters.OrdinalRankListAdapter;
 
@@ -70,19 +71,19 @@ public class CustomOrdinalRank extends CustomScoutView implements DragSortListVi
     }
 
     @Override
-    public String writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
         JSONArray jsonArray = new JSONArray();
         for(int i = 0; i < adapter.size(); i++) {
             jsonArray.put(adapter.get(i));
         }
         String value = jsonArray.toString();
-        map.put(key, new ScoutValue(value));
+        map.put(key, value);
         return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map){
+    public void restoreFromMap(ScoutMap map){
         ScoutValue sv = map.get(key);
         if(sv != null) {
             String value = sv.getString();

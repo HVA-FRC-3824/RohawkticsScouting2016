@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.text.SimpleDateFormat;
@@ -95,7 +96,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
      *
      * @param map New data to add
      */
-    public void updateMatch(Map<String, ScoutValue> map) {
+    public void updateMatch(ScoutMap map) {
         SQLiteDatabase db = getWritableDatabase();
 
         // Grab anything that isn't being changed
@@ -114,13 +115,13 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 if (!map.containsKey(cursor.getColumnName(i))) {
                     switch (cursor.getType(i)) {
                         case Cursor.FIELD_TYPE_INTEGER:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                            map.put(cursor.getColumnName(i), cursor.getInt(i));
                             break;
                         case Cursor.FIELD_TYPE_FLOAT:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                            map.put(cursor.getColumnName(i), cursor.getFloat(i));
                             break;
                         case Cursor.FIELD_TYPE_STRING:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                            map.put(cursor.getColumnName(i), cursor.getString(i));
                             break;
                     }
                 }
@@ -217,7 +218,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
      * @param matchNum The match number
      * @return Map with all the data for that team in that match
      */
-    public Map<String, ScoutValue> getTeamMatchInfo(int teamNum, int matchNum) {
+    public ScoutMap getTeamMatchInfo(int teamNum, int matchNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -234,21 +235,21 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         }
 
         // Setup map
-        Map<String, ScoutValue> map = new HashMap<>();
+        ScoutMap map = new ScoutMap();
         cursor.moveToFirst();
         for (int i = 1; i < cursor.getColumnCount(); i++) {
             switch (cursor.getType(i)) {
                 case Cursor.FIELD_TYPE_FLOAT:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getFloat(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                    map.put(cursor.getColumnName(i), cursor.getFloat(i));
                     break;
                 case Cursor.FIELD_TYPE_INTEGER:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getInt(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                    map.put(cursor.getColumnName(i), cursor.getInt(i));
                     break;
                 case Cursor.FIELD_TYPE_STRING:
                     Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
-                    map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                    map.put(cursor.getColumnName(i), cursor.getString(i));
                     break;
             }
         }

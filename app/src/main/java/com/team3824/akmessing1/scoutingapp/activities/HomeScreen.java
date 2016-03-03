@@ -226,7 +226,8 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 new SyncMatches().execute();
                 break;
             case R.id.scoutPit_button:
-                intent = new Intent(this, PitList.class);
+                intent = new Intent(this, TeamList.class);
+                intent.putExtra(Constants.NEXT_PAGE,Constants.PIT_SCOUTING);
                 startActivity(intent);
                 break;
             case R.id.syncPit_button:
@@ -241,7 +242,8 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 new SyncSuper().execute();
                 break;
             case R.id.feedback_button:
-                intent = new Intent(this, OurMatchList.class);
+                intent = new Intent(this, MatchList.class);
+                intent.putExtra(Constants.NEXT_PAGE,Constants.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
                 break;
             case R.id.syncDriveTeam_button:
@@ -253,6 +255,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.viewTeam_button:
                 intent = new Intent(this, TeamList.class);
+                intent.putExtra(Constants.NEXT_PAGE,Constants.TEAM_VIEWING);
                 startActivity(intent);
                 break;
             case R.id.viewMatch_button:

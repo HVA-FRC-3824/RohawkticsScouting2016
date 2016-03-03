@@ -19,12 +19,12 @@ import com.team3824.akmessing1.scoutingapp.activities.TeamView;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.list_items.Team;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * Adapter for the list view that holds all the teams for a given picklist
@@ -113,16 +113,16 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(1));
                         teams.remove(t);
                         teams.add(t);
-                        HashMap<String, ScoutValue> map = new HashMap<>();
-                        map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(t.getTeamNumber()));
-                        map.put(StatsDB.KEY_PICKED, new ScoutValue(1));
+                        ScoutMap map = new ScoutMap();
+                        map.put(StatsDB.KEY_TEAM_NUMBER, t.getTeamNumber());
+                        map.put(StatsDB.KEY_PICKED, 1);
                         statsDB.updateStats(map);
                     } else {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(0));
                         Collections.sort(teams, comparator);
-                        HashMap<String, ScoutValue> map = new HashMap<>();
-                        map.put(StatsDB.KEY_TEAM_NUMBER, new ScoutValue(t.getTeamNumber()));
-                        map.put(StatsDB.KEY_PICKED, new ScoutValue(0));
+                        ScoutMap map = new ScoutMap();
+                        map.put(StatsDB.KEY_TEAM_NUMBER,t.getTeamNumber());
+                        map.put(StatsDB.KEY_PICKED, 0);
                         statsDB.updateStats(map);
                     }
                     notifyDataSetChanged();

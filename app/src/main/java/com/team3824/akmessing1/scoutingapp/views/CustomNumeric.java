@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Map;
@@ -39,21 +40,21 @@ public class CustomNumeric extends CustomScoutView{
     }
 
     @Override
-    public String writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
         if(String.valueOf(numeric.getText()).equals(""))
         {
-            map.put(key, new ScoutValue(0.0f));
+            map.put(key, 0.0f);
         }
         else {
-            map.put(key, new ScoutValue(Float.valueOf(String.valueOf(numeric.getText()))));
+            map.put(key, Float.valueOf(String.valueOf(numeric.getText())));
         }
 
         return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map)
+    public void restoreFromMap(ScoutMap map)
     {
         ScoutValue sv = map.get(key);
         if(sv != null) {

@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.views.CustomCheckbox;
 import com.team3824.akmessing1.scoutingapp.views.CustomCounter;
@@ -156,16 +157,16 @@ public class CustomStacks extends CustomScoutView {
 
     // Custom save
     @Override
-    public String writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
         String saveValue = jsonArray.toString();
-        map.put(key,new ScoutValue(saveValue));
+        map.put(key, saveValue);
         return "";
     }
 
     // Custom restore
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map) {
+    public void restoreFromMap(ScoutMap map) {
         ScoutValue sv = map.get(key);
         if(sv != null) {
             String restoreValue = sv.getString();

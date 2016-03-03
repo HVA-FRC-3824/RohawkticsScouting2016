@@ -211,8 +211,8 @@ public class DriveTeamFeedback extends Activity {
                 driveTeamFeedbackDB.updateComments(team1, String.valueOf(commentEditText1.getText()));
                 driveTeamFeedbackDB.updateComments(team2, String.valueOf(commentEditText2.getText()));
 
-                // Go to the next match
-                Intent intent = new Intent(DriveTeamFeedback.this, OurMatchList.class);
+                Intent intent = new Intent(DriveTeamFeedback.this, MatchList.class);
+                intent.putExtra(Constants.NEXT_PAGE,Constants.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
             }
         });
@@ -229,8 +229,8 @@ public class DriveTeamFeedback extends Activity {
         builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Go to the next match
-                Intent intent = new Intent(DriveTeamFeedback.this, OurMatchList.class);
+                Intent intent = new Intent(DriveTeamFeedback.this, MatchList.class);
+                intent.putExtra(Constants.NEXT_PAGE,Constants.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
             }
         });

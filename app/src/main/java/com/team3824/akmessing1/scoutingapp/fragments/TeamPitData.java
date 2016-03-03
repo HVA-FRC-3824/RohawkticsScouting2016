@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 
@@ -38,54 +39,54 @@ public class TeamPitData extends Fragment{
         SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         PitScoutDB pitScoutDB = new PitScoutDB(activity,eventID);
-        Map<String, ScoutValue> pitMap = pitScoutDB.getTeamMap(teamNumber);
+        ScoutMap pitMap = pitScoutDB.getTeamMap(teamNumber);
 
         TextView textView = (TextView)view.findViewById(R.id.pit_robot_width);
         if(pitMap.containsKey(Constants.PIT_ROBOT_WIDTH))
         {
-            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_WIDTH).getFloat()));
+            textView.setText(pitMap.getString(Constants.PIT_ROBOT_WIDTH));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_robot_length);
         if(pitMap.containsKey(Constants.PIT_ROBOT_LENGTH))
         {
-            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_LENGTH).getFloat()));
+            textView.setText(pitMap.getString(Constants.PIT_ROBOT_LENGTH));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_robot_height);
         if(pitMap.containsKey(Constants.PIT_ROBOT_HEIGHT))
         {
-            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_HEIGHT).getFloat()));
+            textView.setText(pitMap.getString(Constants.PIT_ROBOT_HEIGHT));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_robot_weight);
         if(pitMap.containsKey(Constants.PIT_ROBOT_WEIGHT))
         {
-            textView.setText(String.valueOf(pitMap.get(Constants.PIT_ROBOT_WEIGHT).getFloat()));
+            textView.setText(pitMap.getString(Constants.PIT_ROBOT_WEIGHT));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_number_cims);
         if(pitMap.containsKey(Constants.PIT_NUMBER_OF_CIMS))
         {
-            textView.setText(String.valueOf(pitMap.get(Constants.PIT_NUMBER_OF_CIMS).getInt()));
+            textView.setText(pitMap.getString(Constants.PIT_NUMBER_OF_CIMS));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_drivetrain);
         if(pitMap.containsKey(Constants.PIT_DRIVETRAIN))
         {
-            textView.setText(pitMap.get(Constants.PIT_DRIVETRAIN).getString());
+            textView.setText(pitMap.getString(Constants.PIT_DRIVETRAIN));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_programming_language);
         if(pitMap.containsKey(Constants.PIT_PROGRAMMING_LANGUAGE))
         {
-            textView.setText(pitMap.get(Constants.PIT_PROGRAMMING_LANGUAGE).getString());
+            textView.setText(pitMap.getString(Constants.PIT_PROGRAMMING_LANGUAGE));
         }
 
         textView = (TextView)view.findViewById(R.id.pit_notes);
         if(pitMap.containsKey(Constants.PIT_NOTES))
         {
-            textView.setText(pitMap.get(Constants.PIT_NOTES).getString());
+            textView.setText(pitMap.getString(Constants.PIT_NOTES));
         }
 
         return view;

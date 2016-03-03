@@ -17,8 +17,4 @@
         android:id="@+id/next"
         android:title="Next Team"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/reset"
-        android:title="Reset"
-        app:showAsAction="never" />
 </menu>

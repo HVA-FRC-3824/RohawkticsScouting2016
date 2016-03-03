@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Map;
@@ -56,15 +57,15 @@ public class CustomCheckbox extends CustomScoutView {
 
     // Custom save
     @Override
-    public String writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
-        map.put(key, new ScoutValue(checkbox.isChecked()? 1 : 0));
+        map.put(key, checkbox.isChecked()? 1 : 0);
         return "";
     }
 
     // Custom restore
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map)
+    public void restoreFromMap(ScoutMap map)
     {
         ScoutValue sv = map.get(key);
         if(sv != null) {

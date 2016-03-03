@@ -10,6 +10,7 @@ import android.widget.Spinner;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.DefenseAdapter;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
@@ -76,7 +77,7 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
     }
 
     @Override
-    public String writeContentsToMap(Map<String, ScoutValue> map, ViewGroup vg)
+    public String writeContentsToMap(ScoutMap map, ViewGroup vg)
     {
         for(int i = 0; i < 7; i++)
         {
@@ -87,14 +88,14 @@ public class SuperDefenses extends ScoutFragment implements AdapterView.OnItemSe
             }
             else
             {
-                map.put(Constants.SUPER_DEFENSES[i], new ScoutValue(value));
+                map.put(Constants.SUPER_DEFENSES[i], value);
             }
         }
         return "";
     }
 
     @Override
-    public void restoreContentsFromMap(Map<String, ScoutValue> map, ViewGroup vg)
+    public void restoreContentsFromMap(ScoutMap map, ViewGroup vg)
     {
         for(int i = 0; i < 7; i++)
         {

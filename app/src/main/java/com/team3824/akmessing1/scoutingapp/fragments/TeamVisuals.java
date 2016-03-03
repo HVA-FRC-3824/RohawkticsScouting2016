@@ -33,6 +33,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
@@ -111,17 +112,17 @@ public class TeamVisuals extends Fragment {
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
 
         PitScoutDB pitScoutDB = new PitScoutDB(activity, eventID);
-        Map<String, ScoutValue> pitMap = pitScoutDB.getTeamMap(teamNumber);
+        ScoutMap pitMap = pitScoutDB.getTeamMap(teamNumber);
 
         MatchScoutDB matchScoutDB = new MatchScoutDB(activity, eventID);
         Cursor matchCursor = matchScoutDB.getTeamInfo(teamNumber);
 
         StatsDB statsDB = new StatsDB(activity,eventID);
-        Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
+        ScoutMap statsMap = statsDB.getTeamStats(teamNumber);
 
         ImageView imageView = (ImageView)view.findViewById(R.id.robotPicture);
         if (pitMap.containsKey(Constants.PIT_ROBOT_PICTURE)) {
-            String robotPhoto = pitMap.get(Constants.PIT_ROBOT_PICTURE).getString();
+            String robotPhoto = pitMap.getString(Constants.PIT_ROBOT_PICTURE);
             Log.d(TAG, robotPhoto);
             String fullPath = getContext().getFilesDir().getAbsolutePath() + "/" + robotPhoto;
             int targetW = 400;
@@ -402,12 +403,12 @@ public class TeamVisuals extends Fragment {
         return view;
     }
 
-    private void generate_radar_data(Map<String, ScoutValue> map)
+    private void generate_radar_data(ScoutMap map)
     {
         ArrayList<Entry> entries = new ArrayList<>();
         if(map.containsKey(Constants.TOTAL_DEFENSES_SEEN[0])) {
             for (int i = 0; i < 9; i++) {
-                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt(), i));
+                entries.add(new Entry(map.getInt(Constants.TOTAL_DEFENSES_SEEN[i]), i));
             }
         }
         mSeen = new RadarDataSet(entries,"Seen");
@@ -417,7 +418,7 @@ public class TeamVisuals extends Fragment {
         entries = new ArrayList<>();
         if(map.containsKey(Constants.TOTAL_DEFENSES_STARTED[0])) {
             for (int i = 0; i < 9; i++) {
-                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_STARTED[i]).getInt(), i));
+                entries.add(new Entry(map.getInt(Constants.TOTAL_DEFENSES_STARTED[i]), i));
             }
         }
         mStarted = new RadarDataSet(entries,"Started in front of");
@@ -427,7 +428,7 @@ public class TeamVisuals extends Fragment {
         entries = new ArrayList<>();
         if(map.containsKey(Constants.TOTAL_DEFENSES_AUTO_REACHED[0])) {
             for (int i = 0; i < 9; i++) {
-                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]).getInt(), i));
+                entries.add(new Entry(map.getInt(Constants.TOTAL_DEFENSES_AUTO_REACHED[i]), i));
             }
         }
         mReached = new RadarDataSet(entries,"Auto Reach");
@@ -437,7 +438,7 @@ public class TeamVisuals extends Fragment {
         entries = new ArrayList<>();
         if(map.containsKey(Constants.TOTAL_DEFENSES_AUTO_CROSSED[0])) {
             for (int i = 0; i < 9; i++) {
-                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]).getInt(), i));
+                entries.add(new Entry(map.getInt(Constants.TOTAL_DEFENSES_AUTO_CROSSED[i]), i));
             }
         }
         mAutoCross = new RadarDataSet(entries,"Auto Cross");
@@ -447,7 +448,7 @@ public class TeamVisuals extends Fragment {
         entries = new ArrayList<>();
         if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[0])) {
             for (int i = 0; i < 9; i++) {
-                entries.add(new Entry(map.get(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]).getInt(), i));
+                entries.add(new Entry(map.getInt(Constants.TOTAL_DEFENSES_TELEOP_CROSSED[i]), i));
             }
         }
         mTeleopCross = new RadarDataSet(entries,"Teleop Cross");
@@ -455,11 +456,11 @@ public class TeamVisuals extends Fragment {
         mTeleopCross.setValueFormatter(intVF);
 
         entries = new ArrayList<>();
-        if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_TIME[0]) && map.get(Constants.TOTAL_MATCHES).getInt() > 0) {
+        if(map.containsKey(Constants.TOTAL_DEFENSES_TELEOP_TIME[0]) && map.getInt(Constants.TOTAL_MATCHES) > 0) {
             for (int i = 0; i < 9; i++) {
-                float time = map.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt();
-                float seen = map.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt();
-                float notCross = map.get(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]).getInt();
+                float time = map.getInt(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]);
+                float seen = map.getInt(Constants.TOTAL_DEFENSES_SEEN[i]);
+                float notCross = map.getInt(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]);
                 if(seen > 0 && seen != notCross)
                 {
                     entries.add(new Entry(time / (seen - notCross), i));

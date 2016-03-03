@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TableLayout;
 
 import com.team3824.akmessing1.scoutingapp.R;
@@ -26,7 +25,6 @@ import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 public class TeamList extends Activity {
 
     private static final String TAG = "TeamList";
-    private SimpleCursorAdapter dataAdapter;
 
     /**
      * Sets up the list view
@@ -38,21 +36,39 @@ public class TeamList extends Activity {
         setContentView(R.layout.activity_team_list);
 
         CustomHeader header = (CustomHeader) findViewById(R.id.team_list_header);
+        header.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TeamList.this,HomeScreen.class);
+                startActivity(intent);
+            }
+        });
         header.removeHome();
 
-        final SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
+        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+
+        Bundle extras = getIntent().getExtras();
+        String nextPage = extras.getString(Constants.NEXT_PAGE);
 
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventID);
-        displayListView(pitScoutDB);
+        if(nextPage.equals(Constants.TEAM_VIEWING)) {
+            displayListView(pitScoutDB, -1, nextPage);
+        }
+        else if(nextPage.equals(Constants.PIT_SCOUTING))
+        {
+            displayListView(pitScoutDB,sharedPreferences.getInt(Constants.PIT_GROUP_NUMBER,0), nextPage);
+        }
         pitScoutDB.close();
     }
 
     /**
      * Adds all the buttons with the team numbers and attaches their on click listener
      * @param pitScoutDB The pit scouting database helper
+     * @param pitGroupNumber Group number used for spliting up the pit scouting assignments
+     * @param nextPage The next page to go to once a button is clicked
      */
-    private void displayListView(PitScoutDB pitScoutDB) {
+    private void displayListView(PitScoutDB pitScoutDB, int pitGroupNumber, final String nextPage) {
         Cursor cursor = pitScoutDB.getAllTeamsInfo();
 
         if (cursor != null && cursor.getCount() > 0) {
@@ -61,9 +77,28 @@ public class TeamList extends Activity {
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4, 4, 4, 4);
 
-            // Add buttons
+            // Sets up the different groups with different teams to pit scout
+            //TODO: modify so the assignments are more even. Currently the last group will have fewer
+            // teams to scout than the others if the number of teams is not divisible by 6.
+            int numTeams = cursor.getCount();
+            int numGroupTeams = numTeams / 6;
+            int extra = numTeams % 6;
+            int startPosition = 0;
+            int endPosition = -1;
+            if(nextPage.equals(Constants.PIT_SCOUTING)) {
+                startPosition = numGroupTeams * (pitGroupNumber - 1);
+                endPosition = numGroupTeams * pitGroupNumber;
+                if (extra > 0) {
+                    startPosition += pitGroupNumber - 1;
+                    endPosition += pitGroupNumber;
+                }
+            }
 
-            do {
+            for (cursor.moveToPosition(startPosition); !cursor.isAfterLast(); cursor.moveToNext()) {
+                int position = cursor.getPosition();
+                if (position == endPosition) {
+                    break;
+                }
 
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
@@ -73,19 +108,30 @@ public class TeamList extends Activity {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(TeamList.this, TeamView.class);
+                        Intent intent = null;
+                        if (nextPage.equals(Constants.PIT_SCOUTING)) {
+                            intent = new Intent(TeamList.this, PitScouting.class);
+                        } else if (nextPage.equals(Constants.TEAM_VIEWING)) {
+                            intent = new Intent(TeamList.this, TeamView.class);
+                        } else {
+                            assert false;
+                        }
                         intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
                         startActivity(intent);
                     }
                 });
 
-                button.setBackgroundColor(Color.GRAY);
-                button.setTextColor(Color.WHITE);
-
+                if(nextPage.equals(Constants.PIT_SCOUTING)) {
+                    // Buttons are green if the team has been scouted and red if it hasn't
+                    if (cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_COMPLETE)) != 0) {
+                        button.setBackgroundColor(Color.GREEN);
+                    } else {
+                        button.setBackgroundColor(Color.RED);
+                    }
+                }
 
                 linearLayout.addView(button);
-                cursor.moveToNext();
-            } while (!cursor.isAfterLast());
+            }
         }
     }
 }

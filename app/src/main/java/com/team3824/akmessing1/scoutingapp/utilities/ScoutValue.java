@@ -33,17 +33,50 @@ public class ScoutValue {
 
     public String getString()
     {
-        return value2;
+        switch (type) {
+            case INT_TYPE:
+                return String.valueOf(value1);
+            case STRING_TYPE:
+                return value2;
+            case FLOAT_TYPE:
+                return String.valueOf(value3);
+            default:
+                assert false;
+                return "";
+        }
     }
 
     public int getInt()
     {
-        return value1;
+        switch (type)
+        {
+            case INT_TYPE:
+                return value1;
+            case STRING_TYPE:
+                return Integer.parseInt(value2);
+            case FLOAT_TYPE:
+                return (int)value3;
+            default:
+                assert false;
+                return 0;
+        }
+
     }
 
     public float getFloat()
     {
-        return value3;
+        switch (type)
+        {
+            case INT_TYPE:
+                return (float)value1;
+            case STRING_TYPE:
+                return Float.parseFloat(value2);
+            case FLOAT_TYPE:
+                return value3;
+            default:
+                assert false;
+                return 0.0f;
+        }
     }
 
 }

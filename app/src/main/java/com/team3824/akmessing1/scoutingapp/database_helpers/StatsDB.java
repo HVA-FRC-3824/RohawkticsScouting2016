@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import org.json.JSONArray;
@@ -35,6 +36,8 @@ public class StatsDB extends SQLiteOpenHelper {
     // The team number is going to be the id, but another variable is set up for convenience
     public static final String KEY_TEAM_NUMBER = "_id";
     public static final String KEY_PICKED = "picked";
+    public static final String KEY_DNP = "dnp";
+    public static final String KEY_DECLINE = "decline";
     public static final String KEY_LAST_UPDATED = "last_updated";
 
 
@@ -45,10 +48,9 @@ public class StatsDB extends SQLiteOpenHelper {
      * @param context
      * @param eventID The ID for the event based on FIRST and The Blue Alliance
      */
-    public StatsDB(Context context, String eventID)
-    {
+    public StatsDB(Context context, String eventID) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        tableName = "stats_"+eventID;
+        tableName = "stats_" + eventID;
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
@@ -60,12 +62,13 @@ public class StatsDB extends SQLiteOpenHelper {
      * @param db The database to add the table to
      */
     @Override
-    public void onCreate(SQLiteDatabase db)
-    {
-        String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_PICKED+" INTEGER NOT NULL,"+
-                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+    public void onCreate(SQLiteDatabase db) {
+        String queryString = "CREATE TABLE IF NOT EXISTS " + tableName +
+                "( " + KEY_ID + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                " " + KEY_PICKED + " INTEGER NOT NULL," +
+                " " + KEY_DNP + " INTEGER NOT NULL," +
+                " " + KEY_DECLINE + " INTEGER NOT NULL," +
+                " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
 
@@ -78,13 +81,12 @@ public class StatsDB extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+tableName);
+        db.execSQL("DROP TABLE IF EXISTS " + tableName);
         this.onCreate(db);
     }
 
     // Check if column exists
-    public boolean hasColumn(String columnName)
-    {
+    public boolean hasColumn(String columnName) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(tableName, // a. table
@@ -104,96 +106,89 @@ public class StatsDB extends SQLiteOpenHelper {
      * @param columnName Name of the new column
      * @param columnType What type the new column should be
      */
-    public void addColumn(String columnName, String columnType)
-    {
+    public void addColumn(String columnName, String columnType) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
-        }
-        catch (SQLException e)
-        {
-            Log.d(TAG,e.getMessage());
+        } catch (SQLException e) {
+            Log.d(TAG, e.getMessage());
         }
     }
 
     /**
-     *
      * @param array
      */
-    public void createTeamList(JSONArray array)
-    {
+    public void createTeamList(JSONArray array) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        for(int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             try {
                 JSONObject jsonObject = array.getJSONObject(i);
                 int teamNumber = jsonObject.getInt("team_number");
                 ContentValues values = new ContentValues();
-                values.put(KEY_TEAM_NUMBER,teamNumber);
+                values.put(KEY_TEAM_NUMBER, teamNumber);
                 values.put(KEY_PICKED, 0);
+                values.put(KEY_DECLINE, 0);
+                values.put(KEY_DNP, 0);
                 values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-                db.insert(tableName,null,values);
-            }catch (JSONException e) {
+                db.insert(tableName, null, values);
+            } catch (JSONException e) {
                 Log.d(TAG, "Exception: " + e.toString());
             }
         }
     }
 
     /**
-     *
      * @param teamNumber
      */
-    public void addTeamNumber(int teamNumber)
-    {
+    public void addTeamNumber(int teamNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
         int numEntries = (int) DatabaseUtils.queryNumEntries(db, tableName);
         ContentValues values = new ContentValues();
-        values.put(KEY_TEAM_NUMBER,teamNumber);
+        values.put(KEY_TEAM_NUMBER, teamNumber);
         values.put(KEY_PICKED, 0);
+        values.put(KEY_DECLINE, 0);
+        values.put(KEY_DNP, 0);
         values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-        db.insert(tableName,null,values);
+        db.insert(tableName, null, values);
     }
 
     /**
-     *
      * @param teamNumber
      */
-    public void removeTeamNumber(int teamNumber)
-    {
+    public void removeTeamNumber(int teamNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(tableName, KEY_TEAM_NUMBER + " = ?", new String[]{String.valueOf(teamNumber)});
     }
 
     /**
-     *
      * @param map
      */
-    public void updateStats(Map<String, ScoutValue> map)
-    {
+    public void updateStats(ScoutMap map) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor =db.query(tableName, // a. table
+        Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
                 KEY_TEAM_NUMBER + " = ? ", // c. selections
-                new String[]{String.valueOf(map.get(KEY_TEAM_NUMBER).getInt())}, // d. selections args
+                new String[]{map.getString(KEY_TEAM_NUMBER)}, // d. selections args
                 null, // e. group by
                 null, // f. having
                 null, // g. order by
                 "1"); // h. limit
         String[] columnNames = cursor.getColumnNames();
-        if(cursor != null && cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 if (!map.containsKey(cursor.getColumnName(i))) {
                     switch (cursor.getType(i)) {
                         case Cursor.FIELD_TYPE_INTEGER:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                            map.put(cursor.getColumnName(i), cursor.getInt(i));
                             break;
                         case Cursor.FIELD_TYPE_FLOAT:
-                            map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                            map.put(cursor.getColumnName(i), cursor.getFloat(i));
                             break;
                         case Cursor.FIELD_TYPE_STRING:
-                                map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                            map.put(cursor.getColumnName(i), cursor.getString(i));
                             break;
                     }
                 }
@@ -205,40 +200,36 @@ public class StatsDB extends SQLiteOpenHelper {
 
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-        Log.d(TAG,dateFormat.format(new Date()));
-        for(Map.Entry<String, ScoutValue> entry : map.entrySet())
-        {
+        Log.d(TAG, dateFormat.format(new Date()));
+        for (Map.Entry<String, ScoutValue> entry : map.entrySet()) {
             String column = entry.getKey();
             ScoutValue sv = entry.getValue();
-            if(Arrays.asList(columnNames).indexOf(column) == -1)
-            {
-                switch(sv.getType())
-                {
+            if (Arrays.asList(columnNames).indexOf(column) == -1) {
+                switch (sv.getType()) {
                     case FLOAT_TYPE:
-                        addColumn(column,"REAL");
+                        addColumn(column, "REAL");
                         break;
                     case INT_TYPE:
-                        addColumn(column,"INTEGER");
+                        addColumn(column, "INTEGER");
                         break;
                     case STRING_TYPE:
-                        addColumn(column,"TEXT");
+                        addColumn(column, "TEXT");
                         break;
                 }
             }
 
-            switch(sv.getType())
-            {
+            switch (sv.getType()) {
                 case FLOAT_TYPE:
                     Log.d(TAG, column + "->" + sv.getFloat());
-                    cvs.put(column,sv.getFloat());
+                    cvs.put(column, sv.getFloat());
                     break;
                 case INT_TYPE:
-                    Log.d(TAG,column + "->" + sv.getInt());
-                    cvs.put(column,sv.getInt());
+                    Log.d(TAG, column + "->" + sv.getInt());
+                    cvs.put(column, sv.getInt());
                     break;
                 case STRING_TYPE:
-                    Log.d(TAG,column + "->" + sv.getString());
-                    cvs.put(column,sv.getString());
+                    Log.d(TAG, column + "->" + sv.getString());
+                    cvs.put(column, sv.getString());
                     break;
             }
         }
@@ -246,11 +237,9 @@ public class StatsDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @return
      */
-    public Cursor getStats()
-    {
+    public Cursor getStats() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -266,13 +255,11 @@ public class StatsDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param since
      * @return
      */
-    public Cursor getStatsSince(String since)
-    {
-        if(since.equals("") || since == null)
+    public Cursor getStatsSince(String since) {
+        if (since.equals("") || since == null)
             return getStats();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
@@ -289,12 +276,10 @@ public class StatsDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param teamNum
      * @return
      */
-    public Map<String, ScoutValue> getTeamStats(int teamNum)
-    {
+    public ScoutMap getTeamStats(int teamNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -304,26 +289,25 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // f. having
                 null, // g. order by
                 null); // h. limit
-        if (cursor == null)
-        {
+        if (cursor == null) {
             return null;
         }
-        Map<String, ScoutValue> map = new HashMap<>();
+        ScoutMap map = new ScoutMap();
         cursor.moveToFirst();
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             for (int i = 1; i < cursor.getColumnCount(); i++) {
                 switch (cursor.getType(i)) {
                     case Cursor.FIELD_TYPE_FLOAT:
                         Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getFloat(i));
-                        map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
+                        map.put(cursor.getColumnName(i), cursor.getFloat(i));
                         break;
                     case Cursor.FIELD_TYPE_INTEGER:
                         Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getInt(i));
-                        map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
+                        map.put(cursor.getColumnName(i), cursor.getInt(i));
                         break;
                     case Cursor.FIELD_TYPE_STRING:
                         Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
-                        map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
+                        map.put(cursor.getColumnName(i), cursor.getString(i));
                         break;
                 }
             }
@@ -332,11 +316,9 @@ public class StatsDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @return
      */
-    public String getLastUpdatedTime()
-    {
+    public String getLastUpdatedTime() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 new String[]{KEY_LAST_UPDATED}, // b. column names
@@ -344,12 +326,12 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // d. selections args
                 null, // e. group by
                 null, // f. having
-                KEY_LAST_UPDATED+" DESC", // g. order by
+                KEY_LAST_UPDATED + " DESC", // g. order by
                 "1"); // h. limit
-        if(cursor == null )
+        if (cursor == null)
             return null;
 
-        if(cursor.getCount() == 0)
+        if (cursor.getCount() == 0)
             return "";
 
         cursor.moveToFirst();
@@ -358,12 +340,10 @@ public class StatsDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param teamNum
      * @return
      */
-    public String getLastUpdatedTime(int teamNum)
-    {
+    public String getLastUpdatedTime(int teamNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 new String[]{KEY_LAST_UPDATED}, // b. column names
@@ -371,9 +351,9 @@ public class StatsDB extends SQLiteOpenHelper {
                 new String[]{String.valueOf(teamNum)}, // d. selections args
                 null, // e. group by
                 null, // f. having
-                KEY_LAST_UPDATED+" DESC", // g. order by
+                KEY_LAST_UPDATED + " DESC", // g. order by
                 "1"); // h. limit
-        if(cursor != null)
+        if (cursor != null)
             cursor.moveToFirst();
         else
             return null;
@@ -384,8 +364,7 @@ public class StatsDB extends SQLiteOpenHelper {
     /**
      * Resets the table
      */
-    public void reset()
-    {
+    public void reset() {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ArrayList<Integer> teams = new ArrayList<>();
@@ -395,40 +374,42 @@ public class StatsDB extends SQLiteOpenHelper {
                 null, // d. selections args
                 null, // e. group by
                 null, // f. having
-                KEY_TEAM_NUMBER+" DESC", // g. order by
+                KEY_TEAM_NUMBER + " DESC", // g. order by
                 null); // h. limit
         cursor.moveToFirst();
-        while(!cursor.isAfterLast())
-        {
+        while (!cursor.isAfterLast()) {
             teams.add(cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER)));
             cursor.moveToNext();
         }
 
 
-        String query = "DROP TABLE "+tableName;
+        String query = "DROP TABLE " + tableName;
         db.execSQL(query);
-        query = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_PICKED+" INTEGER NOT NULL,"+
-                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        query = "CREATE TABLE IF NOT EXISTS " + tableName +
+                "( " + KEY_ID + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                " " + KEY_PICKED + " INTEGER NOT NULL," +
+                " " + KEY_DNP + " INTEGER NOT NULL," +
+                " " + KEY_DECLINE + " INTEGER NOT NULL," +
+                " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(query);
-        for(int i = 0; i < teams.size(); i++) {
-                int teamNumber = teams.get(i);
-                ContentValues values = new ContentValues();
-                values.put(KEY_TEAM_NUMBER,teamNumber);
-                values.put(KEY_PICKED, 0);
-                values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-                db.insert(tableName,null,values);
+        for (int i = 0; i < teams.size(); i++) {
+            int teamNumber = teams.get(i);
+            ContentValues values = new ContentValues();
+            values.put(KEY_TEAM_NUMBER, teamNumber);
+            values.put(KEY_PICKED, 0);
+            values.put(KEY_DECLINE, 0);
+            values.put(KEY_DNP, 0);
+            values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
+            db.insert(tableName, null, values);
         }
     }
 
     /**
      * Drops the table
      */
-    public void remove()
-    {
+    public void remove() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DROP TABLE "+tableName;
+        String query = "DROP TABLE " + tableName;
         db.execSQL(query);
     }
 }

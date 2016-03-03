@@ -44,7 +44,8 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
     private final int FINAL_1_INDEX = 4;
     private final int FINAL_2_INDEX = 5;
     private final String SELECT_ALLIANCE = "Select Alliance";
-    File saveFile;
+    File alliancesSaveFile;
+    File bracketSaveFile;
     FileInputStream saveFIS;
     FileOutputStream saveFOS;
     JSONArray json = null;
@@ -116,13 +117,14 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
         ((Button)view.findViewById(R.id.q_2v7)).setOnClickListener(this);
         ((Button)view.findViewById(R.id.q_3v6)).setOnClickListener(this);
         ((Button)view.findViewById(R.id.q_4v5)).setOnClickListener(this);
+        ((Button)view.findViewById(R.id.save)).setOnClickListener(this);
 
         previous = new String[6];
 
-        saveFile = new File(getContext().getFilesDir(), String.format("%s_alliance_selection.txt", eventId));
-        if (saveFile.exists()) {
+        alliancesSaveFile = new File(context.getFilesDir(), String.format("%s_alliance_selection.txt", eventId));
+        if (alliancesSaveFile.exists()) {
             try {
-                saveFIS = new FileInputStream(saveFile);
+                saveFIS = new FileInputStream(alliancesSaveFile);
                 String jsonText = "";
                 char current;
                 while (saveFIS.available() > 0) {
@@ -214,6 +216,44 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
 
                 for (int i = 0; i < 6; i++) {
                     previous[i] = SELECT_ALLIANCE;
+                }
+
+                bracketSaveFile = new File(context.getFilesDir(), String.format("%s_bracket_results.txt", eventId));
+                if(bracketSaveFile.exists())
+                {
+                    json = null;
+                    try {
+                        saveFIS = new FileInputStream(bracketSaveFile);
+                        String jsonText = "";
+                        char current;
+                        while (saveFIS.available() > 0) {
+                            current = (char) saveFIS.read();
+                            jsonText += String.valueOf(current);
+                        }
+                        Log.d(TAG, jsonText);
+                        json = new JSONArray(jsonText);
+                        saveFIS.close();
+                    } catch (FileNotFoundException e) {
+                        Log.d(TAG, e.getMessage());
+                    } catch (IOException e) {
+                        Log.d(TAG, e.getMessage());
+                    } catch (JSONException e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+
+                    if(json != null)
+                    {
+
+                        //TODO: Figure out finals...
+                        for(int i = 0; i < json.length(); i++)
+                        {
+                            try {
+                                spinners[i].setSelection(adapters[i].getPosition(json.getString(i)));
+                            } catch (JSONException e) {
+
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -612,6 +652,35 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
 
                 startActivity(intent);
+                break;
+            case R.id.save:
+                json = new JSONArray();
+                for(int i = 0; i < spinners.length; i++)
+                {
+                    String spinnerValue = String.valueOf(spinners[i].getSelectedItem());
+                    json.put(spinnerValue);
+                }
+                String text = json.toString();
+                Log.d(TAG,text);
+                if(bracketSaveFile.exists())
+                {
+                    bracketSaveFile.delete();
+                    try {
+                        bracketSaveFile.createNewFile();
+                    } catch (IOException e) {
+                        Log.d(TAG,e.getMessage());
+                    }
+                }
+                try
+                {
+                    saveFOS = new FileOutputStream(bracketSaveFile);
+                    saveFOS.write(text.getBytes());
+                    saveFOS.close();
+                } catch (FileNotFoundException e) {
+                    Log.d(TAG,e.getMessage());
+                } catch (IOException e) {
+                    Log.d(TAG,e.getMessage());
+                }
                 break;
         }
     }

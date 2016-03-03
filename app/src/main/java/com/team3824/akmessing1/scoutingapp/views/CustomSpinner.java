@@ -9,6 +9,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Arrays;
@@ -48,14 +49,14 @@ public class CustomSpinner extends CustomScoutView{
     }
 
     @Override
-    public String writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
-        map.put(key, new ScoutValue(String.valueOf(spinner.getSelectedItem())));
+        map.put(key, String.valueOf(spinner.getSelectedItem()));
         return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map)
+    public void restoreFromMap(ScoutMap map)
     {
         ScoutValue sv = map.get(key);
         if(sv != null) {

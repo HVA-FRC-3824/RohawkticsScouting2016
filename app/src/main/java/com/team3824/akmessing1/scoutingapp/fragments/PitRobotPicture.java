@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
@@ -58,7 +59,7 @@ public class PitRobotPicture extends ScoutFragment{
         if(valueMap != null) {
             // Set up the image if one already exists
             if(valueMap.containsKey(Constants.PIT_ROBOT_PICTURE)) {
-                mCurrentPhotoPath = valueMap.get(Constants.PIT_ROBOT_PICTURE).getString();
+                mCurrentPhotoPath = valueMap.getString(Constants.PIT_ROBOT_PICTURE);
                 valueMap.remove(Constants.PIT_ROBOT_PICTURE);
                 if (!mCurrentPhotoPath.equals("")) {
                     if(setPic()) {
@@ -171,9 +172,9 @@ public class PitRobotPicture extends ScoutFragment{
     }
 
     @Override
-    public String writeContentsToMap(Map<String, ScoutValue> map)
+    public String writeContentsToMap(ScoutMap map)
     {
-        map.put(Constants.PIT_ROBOT_PICTURE,new ScoutValue(mCurrentPhotoPath));
+        map.put(Constants.PIT_ROBOT_PICTURE,mCurrentPhotoPath);
         return super.writeContentsToMap(map);
     }
 }

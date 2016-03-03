@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Map;
@@ -37,14 +38,14 @@ public class CustomEdittext extends CustomScoutView {
     }
 
     @Override
-    public String writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
-        map.put(key, new ScoutValue(String.valueOf(edittext.getText())));
+        map.put(key, String.valueOf(edittext.getText()));
         return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map)
+    public void restoreFromMap(ScoutMap map)
     {
         ScoutValue sv = map.get(key);
         if(sv != null) {
