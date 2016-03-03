@@ -46,10 +46,10 @@ public class SyncDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String queryString = "CREATE TABLE IF NOT EXISTS " + tableName +
                 "( " + KEY_ID + " STRING PRIMARY KEY UNIQUE NOT NULL," +
-                " " + KEY_MATCH_LAST_UPDATED + " DATETIME NOT NULL" +
-                " " + KEY_PIT_LAST_UPDATED + " DATETIME NOT NULL" +
-                " " + KEY_SUPER_LAST_UPDATED + " DATETIME NOT NULL" +
-                " " + KEY_DRIVE_TEAM_LAST_UPDATED + " DATETIME NOT NULL" +
+                " " + KEY_MATCH_LAST_UPDATED + " DATETIME NOT NULL," +
+                " " + KEY_PIT_LAST_UPDATED + " DATETIME NOT NULL," +
+                " " + KEY_SUPER_LAST_UPDATED + " DATETIME NOT NULL," +
+                " " + KEY_DRIVE_TEAM_LAST_UPDATED + " DATETIME NOT NULL," +
                 " " + KEY_STATS_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
@@ -92,6 +92,13 @@ public class SyncDB extends SQLiteOpenHelper {
             cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_DRIVE_TEAM_LAST_UPDATED)));
             cvs.put(KEY_STATS_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_STATS_LAST_UPDATED)));
         }
+        else
+        {
+            cvs.put(KEY_PIT_LAST_UPDATED, "");
+            cvs.put(KEY_SUPER_LAST_UPDATED, "");
+            cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, "");
+            cvs.put(KEY_STATS_LAST_UPDATED, "");
+        }
         db.replace(tableName, null, cvs);
         db.close();
     }
@@ -120,6 +127,13 @@ public class SyncDB extends SQLiteOpenHelper {
             cvs.put(KEY_SUPER_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_SUPER_LAST_UPDATED)));
             cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_DRIVE_TEAM_LAST_UPDATED)));
             cvs.put(KEY_STATS_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_STATS_LAST_UPDATED)));
+        }
+        else
+        {
+            cvs.put(KEY_MATCH_LAST_UPDATED, "");
+            cvs.put(KEY_SUPER_LAST_UPDATED, "");
+            cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, "");
+            cvs.put(KEY_STATS_LAST_UPDATED, "");
         }
         db.replace(tableName, null, cvs);
         db.close();
@@ -150,6 +164,13 @@ public class SyncDB extends SQLiteOpenHelper {
             cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_DRIVE_TEAM_LAST_UPDATED)));
             cvs.put(KEY_STATS_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_STATS_LAST_UPDATED)));
         }
+        else
+        {
+            cvs.put(KEY_MATCH_LAST_UPDATED, "");
+            cvs.put(KEY_PIT_LAST_UPDATED, "");
+            cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, "");
+            cvs.put(KEY_STATS_LAST_UPDATED, "");
+        }
         db.replace(tableName, null, cvs);
         db.close();
     }
@@ -179,6 +200,13 @@ public class SyncDB extends SQLiteOpenHelper {
             cvs.put(KEY_SUPER_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_SUPER_LAST_UPDATED)));
             cvs.put(KEY_STATS_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_STATS_LAST_UPDATED)));
         }
+        else
+        {
+            cvs.put(KEY_MATCH_LAST_UPDATED, "");
+            cvs.put(KEY_PIT_LAST_UPDATED, "");
+            cvs.put(KEY_SUPER_LAST_UPDATED, "");
+            cvs.put(KEY_STATS_LAST_UPDATED, "");
+        }
         db.replace(tableName, null, cvs);
         db.close();
     }
@@ -207,6 +235,13 @@ public class SyncDB extends SQLiteOpenHelper {
             cvs.put(KEY_PIT_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_PIT_LAST_UPDATED)));
             cvs.put(KEY_SUPER_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_SUPER_LAST_UPDATED)));
             cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_DRIVE_TEAM_LAST_UPDATED)));
+        }
+        else
+        {
+            cvs.put(KEY_MATCH_LAST_UPDATED, "");
+            cvs.put(KEY_PIT_LAST_UPDATED, "");
+            cvs.put(KEY_SUPER_LAST_UPDATED, "");
+            cvs.put(KEY_DRIVE_TEAM_LAST_UPDATED, "");
         }
         db.replace(tableName, null, cvs);
         db.close();
@@ -332,10 +367,10 @@ public class SyncDB extends SQLiteOpenHelper {
         db.execSQL(query);
         query = "CREATE TABLE IF NOT EXISTS " + tableName +
                 "( " + KEY_ID + " STRING PRIMARY KEY UNIQUE NOT NULL," +
-                " " + KEY_MATCH_LAST_UPDATED + " DATETIME NOT NULL" +
-                " " + KEY_PIT_LAST_UPDATED + " DATETIME NOT NULL" +
-                " " + KEY_SUPER_LAST_UPDATED + " DATETIME NOT NULL" +
-                " " + KEY_DRIVE_TEAM_LAST_UPDATED + " DATETIME NOT NULL" +
+                " " + KEY_MATCH_LAST_UPDATED + " DATETIME NOT NULL," +
+                " " + KEY_PIT_LAST_UPDATED + " DATETIME NOT NULL," +
+                " " + KEY_SUPER_LAST_UPDATED + " DATETIME NOT NULL," +
+                " " + KEY_DRIVE_TEAM_LAST_UPDATED + " DATETIME NOT NULL," +
                 " " + KEY_STATS_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(query);
     }

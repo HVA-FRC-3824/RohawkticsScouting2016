@@ -68,17 +68,20 @@ public class HomeScreen extends Activity implements View.OnClickListener {
         String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        if(!eventID.equals("")) {
+            pitScoutDB = new PitScoutDB(this, eventID);
+            matchScoutDB = new MatchScoutDB(this, eventID);
+            superScoutDB = new SuperScoutDB(this, eventID);
+            statsDB = new StatsDB(this, eventID);
+            driveTeamFeedbackDB = new DriveTeamFeedbackDB(this, eventID);
+            scheduleDB = new ScheduleDB(this, eventID);
+            syncDB = new SyncDB(this, eventID);
+        }
+
         // If settings have been saved then set up the database helpers and the sync handler
         if (!eventID.equals("") && bluetoothAdapter != null) {
             handler = new SyncHandler();
             bluetoothSync = new BluetoothSync(handler, false);
-            matchScoutDB = new MatchScoutDB(this, eventID);
-            pitScoutDB = new PitScoutDB(this, eventID);
-            superScoutDB = new SuperScoutDB(this, eventID);
-            driveTeamFeedbackDB = new DriveTeamFeedbackDB(this, eventID);
-            scheduleDB = new ScheduleDB(this, eventID);
-            statsDB = new StatsDB(this, eventID);
-            syncDB = new SyncDB(this, eventID);
             handler.setDatabaseHelpers(matchScoutDB, pitScoutDB, superScoutDB, driveTeamFeedbackDB, statsDB, syncDB, scheduleDB);
             handler.setContext(this);
         }
