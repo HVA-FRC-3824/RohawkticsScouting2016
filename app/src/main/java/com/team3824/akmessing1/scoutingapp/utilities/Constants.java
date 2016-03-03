@@ -2,9 +2,11 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 public interface Constants {
 
-    public static final String VERSION="Version: 1.0.12";
+    public static final String VERSION="Version: 1.1.0";
 
     public static final String APP_DATA = "appData";
+
+    public static final int OUR_TEAM_NUMBER = 3824;
 
     // Settings
     public static final String EVENT_ID = "event_id";
@@ -87,7 +89,6 @@ public interface Constants {
 
 
     // Super
-
     public static final String SUPER_EVASION_ABILITY = "super_evasion_ability";
     public static final String SUPER_BLOCKING_ABILITY = "super_block_ability";
     public static final String SUPER_SPEED = "super_speed";
@@ -219,4 +220,72 @@ public interface Constants {
     public static final char PING_HEADER = 'p';
     public static final String PING = "ping";
     public static final String PONG = "pong";
+    
+    // Sync Activity
+    public static final String SYNC_NONE = "None";
+    public static final int SYNC_NONE_INDEX = 0;
+
+    public static final String SYNC_PING = "Ping";
+    public static final int SYNC_PING_INDEX = 1;
+
+    public static final String SYNC_SEND_MATCH = "Send Match Data";
+    public static final int SYNC_SEND_MATCH_INDEX = 2;
+
+    public static final String SYNC_SEND_PIT = "Send Pit Data";
+    public static final int SYNC_SEND_PIT_INDEX = 3;
+
+    public static final String SYNC_SEND_SUPER = "Send Super Data";
+    public static final int SYNC_SEND_SUPER_INDEX = 4;
+
+    public static final String SYNC_SEND_FEEDBACK = "Send Drive Team Feedback";
+    public static final int SYNC_SEND_FEEDBACK_INDEX = 5;
+
+    public static final String SYNC_SEND_STATS = "Send Stats";
+    public static final int SYNC_SEND_STATS_INDEX = 6;
+
+    public static final String SYNC_SEND_ALL = "Send All";
+    public static final int SYNC_SEND_ALL_INDEX = 7;
+
+    public static final String SYNC_SEND_SCHEDULE = "Send Schedule";
+    public static final int SYNC_SEND_SCHEDULE_INDEX = 8;
+
+    public static final String SYNC_RECEIVE_MATCH = "Receive Match Data";
+    public static final int SYNC_RECEIVE_MATCH_INDEX = 9;
+
+    public static final String SYNC_RECEIVE_PIT = "Receive Pit Data";
+    public static final int SYNC_RECEIVE_PIT_INDEX = 10;
+
+    public static final String SYNC_RECEIVE_SUPER = "Receive Super Data";
+    public static final int SYNC_RECEIVE_SUPER_INDEX = 11;
+
+    public static final String SYNC_RECEIVE_FEEDBACK = "Receive Drive Team Feedback";
+    public static final int SYNC_RECEIVE_FEEDBACK_INDEX = 12;
+
+    public static final String SYNC_RECEIVE_STATS = "Receive Stats";
+    public static final int SYNC_RECEIVE_STATS_INDEX = 13;
+
+    public static final String SYNC_RECEIVE_ALL = "Receive All";
+    public static final int SYNC_RECEIVE_ALL_INDEX = 14;
+
+    public static final String SYNC_RECEIVE_SCHEDULE = "Receive Schedule";
+    public static final int SYNC_RECEIVE_SCHEDULE_INDEX = 15;
+
+    public static final String[] SYNC_ACTIONS = {SYNC_NONE, SYNC_PING, SYNC_SEND_MATCH, SYNC_SEND_PIT,
+            SYNC_SEND_SUPER, SYNC_SEND_FEEDBACK, SYNC_SEND_STATS, SYNC_SEND_ALL, SYNC_SEND_SCHEDULE,
+            SYNC_RECEIVE_MATCH, SYNC_RECEIVE_PIT, SYNC_RECEIVE_SUPER, SYNC_RECEIVE_FEEDBACK, SYNC_RECEIVE_STATS,
+            SYNC_RECEIVE_ALL, SYNC_RECEIVE_SCHEDULE};
+
+    //Alliance Selection
+    public static final int ALLIANCE_1_INDEX = 0;
+    public static final int ALLIANCE_2_INDEX = 1;
+    public static final int ALLIANCE_3_INDEX = 2;
+    public static final int ALLIANCE_4_INDEX = 3;
+    public static final int ALLIANCE_5_INDEX = 4;
+    public static final int ALLIANCE_6_INDEX = 5;
+    public static final int ALLIANCE_7_INDEX = 6;
+    public static final int ALLIANCE_8_INDEX = 7;
+
+    public static final int CAPTAIN_OFFSET = 0;
+    public static final int FIRST_PICK_OFFSET = 8;
+    public static final int SECOND_PICK_OFFSET = 16;
 }

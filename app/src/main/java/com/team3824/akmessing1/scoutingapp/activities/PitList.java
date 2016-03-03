@@ -62,7 +62,7 @@ public class PitList extends Activity {
      * @param pitGroupNumber Group number used for spliting up the pit scouting assignments
      */
     private void displayListView(PitScoutDB pitScoutDB, int pitGroupNumber) {
-        Cursor cursor = pitScoutDB.getAllTeams();
+        Cursor cursor = pitScoutDB.getAllTeamsInfo();
 
         if (cursor != null && cursor.getCount() > 0) {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.pit_list);

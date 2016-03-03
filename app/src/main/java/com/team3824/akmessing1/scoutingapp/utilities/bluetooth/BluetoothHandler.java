@@ -187,7 +187,7 @@ public class BluetoothHandler extends Handler {
                             case Constants.PIT_HEADER:
                                 lastUpdated = syncDB.getMatchLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updatePitSync(bluetoothSync.getConnectedAddress());
-                                String pitText = Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
+                                String pitText = Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
                                 while(!bluetoothSync.write(pitText.getBytes()));
                                 displayText("Responded with Pit Data");
                                 break;

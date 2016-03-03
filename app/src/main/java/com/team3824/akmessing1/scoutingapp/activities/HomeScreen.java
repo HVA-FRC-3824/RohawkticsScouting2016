@@ -59,7 +59,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_screen);
+        setContentView(R.layout.activity_home_screen);
 
         ((TextView) findViewById(R.id.version)).setText(Constants.VERSION);
 
@@ -117,6 +117,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.matchPlanning_button);
                 setupButton(R.id.viewTeam_button);
                 setupButton(R.id.viewMatch_button);
+                setupButton(R.id.eliminationMatches_button);
                 setupButton(R.id.viewEvent_button);
                 setupButton(R.id.feedback_button);
                 if (bluetoothAdapter != null) {
@@ -135,6 +136,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.matchPlanning_button);
                 setupButton(R.id.viewTeam_button);
                 setupButton(R.id.viewMatch_button);
+                setupButton(R.id.eliminationMatches_button);
                 setupButton(R.id.viewEvent_button);
                 setupButton(R.id.viewPickList_button);
                 setupButton(R.id.syncStrategy_button);
@@ -157,6 +159,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
 
                 setupButton(R.id.viewTeam_button);
                 setupButton(R.id.viewMatch_button);
+                setupButton(R.id.eliminationMatches_button);
                 setupButton(R.id.viewEvent_button);
                 setupButton(R.id.viewPickList_button);
 
@@ -255,6 +258,10 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             case R.id.viewMatch_button:
                 intent = new Intent(this, MatchList.class);
                 intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_VIEWING);
+                startActivity(intent);
+                break;
+            case R.id.eliminationMatches_button:
+                intent = new Intent(this,EliminationMatchList.class);
                 startActivity(intent);
                 break;
             case R.id.viewEvent_button:
@@ -467,7 +474,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getPitLastUpdated(connectedAddress);
             syncDB.updatePitSync(connectedAddress);
 
-            String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamInfoSince(lastUpdated));
+            String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
             if (!pitUpdatedText.equals(String.format("%c[]", Constants.PIT_HEADER))) {
                 for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(pitUpdatedText.getBytes())) {

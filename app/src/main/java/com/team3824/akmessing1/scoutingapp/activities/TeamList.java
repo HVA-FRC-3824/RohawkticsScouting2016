@@ -53,7 +53,7 @@ public class TeamList extends Activity {
      * @param pitScoutDB The pit scouting database helper
      */
     private void displayListView(PitScoutDB pitScoutDB) {
-        Cursor cursor = pitScoutDB.getAllTeams();
+        Cursor cursor = pitScoutDB.getAllTeamsInfo();
 
         if (cursor != null && cursor.getCount() > 0) {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.team_list);

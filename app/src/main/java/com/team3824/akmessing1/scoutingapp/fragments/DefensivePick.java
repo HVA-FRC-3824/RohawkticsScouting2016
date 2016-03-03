@@ -6,12 +6,24 @@ import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.list_items.Team;
 
+/**
+ *
+ */
 public class DefensivePick extends ScoutPick{
+    /**
+     *
+     */
     public DefensivePick()
     {
         setPickType("defensive");
     }
 
+    /**
+     *
+     * @param team
+     * @param statsCursor
+     * @return
+     */
     @Override
     protected Team setupTeam(Team team, Cursor statsCursor) {
         if (statsCursor.getColumnIndex(Constants.TOTAL_MATCHES) > -1 && statsCursor.getInt(statsCursor.getColumnIndex(Constants.TOTAL_MATCHES)) > 0) {

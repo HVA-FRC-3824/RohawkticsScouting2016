@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Quarter Finals -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quarterfinals"
+                android:textSize="40sp"
+                android:textColor="@color/black"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 1"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightRed"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance1"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 8"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightBlue"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance8"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Match"
+                android:id="@+id/q_1v8"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:background="@color/navy_blue"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 4"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightRed"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance4"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 5"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightBlue"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance5"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Match"
+                android:id="@+id/q_4v5"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:background="@color/navy_blue"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 2"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightRed"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance2"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 7"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightBlue"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance7"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Match"
+                android:id="@+id/q_2v7"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:background="@color/navy_blue"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 3"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightRed"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance3"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance 6"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightBlue"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/q_alliance6"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Match"
+                android:id="@+id/q_3v6"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:background="@color/navy_blue"
+                android:padding="5dp" />
+
+        </LinearLayout>
+
+        <!-- Semi Finals -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Semifinal"
+                android:textSize="40sp"
+                android:textColor="@color/black"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance ?"
+                android:id="@+id/s_label1"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightRed"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/s_alliance1"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance ?"
+                android:id="@+id/s_label2"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightBlue"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/s_alliance2"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Match"
+                android:id="@+id/s_1v2"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:background="@color/navy_blue"
+                android:padding="5dp"
+                android:visibility="invisible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance ?"
+                android:id="@+id/s_label3"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightRed"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/s_alliance3"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance ?"
+                android:id="@+id/s_label4"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightBlue"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/s_alliance4"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Match"
+                android:id="@+id/s_3v4"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:background="@color/navy_blue"
+                android:padding="5dp"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <!-- Finals -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Finals"
+                android:textSize="40sp"
+                android:textColor="@color/black"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance ?"
+                android:id="@+id/f_label1"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightRed"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/f_alliance1"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alliance ?"
+                android:id="@+id/f_label2"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/brightBlue"
+                android:textSize="25sp" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test text"
+                android:id="@+id/f_alliance2"
+                android:layout_gravity="center_horizontal"
+                android:textSize="20sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Match"
+                android:id="@+id/f_1v2"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:background="@color/navy_blue"
+                android:padding="5dp"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

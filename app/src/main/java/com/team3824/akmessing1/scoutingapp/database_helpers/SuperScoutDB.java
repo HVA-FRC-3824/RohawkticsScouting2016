@@ -21,12 +21,6 @@ import java.util.Map;
 // Database helper for match scouting data
 public class SuperScoutDB extends SQLiteOpenHelper {
 
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
-    // Database Name
-    private static final String DATABASE_NAME = "RohawkticsDB";
-    private String TAG = "SuperScoutDB";
-
     // Initial Table Columns names
     public static final String KEY_ID = "_id";
     public static final String KEY_MATCH_NUMBER = "_id";
@@ -37,58 +31,80 @@ public class SuperScoutDB extends SQLiteOpenHelper {
     public static final String KEY_RED2 = "red2";
     public static final String KEY_RED3 = "red3";
     public static final String KEY_LAST_UPDATED = "last_updated";
-
-
-    private String tableName;
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+    // Database Name
+    private static final String DATABASE_NAME = "RohawkticsDB";
     private static SimpleDateFormat dateFormat;
+    private String TAG = "SuperScoutDB";
+    private String tableName;
 
-
-    public SuperScoutDB(Context context, String eventID)
-    {
+    /**
+     * @param context
+     * @param eventID The ID for the event based on FIRST and The Blue Alliance
+     */
+    public SuperScoutDB(Context context, String eventID) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        tableName = "superScouting_"+eventID;
+        tableName = "superScouting_" + eventID;
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
     }
 
+    /**
+     * Creates new database table if one does not exist
+     *
+     * @param db The database to add the table to
+     */
     @Override
-    public void onCreate(SQLiteDatabase db)
-    {
-        String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_BLUE1+" INTEGER NOT NULL,"+
-                " "+KEY_BLUE2+" INTEGER NOT NULL,"+
-                " "+KEY_BLUE3+" INTEGER NOT NULL,"+
-                " "+KEY_RED1+" INTEGER NOT NULL,"+
-                " "+KEY_RED2+" INTEGER NOT NULL,"+
-                " "+KEY_RED3+" INTEGER NOT NULL,"+
-                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+    public void onCreate(SQLiteDatabase db) {
+        String queryString = "CREATE TABLE IF NOT EXISTS " + tableName +
+                "( " + KEY_ID + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                " " + KEY_BLUE1 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE2 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE3 + " INTEGER NOT NULL," +
+                " " + KEY_RED1 + " INTEGER NOT NULL," +
+                " " + KEY_RED2 + " INTEGER NOT NULL," +
+                " " + KEY_RED3 + " INTEGER NOT NULL," +
+                " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
 
+    /**
+     * Upgrades the table by dropping it and creating a new one
+     *
+     * @param db         The database to update
+     * @param oldVersion Old version number
+     * @param newVersion New version number
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+tableName);
+        db.execSQL("DROP TABLE IF EXISTS " + tableName);
         this.onCreate(db);
     }
 
-    // Add column to table
-    public void addColumn(String columnName, String columnType)
-    {
+    /**
+     * Adds a new column to the table
+     *
+     * @param columnName Name of the new column
+     * @param columnType What type the new column should be
+     */
+    public void addColumn(String columnName, String columnType) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.getMessage();
         }
     }
 
     // Store data in the database for a specific match and team
-    public void updateMatch(Map<String, ScoutValue> map)
-    {
+
+    /**
+     *
+     * @param map
+     */
+    public void updateMatch(Map<String, ScoutValue> map) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.query(tableName, // a. table
@@ -100,7 +116,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null, // g. order by
                 "1"); // h. limit
         String[] columnNames = cursor.getColumnNames();
-        if(cursor != null && cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             for (int i = 0; i < cursor.getColumnCount(); i++) {
                 if (!map.containsKey(cursor.getColumnName(i))) {
@@ -125,39 +141,35 @@ public class SuperScoutDB extends SQLiteOpenHelper {
 
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
-        for(Map.Entry<String, ScoutValue> entry : map.entrySet())
-        {
+        for (Map.Entry<String, ScoutValue> entry : map.entrySet()) {
             String column = entry.getKey();
             ScoutValue sv = entry.getValue();
-            if(Arrays.asList(columnNames).indexOf(column) == -1)
-            {
-                switch(sv.getType())
-                {
+            if (Arrays.asList(columnNames).indexOf(column) == -1) {
+                switch (sv.getType()) {
                     case FLOAT_TYPE:
-                        addColumn(column,"REAL");
+                        addColumn(column, "REAL");
                         break;
                     case INT_TYPE:
-                        addColumn(column,"INTEGER");
+                        addColumn(column, "INTEGER");
                         break;
                     case STRING_TYPE:
-                        addColumn(column,"TEXT");
+                        addColumn(column, "TEXT");
                         break;
                 }
             }
 
-            switch(sv.getType())
-            {
+            switch (sv.getType()) {
                 case FLOAT_TYPE:
-                    Log.d(TAG,column + "->" + sv.getFloat());
-                    cvs.put(column,sv.getFloat());
+                    Log.d(TAG, column + "->" + sv.getFloat());
+                    cvs.put(column, sv.getFloat());
                     break;
                 case INT_TYPE:
-                    Log.d(TAG,column + "->" + sv.getInt());
-                    cvs.put(column,sv.getInt());
+                    Log.d(TAG, column + "->" + sv.getInt());
+                    cvs.put(column, sv.getInt());
                     break;
                 case STRING_TYPE:
-                    Log.d(TAG,column + "->" + sv.getString());
-                    cvs.put(column,sv.getString());
+                    Log.d(TAG, column + "->" + sv.getString());
+                    cvs.put(column, sv.getString());
                     break;
             }
         }
@@ -166,8 +178,13 @@ public class SuperScoutDB extends SQLiteOpenHelper {
     }
 
     // Get all the scouting information about a specific match
-    public Map<String, ScoutValue> getMatchInfo(int matchNum)
-    {
+
+    /**
+     *
+     * @param matchNum
+     * @return
+     */
+    public Map<String, ScoutValue> getMatchInfo(int matchNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -183,19 +200,18 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         cursor.moveToFirst();
         // Setup map
         Map<String, ScoutValue> map = new HashMap<>();
-        for(int i = 1; i < cursor.getColumnCount(); i++)
-        {
-            switch(cursor.getType(i)) {
+        for (int i = 1; i < cursor.getColumnCount(); i++) {
+            switch (cursor.getType(i)) {
                 case Cursor.FIELD_TYPE_FLOAT:
-                    Log.d(TAG,cursor.getColumnName(i) + "<-" + cursor.getFloat(i));
+                    Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getFloat(i));
                     map.put(cursor.getColumnName(i), new ScoutValue(cursor.getFloat(i)));
                     break;
                 case Cursor.FIELD_TYPE_INTEGER:
-                    Log.d(TAG,cursor.getColumnName(i) + "<-" + cursor.getInt(i));
+                    Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getInt(i));
                     map.put(cursor.getColumnName(i), new ScoutValue(cursor.getInt(i)));
                     break;
                 case Cursor.FIELD_TYPE_STRING:
-                    Log.d(TAG,cursor.getColumnName(i) + "<-" + cursor.getString(i));
+                    Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
                     map.put(cursor.getColumnName(i), new ScoutValue(cursor.getString(i)));
                     break;
             }
@@ -204,12 +220,15 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         return map;
     }
 
-    public ArrayList<Integer> getMatchesUpdatedSince(String lastUpdated)
-    {
+    /**
+     *
+     * @param lastUpdated
+     * @return
+     */
+    public ArrayList<Integer> getMatchesUpdatedSince(String lastUpdated) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor;
-        if(lastUpdated == null || lastUpdated.equals(""))
-        {
+        if (lastUpdated == null || lastUpdated.equals("")) {
             cursor = db.query(true, // distinct
                     tableName, // a. table
                     new String[]{KEY_MATCH_NUMBER}, // b. column names
@@ -219,8 +238,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                     null, // f. having
                     null, // g. order by
                     null); // h. limit
-        }
-        else {
+        } else {
             cursor = db.query(true, // distinct
                     tableName, // a. table
                     new String[]{KEY_MATCH_NUMBER}, // b. column names
@@ -231,28 +249,29 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                     null, // g. order by
                     null); // h. limit
         }
-        if(cursor == null)
-        {
+        if (cursor == null) {
             return null;
         }
 
-        if(cursor.getCount() == 0)
-        {
+        if (cursor.getCount() == 0) {
             return new ArrayList<Integer>();
         }
 
         cursor.moveToFirst();
         ArrayList<Integer> matchNumbers = new ArrayList<>();
-        do{
+        do {
             matchNumbers.add(cursor.getInt(0));
             cursor.moveToNext();
-        }while(!cursor.isAfterLast());
+        } while (!cursor.isAfterLast());
         db.close();
         return matchNumbers;
     }
 
-    public Cursor getAllMatches()
-    {
+    /**
+     *
+     * @return
+     */
+    public Cursor getAllMatches() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -267,12 +286,16 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getAllMatchesSince(String since)
-    {
+    /**
+     *
+     * @param since
+     * @return
+     */
+    public Cursor getAllMatchesSince(String since) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
-                KEY_LAST_UPDATED+" > ?", // c. selections
+                KEY_LAST_UPDATED + " > ?", // c. selections
                 new String[]{since}, // d. selections args
                 null, // e. group by
                 null, // f. having
@@ -283,8 +306,12 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor getTeamNotes(int teamNumber)
-    {
+    /**
+     *
+     * @param teamNumber
+     * @return
+     */
+    public Cursor getTeamNotes(int teamNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(tableName, // a. table
                 null, // b. column names
@@ -295,7 +322,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null, // g. order by
                 "1"); // h. limit
 
-        if( cursor.getColumnIndex(Constants.SUPER_NOTES) != -1) {
+        if (cursor.getColumnIndex(Constants.SUPER_NOTES) != -1) {
             cursor = db.query(tableName, // a. table
                     new String[]{KEY_MATCH_NUMBER, Constants.SUPER_NOTES}, // b. column names
                     KEY_BLUE1 + " = ? or " + KEY_BLUE2 + " = ? or " + KEY_BLUE3 + " = ? or " + KEY_RED1 + " = ? or " +
@@ -307,37 +334,40 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                     null, // f. having
                     null, // g. order by
                     null); // h. limit
-        }
-        else
-        {
+        } else {
             return null;
         }
-        if(cursor != null)
+        if (cursor != null)
             cursor.moveToFirst();
         return cursor;
     }
 
-    public void reset()
-    {
+    /**
+     * Resets the table
+     */
+    //TODO: use onUpgrade?
+    public void reset() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DROP TABLE "+tableName;
+        String query = "DROP TABLE " + tableName;
         db.execSQL(query);
-        query = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_ID+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_BLUE1+" INTEGER NOT NULL,"+
-                " "+KEY_BLUE2+" INTEGER NOT NULL,"+
-                " "+KEY_BLUE3+" INTEGER NOT NULL,"+
-                " "+KEY_RED1+" INTEGER NOT NULL,"+
-                " "+KEY_RED2+" INTEGER NOT NULL,"+
-                " "+KEY_RED3+" INTEGER NOT NULL,"+
-                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+        query = "CREATE TABLE IF NOT EXISTS " + tableName +
+                "( " + KEY_ID + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                " " + KEY_BLUE1 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE2 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE3 + " INTEGER NOT NULL," +
+                " " + KEY_RED1 + " INTEGER NOT NULL," +
+                " " + KEY_RED2 + " INTEGER NOT NULL," +
+                " " + KEY_RED3 + " INTEGER NOT NULL," +
+                " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(query);
     }
 
-    public void remove()
-    {
+    /**
+     * Drops the table
+     */
+    public void remove() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DROP TABLE "+tableName;
+        String query = "DROP TABLE " + tableName;
         db.execSQL(query);
     }
 

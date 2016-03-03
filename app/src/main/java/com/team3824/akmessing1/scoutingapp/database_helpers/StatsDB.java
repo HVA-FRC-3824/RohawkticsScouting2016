@@ -41,6 +41,10 @@ public class StatsDB extends SQLiteOpenHelper {
     private String tableName;
     private static SimpleDateFormat dateFormat;
 
+    /**
+     * @param context
+     * @param eventID The ID for the event based on FIRST and The Blue Alliance
+     */
     public StatsDB(Context context, String eventID)
     {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,7 +54,11 @@ public class StatsDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
+    /**
+     * Creates new database table if one does not exist
+     *
+     * @param db The database to add the table to
+     */
     @Override
     public void onCreate(SQLiteDatabase db)
     {
@@ -61,6 +69,13 @@ public class StatsDB extends SQLiteOpenHelper {
         db.execSQL(queryString);
     }
 
+    /**
+     * Upgrades the table by dropping it and creating a new one
+     *
+     * @param db         The database to update
+     * @param oldVersion Old version number
+     * @param newVersion New version number
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+tableName);
@@ -83,7 +98,12 @@ public class StatsDB extends SQLiteOpenHelper {
         return cursor.getColumnIndex(columnName) != -1;
     }
 
-    // Add column to table
+    /**
+     * Adds a new column to the table
+     *
+     * @param columnName Name of the new column
+     * @param columnType What type the new column should be
+     */
     public void addColumn(String columnName, String columnType)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -96,6 +116,10 @@ public class StatsDB extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     *
+     * @param array
+     */
     public void createTeamList(JSONArray array)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -115,6 +139,10 @@ public class StatsDB extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     *
+     * @param teamNumber
+     */
     public void addTeamNumber(int teamNumber)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -126,12 +154,20 @@ public class StatsDB extends SQLiteOpenHelper {
         db.insert(tableName,null,values);
     }
 
+    /**
+     *
+     * @param teamNumber
+     */
     public void removeTeamNumber(int teamNumber)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(tableName, KEY_TEAM_NUMBER + " = ?", new String[]{String.valueOf(teamNumber)});
     }
 
+    /**
+     *
+     * @param map
+     */
     public void updateStats(Map<String, ScoutValue> map)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -209,6 +245,10 @@ public class StatsDB extends SQLiteOpenHelper {
         db.replace(tableName, null, cvs);
     }
 
+    /**
+     *
+     * @return
+     */
     public Cursor getStats()
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -225,6 +265,11 @@ public class StatsDB extends SQLiteOpenHelper {
         return cursor;
     }
 
+    /**
+     *
+     * @param since
+     * @return
+     */
     public Cursor getStatsSince(String since)
     {
         if(since.equals("") || since == null)
@@ -243,6 +288,11 @@ public class StatsDB extends SQLiteOpenHelper {
         return cursor;
     }
 
+    /**
+     *
+     * @param teamNum
+     * @return
+     */
     public Map<String, ScoutValue> getTeamStats(int teamNum)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -281,6 +331,10 @@ public class StatsDB extends SQLiteOpenHelper {
         return map;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLastUpdatedTime()
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -303,6 +357,11 @@ public class StatsDB extends SQLiteOpenHelper {
         return cursor.getString(0);
     }
 
+    /**
+     *
+     * @param teamNum
+     * @return
+     */
     public String getLastUpdatedTime(int teamNum)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -322,6 +381,9 @@ public class StatsDB extends SQLiteOpenHelper {
         return cursor.getString(0);
     }
 
+    /**
+     * Resets the table
+     */
     public void reset()
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -360,6 +422,9 @@ public class StatsDB extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Drops the table
+     */
     public void remove()
     {
         SQLiteDatabase db = this.getWritableDatabase();

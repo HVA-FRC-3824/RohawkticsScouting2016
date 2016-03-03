@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -102,7 +103,7 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         int num_items = 0;
         String temp = fileManager.getCurrentDir();
-        File file = new File(temp + "/" + directory.get(position));
+        final File file = new File(temp + "/" + directory.get(position));
         String[] list = file.list();
 
         if (list != null)
@@ -118,10 +119,6 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
         TextView topView = (TextView) convertView.findViewById(R.id.top_view);
         TextView bottomView = (TextView) convertView.findViewById(R.id.bottom_view);
         ImageView icon = (ImageView) convertView.findViewById(R.id.row_image);
-        ImageView mSelect = (ImageView) convertView.findViewById(R.id.multiselect_icon);
-
-        //topView.setTextColor(mColor);
-        //bottomView.setTextColor(mColor);
 
         if (thumbnailCreator == null)
             thumbnailCreator = new ThumbnailCreator(68, 68);
@@ -254,6 +251,15 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
         }
 
         topView.setText(file.getName());
+
+        ((Button)convertView.findViewById(R.id.delete)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                directory.remove(file.getName());
+                file.delete();
+                DirectoryAdapter.this.notifyDataSetChanged();
+            }
+        });
 
         return convertView;
     }

@@ -1,49 +1,45 @@
 package com.team3824.akmessing1.scoutingapp.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.activities.TeamView;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 
+/**
+ *
+ */
 public class MatchTeamFragment extends Fragment {
 
+    View view;
     private String TAG = "MatchTeamFragment";
 
-    private class StartPosition {
-
-        int mDefenseIndex;
-        int mNumCrosses;
-        int mNumSeen;
-    }
-    private class Defense {
-
-        int mDefenseIndex;
-        float mTime;
-    }
-    View view;
-
-    public MatchTeamFragment()
-    {
+    /**
+     *
+     */
+    public MatchTeamFragment() {
 
     }
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +53,12 @@ public class MatchTeamFragment extends Fragment {
         return view;
     }
 
-    public void setTeamNumber(final int teamNumber, Context context)
-    {
-        TextView textView = (TextView)view.findViewById(R.id.team_number);
+    /**
+     * @param teamNumber
+     * @param context
+     */
+    public void setTeamNumber(final int teamNumber, Context context) {
+        TextView textView = (TextView) view.findViewById(R.id.team_number);
         textView.setText(String.valueOf(teamNumber));
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
@@ -75,9 +74,9 @@ public class MatchTeamFragment extends Fragment {
             }
         });
 
-        StatsDB statsDB = new StatsDB(context,eventId);
+        StatsDB statsDB = new StatsDB(context, eventId);
         Map<String, ScoutValue> statsMap = statsDB.getTeamStats(teamNumber);
-        if(statsMap.containsKey(Constants.TOTAL_MATCHES)) {
+        if (statsMap.containsKey(Constants.TOTAL_MATCHES)) {
             textView = (TextView) view.findViewById(R.id.total_matches);
             int numMatches = statsMap.get(Constants.TOTAL_MATCHES).getInt();
             textView.setText(String.valueOf(numMatches));
@@ -119,11 +118,9 @@ public class MatchTeamFragment extends Fragment {
                         }
                     }
                 });
-                if(starts.get(0).mNumCrosses > 0) {
+                if (starts.get(0).mNumCrosses > 0) {
                     textView.setText(Constants.DEFENSES_LABEL[starts.get(0).mDefenseIndex]);
-                }
-                else
-                {
+                } else {
                     textView.setText("None");
                 }
 
@@ -150,7 +147,7 @@ public class MatchTeamFragment extends Fragment {
                 float mTotalPoints = mEndgamePoints + mTeleopPoints + mAutoPoints + mFoulPoints;
 
 
-                float averagePoints = mTotalPoints / (float)numMatches;
+                float averagePoints = mTotalPoints / (float) numMatches;
 
                 textView.setText(String.valueOf(averagePoints));
 
@@ -160,11 +157,11 @@ public class MatchTeamFragment extends Fragment {
                 float mAutoHighMissed = statsMap.get(Constants.TOTAL_AUTO_HIGH_MISS).getInt();
                 float mAutoHighTotal = (mAutoHighMade + mAutoHighMissed);
                 float mAutoHighAccuracy = 0;
-                if(mAutoHighTotal != 0) {
+                if (mAutoHighTotal != 0) {
                     mAutoHighAccuracy = ((mAutoHighMade / mAutoHighTotal) * 100);
                 }
-                float mAutoHighAverage = mAutoHighMade / (float)numMatches;
-                textView.setText(String.format("%.2f (%.2f%%)",mAutoHighAverage,mAutoHighAccuracy));
+                float mAutoHighAverage = mAutoHighMade / (float) numMatches;
+                textView.setText(String.format("%.2f (%.2f%%)", mAutoHighAverage, mAutoHighAccuracy));
 
                 textView = (TextView) view.findViewById(R.id.auto_low);
 
@@ -172,11 +169,11 @@ public class MatchTeamFragment extends Fragment {
                 float mAutoLowMissed = statsMap.get(Constants.TOTAL_AUTO_LOW_MISS).getInt();
                 float mAutoLowTotal = (mAutoLowMade + mAutoLowMissed);
                 float mAutoLowAccuracy = 0;
-                if(mAutoLowTotal != 0) {
+                if (mAutoLowTotal != 0) {
                     mAutoLowAccuracy = ((mAutoLowMade / mAutoLowTotal) * 100);
                 }
-                float mAutoLowAverage = mAutoLowMade / (float)numMatches;
-                textView.setText(String.format("%.2f (%.2f%%)",mAutoLowAverage,mAutoLowAccuracy));
+                float mAutoLowAverage = mAutoLowMade / (float) numMatches;
+                textView.setText(String.format("%.2f (%.2f%%)", mAutoLowAverage, mAutoLowAccuracy));
 
 
                 textView = (TextView) view.findViewById(R.id.teleop_high);
@@ -185,11 +182,11 @@ public class MatchTeamFragment extends Fragment {
                 float mTeleopHighMissed = statsMap.get(Constants.TOTAL_TELEOP_HIGH_MISS).getInt();
                 float mTeleopHighTotal = (mTeleopHighMade + mTeleopHighMissed);
                 float mTeleopHighAccuracy = 0;
-                if(mTeleopHighTotal != 0) {
+                if (mTeleopHighTotal != 0) {
                     mTeleopHighAccuracy = ((mTeleopHighMade / mTeleopHighTotal) * 100);
                 }
-                float mTeleopHighAverage = mTeleopHighMade / (float)numMatches;
-                textView.setText(String.format("%.2f (%.2f%%)",mTeleopHighAverage,mTeleopHighAccuracy));
+                float mTeleopHighAverage = mTeleopHighMade / (float) numMatches;
+                textView.setText(String.format("%.2f (%.2f%%)", mTeleopHighAverage, mTeleopHighAccuracy));
 
                 textView = (TextView) view.findViewById(R.id.teleop_low);
 
@@ -197,12 +194,12 @@ public class MatchTeamFragment extends Fragment {
                 float mTeleopLowMissed = statsMap.get(Constants.TOTAL_TELEOP_LOW_MISS).getInt();
                 float mTeleopLowTotal = (mTeleopLowMade + mTeleopLowMissed);
                 float mTeleopLowAccuracy = 0;
-                if(mTeleopLowTotal != 0) {
+                if (mTeleopLowTotal != 0) {
                     mTeleopLowAccuracy = ((mTeleopLowMade / mTeleopLowTotal) * 100);
                 }
-                float mTeleopLowAverage = mTeleopLowMade / (float)numMatches;
+                float mTeleopLowAverage = mTeleopLowMade / (float) numMatches;
 
-                textView.setText(String.format("%.2f (%.2f%%)",mTeleopLowAverage,mTeleopLowAccuracy));
+                textView.setText(String.format("%.2f (%.2f%%)", mTeleopLowAverage, mTeleopLowAccuracy));
 
 
                 textView = (TextView) view.findViewById(R.id.can_scale);
@@ -219,17 +216,12 @@ public class MatchTeamFragment extends Fragment {
                     float seen = statsMap.get(Constants.TOTAL_DEFENSES_SEEN[i]).getInt();
                     float notCross = statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_NOT_CROSSED[i]).getInt();
 
-                    if(seen == 0)
-                    {
+                    if (seen == 0) {
                         defense.mTime = -1;
-                    }
-                    else if(seen == notCross)
-                    {
+                    } else if (seen == notCross) {
                         defense.mTime = 0;
-                    }
-                    else
-                    {
-                        defense.mTime = ((float)statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt()) / (seen - notCross);
+                    } else {
+                        defense.mTime = ((float) statsMap.get(Constants.TOTAL_DEFENSES_TELEOP_TIME[i]).getInt()) / (seen - notCross);
                     }
                     defense.mDefenseIndex = i;
                     defenses.add(defense);
@@ -239,67 +231,46 @@ public class MatchTeamFragment extends Fragment {
                 Collections.sort(defenses, new Comparator<Defense>() {
                     @Override
                     public int compare(Defense lhs, Defense rhs) {
-                        if(rhs.mTime > 0 && lhs.mTime > 0) {
+                        if (rhs.mTime > 0 && lhs.mTime > 0) {
                             return Float.compare(lhs.mTime, rhs.mTime);
-                        }
-                        else if(rhs.mTime > 0)
-                        {
+                        } else if (rhs.mTime > 0) {
                             return 1;
-                        }
-                        else if(lhs.mTime > 0)
-                        {
+                        } else if (lhs.mTime > 0) {
                             return -1;
-                        }
-                        else if(lhs.mTime == 0 && rhs.mTime == 0)
-                        {
+                        } else if (lhs.mTime == 0 && rhs.mTime == 0) {
                             return 0;
-                        }
-                        else if(rhs.mTime > -1)
-                        {
+                        } else if (rhs.mTime > -1) {
                             return -1;
-                        }
-                        else if(lhs.mTime > -1)
-                        {
+                        } else if (lhs.mTime > -1) {
                             return 1;
-                        }
-                        else
-                        {
+                        } else {
                             return 0;
                         }
                     }
                 });
 
-                if(defenses.get(0).mTime > 0)
-                {
+                if (defenses.get(0).mTime > 0) {
                     String DefenseString = "";
-                    for(int i = 0; i < 9; i++)
-                    {
+                    for (int i = 0; i < 9; i++) {
                         Defense defense = defenses.get(i);
                         String defenseString = Constants.DEFENSES_LABEL[defense.mDefenseIndex];
-                        if(defense.mTime > 0)
-                        {
-                            defenseString += String.format(" (~ %.1f s)",defense.mTime);
-                        }
-                        else if(defense.mTime == 0)
-                        {
+                        if (defense.mTime > 0) {
+                            defenseString += String.format(" (~ %.1f s)", defense.mTime);
+                        } else if (defense.mTime == 0) {
                             defenseString += " (NC)";
-                        }
-                        else
-                        {
+                        } else {
                             defenseString += " (NS)";
                         }
 
-                        defenseString = String.format("%d. %s\n",i+1,defenseString);
+                        defenseString = String.format("%d. %s\n", i + 1, defenseString);
                         DefenseString += defenseString;
                     }
-                    DefenseString = DefenseString.substring(0,DefenseString.length()-1);
+                    DefenseString = DefenseString.substring(0, DefenseString.length() - 1);
                     textView.setText(DefenseString);
-                }
-                else
-                {
+                } else {
                     String bestDefenseString = "None";
-                    for(int i = 0; i < 8; i++);
-                        bestDefenseString += "\n";
+                    for (int i = 0; i < 8; i++) ;
+                    bestDefenseString += "\n";
                     textView.setText(bestDefenseString);
                 }
 
@@ -315,8 +286,7 @@ public class MatchTeamFragment extends Fragment {
                     else
                         ranking += "th";
                     textView.setText(ranking);
-                }
-                else {
+                } else {
                     textView.setText("N/A");
                 }
 
@@ -332,32 +302,47 @@ public class MatchTeamFragment extends Fragment {
                     else
                         ranking += "th";
                     textView.setText(ranking);
-                }
-                else {
+                } else {
                     textView.setText("N/A");
                 }
-            }
-            else {
+            } else {
                 textView = (TextView) view.findViewById(R.id.defenses);
                 String spacing = "";
-                for(int i = 0; i < 8; i++)
+                for (int i = 0; i < 8; i++)
                     spacing += "\n";
 
                 textView.setText(spacing);
             }
-        }
-        else
-        {
+        } else {
             textView = (TextView) view.findViewById(R.id.total_matches);
             textView.setText("0");
 
             textView = (TextView) view.findViewById(R.id.defenses);
             String spacing = "";
-            for(int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
                 spacing += "\n";
 
             textView.setText(spacing);
         }
+    }
+
+    /**
+     *
+     */
+    private class StartPosition {
+
+        int mDefenseIndex;
+        int mNumCrosses;
+        int mNumSeen;
+    }
+
+    /**
+     *
+     */
+    private class Defense {
+
+        int mDefenseIndex;
+        float mTime;
     }
 }
 
