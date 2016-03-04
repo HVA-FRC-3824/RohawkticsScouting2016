@@ -1,5 +1,6 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,12 +15,11 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.FPA_SuperScout;
@@ -29,21 +29,18 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothHandler;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothSync;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Activity that holds all the fragments for super scouting
  */
-public class SuperScouting extends AppCompatActivity {
+public class SuperScouting extends Activity {
 
     final private String TAG = "SuperScouting";
 
@@ -71,7 +68,7 @@ public class SuperScouting extends AppCompatActivity {
         setContentView(R.layout.activity_super_scouting);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.super_scouting_toolbar);
-        setSupportActionBar(toolbar);
+        setActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
         matchNumber = extras.getInt(Constants.MATCH_NUMBER);
