@@ -189,7 +189,6 @@
                 android:textColor="@color/white"
                 android:id="@+id/viewTeam_button"
                 android:visibility="gone"
-                android:onClick="view_team"
                 android:background="@color/navy_blue" />
 
             <Button

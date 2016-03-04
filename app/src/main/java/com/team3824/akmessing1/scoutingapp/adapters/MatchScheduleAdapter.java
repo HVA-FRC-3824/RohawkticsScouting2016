@@ -17,18 +17,22 @@ import java.util.ArrayList;
 /**
  * Adapter for the match schedule. Highlight teams based on if we will play with them, against them,
  * or both.
+ *
+ * @author Andrew Messing
+ * @version
  */
 public class MatchScheduleAdapter extends ArrayAdapter<Match> {
-    ArrayList<Match> matches;
-    private String TAG = "MatchScheduleAdapter";
+
+    private final String TAG = "MatchScheduleAdapter";
+
+    private ArrayList<Match> matches;
 
     /**
      * @param context
-     * @param textViewResourceId
      * @param matches
      */
-    public MatchScheduleAdapter(Context context, int textViewResourceId, ArrayList<Match> matches) {
-        super(context, textViewResourceId, matches);
+    public MatchScheduleAdapter(Context context, ArrayList<Match> matches) {
+        super(context, R.layout.list_item_schedule_match, matches);
         this.matches = matches;
     }
 
@@ -51,9 +55,9 @@ public class MatchScheduleAdapter extends ArrayAdapter<Match> {
         textView.setText(String.valueOf(match.matchNumber));
 
         // Sets the match number textview to blue if we are in the match, white otherwise.
-        if (match.teams[Constants.BLUE1_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.BLUE2_INDEX] == Constants.OUR_TEAM_NUMBER ||
-                match.teams[Constants.BLUE3_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.RED1_INDEX] == Constants.OUR_TEAM_NUMBER ||
-                match.teams[Constants.RED2_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.RED3_INDEX] == Constants.OUR_TEAM_NUMBER) {
+        if (match.teams[Constants.Match_Schedule.BLUE1_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.Match_Schedule.BLUE2_INDEX] == Constants.OUR_TEAM_NUMBER ||
+                match.teams[Constants.Match_Schedule.BLUE3_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.Match_Schedule.RED1_INDEX] == Constants.OUR_TEAM_NUMBER ||
+                match.teams[Constants.Match_Schedule.RED2_INDEX] == Constants.OUR_TEAM_NUMBER || match.teams[Constants.Match_Schedule.RED3_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
         } else {
@@ -63,17 +67,17 @@ public class MatchScheduleAdapter extends ArrayAdapter<Match> {
 
         // Highlights teams based on if they are a future ally, future opponent, both, or us.
         textView = (TextView) convertView.findViewById(R.id.schedule_blue1);
-        textView.setText(String.valueOf(match.teams[Constants.BLUE1_INDEX]));
-        if (match.teams[Constants.BLUE1_INDEX] == Constants.OUR_TEAM_NUMBER) {
+        textView.setText(String.valueOf(match.teams[Constants.Match_Schedule.BLUE1_INDEX]));
+        if (match.teams[Constants.Match_Schedule.BLUE1_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        } else if (match.futureAlly[Constants.BLUE1_INDEX] && match.futureOpponent[Constants.BLUE1_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.BLUE1_INDEX] && match.futureOpponent[Constants.Match_Schedule.BLUE1_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureAlly[Constants.BLUE1_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.BLUE1_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureOpponent[Constants.BLUE1_INDEX]) {
+        } else if (match.futureOpponent[Constants.Match_Schedule.BLUE1_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
@@ -84,17 +88,17 @@ public class MatchScheduleAdapter extends ArrayAdapter<Match> {
         }
 
         textView = (TextView) convertView.findViewById(R.id.schedule_blue2);
-        textView.setText(String.valueOf(match.teams[Constants.BLUE2_INDEX]));
-        if (match.teams[Constants.BLUE2_INDEX] == Constants.OUR_TEAM_NUMBER) {
+        textView.setText(String.valueOf(match.teams[Constants.Match_Schedule.BLUE2_INDEX]));
+        if (match.teams[Constants.Match_Schedule.BLUE2_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        } else if (match.futureAlly[Constants.BLUE2_INDEX] && match.futureOpponent[Constants.BLUE2_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.BLUE2_INDEX] && match.futureOpponent[Constants.Match_Schedule.BLUE2_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureAlly[Constants.BLUE2_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.BLUE2_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureOpponent[Constants.BLUE2_INDEX]) {
+        } else if (match.futureOpponent[Constants.Match_Schedule.BLUE2_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
@@ -105,17 +109,17 @@ public class MatchScheduleAdapter extends ArrayAdapter<Match> {
         }
 
         textView = (TextView) convertView.findViewById(R.id.schedule_blue3);
-        textView.setText(String.valueOf(match.teams[Constants.BLUE3_INDEX]));
-        if (match.teams[Constants.BLUE3_INDEX] == Constants.OUR_TEAM_NUMBER) {
+        textView.setText(String.valueOf(match.teams[Constants.Match_Schedule.BLUE3_INDEX]));
+        if (match.teams[Constants.Match_Schedule.BLUE3_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        } else if (match.futureAlly[Constants.BLUE3_INDEX] && match.futureOpponent[Constants.BLUE3_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.BLUE3_INDEX] && match.futureOpponent[Constants.Match_Schedule.BLUE3_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureAlly[Constants.BLUE3_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.BLUE3_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureOpponent[Constants.BLUE3_INDEX]) {
+        } else if (match.futureOpponent[Constants.Match_Schedule.BLUE3_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
@@ -126,17 +130,17 @@ public class MatchScheduleAdapter extends ArrayAdapter<Match> {
         }
 
         textView = (TextView) convertView.findViewById(R.id.schedule_red1);
-        textView.setText(String.valueOf(match.teams[Constants.RED1_INDEX]));
-        if (match.teams[Constants.RED1_INDEX] == Constants.OUR_TEAM_NUMBER) {
+        textView.setText(String.valueOf(match.teams[Constants.Match_Schedule.RED1_INDEX]));
+        if (match.teams[Constants.Match_Schedule.RED1_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        } else if (match.futureAlly[Constants.RED1_INDEX] && match.futureOpponent[Constants.RED1_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.RED1_INDEX] && match.futureOpponent[Constants.Match_Schedule.RED1_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureAlly[Constants.RED1_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.RED1_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureOpponent[Constants.RED1_INDEX]) {
+        } else if (match.futureOpponent[Constants.Match_Schedule.RED1_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
@@ -147,17 +151,17 @@ public class MatchScheduleAdapter extends ArrayAdapter<Match> {
         }
 
         textView = (TextView) convertView.findViewById(R.id.schedule_red2);
-        textView.setText(String.valueOf(match.teams[Constants.RED2_INDEX]));
-        if (match.teams[Constants.RED2_INDEX] == Constants.OUR_TEAM_NUMBER) {
+        textView.setText(String.valueOf(match.teams[Constants.Match_Schedule.RED2_INDEX]));
+        if (match.teams[Constants.Match_Schedule.RED2_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        } else if (match.futureAlly[Constants.RED2_INDEX] && match.futureOpponent[Constants.RED2_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.RED2_INDEX] && match.futureOpponent[Constants.Match_Schedule.RED2_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureAlly[Constants.RED2_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.RED2_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureOpponent[Constants.RED2_INDEX]) {
+        } else if (match.futureOpponent[Constants.Match_Schedule.RED2_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }
@@ -168,17 +172,17 @@ public class MatchScheduleAdapter extends ArrayAdapter<Match> {
         }
 
         textView = (TextView) convertView.findViewById(R.id.schedule_red3);
-        textView.setText(String.valueOf(match.teams[Constants.RED3_INDEX]));
-        if (match.teams[Constants.RED3_INDEX] == Constants.OUR_TEAM_NUMBER) {
+        textView.setText(String.valueOf(match.teams[Constants.Match_Schedule.RED3_INDEX]));
+        if (match.teams[Constants.Match_Schedule.RED3_INDEX] == Constants.OUR_TEAM_NUMBER) {
             textView.setBackgroundColor(Color.BLUE);
             textView.setTextColor(Color.WHITE);
-        } else if (match.futureAlly[Constants.RED3_INDEX] && match.futureOpponent[Constants.RED3_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.RED3_INDEX] && match.futureOpponent[Constants.Match_Schedule.RED3_INDEX]) {
             textView.setBackgroundColor(Color.YELLOW);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureAlly[Constants.RED3_INDEX]) {
+        } else if (match.futureAlly[Constants.Match_Schedule.RED3_INDEX]) {
             textView.setBackgroundColor(Color.GREEN);
             textView.setTextColor(Color.BLACK);
-        } else if (match.futureOpponent[Constants.RED3_INDEX]) {
+        } else if (match.futureOpponent[Constants.Match_Schedule.RED3_INDEX]) {
             textView.setBackgroundColor(Color.RED);
             textView.setTextColor(Color.WHITE);
         }

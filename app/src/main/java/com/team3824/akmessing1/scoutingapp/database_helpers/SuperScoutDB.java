@@ -16,14 +16,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
-// Database helper for match scouting data
+/**
+ * Helper class for accessing the super scout table of the database
+ *
+ * @author Andrew Messing
+ * @version
+ */
 public class SuperScoutDB extends SQLiteOpenHelper {
 
     // Initial Table Columns names
-    public static final String KEY_ID = "_id";
+    private static final String KEY_ID = "_id";
     public static final String KEY_MATCH_NUMBER = "_id";
     public static final String KEY_BLUE1 = "blue1";
     public static final String KEY_BLUE2 = "blue2";
@@ -31,7 +35,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
     public static final String KEY_RED1 = "red1";
     public static final String KEY_RED2 = "red2";
     public static final String KEY_RED3 = "red3";
-    public static final String KEY_LAST_UPDATED = "last_updated";
+    private static final String KEY_LAST_UPDATED = "last_updated";
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
@@ -90,7 +94,7 @@ public class SuperScoutDB extends SQLiteOpenHelper {
      * @param columnName Name of the new column
      * @param columnType What type the new column should be
      */
-    public void addColumn(String columnName, String columnType) {
+    private void addColumn(String columnName, String columnType) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
@@ -323,9 +327,9 @@ public class SuperScoutDB extends SQLiteOpenHelper {
                 null, // g. order by
                 "1"); // h. limit
 
-        if (cursor.getColumnIndex(Constants.SUPER_NOTES) != -1) {
+        if (cursor.getColumnIndex(Constants.Super_Inputs.SUPER_NOTES) != -1) {
             cursor = db.query(tableName, // a. table
-                    new String[]{KEY_MATCH_NUMBER, Constants.SUPER_NOTES}, // b. column names
+                    new String[]{KEY_MATCH_NUMBER, Constants.Super_Inputs.SUPER_NOTES}, // b. column names
                     KEY_BLUE1 + " = ? or " + KEY_BLUE2 + " = ? or " + KEY_BLUE3 + " = ? or " + KEY_RED1 + " = ? or " +
                             KEY_RED2 + " = ? or " + KEY_RED3 + " = ?", // c. selections
                     new String[]{String.valueOf(teamNumber), String.valueOf(teamNumber),
@@ -341,6 +345,35 @@ public class SuperScoutDB extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
         return cursor;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Integer> getMatchNumbers() {
+        ArrayList<Integer> teamNumbers = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                new String[]{KEY_MATCH_NUMBER}, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if (cursor == null || cursor.getCount() == 0) {
+            Log.d(TAG, "No rows came back");
+            return null;
+        }
+        cursor.moveToFirst();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            teamNumbers.add(cursor.getInt(cursor.getColumnIndex(KEY_MATCH_NUMBER)));
+            cursor.moveToNext();
+        }
+
+        return teamNumbers;
     }
 
     /**

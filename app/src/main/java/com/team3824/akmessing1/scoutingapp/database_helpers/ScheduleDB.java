@@ -27,14 +27,15 @@ public class ScheduleDB extends SQLiteOpenHelper {
     public static final String KEY_RED1 = "red1";
     public static final String KEY_RED2 = "red2";
     public static final String KEY_RED3 = "red3";
-    public static final String KEY_LAST_UPDATED = "last_updated";
+    private static final String KEY_LAST_UPDATED = "last_updated";
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "RohawkticsDB";
     private static String[] COLUMNS = {KEY_MATCH_NUMBER, KEY_BLUE1, KEY_BLUE2, KEY_BLUE3, KEY_RED1, KEY_RED2, KEY_RED3, KEY_LAST_UPDATED};
     private static SimpleDateFormat dateFormat;
-    private String TAG = "ScheduleDB";
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String TAG = "ScheduleDB";
     private String tableName;
 
     /**

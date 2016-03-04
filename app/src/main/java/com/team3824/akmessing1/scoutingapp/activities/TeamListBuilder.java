@@ -22,15 +22,17 @@ import java.util.ArrayList;
 
 /**
  * Admin activity to add and remove teams from the team list
+ *
+ * @author Andrew Messing
+ * @version %I%
  */
 public class TeamListBuilder extends Activity implements View.OnClickListener {
 
-    LinearLayout layout;
-    ArrayList<Integer> teams;
-    TeamListBuilderAdapter teamListBuilderAdapter;
-    PitScoutDB pitScoutDB;
-    StatsDB statsDB;
-    private String TAG = "TeamListBuilder";
+    private TeamListBuilderAdapter teamListBuilderAdapter;
+    private PitScoutDB pitScoutDB;
+    private StatsDB statsDB;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String TAG = "TeamListBuilder";
 
     /**
      * Sets the list view's adapter and the add button.
@@ -44,15 +46,15 @@ public class TeamListBuilder extends Activity implements View.OnClickListener {
         ((CustomHeader) findViewById(R.id.header)).removeHome();
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        final String eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         pitScoutDB = new PitScoutDB(this, eventID);
         statsDB = new StatsDB(this, eventID);
 
-        layout = (LinearLayout) findViewById(R.id.team_list);
-        teams = pitScoutDB.getTeamNumbers();
+        LinearLayout layout = (LinearLayout) findViewById(R.id.team_list);
+        ArrayList<Integer> teams = pitScoutDB.getTeamNumbers();
 
         ListView listView = (ListView) findViewById(R.id.listview);
-        teamListBuilderAdapter = new TeamListBuilderAdapter(this, R.layout.list_item_team_list_builder, teams, pitScoutDB, statsDB);
+        teamListBuilderAdapter = new TeamListBuilderAdapter(this, teams, pitScoutDB, statsDB);
         listView.setAdapter(teamListBuilderAdapter);
 
         Button add = (Button) findViewById(R.id.add);

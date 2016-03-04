@@ -12,12 +12,9 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
-import java.util.Map;
-
 // Custom field with label and clickable counter
 public class CustomCounter extends CustomScoutView{
 
-    private TextView label;
     private TextView countView;
     private int count;
     private String key;
@@ -29,7 +26,7 @@ public class CustomCounter extends CustomScoutView{
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.custom_counter, this);
 
-        label = (TextView)this.findViewById(R.id.label);
+        TextView label = (TextView) this.findViewById(R.id.label);
 
         // Set label and get key
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);

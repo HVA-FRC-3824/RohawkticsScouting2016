@@ -15,9 +15,9 @@ import java.util.Date;
  */
 public class DriveTeamFeedbackDB extends SQLiteOpenHelper {
     // Initial Table Columns names
-    public static final String KEY_ID = "_id";
+    private static final String KEY_ID = "_id";
     public static final String KEY_TEAM_NUMBER = "_id";
-    public static final String KEY_LAST_UPDATED = "last_updated";
+    private static final String KEY_LAST_UPDATED = "last_updated";
     public static final String KEY_COMMENTS = "comments";
     // Database Version
     private static final int DATABASE_VERSION = 1;

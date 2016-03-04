@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
@@ -11,4 +11,13 @@
         android:padding="2dp"
         android:textSize="20sp"
         android:textColor="#000000"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+"
+        android:id="@+id/tie"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@color/navy_blue"/>
 </LinearLayout>

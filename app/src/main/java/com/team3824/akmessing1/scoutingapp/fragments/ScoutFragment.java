@@ -6,49 +6,42 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.views.CustomScoutView;
 
-import java.util.HashMap;
-import java.util.Map;
-
-// abstract base class for each of the match scouting fragments
 
 /**
+ * abstract base class for each of the match scouting fragments
  *
+ * @author Andrew Messing
+ * @version
  */
 public abstract class ScoutFragment extends Fragment {
 
-    private String TAG = "ScoutFragment";
+    private final String TAG = "ScoutFragment";
     protected ScoutMap valueMap;
 
-    public ScoutFragment()
-    {
+    public ScoutFragment() {
         valueMap = new ScoutMap();
     }
 
     /**
-     *
      * @param map
      */
-    public void setValuesMap(ScoutMap map)
-    {
+    public void setValuesMap(ScoutMap map) {
         valueMap = map;
     }
 
-    // Recursive functions to get all the values and store them in a map
-
     /**
+     * Recursive functions to get all the values and store them in a map
      *
      * @param map
      * @return
      */
-    public String writeContentsToMap(ScoutMap map)
-    {
+    public String writeContentsToMap(ScoutMap map) {
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
         if (vg == null) {
-            Log.d(TAG,"Null view");
+            Log.d(TAG, "Null view");
             // If the view has been destroyed, state should already be saved
             // to parent activity
             map.putAll(valueMap);
@@ -69,13 +62,11 @@ public abstract class ScoutFragment extends Fragment {
     }
 
     /**
-     *
      * @param map
      * @param viewGroup
      * @return
      */
-    public String writeContentsToMap(ScoutMap map, ViewGroup viewGroup)
-    {
+    protected String writeContentsToMap(ScoutMap map, ViewGroup viewGroup) {
         String error = "";
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -89,9 +80,8 @@ public abstract class ScoutFragment extends Fragment {
         return error;
     }
 
-    // Recursive function to get all the values from a map and populate the fields
-
     /**
+     * Recursive function to get all the values from a map and populate the fields
      *
      * @param map
      */
@@ -99,7 +89,7 @@ public abstract class ScoutFragment extends Fragment {
         // Get the ViewGroup holding all of the widgets
         ViewGroup vg = (ViewGroup) getView();
         if (vg == null) {
-            Log.d(TAG,"Null view");
+            Log.d(TAG, "Null view");
             // If the view has been destroyed, state should already be saved
             // to parent activity
             return;
@@ -116,11 +106,10 @@ public abstract class ScoutFragment extends Fragment {
     }
 
     /**
-     *
      * @param map
      * @param viewGroup
      */
-    public void restoreContentsFromMap(ScoutMap map, ViewGroup viewGroup) {
+    protected void restoreContentsFromMap(ScoutMap map, ViewGroup viewGroup) {
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View view = viewGroup.getChildAt(i);
@@ -136,8 +125,7 @@ public abstract class ScoutFragment extends Fragment {
      *
      */
     @Override
-    public void onDestroyView()
-    {
+    public void onDestroyView() {
         valueMap.clear();
         writeContentsToMap(valueMap);
         super.onDestroyView();

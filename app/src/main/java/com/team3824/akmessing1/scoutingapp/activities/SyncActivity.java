@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -35,40 +34,28 @@ import java.util.ArrayList;
 import java.util.Set;
 
 /**
- *  Admin Activity to control sending and requesting data to and from the other tablets
+ * Admin Activity to control sending and requesting data to and from the other tablets
+ *
+ * @author Andrew Messing
+ * @version
  */
 public class SyncActivity extends Activity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static String TAG = "SyncActivity";
 
-    private final String RED = "red";
-    private final String GREEN = "green";
-    private final String BLUE = "blue";
-    private final String CYAN = "cyan";
     private final String YELLOW = "#DAA520";
-    private final String BLACK = "black";
 
-    Object[] pairedDevices;
-    Spinner pairedSpinner, actionSpinner;
+    private Object[] pairedDevices;
+    private Spinner pairedSpinner;
+    private Spinner actionSpinner;
 
-    MatchScoutDB matchScoutDB;
-    PitScoutDB pitScoutDB;
-    SuperScoutDB superScoutDB;
-    DriveTeamFeedbackDB driveTeamFeedbackDB;
-    ScheduleDB scheduleDB;
-    StatsDB statsDB;
-    SyncDB syncDB;
-
-    CircularBuffer circularBuffer;
-    private BluetoothAdapter mBluetoothAdapter = null;
+    private CircularBuffer circularBuffer;
     private TextView textView;
     private BluetoothSync bluetoothSync;
-    private SyncHandler handler;
-    private String selectedAddress;
 
     /**
-     *  Checks if this device supports bluetooth and if bluetooth enabled. Also sets up the paired
-     *  devices dropdown and the actions dropdown.
+     * Checks if this device supports bluetooth and if bluetooth enabled. Also sets up the paired
+     * devices dropdown and the actions dropdown.
      *
      * @param savedInstanceState
      */
@@ -77,12 +64,12 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
 
-        ((Button) findViewById(R.id.back)).setOnClickListener(this);
+        findViewById(R.id.back).setOnClickListener(this);
 
         // Get local Bluetooth adapter
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter != null) {
             if (mBluetoothAdapter.isEnabled()) {
                 ArrayAdapter<String> pairedDevicesArrayAdapter =
@@ -108,25 +95,25 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
                         new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item);
                 actionSpinner = (Spinner) findViewById(R.id.action);
                 actionSpinner.setAdapter(actionArrayAdapter);
-                actionArrayAdapter.addAll(Constants.SYNC_ACTIONS);
+                actionArrayAdapter.addAll(Constants.Sync_Activity.SYNC_ACTIONS);
                 actionSpinner.setOnItemSelectedListener(this);
 
 
-                handler = new SyncHandler();
+                SyncHandler handler = new SyncHandler();
                 bluetoothSync = new BluetoothSync(handler, false);
 
                 textView = (TextView) findViewById(R.id.sync_log);
                 textView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
-                matchScoutDB = new MatchScoutDB(this, eventID);
-                pitScoutDB = new PitScoutDB(this, eventID);
-                superScoutDB = new SuperScoutDB(this, eventID);
-                driveTeamFeedbackDB = new DriveTeamFeedbackDB(this, eventID);
-                scheduleDB = new ScheduleDB(this, eventID);
-                statsDB = new StatsDB(this, eventID);
-                syncDB = new SyncDB(this, eventID);
+                MatchScoutDB matchScoutDB = new MatchScoutDB(this, eventID);
+                PitScoutDB pitScoutDB = new PitScoutDB(this, eventID);
+                SuperScoutDB superScoutDB = new SuperScoutDB(this, eventID);
+                DriveTeamFeedbackDB driveTeamFeedbackDB = new DriveTeamFeedbackDB(this, eventID);
+                ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
+                StatsDB statsDB = new StatsDB(this, eventID);
+                SyncDB syncDB = new SyncDB(this, eventID);
 
-                ((Button) findViewById(R.id.execute_action)).setOnClickListener(this);
+                findViewById(R.id.execute_action).setOnClickListener(this);
 
                 circularBuffer = new CircularBuffer(20);
 
@@ -149,7 +136,7 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
     }
 
     /**
-     *  Kills the bluetooth threads
+     * Kills the bluetooth threads
      */
     @Override
     public void onDestroy() {
@@ -160,7 +147,8 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
     }
 
     /**
-     *  Gets the file names for the robot pictures for the current event
+     * Gets the file names for the robot pictures for the current event
+     *
      * @param cursor The response from the database query
      * @return
      */
@@ -168,9 +156,9 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
         ArrayList<String> filenames = new ArrayList<>();
         int i = 0;
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            if (cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE) != -1) {
-                if (cursor.getType(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
-                    String filename = cursor.getString(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE));
+            if (cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE) != -1) {
+                if (cursor.getType(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
+                    String filename = cursor.getString(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE));
                     if (!filename.equals("")) {
                         Log.d(TAG, filename);
                         filenames.add(filename);
@@ -182,9 +170,11 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
     }
 
     /**
-     *  Handler for clicking the buttons
+     * Handler for clicking the buttons
+     *
      * @param v The view that was clicked
      */
+    //TODO: Finish
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -198,46 +188,46 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
                         String text;
                         switch (position) {
 
-                            case Constants.SYNC_NONE_INDEX: //None
-                                Log.e(TAG, "This should never happen...");
-                                rotateText(RED, "This should never happen...");
+                            case Constants.Sync_Activity.SYNC_NONE_INDEX: //None
+                                assert false;
                                 break;
-                            case Constants.SYNC_PING_INDEX: // Ping
+                            case Constants.Sync_Activity.SYNC_PING_INDEX: // Ping
                                 Log.d(TAG, "Sending Ping...");
+                                String BLUE = "blue";
                                 rotateText(BLUE, "Sending Ping...");
-                                for (int i = 0; i < Constants.NUM_ATTEMPTS; i++) {
-                                    if (bluetoothSync.write(Constants.PING.getBytes())) {
+                                for (int i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                                    if (bluetoothSync.write(Constants.Bluetooth.PING.getBytes())) {
                                         break;
                                     }
                                 }
                                 break;
-                            case Constants.SYNC_SEND_MATCH_INDEX:
+                            case Constants.Sync_Activity.SYNC_SEND_MATCH_INDEX:
                                 break;
-                            case Constants.SYNC_SEND_PIT_INDEX:
+                            case Constants.Sync_Activity.SYNC_SEND_PIT_INDEX:
                                 break;
-                            case Constants.SYNC_SEND_SUPER_INDEX:
+                            case Constants.Sync_Activity.SYNC_SEND_SUPER_INDEX:
                                 break;
-                            case Constants.SYNC_SEND_FEEDBACK_INDEX:
+                            case Constants.Sync_Activity.SYNC_SEND_FEEDBACK_INDEX:
                                 break;
-                            case Constants.SYNC_SEND_STATS_INDEX:
+                            case Constants.Sync_Activity.SYNC_SEND_STATS_INDEX:
                                 break;
-                            case Constants.SYNC_SEND_ALL_INDEX:
+                            case Constants.Sync_Activity.SYNC_SEND_ALL_INDEX:
                                 break;
-                            case Constants.SYNC_SEND_SCHEDULE_INDEX:
+                            case Constants.Sync_Activity.SYNC_SEND_SCHEDULE_INDEX:
                                 break;
-                            case Constants.SYNC_RECEIVE_MATCH_INDEX:
+                            case Constants.Sync_Activity.SYNC_RECEIVE_MATCH_INDEX:
                                 break;
-                            case Constants.SYNC_RECEIVE_PIT_INDEX:
+                            case Constants.Sync_Activity.SYNC_RECEIVE_PIT_INDEX:
                                 break;
-                            case Constants.SYNC_RECEIVE_SUPER_INDEX:
+                            case Constants.Sync_Activity.SYNC_RECEIVE_SUPER_INDEX:
                                 break;
-                            case Constants.SYNC_RECEIVE_FEEDBACK_INDEX:
+                            case Constants.Sync_Activity.SYNC_RECEIVE_FEEDBACK_INDEX:
                                 break;
-                            case Constants.SYNC_RECEIVE_STATS_INDEX:
+                            case Constants.Sync_Activity.SYNC_RECEIVE_STATS_INDEX:
                                 break;
-                            case Constants.SYNC_RECEIVE_ALL_INDEX:
+                            case Constants.Sync_Activity.SYNC_RECEIVE_ALL_INDEX:
                                 break;
-                            case Constants.SYNC_RECEIVE_SCHEDULE_INDEX:
+                            case Constants.Sync_Activity.SYNC_RECEIVE_SCHEDULE_INDEX:
                                 break;
                         }
                     }
@@ -259,14 +249,13 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
         if (parent.getId() == R.id.paired_devices) {
             String info = String.valueOf(pairedSpinner.getSelectedItem());
             if (!info.equals("None")) {
-                selectedAddress = info.substring(info.length() - 17);
+                String selectedAddress = info.substring(info.length() - 17);
                 new ConnectionTask().execute((BluetoothDevice) pairedDevices[position - 1]);
             }
         }
     }
 
     /**
-     *
      * @param parent
      */
     @Override
@@ -275,29 +264,30 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
     }
 
     /**
-     *  Rotates the circular buffer with the new text and displays it in the log text view in the
-     *  specified color
+     * Rotates the circular buffer with the new text and displays it in the log text view in the
+     * specified color
      *
      * @param color The color this particular line of text will be displayed as
-     * @param text The text that is added
+     * @param text  The text that is added
      */
-    public void rotateText(String color, String text) {
+    private void rotateText(String color, String text) {
         circularBuffer.insert(String.format("<font color='%s'>%s</font><br>", color, text));
         textView.setText(Html.fromHtml(circularBuffer.toString()));
     }
 
     /**
-     *  Bluetooth message handler with custom display text that adds to the log text view
+     * Bluetooth message handler with custom display text that adds to the log text view
      */
     private class SyncHandler extends BluetoothHandler {
         @Override
         public void displayText(String text) {
+            String BLACK = "black";
             rotateText(BLACK, text);
         }
     }
 
     /**
-     *  Asynchronous Task that attempts to connect to the selected tablet
+     * Asynchronous Task that attempts to connect to the selected tablet
      */
     private class ConnectionTask extends AsyncTask<BluetoothDevice, Void, Void> {
 
@@ -306,11 +296,13 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
          */
         @Override
         protected void onPreExecute() {
+            String CYAN = "cyan";
             rotateText(CYAN, "Attempting to connect");
         }
 
         /**
          * Attempts to connect
+         *
          * @param params The Bluetooth Device to connect to
          * @return nothing
          */
@@ -319,7 +311,7 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
             bluetoothSync.connect((params[0]), false);
             long time = System.currentTimeMillis();
             long newTime = time;
-            while (newTime < time + Constants.CONNECTION_TIMEOUT && bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
+            while (newTime < time + Constants.Bluetooth.CONNECTION_TIMEOUT && bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
                 newTime = System.currentTimeMillis();
             }
             return null;
@@ -327,15 +319,18 @@ public class SyncActivity extends Activity implements View.OnClickListener, Adap
 
         /**
          * Displays if connection was successful
+         *
          * @param result nothing
          */
         @Override
         protected void onPostExecute(Void result) {
             if (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
+                String RED = "red";
                 rotateText(RED, "Connection failed");
                 pairedSpinner.setSelection(0);
                 bluetoothSync.start();
             } else {
+                String GREEN = "green";
                 rotateText(GREEN, String.format("Connnected to %s", bluetoothSync.getConnectedName()));
             }
         }

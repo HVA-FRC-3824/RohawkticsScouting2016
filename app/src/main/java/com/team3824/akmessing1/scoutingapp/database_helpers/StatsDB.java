@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class StatsDB extends SQLiteOpenHelper {
@@ -29,16 +28,16 @@ public class StatsDB extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "RohawkticsDB";
-    private String TAG = "StatsDB";
+    private final String TAG = "StatsDB";
 
     // Initial Table Columns names
-    public static final String KEY_ID = "_id"; // _id is needed for updating
+    private static final String KEY_ID = "_id"; // _id is needed for updating
     // The team number is going to be the id, but another variable is set up for convenience
     public static final String KEY_TEAM_NUMBER = "_id";
     public static final String KEY_PICKED = "picked";
     public static final String KEY_DNP = "dnp";
     public static final String KEY_DECLINE = "decline";
-    public static final String KEY_LAST_UPDATED = "last_updated";
+    private final String KEY_LAST_UPDATED = "last_updated";
 
 
     private String tableName;
@@ -106,7 +105,7 @@ public class StatsDB extends SQLiteOpenHelper {
      * @param columnName Name of the new column
      * @param columnType What type the new column should be
      */
-    public void addColumn(String columnName, String columnType) {
+    private void addColumn(String columnName, String columnType) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
@@ -313,6 +312,35 @@ public class StatsDB extends SQLiteOpenHelper {
             }
         }
         return map;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ArrayList<Integer> getTeamNumbers() {
+        ArrayList<Integer> teamNumbers = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(tableName, // a. table
+                new String[]{KEY_TEAM_NUMBER}, // b. column names
+                null, // c. selections
+                null, // d. selections args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null); // h. limit
+        if (cursor == null || cursor.getCount() == 0) {
+            Log.d(TAG, "No rows came back");
+            return null;
+        }
+        cursor.moveToFirst();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+            teamNumbers.add(cursor.getInt(cursor.getColumnIndex(KEY_TEAM_NUMBER)));
+            cursor.moveToNext();
+        }
+
+        return teamNumbers;
     }
 
     /**

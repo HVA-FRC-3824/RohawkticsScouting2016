@@ -22,7 +22,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.FPA_SuperScout;
+import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_SuperScout;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
@@ -39,13 +39,14 @@ import java.util.Set;
 
 /**
  * Activity that holds all the fragments for super scouting
+ *
+ * @author Andrew Messing
+ * @version 1
  */
 public class SuperScouting extends Activity {
 
-    final private String TAG = "SuperScouting";
+    private final String TAG = "SuperScouting";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private FPA_SuperScout adapter;
 
     private int matchNumber;
@@ -71,7 +72,7 @@ public class SuperScouting extends Activity {
         setActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        matchNumber = extras.getInt(Constants.MATCH_NUMBER);
+        matchNumber = extras.getInt(Constants.Intent_Extras.MATCH_NUMBER);
         if (matchNumber > 0) {
             setTitle("Match Number: " + matchNumber);
         } else {
@@ -81,7 +82,7 @@ public class SuperScouting extends Activity {
 
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
 
         Cursor cursor = scheduleDB.getMatch(matchNumber);
@@ -94,10 +95,10 @@ public class SuperScouting extends Activity {
         arrayList.add(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)));
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
-        viewPager = (ViewPager) findViewById(R.id.super_view_pager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.super_view_pager);
         adapter = new FPA_SuperScout(getFragmentManager(), arrayList);
         viewPager.setAdapter(adapter);
-        tabLayout = (TabLayout) findViewById(R.id.super_tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.super_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
@@ -245,7 +246,7 @@ public class SuperScouting extends Activity {
 
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, MatchList.class);
-                    intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
+                    intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.SUPER_SCOUTING);
                     startActivity(intent);
                 } else {
                     Toast.makeText(SuperScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -267,7 +268,7 @@ public class SuperScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.SUPER_SCOUTING);
                 startActivity(intent);
             }
         });
@@ -305,9 +306,9 @@ public class SuperScouting extends Activity {
                     // Go to the next match
                     Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
                     if (practice) {
-                        intent.putExtra(Constants.MATCH_NUMBER, -1);
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
                     } else {
-                        intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber - 1);
                     }
                     startActivity(intent);
                 } else {
@@ -331,9 +332,9 @@ public class SuperScouting extends Activity {
                 // Go to the next match
                 Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
                 if (practice) {
-                    intent.putExtra(Constants.MATCH_NUMBER, -1);
+                    intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
                 } else {
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber - 1);
                 }
                 startActivity(intent);
             }
@@ -373,9 +374,9 @@ public class SuperScouting extends Activity {
                             // Go to the next match
                             Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
                             if (practice) {
-                                intent.putExtra(Constants.MATCH_NUMBER, -1);
+                                intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
                             } else {
-                                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                                intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber + 1);
                             }
                             startActivity(intent);
                         } else {
@@ -407,9 +408,9 @@ public class SuperScouting extends Activity {
                         // Go to the next match
                         Intent intent = new Intent(SuperScouting.this, SuperScouting.class);
                         if (practice) {
-                            intent.putExtra(Constants.MATCH_NUMBER, -1);
+                            intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
                         } else {
-                            intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                            intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber + 1);
                         }
                         startActivity(intent);
                     }
@@ -456,7 +457,7 @@ public class SuperScouting extends Activity {
                 BluetoothDevice server = null;
                 for (BluetoothDevice device : devices) {
                     String connectedName = device.getName();
-                    if (connectedName.equals(Constants.SERVER_NAME)) {
+                    if (connectedName.equals(Constants.Bluetooth.SERVER_NAME)) {
                         server = device;
                         break;
                     }
@@ -468,13 +469,13 @@ public class SuperScouting extends Activity {
                 }
 
                 int i;
-                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     bluetoothSync.connect(server, false);
                     if (timeout()) {
                         break;
                     }
                 }
-                if (i == Constants.NUM_ATTEMPTS) {
+                if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                     bluetoothSync.stop();
                     publishProgress("Connection to Server Failed");
                     return null;
@@ -485,16 +486,16 @@ public class SuperScouting extends Activity {
                 String lastUpdated = syncDB.getSuperLastUpdated(connectedAddress);
                 syncDB.updateSuperSync(connectedAddress);
 
-                String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-                if (!superUpdatedText.equals(String.format("%c[]", Constants.SUPER_HEADER))) {
-                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                String superUpdatedText = Constants.Bluetooth.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+                if (!superUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.SUPER_HEADER))) {
+                    for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                         if (bluetoothSync.write(superUpdatedText.getBytes())) {
                             break;
                         } else {
-                            publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                            publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
                         }
                     }
-                    if (i == Constants.NUM_ATTEMPTS) {
+                    if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                         Utilities.JsonToSuperDB(superScoutDB, superUpdatedText);
                         publishProgress("Super Data Requeued");
                     } else {
@@ -517,7 +518,7 @@ public class SuperScouting extends Activity {
         private boolean timeout() {
             long time = SystemClock.currentThreadTimeMillis();
             while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
-                if (SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT) {
+                if (SystemClock.currentThreadTimeMillis() > time + Constants.Bluetooth.CONNECTION_TIMEOUT) {
                     return false;
                 }
             }

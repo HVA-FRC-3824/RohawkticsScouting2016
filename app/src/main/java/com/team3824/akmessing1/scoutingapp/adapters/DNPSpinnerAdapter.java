@@ -8,16 +8,16 @@ import java.util.Collections;
 
 public class DNPSpinnerAdapter extends ArrayAdapter<Integer> {
 
-    ArrayList<Integer> teams;
+    private ArrayList<Integer> teams;
 
-    public DNPSpinnerAdapter(Context context, int resource, ArrayList<Integer> objects) {
-        super(context, resource, objects);
+    public DNPSpinnerAdapter(Context context, ArrayList<Integer> objects) {
+        super(context, android.R.layout.simple_spinner_dropdown_item, objects);
         teams = objects;
     }
 
     public void remove(Integer teamNumber)
     {
-        teams.remove((Object)teamNumber);
+        teams.remove(teamNumber);
         notifyDataSetChanged();
 
     }

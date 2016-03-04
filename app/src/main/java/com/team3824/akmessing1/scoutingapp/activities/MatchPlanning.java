@@ -24,13 +24,16 @@ import java.io.IOException;
 /**
  *  Activity where the user can draw on a canvas where the background is the field. Includes features
  *  for multiple colors, multiple size brushes, erasers, and save/recovery of a drawing.
+ *
+ *  @author Andrew Messing
+ *  @version
  */
 public class MatchPlanning extends Activity implements View.OnClickListener {
 
     private String TAG = "MatchPlanning";
 
     private DrawingView drawView;
-    private ImageButton currPaint, drawBtn, eraseBtn, newBtn, saveBtn, openBtn;
+    private ImageButton currPaint;
     private float extraSmallBrush, smallBrush, mediumBrush, largeBrush;
 
     /**
@@ -54,19 +57,19 @@ public class MatchPlanning extends Activity implements View.OnClickListener {
         mediumBrush = 20;
         largeBrush = 30;
 
-        drawBtn = (ImageButton) findViewById(R.id.draw_btn);
+        ImageButton drawBtn = (ImageButton) findViewById(R.id.draw_btn);
         drawBtn.setOnClickListener(this);
 
-        eraseBtn = (ImageButton) findViewById(R.id.erase_btn);
+        ImageButton eraseBtn = (ImageButton) findViewById(R.id.erase_btn);
         eraseBtn.setOnClickListener(this);
 
-        newBtn = (ImageButton) findViewById(R.id.new_btn);
+        ImageButton newBtn = (ImageButton) findViewById(R.id.new_btn);
         newBtn.setOnClickListener(this);
 
-        saveBtn = (ImageButton) findViewById(R.id.save_btn);
+        ImageButton saveBtn = (ImageButton) findViewById(R.id.save_btn);
         saveBtn.setOnClickListener(this);
 
-        openBtn = (ImageButton) findViewById(R.id.open_btn);
+        ImageButton openBtn = (ImageButton) findViewById(R.id.open_btn);
         openBtn.setOnClickListener(this);
 
         Button backBtn = (Button) findViewById(R.id.back_btn);

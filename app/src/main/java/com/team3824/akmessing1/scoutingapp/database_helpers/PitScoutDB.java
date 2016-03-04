@@ -20,24 +20,29 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Helper class for accessing the pit scout table of the database
+ *
+ * @author Andrew Messing
+ */
 public class PitScoutDB extends SQLiteOpenHelper {
 
     // Initial Table Columns names
-    public static final String KEY_ID = "_id"; // _id is needed for updating
+
     // The team number is going to be the id, but another variable is set up for convenience
     public static final String KEY_TEAM_NUMBER = "_id";
     public static final String KEY_NICKNAME = "nickname";
     public static final String KEY_COMPLETE = "complete";
-    public static final String KEY_LAST_UPDATED = "last_updated";
+    private static final String KEY_ID = "_id";
+    private static final String KEY_LAST_UPDATED = "last_updated";
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "RohawkticsDB";
     private static SimpleDateFormat dateFormat;
-    private String TAG = "PitScoutDB";
+    private final String TAG = "PitScoutDB";
     private String tableName;
 
     /**
@@ -86,7 +91,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
      * @param columnName Name of the new column
      * @param columnType What type the new column should be
      */
-    public void addColumn(String columnName, String columnType) {
+    private void addColumn(String columnName, String columnType) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
@@ -97,6 +102,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
 
     /**
      * Fills in part of the database table based on the result from The Blue Alliance
+     *
      * @param array
      */
     public void createTeamList(JSONArray array) {
@@ -123,6 +129,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
     /**
      * Adds a team number to the database table
      * (This version has a blank nickname)
+     *
      * @param teamNumber The number of the team added
      */
     public void addTeamNumber(int teamNumber) {
@@ -137,8 +144,9 @@ public class PitScoutDB extends SQLiteOpenHelper {
 
     /**
      * Adds a team number to the database table
+     *
      * @param teamNumber The number of the team added
-     * @param nickname The nickname of the team added
+     * @param nickname   The nickname of the team added
      */
     public void addTeamNumber(int teamNumber, String nickname) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -152,6 +160,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
 
     /**
      * Removes a row from the table with the specified team number
+     *
      * @param teamNumber
      */
     public void removeTeamNumber(int teamNumber) {
@@ -161,6 +170,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
 
     /**
      * Update the data in the pit database table for a team
+     *
      * @param map The data
      */
     public void updatePit(ScoutMap map) {
@@ -238,6 +248,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
 
     /**
      * Resets the row in the database for the specified team
+     *
      * @param teamNumber
      */
     //TODO: check if pit group system works and then remove
@@ -267,6 +278,7 @@ public class PitScoutDB extends SQLiteOpenHelper {
 
     /**
      * Get the data for all the teams
+     *
      * @return The data for all the teams
      */
     public Cursor getAllTeamsInfo() {
@@ -285,7 +297,8 @@ public class PitScoutDB extends SQLiteOpenHelper {
     }
 
     /**
-     *  Get the data for a specific team
+     * Get the data for a specific team
+     *
      * @param teamNum
      * @return The data for a specific team
      */
@@ -305,7 +318,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param teamNum
      * @return
      */
@@ -328,7 +340,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param teamNum
      * @return
      */
@@ -355,7 +366,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
     // Used in restoring field values
 
     /**
-     *
      * @param teamNum
      * @return
      */
@@ -401,7 +411,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @return
      */
     public int getNumTeams() {
@@ -410,7 +419,6 @@ public class PitScoutDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @return
      */
     public ArrayList<Integer> getTeamNumbers() {
@@ -439,13 +447,11 @@ public class PitScoutDB extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param since
      * @return
      */
     public Cursor getAllTeamsInfoSince(String since) {
-        if(since.equals(""))
-        {
+        if (since.equals("")) {
             return getAllTeamsInfo();
         }
         SQLiteDatabase db = this.getReadableDatabase();

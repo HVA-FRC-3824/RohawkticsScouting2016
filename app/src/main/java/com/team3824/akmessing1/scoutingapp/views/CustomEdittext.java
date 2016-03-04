@@ -11,13 +11,10 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
-import java.util.Map;
-
 public class CustomEdittext extends CustomScoutView {
 
     private String TAG = "CustomEdittext";
 
-    private TextView label;
     private EditText edittext;
     private String key;
 
@@ -29,7 +26,7 @@ public class CustomEdittext extends CustomScoutView {
         inflater.inflate(R.layout.custom_edittext, this);
 
         edittext = (EditText)this.findViewById(R.id.edittext);
-        label = (TextView)this.findViewById(R.id.label);
+        TextView label = (TextView) this.findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));

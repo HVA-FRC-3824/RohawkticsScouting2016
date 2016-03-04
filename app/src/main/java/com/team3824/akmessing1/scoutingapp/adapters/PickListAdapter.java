@@ -27,29 +27,30 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Adapter for the list view that holds all the teams for a given picklist
+ * Adapter for the list view that holds all the teams for a given pick list
+ *
+ * @author Andrew Messing
+ * @version 1
  */
 public class PickListAdapter extends ArrayAdapter<Team> {
 
-    String pickType;
-    Context context;
-    StatsDB statsDB;
-    Comparator<Team> comparator;
+    private final String TAG = "PickListAdapter";
+
+    private Context context;
+    private StatsDB statsDB;
+    private Comparator<Team> comparator;
     private ArrayList<Team> teams;
 
     /**
      * @param context
-     * @param textViewResourceId
      * @param teams
-     * @param pickType           The tag for the type of pick.
-     * @param statsDB            The database helper for the stats database table
-     * @param comparator         The comparator to use to sort the teams
+     * @param statsDB    The database helper for the stats database table
+     * @param comparator The comparator to use to sort the teams
      */
-    public PickListAdapter(Context context, int textViewResourceId, ArrayList<Team> teams, String pickType, StatsDB statsDB, Comparator<Team> comparator) {
-        super(context, textViewResourceId, teams);
+    public PickListAdapter(Context context, ArrayList<Team> teams, StatsDB statsDB, Comparator<Team> comparator) {
+        super(context, R.layout.list_item_pick, teams);
         this.context = context;
         this.teams = teams;
-        this.pickType = pickType;
         this.statsDB = statsDB;
         this.comparator = comparator;
     }
@@ -90,7 +91,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), TeamView.class);
-                    intent.putExtra(Constants.TEAM_NUMBER, t.getTeamNumber());
+                    intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, t.getTeamNumber());
                     getContext().startActivity(intent);
                 }
             });
@@ -121,7 +122,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
                         t.setMapElement(StatsDB.KEY_PICKED, new ScoutValue(0));
                         Collections.sort(teams, comparator);
                         ScoutMap map = new ScoutMap();
-                        map.put(StatsDB.KEY_TEAM_NUMBER,t.getTeamNumber());
+                        map.put(StatsDB.KEY_TEAM_NUMBER, t.getTeamNumber());
                         map.put(StatsDB.KEY_PICKED, 0);
                         statsDB.updateStats(map);
                     }
@@ -132,11 +133,11 @@ public class PickListAdapter extends ArrayAdapter<Team> {
             // Set up thumbnail
             //TODO: change to be based on the event id and the team number
             //TODO: use thumbnail creator?
-            ScoutValue robotPicture = t.getMapElement(Constants.PIT_ROBOT_PICTURE);
+            ScoutValue robotPicture = t.getMapElement(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
             if (robotPicture != null) {
                 String imagePath = robotPicture.getString();
-                if (imagePath != "") {
+                if (!imagePath.equals("")) {
                     Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + imagePath),
                             64, 64);
                     imageView.setImageBitmap(thumbnail);
@@ -144,12 +145,12 @@ public class PickListAdapter extends ArrayAdapter<Team> {
             }
 
             //Add whether they received a yellow card or a red card
-            if (t.containsMapElement(Constants.TOTAL_YELLOW_CARDS)) {
-                if (t.getMapElement(Constants.TOTAL_YELLOW_CARDS).getInt() > 0) {
+            if (t.containsMapElement(Constants.Calculated_Totals.TOTAL_YELLOW_CARDS)) {
+                if (t.getMapElement(Constants.Calculated_Totals.TOTAL_YELLOW_CARDS).getInt() > 0) {
                     convertView.findViewById(R.id.yellow_card).setVisibility(View.VISIBLE);
                 }
 
-                if (t.getMapElement(Constants.TOTAL_RED_CARDS).getInt() > 0) {
+                if (t.getMapElement(Constants.Calculated_Totals.TOTAL_RED_CARDS).getInt() > 0) {
                     convertView.findViewById(R.id.red_card).setVisibility(View.VISIBLE);
                 }
             }
@@ -162,7 +163,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
             topText.setText(String.format("%d - %s", teamNumber, nickname));
 
             TextView bottomText = (TextView) convertView.findViewById(R.id.bottomText);
-            bottomText.setText(t.getMapElement(Constants.BOTTOM_TEXT).getString());
+            bottomText.setText(t.getMapElement(Constants.Pick_List.BOTTOM_TEXT).getString());
 
         }
 

@@ -13,12 +13,13 @@ import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Arrays;
-import java.util.Map;
 
 public class CustomRadioButtons extends CustomScoutView {
-    private TextView label;
+
+    private final String TAG = "CustomRadioButtons";
+
     private String[] resourceStrings;
-    RadioGroup radios;
+    private RadioGroup radios;
     private String key;
 
     public CustomRadioButtons(Context context, AttributeSet attrs)
@@ -27,7 +28,7 @@ public class CustomRadioButtons extends CustomScoutView {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.custom_radio, this);
 
-        label = (TextView)findViewById(R.id.label);
+        TextView label = (TextView) findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));

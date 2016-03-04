@@ -20,8 +20,10 @@ import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 /**
  * Activity to show all the teams as buttons that lead to the Team View
+ *
+ * @author Andrew Messing
+ * @version %I%
  */
-//TODO: Merge with PitList
 public class TeamList extends Activity {
 
     private static final String TAG = "TeamList";
@@ -46,18 +48,18 @@ public class TeamList extends Activity {
         header.removeHome();
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
 
         Bundle extras = getIntent().getExtras();
-        String nextPage = extras.getString(Constants.NEXT_PAGE);
+        String nextPage = extras.getString(Constants.Intent_Extras.NEXT_PAGE);
 
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventID);
-        if(nextPage.equals(Constants.TEAM_VIEWING)) {
+        if(nextPage.equals(Constants.Intent_Extras.TEAM_VIEWING)) {
             displayListView(pitScoutDB, -1, nextPage);
         }
-        else if(nextPage.equals(Constants.PIT_SCOUTING))
+        else if(nextPage.equals(Constants.Intent_Extras.PIT_SCOUTING))
         {
-            displayListView(pitScoutDB,sharedPreferences.getInt(Constants.PIT_GROUP_NUMBER,0), nextPage);
+            displayListView(pitScoutDB,sharedPreferences.getInt(Constants.Settings.PIT_GROUP_NUMBER,0), nextPage);
         }
         pitScoutDB.close();
     }
@@ -85,7 +87,7 @@ public class TeamList extends Activity {
             int extra = numTeams % 6;
             int startPosition = 0;
             int endPosition = -1;
-            if(nextPage.equals(Constants.PIT_SCOUTING)) {
+            if(nextPage.equals(Constants.Intent_Extras.PIT_SCOUTING)) {
                 startPosition = numGroupTeams * (pitGroupNumber - 1);
                 endPosition = numGroupTeams * pitGroupNumber;
                 if (extra > 0) {
@@ -109,19 +111,19 @@ public class TeamList extends Activity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = null;
-                        if (nextPage.equals(Constants.PIT_SCOUTING)) {
+                        if (nextPage.equals(Constants.Intent_Extras.PIT_SCOUTING)) {
                             intent = new Intent(TeamList.this, PitScouting.class);
-                        } else if (nextPage.equals(Constants.TEAM_VIEWING)) {
+                        } else if (nextPage.equals(Constants.Intent_Extras.TEAM_VIEWING)) {
                             intent = new Intent(TeamList.this, TeamView.class);
                         } else {
                             assert false;
                         }
-                        intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
+                        intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, teamNumber);
                         startActivity(intent);
                     }
                 });
 
-                if(nextPage.equals(Constants.PIT_SCOUTING)) {
+                if(nextPage.equals(Constants.Intent_Extras.PIT_SCOUTING)) {
                     // Buttons are green if the team has been scouted and red if it hasn't
                     if (cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_COMPLETE)) != 0) {
                         button.setBackgroundColor(Color.GREEN);

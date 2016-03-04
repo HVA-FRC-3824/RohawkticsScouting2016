@@ -19,6 +19,9 @@ import com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 /**
+ * @author Andrew Messing
+ * @version 1
+ *
  *  Activity to view highlights of all six teams competing in a given match
  */
 public class MatchView extends Activity {
@@ -39,10 +42,10 @@ public class MatchView extends Activity {
         setContentView(R.layout.activity_match_view);
 
         Bundle extras = getIntent().getExtras();
-        matchNumber = extras.getInt(Constants.MATCH_NUMBER,-1);
+        matchNumber = extras.getInt(Constants.Intent_Extras.MATCH_NUMBER,-1);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.match_view_toolbar);
         setActionBar(toolbar);
@@ -52,7 +55,7 @@ public class MatchView extends Activity {
         }
         else
         {
-            setTitle(extras.getString(Constants.MATCH_TYPE));
+            setTitle(extras.getString(Constants.Alliance_Selection.MATCH_TYPE));
         }
 
         TextView tv = (TextView) findViewById(R.id.auto_high_goal_blue);
@@ -109,17 +112,17 @@ public class MatchView extends Activity {
         {
             FragmentManager fm = getFragmentManager();
             MatchTeamFragment blue1 = (MatchTeamFragment) fm.findFragmentById(R.id.blue1);
-            blue1.setTeamNumber(extras.getInt(Constants.BLUE1), this);
+            blue1.setTeamNumber(extras.getInt(Constants.Alliance_Selection.BLUE1), this);
             MatchTeamFragment blue2 = (MatchTeamFragment) fm.findFragmentById(R.id.blue2);
-            blue2.setTeamNumber(extras.getInt(Constants.BLUE2), this);
+            blue2.setTeamNumber(extras.getInt(Constants.Alliance_Selection.BLUE2), this);
             MatchTeamFragment blue3 = (MatchTeamFragment) fm.findFragmentById(R.id.blue3);
-            blue3.setTeamNumber(extras.getInt(Constants.BLUE3), this);
+            blue3.setTeamNumber(extras.getInt(Constants.Alliance_Selection.BLUE3), this);
             MatchTeamFragment red1 = (MatchTeamFragment) fm.findFragmentById(R.id.red1);
-            red1.setTeamNumber(extras.getInt(Constants.RED1), this);
+            red1.setTeamNumber(extras.getInt(Constants.Alliance_Selection.RED1), this);
             MatchTeamFragment red2 = (MatchTeamFragment) fm.findFragmentById(R.id.red2);
-            red2.setTeamNumber(extras.getInt(Constants.RED2), this);
+            red2.setTeamNumber(extras.getInt(Constants.Alliance_Selection.RED2), this);
             MatchTeamFragment red3 = (MatchTeamFragment) fm.findFragmentById(R.id.red3);
-            red3.setTeamNumber(extras.getInt(Constants.RED3), this);
+            red3.setTeamNumber(extras.getInt(Constants.Alliance_Selection.RED3), this);
         }
 
         prevMatch = matchNumber > 1;
@@ -163,12 +166,12 @@ public class MatchView extends Activity {
                 break;
             case R.id.previous:
                 intent = new Intent(this, MatchView.class);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber - 1);
                 startActivity(intent);
                 break;
             case R.id.next:
                 intent = new Intent(this, MatchView.class);
-                intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber + 1);
                 startActivity(intent);
                 break;
             default:

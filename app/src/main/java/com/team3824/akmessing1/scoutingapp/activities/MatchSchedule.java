@@ -34,6 +34,7 @@ public class MatchSchedule extends Activity {
 
     /**
      * Sets up the page
+     *
      * @param savedInstanceState
      */
     @Override
@@ -52,8 +53,8 @@ public class MatchSchedule extends Activity {
         });
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
-        String userType = sharedPreferences.getString(Constants.USER_TYPE, "");
+        final String eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
+        String userType = sharedPreferences.getString(Constants.Settings.USER_TYPE, "");
         ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
 
         ViewGroup viewGroup = (ViewGroup) findViewById(R.id.key);
@@ -83,7 +84,7 @@ public class MatchSchedule extends Activity {
 
         displayListView(scheduleDB);
 
-        if (userType.equals(Constants.ADMIN)) {
+        if (userType.equals(Constants.User_Types.ADMIN)) {
             Button button = (Button) findViewById(R.id.edit);
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +99,7 @@ public class MatchSchedule extends Activity {
     }
 
     /**
-     *  Populates the list view with the match rows
+     * Populates the list view with the match rows
      *
      * @param scheduleDB The schedule database table helper
      */
@@ -159,7 +160,7 @@ public class MatchSchedule extends Activity {
             matches.add(0, match);
         }
 
-        MatchScheduleAdapter matchScheduleAdapter = new MatchScheduleAdapter(this, R.layout.list_item_schedule_match, matches);
+        MatchScheduleAdapter matchScheduleAdapter = new MatchScheduleAdapter(this, matches);
         listview.setAdapter(matchScheduleAdapter);
     }
 }

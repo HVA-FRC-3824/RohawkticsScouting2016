@@ -11,14 +11,11 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
-import java.util.Map;
-
 // Custom textbox with label only for numbers
 public class CustomNumeric extends CustomScoutView{
 
     private String TAG = "CustomNumeric";
 
-    private TextView label;
     private EditText numeric;
     private String key;
 
@@ -31,7 +28,7 @@ public class CustomNumeric extends CustomScoutView{
 
         numeric = (EditText)this.findViewById(R.id.numeric);
         //numeric.setText("0");
-        label = (TextView)this.findViewById(R.id.label);
+        TextView label = (TextView) this.findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));

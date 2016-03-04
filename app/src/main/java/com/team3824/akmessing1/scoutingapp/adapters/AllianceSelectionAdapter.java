@@ -8,21 +8,24 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.fragments.AllianceSelection;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 /**
+ * Adapter for each of the Alliance Selection Spinners
  *
+ * @author Andrew Messing
+ * @version %I%
  */
 public class AllianceSelectionAdapter extends ArrayAdapter<String> {
 
-    ArrayList<String> teams;
+    private ArrayList<String> teams;
 
-    public AllianceSelectionAdapter(Context context, int resource, ArrayList<String> objects) {
-        super(context, resource, objects);
+    public AllianceSelectionAdapter(Context context, ArrayList<String> objects) {
+        super(context, android.R.layout.simple_spinner_dropdown_item, objects);
         teams = objects;
     }
 
@@ -57,19 +60,25 @@ public class AllianceSelectionAdapter extends ArrayAdapter<String> {
         return teams.indexOf(s);
     }
 
+    /**
+     * @param s
+     */
     public void remove(String s) {
         teams.remove(s);
         notifyDataSetChanged();
     }
 
+    /**
+     * @param s
+     */
     public void add(String s) {
         teams.add(s);
         Collections.sort(teams, new Comparator<String>() {
             @Override
             public int compare(String lhs, String rhs) {
-                if (lhs.equals(AllianceSelection.SELECT_TEAM)) {
+                if (lhs.equals(Constants.Alliance_Selection.SELECT_TEAM)) {
                     return -1;
-                } else if (rhs.equals(AllianceSelection.SELECT_TEAM)) {
+                } else if (rhs.equals(Constants.Alliance_Selection.SELECT_TEAM)) {
                     return 1;
                 }
                 return Integer.compare(Integer.parseInt(lhs), Integer.parseInt(rhs));

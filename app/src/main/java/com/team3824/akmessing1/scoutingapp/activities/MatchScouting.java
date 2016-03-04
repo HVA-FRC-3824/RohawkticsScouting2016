@@ -22,37 +22,31 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.FPA_MatchScout;
+import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_MatchScout;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.SyncDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothHandler;
 import com.team3824.akmessing1.scoutingapp.utilities.bluetooth.BluetoothSync;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
- *  Activity that holds the fragments for scouting matches.
+ * Activity that holds the fragments for scouting matches.
  */
 public class MatchScouting extends Activity {
 
     private static String TAG = "MatchScouting";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private FPA_MatchScout adapter;
 
     private int teamNumber;
     private int matchNumber;
-    private String allianceColor;
 
     private int prevTeamNumber = -1;
     private int nextTeamNumber = -1;
@@ -61,7 +55,7 @@ public class MatchScouting extends Activity {
     private boolean practice = false;
 
     /**
-     *  Sets up the view pager, pager adapter, and tab layout.
+     * Sets up the view pager, pager adapter, and tab layout.
      *
      * @param savedInstanceState
      */
@@ -74,28 +68,26 @@ public class MatchScouting extends Activity {
 
         // Get Match Number and Team Number from the intent
         Bundle extras = getIntent().getExtras();
-        matchNumber = extras.getInt(Constants.MATCH_NUMBER);
-        if(matchNumber > 0) {
-            teamNumber = extras.getInt(Constants.TEAM_NUMBER);
+        matchNumber = extras.getInt(Constants.Intent_Extras.MATCH_NUMBER);
+        if (matchNumber > 0) {
+            teamNumber = extras.getInt(Constants.Intent_Extras.TEAM_NUMBER);
             setTitle("Match Number: " + matchNumber + " Team Number: " + teamNumber);
-        }
-        else
-        {
+        } else {
             practice = true;
             setTitle("Practice Match");
         }
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        allianceColor = sharedPreferences.getString(Constants.ALLIANCE_COLOR, "");
+        String allianceColor = sharedPreferences.getString(Constants.Settings.ALLIANCE_COLOR, "");
 
         // Set up tabs and pages for different fragments of a match
         findViewById(android.R.id.content).setKeepScreenOn(true);
-        viewPager = (ViewPager) findViewById(R.id.match_view_pager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.match_view_pager);
         adapter = new FPA_MatchScout(getFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(5);
-        tabLayout = (TabLayout) findViewById(R.id.match_tab_layout);
-        if (allianceColor.equals(Constants.BLUE)) {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.match_tab_layout);
+        if (allianceColor.equals(Constants.Alliance_Colors.BLUE)) {
             tabLayout.setBackgroundColor(Color.BLUE);
         } else {
             tabLayout.setBackgroundColor(Color.RED);
@@ -106,7 +98,7 @@ public class MatchScouting extends Activity {
 
         // Restore any values from the database if this team/match combo has been scouted before
         // (basically if updating)
-        eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         MatchScoutDB matchScoutDB = new MatchScoutDB(this, eventId);
         ScoutMap map = matchScoutDB.getTeamMatchInfo(teamNumber, matchNumber);
         if (map != null) {
@@ -117,7 +109,7 @@ public class MatchScouting extends Activity {
         // First match doesn't need a previous menu option
         if (!practice && matchNumber != 1) {
             Cursor prevCursor = scheduleDB.getMatch(matchNumber - 1);
-            int allianceNum = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
+            int allianceNum = sharedPreferences.getInt(Constants.Settings.ALLIANCE_NUMBER, 0);
             prevTeamNumber = prevCursor.getInt(prevCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
             Log.d(TAG, "Prev Team: " + prevTeamNumber);
         } else {
@@ -126,17 +118,15 @@ public class MatchScouting extends Activity {
 
         // Determine if the last match or not
         Cursor nextCursor = null;
-        if(!practice) {
+        if (!practice) {
             nextCursor = scheduleDB.getMatch(matchNumber + 1);
         }
 
         //Last match doesn't need a next button
-        if(practice)
-        {
+        if (practice) {
             nextTeamNumber = 0;
-        }
-        else if (nextCursor != null && nextCursor.getCount() > 0) {
-            int allianceNum = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
+        } else if (nextCursor != null && nextCursor.getCount() > 0) {
+            int allianceNum = sharedPreferences.getInt(Constants.Settings.ALLIANCE_NUMBER, 0);
             nextTeamNumber = nextCursor.getInt(nextCursor.getColumnIndex(allianceColor.toLowerCase() + allianceNum));
             Log.d(TAG, "Next Team: " + nextTeamNumber);
         } else {
@@ -150,6 +140,7 @@ public class MatchScouting extends Activity {
     /**
      * Creates the overflow menu for the toolbar. Removes previous match or next match options if
      * they do not exist.
+     *
      * @param menu The menu that is filled with the overflow menu.
      * @return true
      */
@@ -193,8 +184,8 @@ public class MatchScouting extends Activity {
     }
 
     /**
-     *  The action that happens when the home button is pressed. Brings up dialog with options to save
-     *  and takes user to the home screen.
+     * The action that happens when the home button is pressed. Brings up dialog with options to save
+     * and takes user to the home screen.
      */
     private void home_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
@@ -215,7 +206,7 @@ public class MatchScouting extends Activity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    if(!practice) {
+                    if (!practice) {
                         new SaveTask().execute(data);
                     }
 
@@ -251,7 +242,7 @@ public class MatchScouting extends Activity {
 
     /**
      * The action that happens when the back button is pressed. Brings up dialog with options to save
-     *  and takes user to the match list.
+     * and takes user to the match list.
      */
     private void back_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MatchScouting.this);
@@ -272,13 +263,13 @@ public class MatchScouting extends Activity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    if(!practice) {
+                    if (!practice) {
                         new SaveTask().execute(data);
                     }
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchList.class);
-                    intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_SCOUTING);
+                    intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.MATCH_SCOUTING);
                     startActivity(intent);
                 } else {
                     Toast.makeText(MatchScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -300,7 +291,7 @@ public class MatchScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_SCOUTING);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.MATCH_SCOUTING);
                 startActivity(intent);
             }
         });
@@ -309,7 +300,7 @@ public class MatchScouting extends Activity {
 
     /**
      * The action that happens when the previous match button is pressed. Brings up dialog with options to save
-     *  and takes user to match scout the previous match.
+     * and takes user to match scout the previous match.
      */
     private void previous_press() {
         Log.d(TAG, "previous match pressed");
@@ -331,19 +322,17 @@ public class MatchScouting extends Activity {
 
                 if (error.equals("")) {
                     Log.d(TAG, "Saving values");
-                    if(!practice) {
+                    if (!practice) {
                         new SaveTask().execute(data);
                     }
 
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                    if(practice) {
-                        intent.putExtra(Constants.MATCH_NUMBER, -1);
-                    }
-                    else
-                    {
-                        intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
-                        intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                    if (practice) {
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
+                    } else {
+                        intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, prevTeamNumber);
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber - 1);
                     }
                     startActivity(intent);
                 } else {
@@ -366,13 +355,11 @@ public class MatchScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                if(practice)
-                {
-                    intent.putExtra(Constants.MATCH_NUMBER, -1);
-                }
-                else {
-                    intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber - 1);
+                if (practice) {
+                    intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
+                } else {
+                    intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, prevTeamNumber);
+                    intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber - 1);
                 }
                 startActivity(intent);
             }
@@ -382,7 +369,7 @@ public class MatchScouting extends Activity {
 
     /**
      * The action that happens when the next match button is pressed. Brings up dialog with options to save
-     *  and takes user to match scout the next match.
+     * and takes user to match scout the next match.
      */
     private void next_press() {
         Log.d(TAG, "next match pressed");
@@ -412,10 +399,10 @@ public class MatchScouting extends Activity {
                     // Go to the next match
                     Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
                     if (practice) {
-                        intent.putExtra(Constants.MATCH_NUMBER, -1);
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
                     } else {
-                        intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
-                        intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                        intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber + 1);
                     }
                     startActivity(intent);
                 } else {
@@ -438,13 +425,11 @@ public class MatchScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(MatchScouting.this, MatchScouting.class);
-                if(practice)
-                {
-                    intent.putExtra(Constants.MATCH_NUMBER, -1);
-                }
-                else {
-                    intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
-                    intent.putExtra(Constants.MATCH_NUMBER, matchNumber + 1);
+                if (practice) {
+                    intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
+                } else {
+                    intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
+                    intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber + 1);
                 }
                 startActivity(intent);
             }
@@ -477,7 +462,7 @@ public class MatchScouting extends Activity {
                 BluetoothDevice server = null;
                 for (BluetoothDevice device : devices) {
                     String connectedName = device.getName();
-                    if (connectedName.equals(Constants.SERVER_NAME)) {
+                    if (connectedName.equals(Constants.Bluetooth.SERVER_NAME)) {
                         server = device;
                         break;
                     }
@@ -489,13 +474,13 @@ public class MatchScouting extends Activity {
                 }
 
                 int i;
-                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     bluetoothSync.connect(server, false);
                     if (timeout()) {
                         break;
                     }
                 }
-                if (i == Constants.NUM_ATTEMPTS) {
+                if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                     bluetoothSync.stop();
                     publishProgress("Connection to Server Failed");
                     return null;
@@ -506,16 +491,16 @@ public class MatchScouting extends Activity {
                 String lastUpdated = syncDB.getMatchLastUpdated(connectedAddress);
                 syncDB.updateMatchSync(connectedAddress);
 
-                String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
-                if (!matchUpdatedText.equals(String.format("%c[]", Constants.MATCH_HEADER))) {
-                    for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+                String matchUpdatedText = Constants.Bluetooth.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
+                if (!matchUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.MATCH_HEADER))) {
+                    for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                         if (bluetoothSync.write(matchUpdatedText.getBytes())) {
                             break;
                         } else {
-                            publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                            publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
                         }
                     }
-                    if (i == Constants.NUM_ATTEMPTS) {
+                    if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                         Utilities.JsonToMatchDB(matchScoutDB, matchUpdatedText);
                         publishProgress("Match Data Requeued");
                     } else {
@@ -533,7 +518,7 @@ public class MatchScouting extends Activity {
         private boolean timeout() {
             long time = SystemClock.currentThreadTimeMillis();
             while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
-                if (SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT) {
+                if (SystemClock.currentThreadTimeMillis() > time + Constants.Bluetooth.CONNECTION_TIMEOUT) {
                     return false;
                 }
             }

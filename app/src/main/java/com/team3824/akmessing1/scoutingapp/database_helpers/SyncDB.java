@@ -9,14 +9,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Helper class for accessing the sync table of the database
+ *
+ * @author Andrew Messing
+ * @version
+ */
 public class SyncDB extends SQLiteOpenHelper {
     // Initial Table Columns names
-    public static final String KEY_ID = "_id";
-    public static final String KEY_MATCH_LAST_UPDATED = "match_last_updated";
-    public static final String KEY_PIT_LAST_UPDATED = "pit_last_updated";
-    public static final String KEY_SUPER_LAST_UPDATED = "super_last_updated";
-    public static final String KEY_DRIVE_TEAM_LAST_UPDATED = "drive_team_last_updated";
-    public static final String KEY_STATS_LAST_UPDATED = "stats_last_updated";
+    private static final String KEY_ID = "_id";
+    private static final String KEY_MATCH_LAST_UPDATED = "match_last_updated";
+    private static final String KEY_PIT_LAST_UPDATED = "pit_last_updated";
+    private static final String KEY_SUPER_LAST_UPDATED = "super_last_updated";
+    private static final String KEY_DRIVE_TEAM_LAST_UPDATED = "drive_team_last_updated";
+    private static final String KEY_STATS_LAST_UPDATED = "stats_last_updated";
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name

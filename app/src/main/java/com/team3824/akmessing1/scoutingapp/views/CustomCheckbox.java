@@ -12,8 +12,6 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
-import java.util.Map;
-
 // Adds a label to the checkbox and allows custom saving and restoring
 public class CustomCheckbox extends CustomScoutView {
 

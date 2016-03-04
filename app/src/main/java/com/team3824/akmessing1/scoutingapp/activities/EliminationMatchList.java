@@ -7,14 +7,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.FPA_EliminationMatchList;
+import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_EliminationMatchList;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
-
+/**
+ * Activity which contains Alliance Selection Fragments and Bracket Results fragments in order to set
+ * up Elimination Match Views.
+ *
+ * @author Andrew Messing
+ * @version
+ */
 public class EliminationMatchList extends Activity implements ViewPager.OnPageChangeListener{
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private FPA_EliminationMatchList adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +27,11 @@ public class EliminationMatchList extends Activity implements ViewPager.OnPageCh
         CustomHeader customHeader = (CustomHeader)findViewById(R.id.header);
         customHeader.removeHome();
 
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        adapter = new FPA_EliminationMatchList(getFragmentManager());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        FPA_EliminationMatchList adapter = new FPA_EliminationMatchList(getFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
@@ -39,8 +42,15 @@ public class EliminationMatchList extends Activity implements ViewPager.OnPageCh
 
     }
 
+    //TODO: Set up new alliance selections to move over to bracket results
     @Override
     public void onPageSelected(int position) {
+
+        // Move from 0 to 1
+        if(position == 1)
+        {
+
+        }
 
     }
 

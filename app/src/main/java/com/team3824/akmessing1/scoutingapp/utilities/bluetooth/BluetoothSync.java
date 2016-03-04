@@ -9,7 +9,6 @@ import android.os.Message;
 import android.util.Log;
 
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
-import com.team3824.akmessing1.scoutingapp.utilities.MessageType;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.io.BufferedInputStream;
@@ -22,6 +21,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 public class BluetoothSync {
     private static String TAG = "BluetoothSync";
     private static final String NAME_SECURE = "SyncSecure";
@@ -41,13 +41,13 @@ public class BluetoothSync {
     private Handler mHandler;
 
     // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
-    public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    private static final int STATE_NONE = 0;       // we're doing nothing
+    private static final int STATE_LISTEN = 1;     // now listening for incoming connections
+    private static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
-    public String connectedAddress = "";
-    public String connectedName = "";
+    private String connectedAddress = "";
+    private String connectedName = "";
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -77,6 +77,11 @@ public class BluetoothSync {
     public synchronized int getState() {
         return mState;
     }
+
+    /**
+     * Returns whether the current state is connected
+     */
+    public synchronized boolean isConnected(){return mState == STATE_CONNECTED;}
 
     /**
      * Return the device id of the connected device
@@ -168,7 +173,7 @@ public class BluetoothSync {
      * @param socket The BluetoothSocket on which the connection was made
      * @param device The BluetoothDevice that has been connected
      */
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice
+    private synchronized void connected(BluetoothSocket socket, BluetoothDevice
             device, String socketType) {
         Log.d(TAG, "Connected");
 
@@ -274,7 +279,7 @@ public class BluetoothSync {
      * Indicate that the connection was lost and notify the UI Activity.
      */
     private void connectionLost() {
-        mHandler.sendEmptyMessage(MessageType.CONNECTION_LOST);
+        mHandler.sendEmptyMessage(Constants.Message_Type.CONNECTION_LOST);
         Log.e(TAG,"Connection Lost");
         // Start the service over to restart listening mode
         BluetoothSync.this.start();
@@ -315,7 +320,7 @@ public class BluetoothSync {
             Log.d(TAG, "BEGIN mAcceptThread" + this);
             setName("AcceptThread"+socketType);
 
-            BluetoothSocket socket = null;
+            BluetoothSocket socket;
 
             // Listen to the server socket if we're not connected
             while (mState != STATE_CONNECTED) {
@@ -480,7 +485,7 @@ public class BluetoothSync {
                         byte[] digest = new byte[16];
                         int headerIndex = 0;
                         byte header;
-                        int totalSize = -1, remainingSize = -1;
+                        int totalSize, remainingSize = -1;
 
                         while (true) {
                             if (waitingForHeader) {
@@ -489,7 +494,7 @@ public class BluetoothSync {
                                 headerBytes[headerIndex++] = header;
 
                                 if (headerIndex == 22) {
-                                    if ((headerBytes[0] == Constants.HEADER_MSB) && (headerBytes[1] == Constants.HEADER_LSB)) {
+                                    if ((headerBytes[0] == Constants.Bluetooth.HEADER_MSB) && (headerBytes[1] == Constants.Bluetooth.HEADER_LSB)) {
                                         Log.v(TAG, "Header Received.  Now obtaining length");
                                         byte[] dataSizeBuffer = Arrays.copyOfRange(headerBytes, 2, 6);
                                         totalSize = Utilities.byteArrayToInt(dataSizeBuffer);
@@ -500,14 +505,14 @@ public class BluetoothSync {
                                     } else {
                                         Log.e(TAG, "Did not receive correct header.  Closing socket");
                                         mmSocket.close();
-                                        mHandler.sendEmptyMessage(MessageType.INVALID_HEADER);
+                                        mHandler.sendEmptyMessage(Constants.Message_Type.INVALID_HEADER);
                                         break;
                                     }
                                 }
 
                             } else {
                                 // Read the data from the stream in chunks
-                                byte[] buffer = new byte[Constants.CHUNK_SIZE];
+                                byte[] buffer = new byte[Constants.Bluetooth.CHUNK_SIZE];
                                 Log.v(TAG, String.format("Waiting for data.  Expecting %d more bytes.",remainingSize));
                                 int bytesRead = mmInStream.read(buffer);
                                 Log.v(TAG, "Read " + bytesRead + " bytes into buffer");
@@ -528,7 +533,7 @@ public class BluetoothSync {
                             Log.v(TAG, "Digest matches OK.");
                             Message message = new Message();
                             message.obj = data;
-                            message.what = MessageType.DATA_RECEIVED;
+                            message.what = Constants.Message_Type.DATA_RECEIVED;
                             mHandler.sendMessage(message);
 
                             // Send the digest back to the client as a confirmation
@@ -537,7 +542,7 @@ public class BluetoothSync {
 
                         } else {
                             Log.e(TAG, "Digest did not match.  Corrupt transfer?");
-                            mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
+                            mHandler.sendEmptyMessage(Constants.Message_Type.DIGEST_DID_NOT_MATCH);
                             mmOutStream.write(digest);
                         }
 
@@ -568,11 +573,11 @@ public class BluetoothSync {
             }
             mSubstate = SUBSTATE_SENDING;
             try {
-                mHandler.sendEmptyMessage(MessageType.SENDING_DATA);
+                mHandler.sendEmptyMessage(Constants.Message_Type.SENDING_DATA);
 
                 // Send the header control first
-                mmOutStream.write(Constants.HEADER_MSB);
-                mmOutStream.write(Constants.HEADER_LSB);
+                mmOutStream.write(Constants.Bluetooth.HEADER_MSB);
+                mmOutStream.write(Constants.Bluetooth.HEADER_LSB);
 
                 // write size
                 mmOutStream.write(Utilities.intToByteArray(buffer.length));
@@ -596,12 +601,12 @@ public class BluetoothSync {
                     if (incomingIndex == 16) {
                         if (Utilities.digestMatch(buffer, incomingDigest)) {
                             Log.v(TAG, "Digest matched OK.  Data was received OK.");
-                            mHandler.sendEmptyMessage(MessageType.DATA_SENT_OK);
+                            mHandler.sendEmptyMessage(Constants.Message_Type.DATA_SENT_OK);
                             mSubstate = SUBSTATE_RECEIVING;
                             return true;
                         } else {
                             Log.e(TAG, "Digest did not match.  Might want to resend.");
-                            mHandler.sendEmptyMessage(MessageType.DIGEST_DID_NOT_MATCH);
+                            mHandler.sendEmptyMessage(Constants.Message_Type.DIGEST_DID_NOT_MATCH);
                             mSubstate = SUBSTATE_RECEIVING;
                             return false;
                         }
@@ -629,7 +634,7 @@ public class BluetoothSync {
             mSubstate = SUBSTATE_SENDING;
 
             try {
-                mHandler.sendEmptyMessage(MessageType.SENDING_DATA);
+                mHandler.sendEmptyMessage(Constants.Message_Type.SENDING_DATA);
 
                 byte[] bytes = new byte[1024];
                 int len;

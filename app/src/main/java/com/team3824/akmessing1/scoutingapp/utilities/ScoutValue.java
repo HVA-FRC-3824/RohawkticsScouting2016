@@ -2,11 +2,12 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 // Object that supports multiple types
 public class ScoutValue {
-    public enum ValueType{STRING_TYPE, INT_TYPE, FLOAT_TYPE};
-    ValueType type;
-    int value1;
-    String value2;
-    float value3;
+    public enum ValueType{STRING_TYPE, INT_TYPE, FLOAT_TYPE}
+
+    private ValueType type;
+    private int value1;
+    private String value2;
+    private float value3;
 
     public ScoutValue(int value)
     {

@@ -40,10 +40,10 @@ public class MatchList extends Activity {
         setContentView(R.layout.activity_match_list);
 
         Bundle extras = getIntent().getExtras();
-        String nextPage = extras.getString(Constants.NEXT_PAGE);
+        String nextPage = extras.getString(Constants.Intent_Extras.NEXT_PAGE);
 
         final SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        final String eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
 
         CustomHeader header = (CustomHeader) findViewById(R.id.match_list_header);
         header.removeHome();
@@ -63,9 +63,9 @@ public class MatchList extends Activity {
     /**
      * Setup list view with the scheduled matches
      *
-     * @param scheduleDB The database helper for the schedule database
+     * @param scheduleDB        The database helper for the schedule database
      * @param sharedPreferences Prefences saved in Settings
-     * @param nextPage Whether the next page should be Match Scouting, Super Scouting, or Match View.
+     * @param nextPage          Whether the next page should be Match Scouting, Super Scouting, or Match View.
      */
     private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences, final String nextPage) {
         Cursor cursor = scheduleDB.getSchedule();
@@ -73,15 +73,14 @@ public class MatchList extends Activity {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.match_list);
             int alliance_number = -1;
             String alliance_color = "";
-            if (nextPage.equals(Constants.MATCH_SCOUTING)) {
-                alliance_number = sharedPreferences.getInt(Constants.ALLIANCE_NUMBER, 0);
-                alliance_color = sharedPreferences.getString(Constants.ALLIANCE_COLOR, "");
+            if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
+                alliance_number = sharedPreferences.getInt(Constants.Settings.ALLIANCE_NUMBER, 0);
+                alliance_color = sharedPreferences.getString(Constants.Settings.ALLIANCE_COLOR, "");
             }
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(4, 4, 4, 4);
 
-            if(nextPage.equals(Constants.MATCH_SCOUTING) || nextPage.equals(Constants.SUPER_SCOUTING))
-            {
+            if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING) || nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
                 button.setText("Practice Match");
@@ -89,15 +88,12 @@ public class MatchList extends Activity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = null;
-                        if(nextPage.equals(Constants.MATCH_SCOUTING))
-                        {
+                        if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
+                            intent = new Intent(MatchList.this, MatchScouting.class);
+                        } else if (nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
                             intent = new Intent(MatchList.this, MatchScouting.class);
                         }
-                        else if(nextPage.equals(Constants.SUPER_SCOUTING))
-                        {
-                            intent = new Intent(MatchList.this, MatchScouting.class);
-                        }
-                        intent.putExtra(Constants.MATCH_NUMBER,-1);
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
                         startActivity(intent);
                     }
                 });
@@ -109,19 +105,18 @@ public class MatchList extends Activity {
                 Button button = new Button(this);
                 button.setLayoutParams(lp);
                 final int matchNumber = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_MATCH_NUMBER));
-                if(nextPage.equals(Constants.DRIVE_TEAM_FEEDBACK) &&
+                if (nextPage.equals(Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK) &&
                         cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)) != Constants.OUR_TEAM_NUMBER &&
                         cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)) != Constants.OUR_TEAM_NUMBER &&
                         cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)) != Constants.OUR_TEAM_NUMBER &&
                         cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)) != Constants.OUR_TEAM_NUMBER &&
                         cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)) != Constants.OUR_TEAM_NUMBER &&
-                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)) != Constants.OUR_TEAM_NUMBER)
-                {
+                        cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)) != Constants.OUR_TEAM_NUMBER) {
                     continue;
                 }
 
                 int tempTeamNumber = -1; // fixes issue with final and possible noninitialization
-                if (nextPage.equals(Constants.MATCH_SCOUTING)) {
+                if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
                     tempTeamNumber = cursor.getInt(cursor.getColumnIndex(alliance_color.toLowerCase() + alliance_number));
                     button.setText(String.format("Match %d : %d", matchNumber, tempTeamNumber));
                 } else {
@@ -129,10 +124,10 @@ public class MatchList extends Activity {
                 }
                 final int teamNumber = tempTeamNumber; // fixes issue with final and possible noninitialization
                 switch (alliance_color) {
-                    case Constants.BLUE:
+                    case Constants.Alliance_Colors.BLUE:
                         button.setBackgroundColor(Color.BLUE);
                         break;
-                    case Constants.RED:
+                    case Constants.Alliance_Colors.RED:
                         button.setBackgroundColor(Color.RED);
                         break;
                 }
@@ -141,19 +136,19 @@ public class MatchList extends Activity {
                     public void onClick(View v) {
                         Intent intent = null;
 
-                        if (nextPage.equals(Constants.MATCH_SCOUTING)) {
+                        if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
                             intent = new Intent(MatchList.this, MatchScouting.class);
-                            intent.putExtra(Constants.TEAM_NUMBER, teamNumber);
-                        } else if (nextPage.equals(Constants.SUPER_SCOUTING)) {
+                            intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, teamNumber);
+                        } else if (nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
                             intent = new Intent(MatchList.this, SuperScouting.class);
-                        } else if (nextPage.equals(Constants.MATCH_VIEWING)) {
+                        } else if (nextPage.equals(Constants.Intent_Extras.MATCH_VIEWING)) {
                             intent = new Intent(MatchList.this, MatchView.class);
-                        } else if(nextPage.equals(Constants.DRIVE_TEAM_FEEDBACK)){
+                        } else if (nextPage.equals(Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK)) {
                             intent = new Intent(MatchList.this, DriveTeamFeedback.class);
                         } else {
                             assert false;
                         }
-                        intent.putExtra(Constants.MATCH_NUMBER, matchNumber);
+                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, matchNumber);
                         startActivity(intent);
                     }
                 });

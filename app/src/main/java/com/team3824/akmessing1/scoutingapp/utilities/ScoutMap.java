@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class ScoutMap {
 
-    HashMap<String, ScoutValue> map;
+    private HashMap<String, ScoutValue> map;
 
     public ScoutMap() {
         map = new HashMap<>();

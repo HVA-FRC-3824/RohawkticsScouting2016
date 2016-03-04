@@ -15,7 +15,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,14 +26,16 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public static final String KEY_ID = "_id";
     public static final String KEY_MATCH_NUMBER = "match_number";
     public static final String KEY_TEAM_NUMBER = "team_number";
-    public static final String KEY_LAST_UPDATED = "last_updated";
+    private static final String KEY_LAST_UPDATED = "last_updated";
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "RohawkticsDB";
     private static SimpleDateFormat dateFormat;
-    private String TAG = "MatchScoutDB";
+    private final String TAG = "MatchScoutDB";
     private String tableName;
+
+    private String eventId;
 
     /**
      * @param context
@@ -43,6 +44,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
     public MatchScoutDB(Context context, String eventID) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         tableName = "matchScouting_" + eventID;
+        eventId = eventID;
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
@@ -82,7 +84,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
      * @param columnName Name of the new column
      * @param columnType What type the new column should be
      */
-    public void addColumn(String columnName, String columnType) {
+    private void addColumn(String columnName, String columnType) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
@@ -359,6 +361,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
      *
      * @return The match data
      */
+    @SuppressWarnings("WeakerAccess")
     public Cursor getAllInfo() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(true, // distinct
@@ -398,6 +401,11 @@ public class MatchScoutDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "DROP TABLE " + tableName;
         db.execSQL(query);
+    }
+
+    public String getEventID()
+    {
+        return eventId;
     }
 
 }

@@ -38,21 +38,24 @@ import java.util.Set;
  * The home screen for the app. Different buttons appear based on the user type in settings.
  */
 public class HomeScreen extends Activity implements View.OnClickListener {
-    private static String TAG = "HomeScreen";
-    BluetoothSync bluetoothSync;
-    SyncHandler handler;
-    MatchScoutDB matchScoutDB;
-    PitScoutDB pitScoutDB;
-    SuperScoutDB superScoutDB;
-    DriveTeamFeedbackDB driveTeamFeedbackDB;
-    StatsDB statsDB;
-    ScheduleDB scheduleDB;
-    SyncDB syncDB;
+    private final String TAG = "HomeScreen";
+    private BluetoothSync bluetoothSync;
+
+    private MatchScoutDB matchScoutDB;
+    private PitScoutDB pitScoutDB;
+    private SuperScoutDB superScoutDB;
+    private DriveTeamFeedbackDB driveTeamFeedbackDB;
+    private StatsDB statsDB;
+    private ScheduleDB scheduleDB;
+    private SyncDB syncDB;
+
+    private String eventID;
+
     private BluetoothAdapter bluetoothAdapter = null;
 
     /**
-     *  Sets up the buttons that are to appear. Different buttons become visible based on the user
-     *  type.
+     * Sets up the buttons that are to appear. Different buttons become visible based on the user
+     * type.
      *
      * @param savedInstanceState
      */
@@ -64,11 +67,11 @@ public class HomeScreen extends Activity implements View.OnClickListener {
         ((TextView) findViewById(R.id.version)).setText(Constants.VERSION);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String type = sharedPreferences.getString(Constants.USER_TYPE, "");
-        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String type = sharedPreferences.getString(Constants.Settings.USER_TYPE, "");
+        eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        if(!eventID.equals("")) {
+        if (!eventID.equals("")) {
             pitScoutDB = new PitScoutDB(this, eventID);
             matchScoutDB = new MatchScoutDB(this, eventID);
             superScoutDB = new SuperScoutDB(this, eventID);
@@ -80,7 +83,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
 
         // If settings have been saved then set up the database helpers and the sync handler
         if (!eventID.equals("") && bluetoothAdapter != null) {
-            handler = new SyncHandler();
+            SyncHandler handler = new SyncHandler();
             bluetoothSync = new BluetoothSync(handler, false);
             handler.setDatabaseHelpers(matchScoutDB, pitScoutDB, superScoutDB, driveTeamFeedbackDB, statsDB, syncDB, scheduleDB);
             handler.setContext(this);
@@ -90,7 +93,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
 
         // Depending on the user type set up the buttons
         switch (type) {
-            case Constants.MATCH_SCOUT: {
+            case Constants.User_Types.MATCH_SCOUT: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.scoutMatch_button);
                 if (bluetoothAdapter != null) {
@@ -98,7 +101,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 }
                 break;
             }
-            case Constants.PIT_SCOUT: {
+            case Constants.User_Types.PIT_SCOUT: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.scoutPit_button);
                 if (bluetoothAdapter != null) {
@@ -107,7 +110,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 }
                 break;
             }
-            case Constants.SUPER_SCOUT: {
+            case Constants.User_Types.SUPER_SCOUT: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.superScout_button);
                 if (bluetoothAdapter != null) {
@@ -115,7 +118,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 }
                 break;
             }
-            case Constants.DRIVE_TEAM: {
+            case Constants.User_Types.DRIVE_TEAM: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.matchPlanning_button);
                 setupButton(R.id.viewTeam_button);
@@ -134,7 +137,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 }
                 break;
             }
-            case Constants.STRATEGY: {
+            case Constants.User_Types.STRATEGY: {
                 setupButton(R.id.matchSchedule_button);
                 setupButton(R.id.matchPlanning_button);
                 setupButton(R.id.viewTeam_button);
@@ -145,12 +148,12 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.syncStrategy_button);
                 break;
             }
-            case Constants.SERVER: {
+            case Constants.User_Types.SERVER: {
                 setupButton(R.id.server_button);
                 setupButton(R.id.upload_download_button);
                 break;
             }
-            case Constants.ADMIN: {
+            case Constants.User_Types.ADMIN: {
                 setupButton(R.id.matchSchedule_button);
 
                 setupButton(R.id.scoutMatch_button);
@@ -193,7 +196,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
     }
 
     /**
-     *  Makes the button visible and attaches the on click listener
+     * Makes the button visible and attaches the on click listener
      *
      * @param btn id for the button to be set up
      */
@@ -222,7 +225,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.scoutMatch_button:
                 intent = new Intent(this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_SCOUTING);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.MATCH_SCOUTING);
                 startActivity(intent);
                 break;
             case R.id.syncMatch_button:
@@ -230,7 +233,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.scoutPit_button:
                 intent = new Intent(this, TeamList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.PIT_SCOUTING);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.PIT_SCOUTING);
                 startActivity(intent);
                 break;
             case R.id.syncPit_button:
@@ -238,7 +241,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.superScout_button:
                 intent = new Intent(this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE, Constants.SUPER_SCOUTING);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.SUPER_SCOUTING);
                 startActivity(intent);
                 break;
             case R.id.syncSuper_button:
@@ -246,7 +249,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.feedback_button:
                 intent = new Intent(this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.DRIVE_TEAM_FEEDBACK);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
                 break;
             case R.id.syncDriveTeam_button:
@@ -258,16 +261,16 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.viewTeam_button:
                 intent = new Intent(this, TeamList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.TEAM_VIEWING);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.TEAM_VIEWING);
                 startActivity(intent);
                 break;
             case R.id.viewMatch_button:
                 intent = new Intent(this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE, Constants.MATCH_VIEWING);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.MATCH_VIEWING);
                 startActivity(intent);
                 break;
             case R.id.eliminationMatches_button:
-                intent = new Intent(this,EliminationMatchList.class);
+                intent = new Intent(this, EliminationMatchList.class);
                 startActivity(intent);
                 break;
             case R.id.viewEvent_button:
@@ -283,8 +286,10 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.aggregate_button:
-                ArrayList<Integer> teams = pitScoutDB.getTeamNumbers();
-                AggregateStats.updateTeams(new HashSet<Integer>(teams), matchScoutDB, superScoutDB, scheduleDB, statsDB);
+                ArrayList<Integer> matches = superScoutDB.getMatchNumbers();
+                if (matches != null) {
+                    new AggregateTask().execute(matches);
+                }
                 break;
             case R.id.database_button:
                 intent = new Intent(this, DatabaseManagement.class);
@@ -328,7 +333,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
     private boolean timeout() {
         long time = SystemClock.currentThreadTimeMillis();
         while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
-            if (SystemClock.currentThreadTimeMillis() > time + Constants.CONNECTION_TIMEOUT) {
+            if (SystemClock.currentThreadTimeMillis() > time + Constants.Bluetooth.CONNECTION_TIMEOUT) {
                 return false;
             }
         }
@@ -336,7 +341,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
     }
 
     /**
-     *  Bluetooth Handler with specific display text for log and toast
+     * Bluetooth Handler with specific display text for log and toast
      */
     private class SyncHandler extends BluetoothHandler {
         /**
@@ -352,12 +357,12 @@ public class HomeScreen extends Activity implements View.OnClickListener {
     }
 
     /**
-     *  Asynchronous Task that syncs the match data with the server tablet
+     * Asynchronous Task that syncs the match data with the server tablet
      */
     private class SyncMatches extends AsyncTask<Void, String, Void> {
         /**
-         *  Connects to the server tablet and sends the match data from the database table for
-         *  the current event
+         * Connects to the server tablet and sends the match data from the database table for
+         * the current event
          *
          * @param params nothing
          * @return nothing
@@ -369,7 +374,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
                 String connectedName = device.getName();
-                if (connectedName.equals(Constants.SERVER_NAME)) {
+                if (connectedName.equals(Constants.Bluetooth.SERVER_NAME)) {
                     server = device;
                     break;
                 }
@@ -381,13 +386,13 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             }
 
             int i;
-            for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                 bluetoothSync.connect(server, false);
                 if (timeout()) {
                     break;
                 }
             }
-            if (i == Constants.NUM_ATTEMPTS) {
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                 bluetoothSync.stop();
                 publishProgress("Connection to Server Failed");
                 return null;
@@ -397,16 +402,16 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getMatchLastUpdated(connectedAddress);
             syncDB.updateMatchSync(connectedAddress);
 
-            String matchUpdatedText = Constants.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
-            if (!matchUpdatedText.equals(String.format("%c[]", Constants.MATCH_HEADER))) {
-                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            String matchUpdatedText = Constants.Bluetooth.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
+            if (!matchUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.MATCH_HEADER))) {
+                for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(matchUpdatedText.getBytes())) {
                         break;
                     } else {
-                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
                     }
                 }
-                if (i == Constants.NUM_ATTEMPTS) {
+                if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                     Utilities.JsonToMatchDB(matchScoutDB, matchUpdatedText);
                     publishProgress("Match Data Requeued");
                 } else {
@@ -440,7 +445,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
     private class SyncPit extends AsyncTask<Void, String, Void> {
         /**
          * Connects to the server tablet and sends the pit data from the database table for
-         *  the current event
+         * the current event
          *
          * @param params nothing
          * @return nothing
@@ -452,7 +457,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
                 String connectedName = device.getName();
-                if (connectedName.equals(Constants.SERVER_NAME)) {
+                if (connectedName.equals(Constants.Bluetooth.SERVER_NAME)) {
                     server = device;
                     break;
                 }
@@ -464,13 +469,13 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             }
 
             int i;
-            for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                 bluetoothSync.connect(server, false);
                 if (timeout()) {
                     break;
                 }
             }
-            if (i == Constants.NUM_ATTEMPTS) {
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                 bluetoothSync.stop();
                 publishProgress("Connection to Server Failed");
                 return null;
@@ -480,16 +485,16 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getPitLastUpdated(connectedAddress);
             syncDB.updatePitSync(connectedAddress);
 
-            String pitUpdatedText = Constants.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
-            if (!pitUpdatedText.equals(String.format("%c[]", Constants.PIT_HEADER))) {
-                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            String pitUpdatedText = Constants.Bluetooth.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
+            if (!pitUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.PIT_HEADER))) {
+                for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(pitUpdatedText.getBytes())) {
                         break;
                     } else {
-                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
                     }
                 }
-                if (i == Constants.NUM_ATTEMPTS) {
+                if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                     Utilities.JsonToPitDB(pitScoutDB, pitUpdatedText);
                     publishProgress("Pit Data Requeued");
                 } else {
@@ -522,8 +527,8 @@ public class HomeScreen extends Activity implements View.OnClickListener {
      */
     private class SyncSuper extends AsyncTask<Void, String, Void> {
         /**
-         *  Connects to the server tablet and sends the super data from the database table for
-         *  the current event
+         * Connects to the server tablet and sends the super data from the database table for
+         * the current event
          *
          * @param params nothing
          * @return nothing
@@ -535,7 +540,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
                 String connectedName = device.getName();
-                if (connectedName.equals(Constants.SERVER_NAME)) {
+                if (connectedName.equals(Constants.Bluetooth.SERVER_NAME)) {
                     server = device;
                     break;
                 }
@@ -547,13 +552,13 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             }
 
             int i;
-            for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                 bluetoothSync.connect(server, false);
                 if (timeout()) {
                     break;
                 }
             }
-            if (i == Constants.NUM_ATTEMPTS) {
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                 bluetoothSync.stop();
                 publishProgress("Connection to Server Failed");
                 return null;
@@ -563,16 +568,16 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getSuperLastUpdated(connectedAddress);
             syncDB.updateSuperSync(connectedAddress);
 
-            String superUpdatedText = Constants.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-            if (!superUpdatedText.equals(String.format("%c[]", Constants.SUPER_HEADER))) {
-                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            String superUpdatedText = Constants.Bluetooth.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+            if (!superUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.SUPER_HEADER))) {
+                for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(superUpdatedText.getBytes())) {
                         break;
                     } else {
-                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
                     }
                 }
-                if (i == Constants.NUM_ATTEMPTS) {
+                if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                     Utilities.JsonToSuperDB(superScoutDB, superUpdatedText);
                     publishProgress("Super Data Requeued");
                 } else {
@@ -607,8 +612,8 @@ public class HomeScreen extends Activity implements View.OnClickListener {
      */
     private class SyncDriveTeam extends AsyncTask<Void, String, Void> {
         /**
-         *  Connects to the server tablet and sends the drive team feedback from the database table for
-         *  the current event
+         * Connects to the server tablet and sends the drive team feedback from the database table for
+         * the current event
          *
          * @param params nothing
          * @return nothing
@@ -620,7 +625,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
                 String connectedName = device.getName();
-                if (connectedName.equals(Constants.SERVER_NAME)) {
+                if (connectedName.equals(Constants.Bluetooth.SERVER_NAME)) {
                     server = device;
                     break;
                 }
@@ -632,13 +637,13 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             }
 
             int i;
-            for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                 bluetoothSync.connect(server, false);
                 if (timeout()) {
                     break;
                 }
             }
-            if (i == Constants.NUM_ATTEMPTS) {
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                 bluetoothSync.stop();
                 publishProgress("Connection to Server Failed");
                 return null;
@@ -648,16 +653,16 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getDriveTeamLastUpdated(connectedAddress);
             syncDB.updateDriveTeamSync(connectedAddress);
 
-            String driveTeamUpdatedText = Constants.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
-            if (!driveTeamUpdatedText.equals(String.format("%c[]", Constants.DRIVE_TEAM_FEEDBACK_HEADER))) {
-                for (i = 0; i < Constants.NUM_ATTEMPTS; i++) {
+            String driveTeamUpdatedText = Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+            if (!driveTeamUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER))) {
+                for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(driveTeamUpdatedText.getBytes())) {
                         break;
                     } else {
-                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.NUM_ATTEMPTS));
+                        publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
                     }
                 }
-                if (i == Constants.NUM_ATTEMPTS) {
+                if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
                     Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, driveTeamUpdatedText);
                     publishProgress("Drive Team Feedback Requeued");
                     bluetoothSync.stop();
@@ -685,6 +690,25 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String text = values[0];
             Log.d(TAG, text);
             Toast.makeText(HomeScreen.this, text, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class AggregateTask extends AsyncTask<ArrayList<Integer>, Void, Void> {
+        @Override
+        public void onPreExecute() {
+            Toast.makeText(HomeScreen.this, "Beginning Calculations...", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Void doInBackground(ArrayList<Integer>... params) {
+            ArrayList<Integer> matches = params[0];
+            AggregateStats.updateSuper(new HashSet<Integer>(matches), matchScoutDB, superScoutDB, statsDB, eventID, HomeScreen.this);
+            return null;
+        }
+
+        @Override
+        public void onPostExecute(Void Result) {
+            Toast.makeText(HomeScreen.this, "Data Aggregated", Toast.LENGTH_SHORT).show();
         }
     }
 }

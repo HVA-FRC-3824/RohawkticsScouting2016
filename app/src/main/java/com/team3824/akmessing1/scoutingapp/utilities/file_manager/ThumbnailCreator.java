@@ -102,7 +102,7 @@ public class ThumbnailCreator extends Thread {
                     @Override
                     public void run() {
                         Message msg = mHandler.obtainMessage();
-                        msg.obj = (Bitmap)mThumb.get();
+                        msg.obj = mThumb.get();
                         msg.sendToTarget();
                     }
                 });
@@ -113,11 +113,9 @@ public class ThumbnailCreator extends Thread {
     private boolean isImageFile(String file) {
         String ext = file.substring(file.lastIndexOf(".") + 1);
 
-        if (ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("jpg") ||
-                ext.equalsIgnoreCase("jpeg")|| ext.equalsIgnoreCase("gif") ||
-                ext.equalsIgnoreCase("tiff")|| ext.equalsIgnoreCase("tif"))
-            return true;
+        return ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("jpg") ||
+                ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("gif") ||
+                ext.equalsIgnoreCase("tiff") || ext.equalsIgnoreCase("tif");
 
-        return false;
     }
 }

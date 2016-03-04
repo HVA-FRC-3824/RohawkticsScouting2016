@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,13 +20,19 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
+ *  @author Andrew Messing
+ *  @version 1
+ *
  *  Activity to display the files in the application internal files directory. Used mainly for
- *  debugging.
+ *  debugging. Can also use to remove files.
  */
 public final class FileView extends Activity implements AdapterView.OnItemSelectedListener{
 
-    FileManager fileManager;
-    DirectoryAdapter directoryAdapter;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String TAG = "FileView";
+
+    private FileManager fileManager;
+    private DirectoryAdapter directoryAdapter;
 
     /**
      * Sets up the file manager and the list view
@@ -43,7 +50,7 @@ public final class FileView extends Activity implements AdapterView.OnItemSelect
         fileManager = new FileManager();
         fileManager.setHomeDir(getFilesDir().getAbsolutePath());
 
-        directoryAdapter = new DirectoryAdapter(this,R.layout.list_item_file,new ArrayList<String>(fileManager.setHomeDir
+        directoryAdapter = new DirectoryAdapter(this, new ArrayList<String>(fileManager.setHomeDir
                 (getFilesDir().getPath())),fileManager);
 
         ListView listView = (ListView)findViewById(R.id.directory);
@@ -55,16 +62,19 @@ public final class FileView extends Activity implements AdapterView.OnItemSelect
     /**
      *  Tries to open the file that is selected or moves to the directory if a folder is selected
      *
-     * @param parent The parent adapter view of the view that is selected
+     * @param parent The parent adapter view of the view that is selected. In this case is the list
+     *               view containing all the files.
      * @param view The view that is selected
-     * @param position The position of the selected item in the menu
-     * @param id The id of the selected item
+     * @param position The position of the selected row item in the menu
+     * @param id The id of the selected row item
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = directoryAdapter.get(position);
         File file = new File(fileManager.getCurrentDir() + "/" + item);
         String item_ext = null;
+
+        Log.d(TAG, "Item selected");
 
         try {
             item_ext = item.substring(item.lastIndexOf("."), item.length());

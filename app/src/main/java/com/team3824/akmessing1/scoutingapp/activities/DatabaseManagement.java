@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
@@ -21,6 +20,9 @@ import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 /**
  * Activity for resetting the database tables for the current event or removing all of them from the
  * database
+ *
+ * @author Andrew Messing
+ * @version %I%
  */
 public class DatabaseManagement extends Activity implements View.OnClickListener {
     private String TAG = "DatabaseManagement";
@@ -47,7 +49,7 @@ public class DatabaseManagement extends Activity implements View.OnClickListener
         setContentView(R.layout.activity_database_management);
 
         sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         matchScoutDB = new MatchScoutDB(this, eventId);
         pitScoutDB = new PitScoutDB(this, eventId);
         superScoutDB = new SuperScoutDB(this, eventId);
@@ -56,15 +58,15 @@ public class DatabaseManagement extends Activity implements View.OnClickListener
         statsDB = new StatsDB(this, eventId);
         scheduleDB = new ScheduleDB(this, eventId);
 
-        ((Button) findViewById(R.id.back)).setOnClickListener(this);
-        ((Button) findViewById(R.id.reset_match_data)).setOnClickListener(this);
-        ((Button) findViewById(R.id.reset_pit_data)).setOnClickListener(this);
-        ((Button) findViewById(R.id.reset_super_data)).setOnClickListener(this);
-        ((Button) findViewById(R.id.reset_driveteam_data)).setOnClickListener(this);
-        ((Button) findViewById(R.id.reset_stats_data)).setOnClickListener(this);
-        ((Button) findViewById(R.id.reset_sync_data)).setOnClickListener(this);
-        ((Button) findViewById(R.id.reset_schedule_data)).setOnClickListener(this);
-        ((Button) findViewById(R.id.remove_all_event_data)).setOnClickListener(this);
+        findViewById(R.id.back).setOnClickListener(this);
+        findViewById(R.id.reset_match_data).setOnClickListener(this);
+        findViewById(R.id.reset_pit_data).setOnClickListener(this);
+        findViewById(R.id.reset_super_data).setOnClickListener(this);
+        findViewById(R.id.reset_driveteam_data).setOnClickListener(this);
+        findViewById(R.id.reset_stats_data).setOnClickListener(this);
+        findViewById(R.id.reset_sync_data).setOnClickListener(this);
+        findViewById(R.id.reset_schedule_data).setOnClickListener(this);
+        findViewById(R.id.remove_all_event_data).setOnClickListener(this);
     }
 
     /**
@@ -105,10 +107,11 @@ public class DatabaseManagement extends Activity implements View.OnClickListener
                 scheduleDB.remove();
                 syncDB.remove();
                 SharedPreferences.Editor prefEditor = sharedPreferences.edit();
-                prefEditor.remove(Constants.EVENT_ID);
-                prefEditor.remove(Constants.ALLIANCE_NUMBER);
-                prefEditor.remove(Constants.ALLIANCE_COLOR);
-                prefEditor.remove(Constants.USER_TYPE);
+                prefEditor.remove(Constants.Settings.EVENT_ID);
+                prefEditor.remove(Constants.Settings.ALLIANCE_NUMBER);
+                prefEditor.remove(Constants.Settings.ALLIANCE_COLOR);
+                prefEditor.remove(Constants.Settings.PIT_GROUP_NUMBER);
+                prefEditor.remove(Constants.Settings.USER_TYPE);
                 prefEditor.commit();
                 Intent intent = new Intent(this, HomeScreen.class);
                 startActivity(intent);

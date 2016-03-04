@@ -20,13 +20,21 @@ import org.json.JSONObject;
 
 public class CustomStacksDisplay extends View {
 
-    private String TAG = "CustomStacksDisplay";
+    private final String TAG = "CustomStacksDisplay";
 
-    JSONArray matches;
-    int numStacks;
-    Paint textPaint, existingTotesPaint, newTotesPaint, canPaint, noodlePaint, outlinePaint, droppedPaint,backgroundPaint;
+    private JSONArray matches;
+    private int numStacks;
+    private Paint textPaint;
+    private Paint existingTotesPaint;
+    private Paint newTotesPaint;
+    private Paint canPaint;
+    private Paint noodlePaint;
+    private Paint outlinePaint;
+    private Paint droppedPaint;
+    private Paint backgroundPaint;
 
-    int screenWidth, screenHeight;
+    private int screenWidth;
+    private int screenHeight;
 
 
     public CustomStacksDisplay(Context context, AttributeSet attrs)
@@ -140,23 +148,21 @@ public class CustomStacksDisplay extends View {
                         float x = toteWidth * stackCount;
 
                         for (int j = 0; j < preexistingTotes; j++) {
-                            float left = x;
                             float right = x + toteWidth;
                             float bottom = screenHeight - (toteHeight * j);
                             float top = bottom - toteHeight;
-                            c.drawRect(left, top, right, bottom, existingTotesPaint);
-                            c.drawRect(left, top, right, bottom, outlinePaint);
+                            c.drawRect(x, top, right, bottom, existingTotesPaint);
+                            c.drawRect(x, top, right, bottom, outlinePaint);
                             totalStackHeight++;
                         }
 
                         int newTotes = stack.getInt("toteCount");
                         for (int j = preexistingTotes; j < preexistingTotes + newTotes; j++) {
-                            float left = x;
                             float right = x + toteWidth;
                             float bottom = screenHeight - (toteHeight * j);
                             float top = bottom - toteHeight;
-                            c.drawRect(left, top, right, bottom, newTotesPaint);
-                            c.drawRect(left, top, right, bottom, outlinePaint);
+                            c.drawRect(x, top, right, bottom, newTotesPaint);
+                            c.drawRect(x, top, right, bottom, outlinePaint);
                             totalStackHeight++;
                         }
 
@@ -187,7 +193,6 @@ public class CustomStacksDisplay extends View {
                             }
                             c.drawCircle(cx, cy, radius, outlinePaint);
                             totalStackHeight++;
-
                         }
                     }
                     else
@@ -197,12 +202,11 @@ public class CustomStacksDisplay extends View {
                         int newTotes = stack.getInt("toteCount");
 
                         for (int j = 0; j < newTotes; j++) {
-                            float left = x;
                             float right = x + toteWidth;
                             float bottom = screenHeight - (toteHeight * j);
                             float top = bottom - toteHeight;
-                            c.drawRect(left, top, right, bottom, droppedPaint);
-                            c.drawRect(left, top, right, bottom, outlinePaint);
+                            c.drawRect(x, top, right, bottom, droppedPaint);
+                            c.drawRect(x, top, right, bottom, outlinePaint);
                             totalStackHeight++;
                         }
                         if (stack.getBoolean("isCanned") && stack.getBoolean("isCanDropped")) {

@@ -8,28 +8,25 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.FPA_TeamView;
+import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_TeamView;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 /**
  * The activity that holds all the fragments that display the collected information about a given team.
+ *
+ * @author Andrew Messing
+ * @version %I%
  */
 public class TeamView extends Activity {
 
     final private String TAG = "TeamView";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private FPA_TeamView adapter;
-
-    private int teamNumber;
     private int previousTeamNumber, nextTeamNumber;
 
     /**
@@ -45,20 +42,20 @@ public class TeamView extends Activity {
         setActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt(Constants.TEAM_NUMBER);
+        int teamNumber = extras.getInt(Constants.Intent_Extras.TEAM_NUMBER);
         setTitle("Team Number: " + teamNumber);
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
-        viewPager = (ViewPager) findViewById(R.id.team_view_view_pager);
-        adapter = new FPA_TeamView(getFragmentManager(), teamNumber);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.team_view_view_pager);
+        FPA_TeamView adapter = new FPA_TeamView(getFragmentManager(), teamNumber);
         viewPager.setAdapter(adapter);
-        tabLayout = (TabLayout) findViewById(R.id.team_view_tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.team_view_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
 
         previousTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
@@ -103,12 +100,12 @@ public class TeamView extends Activity {
                 break;
             case R.id.previous:
                 intent = new Intent(TeamView.this, TeamView.class);
-                intent.putExtra(Constants.TEAM_NUMBER, previousTeamNumber);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, previousTeamNumber);
                 startActivity(intent);
                 break;
             case R.id.next:
                 intent = new Intent(TeamView.this, TeamView.class);
-                intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
                 startActivity(intent);
                 break;
             default:

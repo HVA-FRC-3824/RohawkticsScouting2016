@@ -37,24 +37,23 @@ import java.util.Set;
 /**
  *  Activity that listens for bluetooth connections, receives data and requests for data, aggregates
  *  the data, and logs.
+ *
+ *  @author Andrew Messing
+ *  @version 1
  */
 public class Server extends Activity {
 
-    TextView logView;
-    CircularBuffer circularBuffer;
-    BluetoothSync bluetoothSync;
-    SyncHandler handler;
+    private TextView logView;
+    private CircularBuffer circularBuffer;
+    private BluetoothSync bluetoothSync;
 
     // Database Helpers
-    MatchScoutDB matchScoutDB;
-    PitScoutDB pitScoutDB;
-    SuperScoutDB superScoutDB;
-    DriveTeamFeedbackDB driveTeamFeedbackDB;
-    StatsDB statsDB;
-    ScheduleDB scheduleDB;
-    SyncDB syncDB;
+    private MatchScoutDB matchScoutDB;
+    private SuperScoutDB superScoutDB;
+    private StatsDB statsDB;
+    private String eventID;
 
-    private String TAG = "Server";
+    private final String TAG = "Server";
 
     /**
      * Gets the file names of the robot pictures for the current event
@@ -65,9 +64,9 @@ public class Server extends Activity {
     ArrayList<String> getImageFiles(Cursor cursor) {
         ArrayList<String> filenames = new ArrayList<>();
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            if (cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE) != -1) {
-                if (cursor.getType(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
-                    String filename = cursor.getString(cursor.getColumnIndex(Constants.PIT_ROBOT_PICTURE));
+            if (cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE) != -1) {
+                if (cursor.getType(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
+                    String filename = cursor.getString(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE));
                     if (!filename.equals("")) {
                         Log.d(TAG, filename);
                         filenames.add(filename);
@@ -103,29 +102,29 @@ public class Server extends Activity {
         logView.setMovementMethod(ScrollingMovementMethod.getInstance());
         circularBuffer = new CircularBuffer(50);
 
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
+        eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
+
         Button button = (Button) findViewById(R.id.aggregate_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<Integer> teams = pitScoutDB.getTeamNumbers();
-                AggregateStats.updateTeams(new HashSet<Integer>(teams), matchScoutDB, superScoutDB, scheduleDB, statsDB);
+                ArrayList<Integer> matches = superScoutDB.getMatchNumbers();
+                AggregateStats.updateSuper(new HashSet<Integer>(matches), matchScoutDB, superScoutDB, statsDB, eventID, Server.this);
             }
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
-
-        handler = new SyncHandler();
+        SyncHandler handler = new SyncHandler();
         bluetoothSync = new BluetoothSync(handler, false);
         handler.setBluetoothSync(bluetoothSync);
 
         matchScoutDB = new MatchScoutDB(this, eventID);
-        pitScoutDB = new PitScoutDB(this, eventID);
+        PitScoutDB pitScoutDB = new PitScoutDB(this, eventID);
         superScoutDB = new SuperScoutDB(this, eventID);
-        driveTeamFeedbackDB = new DriveTeamFeedbackDB(this, eventID);
-        scheduleDB = new ScheduleDB(this, eventID);
+        DriveTeamFeedbackDB driveTeamFeedbackDB = new DriveTeamFeedbackDB(this, eventID);
+        ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
         statsDB = new StatsDB(this, eventID);
-        syncDB = new SyncDB(this, eventID);
+        SyncDB syncDB = new SyncDB(this, eventID);
         handler.setDatabaseHelpers(matchScoutDB, pitScoutDB, superScoutDB, driveTeamFeedbackDB, statsDB, syncDB, scheduleDB);
 
         handler.setContext(this);
@@ -158,7 +157,7 @@ public class Server extends Activity {
         @Override
         public void receivedData(String text) {
             switch (text.charAt(0)) {
-                case Constants.MATCH_HEADER:
+                case Constants.Bluetooth.MATCH_HEADER:
                     try {
                         JSONArray jsonArray = new JSONArray(text.substring(1));
                         Set<Integer> teams = new HashSet<>();
@@ -166,12 +165,12 @@ public class Server extends Activity {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             teams.add(jsonObject.getInt(MatchScoutDB.KEY_TEAM_NUMBER));
                         }
-                        AggregateStats.updateTeams(teams, matchScoutDB, superScoutDB, scheduleDB, statsDB);
+                        AggregateStats.updateTeams(teams, matchScoutDB, superScoutDB, statsDB);
                     } catch (JSONException e) {
                         displayText("Aggregate Error...");
                     }
                     break;
-                case Constants.SUPER_HEADER:
+                case Constants.Bluetooth.SUPER_HEADER:
                     try {
                         JSONArray jsonArray = new JSONArray(text.substring(1));
                         Set<Integer> matches = new HashSet<>();
@@ -179,7 +178,7 @@ public class Server extends Activity {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             matches.add(jsonObject.getInt(SuperScoutDB.KEY_MATCH_NUMBER));
                         }
-                        AggregateStats.updateSuper(matches, matchScoutDB, superScoutDB, scheduleDB, statsDB);
+                        AggregateStats.updateSuper(matches, matchScoutDB, superScoutDB, statsDB, eventID, Server.this);
                     } catch (JSONException e) {
                         displayText("Aggregate Error...");
                     }

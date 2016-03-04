@@ -21,20 +21,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
-
 public class CustomStacks extends CustomScoutView {
 
     private String TAG = "CustomStacks";
 
-    String key;
+    private String key;
 
-    JSONArray jsonArray;
+    private JSONArray jsonArray;
 
-    final CustomCounter totes, preexistingTotes;
-    final CustomCheckbox can, noodle, canDropped, stackDropped;
-    final RadioGroup stackNum;
-    Button finishStack;
+    private final CustomCounter totes;
+    private final CustomCounter preexistingTotes;
+    private final CustomCheckbox can;
+    private final CustomCheckbox noodle;
+    private final CustomCheckbox canDropped;
+    private final CustomCheckbox stackDropped;
+    private final RadioGroup stackNum;
+    private Button finishStack;
 
     public CustomStacks(Context context, AttributeSet attrs)
     {

@@ -28,31 +28,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AllianceSelection extends Fragment implements AdapterView.OnItemSelectedListener, OnClickListener{
+/**
+ * Fragment where the elimination alliances are input and saved
+ *
+ * @author Andrew Messing
+ * @version
+ */
+public class AllianceSelection extends Fragment implements AdapterView.OnItemSelectedListener, OnClickListener {
 
     private final String TAG = "AllianceSelection";
+    private Spinner[] spinners;
+    private int[] ids;
+    private AllianceSelectionAdapter[] adapters;
+    private String[] previousTeam;
+    private File saveFile;
+    private JSONArray json = null;
 
-    Spinner spinners[];
-    int ids[];
-    AllianceSelectionAdapter adapters[];
-    String previousTeam[];
-
-    File saveFile;
-    FileInputStream saveFIS;
-    FileOutputStream saveFOS;
-    JSONArray json = null;
-    ArrayList<Integer> teamList;
-
-    public static final String SELECT_TEAM = "Select Team";
-    
-    public AllianceSelection(){}
-
-    /**
-     * @param savedInstanceState
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public AllianceSelection() {
     }
 
     /**
@@ -62,56 +54,54 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
      * @return
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alliance_selection, container, false);
         spinners = new Spinner[24];
         adapters = new AllianceSelectionAdapter[24];
         previousTeam = new String[24];
         ids = new int[24];
 
-        setSpinner(view, Constants.CAPTAIN_OFFSET,Constants.ALLIANCE_1_INDEX,R.id.captain_1);
-        
-        
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_1_INDEX, R.id.captain_1);
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_2_INDEX, R.id.captain_2);
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_3_INDEX, R.id.captain_3);
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_4_INDEX, R.id.captain_4);
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_5_INDEX, R.id.captain_5);
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_6_INDEX, R.id.captain_6);
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_7_INDEX, R.id.captain_7);
-        setSpinner(view, Constants.CAPTAIN_OFFSET, Constants.ALLIANCE_8_INDEX, R.id.captain_8);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_1_INDEX, R.id.captain_1);
 
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_1_INDEX, R.id.first_pick_1);
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_2_INDEX, R.id.first_pick_2);
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_3_INDEX, R.id.first_pick_3);
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_4_INDEX, R.id.first_pick_4);
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_5_INDEX, R.id.first_pick_5);
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_6_INDEX, R.id.first_pick_6);
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_7_INDEX, R.id.first_pick_7);
-        setSpinner(view, Constants.FIRST_PICK_OFFSET, Constants.ALLIANCE_8_INDEX, R.id.first_pick_8);
 
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_1_INDEX, R.id.second_pick_1);
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_2_INDEX, R.id.second_pick_2);
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_3_INDEX, R.id.second_pick_3);
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_4_INDEX, R.id.second_pick_4);
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_5_INDEX, R.id.second_pick_5);
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_6_INDEX, R.id.second_pick_6);
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_7_INDEX, R.id.second_pick_7);
-        setSpinner(view, Constants.SECOND_PICK_OFFSET, Constants.ALLIANCE_8_INDEX, R.id.second_pick_8);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_1_INDEX, R.id.captain_1);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_2_INDEX, R.id.captain_2);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_3_INDEX, R.id.captain_3);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_4_INDEX, R.id.captain_4);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_5_INDEX, R.id.captain_5);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_6_INDEX, R.id.captain_6);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_7_INDEX, R.id.captain_7);
+        setSpinner(view, Constants.Alliance_Selection.CAPTAIN_OFFSET, Constants.Alliance_Selection.ALLIANCE_8_INDEX, R.id.captain_8);
+
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_1_INDEX, R.id.first_pick_1);
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_2_INDEX, R.id.first_pick_2);
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_3_INDEX, R.id.first_pick_3);
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_4_INDEX, R.id.first_pick_4);
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_5_INDEX, R.id.first_pick_5);
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_6_INDEX, R.id.first_pick_6);
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_7_INDEX, R.id.first_pick_7);
+        setSpinner(view, Constants.Alliance_Selection.FIRST_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_8_INDEX, R.id.first_pick_8);
+
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_1_INDEX, R.id.second_pick_1);
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_2_INDEX, R.id.second_pick_2);
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_3_INDEX, R.id.second_pick_3);
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_4_INDEX, R.id.second_pick_4);
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_5_INDEX, R.id.second_pick_5);
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_6_INDEX, R.id.second_pick_6);
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_7_INDEX, R.id.second_pick_7);
+        setSpinner(view, Constants.Alliance_Selection.SECOND_PICK_OFFSET, Constants.Alliance_Selection.ALLIANCE_8_INDEX, R.id.second_pick_8);
 
         Context context = getContext();
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
-        PitScoutDB pitScoutDB = new PitScoutDB(context,eventId);
-        teamList = pitScoutDB.getTeamNumbers();
+        String eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
+        PitScoutDB pitScoutDB = new PitScoutDB(context, eventId);
+        ArrayList<Integer> teamList = pitScoutDB.getTeamNumbers();
 
-        saveFile = new File(getContext().getFilesDir(), String.format("%s_alliance_selection.txt",eventId));
-        if(saveFile.exists())
-        {
+        saveFile = new File(getContext().getFilesDir(), String.format("%s_alliance_selection.txt", eventId));
+        if (saveFile.exists()) {
             try {
-                saveFIS = new FileInputStream(saveFile);
+                FileInputStream saveFIS = new FileInputStream(saveFile);
                 String jsonText = "";
                 char current;
                 while (saveFIS.available() > 0) {
@@ -123,28 +113,25 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
                 saveFIS.close();
             } catch (FileNotFoundException e) {
                 Log.d(TAG, e.getMessage());
-            }
-            catch (IOException e) {
-                Log.d(TAG,e.getMessage());
+            } catch (IOException e) {
+                Log.d(TAG, e.getMessage());
             } catch (JSONException e) {
-                Log.d(TAG,e.getMessage());
+                Log.d(TAG, e.getMessage());
             }
         }
 
-        for(int i = 0; i < 24; i++)
-        {
+        for (int i = 0; i < 24; i++) {
             ArrayList<String> temp = new ArrayList<>();
-            temp.add(SELECT_TEAM);
-            for(int j = 0; j < teamList.size(); j++)
-            {
+            temp.add(Constants.Alliance_Selection.SELECT_TEAM);
+            for (int j = 0; j < teamList.size(); j++) {
                 temp.add(String.valueOf(teamList.get(j)));
             }
-            adapters[i] = new AllianceSelectionAdapter(context,android.R.layout.simple_spinner_dropdown_item,temp);
+            adapters[i] = new AllianceSelectionAdapter(context, temp);
             spinners[i].setAdapter(adapters[i]);
-            previousTeam[i] = SELECT_TEAM;
+            previousTeam[i] = Constants.Alliance_Selection.SELECT_TEAM;
             spinners[i].setOnItemSelectedListener(this);
         }
-        if(json != null) {
+        if (json != null) {
             for (int i = 0; i < 24; i++) {
                 try {
                     spinners[i].setSelection(adapters[i].indexOf(json.getString(i)));
@@ -153,25 +140,23 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
             }
         }
 
-        Button save = (Button)view.findViewById(R.id.save);
+        Button save = (Button) view.findViewById(R.id.save);
         save.setOnClickListener(this);
 
         return view;
     }
-    
-    private void setSpinner(View view, int offset, int alliance, int id)
-    {
-        spinners[offset+alliance] = (Spinner)view.findViewById(id);
-        ids[offset+alliance] = id;
+
+    private void setSpinner(View view, int offset, int alliance, int id) {
+        spinners[offset + alliance] = (Spinner) view.findViewById(id);
+        ids[offset + alliance] = id;
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         int index = 0;
-        for(; index < ids.length; index++)
-        {
-            if(parent.getId() == ids[index])
+        for (; index < ids.length; index++) {
+            if (parent.getId() == ids[index])
                 break;
         }
 
@@ -180,22 +165,20 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
         String teamSelected = adapters[index].getItem(position);
         String previousSelection = previousTeam[index];
 
-        if(teamSelected.equals(previousSelection))
+        if (teamSelected.equals(previousSelection))
             return;
 
-        for(int i = 0; i < adapters.length; i++)
-        {
-            if(i == index)
-            {
+        for (int i = 0; i < adapters.length; i++) {
+            if (i == index) {
                 continue;
             }
 
             String ts = String.valueOf(spinners[i].getSelectedItem());
 
-            if(!teamSelected.equals(SELECT_TEAM)) {
+            if (!teamSelected.equals(Constants.Alliance_Selection.SELECT_TEAM)) {
                 adapters[i].remove(teamSelected);
             }
-            if(!previousSelection.equals(SELECT_TEAM)) {
+            if (!previousSelection.equals(Constants.Alliance_Selection.SELECT_TEAM)) {
                 adapters[i].add(previousSelection);
             }
 
@@ -212,35 +195,31 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public void onClick(View v) {
-        switch(v.getId())
-        {
+        switch (v.getId()) {
             case R.id.save:
                 json = new JSONArray();
-                for(int i = 0; i < spinners.length; i++)
-                {
+                for (int i = 0; i < spinners.length; i++) {
                     String spinnerValue = String.valueOf(spinners[i].getSelectedItem());
                     json.put(spinnerValue);
                 }
                 String text = json.toString();
-                Log.d(TAG,text);
-                if(saveFile.exists())
-                {
+                Log.d(TAG, text);
+                if (saveFile.exists()) {
                     saveFile.delete();
                     try {
                         saveFile.createNewFile();
                     } catch (IOException e) {
-                        Log.d(TAG,e.getMessage());
+                        Log.d(TAG, e.getMessage());
                     }
                 }
-                try
-                {
-                    saveFOS = new FileOutputStream(saveFile);
+                try {
+                    FileOutputStream saveFOS = new FileOutputStream(saveFile);
                     saveFOS.write(text.getBytes());
                     saveFOS.close();
                 } catch (FileNotFoundException e) {
-                    Log.d(TAG,e.getMessage());
+                    Log.d(TAG, e.getMessage());
                 } catch (IOException e) {
-                    Log.d(TAG,e.getMessage());
+                    Log.d(TAG, e.getMessage());
                 }
                 break;
             default:

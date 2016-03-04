@@ -13,11 +13,11 @@ import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Arrays;
-import java.util.Map;
 
 public class CustomSpinner extends CustomScoutView{
 
-    private TextView label;
+    private final String TAG = "CustomSpinner";
+
     private Spinner spinner;
     private String[] resourceStrings;
     private String key;
@@ -29,7 +29,7 @@ public class CustomSpinner extends CustomScoutView{
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.custom_spinner, this);
 
-        label = (TextView)this.findViewById(R.id.label);
+        TextView label = (TextView) this.findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));

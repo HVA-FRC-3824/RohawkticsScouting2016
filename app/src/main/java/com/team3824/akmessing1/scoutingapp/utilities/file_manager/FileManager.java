@@ -155,6 +155,7 @@ public class FileManager {
      * @param newDir	the directory to move the file to
      * @return
      */
+    @SuppressWarnings("WeakerAccess")
     public int copyToDirectory(String old, String newDir) {
         File old_file = new File(old);
         File temp_dir = new File(newDir);
@@ -226,6 +227,7 @@ public class FileManager {
      * @param zip_file
      * @param directory
      */
+    @SuppressWarnings("WeakerAccess")
     public void extractZipFiles(String zip_file, String directory) {
         byte[] data = new byte[BUFFER];
         String name, path, zipDir;
@@ -374,6 +376,7 @@ public class FileManager {
      * @param path name
      * @return
      */
+    @SuppressWarnings("WeakerAccess")
     public int deleteTarget(String path) {
         File target = new File(path);
 
@@ -525,7 +528,7 @@ public class FileManager {
 			/* add files/folder to arraylist depending on hidden status */
             for (int i = 0; i < len; i++) {
                 if(!mShowHiddenFiles) {
-                    if(list[i].toString().charAt(0) != '.')
+                    if(list[i].charAt(0) != '.')
                         mDirContent.add(list[i]);
 
                 } else {
@@ -559,7 +562,7 @@ public class FileManager {
 
                     mDirContent.clear();
                     for (Object a : size_ar) {
-                        if(new File(dir + "/" + (String)a).isDirectory())
+                        if(new File(dir + "/" + a).isDirectory())
                             mDirContent.add(index++, (String)a);
                         else
                             mDirContent.add((String)a);
@@ -575,7 +578,7 @@ public class FileManager {
                     mDirContent.clear();
 
                     for (Object a : type_ar) {
-                        if(new File(current + "/" + (String)a).isDirectory())
+                        if(new File(current + "/" + a).isDirectory())
                             mDirContent.add(dirindex++, (String)a);
                         else
                             mDirContent.add((String)a);

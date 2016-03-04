@@ -17,29 +17,28 @@ import java.util.ArrayList;
  */
 public class DefenseAdapter extends ArrayAdapter<String> {
 
-    boolean black;
+    private final String TAG = "DefenseAdapter";
+
+    private boolean black;
     private ArrayList<String> options;
 
     /**
      * @param context Context of the application
-     * @param resource The layout id
      * @param defenseOptions List of the defenses
      */
-    public DefenseAdapter(Context context, int resource, ArrayList<String> defenseOptions) {
-        super(context, resource, defenseOptions);
+    public DefenseAdapter(Context context, ArrayList<String> defenseOptions) {
+        super(context, R.layout.list_item_string, defenseOptions);
         options = defenseOptions;
         black = false;
     }
 
     /**
-     *
-     * @param context Context of the application
-     * @param resource The layout id
+     *  @param context Context of the application
      * @param defenseOptions List of the defenses
      * @param black Sets whether the text is black or white
      */
-    public DefenseAdapter(Context context, int resource, ArrayList<String> defenseOptions, boolean black) {
-        super(context, resource, defenseOptions);
+    public DefenseAdapter(Context context, ArrayList<String> defenseOptions, boolean black) {
+        super(context, R.layout.list_item_string, defenseOptions);
         options = defenseOptions;
         this.black = black;
     }

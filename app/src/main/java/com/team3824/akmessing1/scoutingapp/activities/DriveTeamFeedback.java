@@ -25,10 +25,12 @@ import com.team3824.akmessing1.scoutingapp.views.CustomEdittext;
 
 /**
  * Activity for the Drive Team to input comments about alliance partners during qualification matches.
+ *
+ * @author Andrew Messing
+ *
  */
 public class DriveTeamFeedback extends Activity {
     private String TAG = "DriveTeamFeedback";
-    private String position;
     private DriveTeamFeedbackDB driveTeamFeedbackDB;
     private int team1 = -1, team2 = -1;
     private EditText commentEditText1, commentEditText2;
@@ -50,33 +52,34 @@ public class DriveTeamFeedback extends Activity {
         setActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        int matchNumber = extras.getInt(Constants.MATCH_NUMBER);
-        position = extras.getString("position");
+        int matchNumber = extras.getInt(Constants.Intent_Extras.MATCH_NUMBER);
+        String position = extras.getString("position");
         setTitle("Match Number: " + matchNumber);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
 
         // Gets the two alliance partners from the schedule
         ScheduleDB scheduleDB = new ScheduleDB(this, eventId);
         Cursor cursor = scheduleDB.getMatch(matchNumber);
 
-        if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)) == 3824) {
+        // Sets up the other two teams based on which position we are
+        if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)) == Constants.OUR_TEAM_NUMBER) {
             team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2));
             team2 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3));
-        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)) == 3824) {
+        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)) == Constants.OUR_TEAM_NUMBER) {
             team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1));
             team2 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3));
-        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)) == 3824) {
+        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)) == Constants.OUR_TEAM_NUMBER) {
             team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1));
             team2 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2));
-        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)) == 3824) {
+        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)) == Constants.OUR_TEAM_NUMBER) {
             team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2));
             team2 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3));
-        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)) == 3824) {
+        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)) == Constants.OUR_TEAM_NUMBER) {
             team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1));
             team2 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3));
-        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)) == 3824) {
+        } else if (cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)) == Constants.OUR_TEAM_NUMBER) {
             team1 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1));
             team2 = cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2));
         }
@@ -212,7 +215,7 @@ public class DriveTeamFeedback extends Activity {
                 driveTeamFeedbackDB.updateComments(team2, String.valueOf(commentEditText2.getText()));
 
                 Intent intent = new Intent(DriveTeamFeedback.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.DRIVE_TEAM_FEEDBACK);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE,Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
             }
         });
@@ -230,7 +233,7 @@ public class DriveTeamFeedback extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(DriveTeamFeedback.this, MatchList.class);
-                intent.putExtra(Constants.NEXT_PAGE,Constants.DRIVE_TEAM_FEEDBACK);
+                intent.putExtra(Constants.Intent_Extras.NEXT_PAGE,Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
             }
         });

@@ -21,13 +21,16 @@ import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 /**
  * Admin Activity to modify the schedule for the current event
+ *
+ * @author Andrew Messing
+ * @version 1
  */
 //TODO: Check if rotation bug fixed via orientation
 //TODO: Add delete/edit button to rows that are already saved and change them to text views
 public class ScheduleBuilder extends Activity {
 
-    private static final String TAG = "ScheduleBuilder";
-    LinearLayout layout;
+    private final String TAG = "ScheduleBuilder";
+    private LinearLayout layout;
 
     /**
      * Sets up the rows of matches that are already in the schedule
@@ -40,7 +43,7 @@ public class ScheduleBuilder extends Activity {
         setContentView(R.layout.activity_schedule_builder);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        final String eventID = sharedPreferences.getString(Constants.EVENT_ID, "");
+        final String eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         final ScheduleDB scheduleDB = new ScheduleDB(this, eventID);
 
         layout = (LinearLayout) findViewById(R.id.schedule);
@@ -159,7 +162,7 @@ public class ScheduleBuilder extends Activity {
      *
      * @param matchNum
      */
-    public void addRow(int matchNum) {
+    private void addRow(int matchNum) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.list_item_schedule_match_build, null);
         Button add = new Button(this);

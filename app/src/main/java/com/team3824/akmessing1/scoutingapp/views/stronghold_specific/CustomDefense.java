@@ -21,18 +21,24 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.Arrays;
-import java.util.Map;
 
+/**
+ * Custom input used to count the number of times that a team crosses a defense and how quickly
+ *
+ * @author Andrew Messing
+ * @version
+ */
 public class CustomDefense extends CustomScoutView implements View.OnClickListener, RadioGroup.OnCheckedChangeListener{
-    private String TAG = "CustomDefenseInput";
+    private final String TAG = "CustomDefenseInput";
 
-    RadioGroup crossNum;
-    RadioGroup timeRadios;
-    Button submit, delete;
-    JSONArray jsonArray;
-    TextView canCrossText;
+    private RadioGroup crossNum;
+    private RadioGroup timeRadios;
+    private Button submit;
+    private Button delete;
+    private JSONArray jsonArray;
+    private TextView canCrossText;
 
-    String key;
+    private String key;
 
     public CustomDefense(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -50,10 +56,10 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
 
         timeRadios = (RadioGroup)findViewById(R.id.radiobuttons);
 
-        for(int i = 0; i < Constants.TELEOP_DEFENSE_TIMES.length;i++)
+        for(int i = 0; i < Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES.length;i++)
         {
             RadioButton radioButton = new RadioButton(context, attrs);
-            radioButton.setText(Constants.TELEOP_DEFENSE_TIMES[i]);
+            radioButton.setText(Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES[i]);
             radioButton.setId(i);
             timeRadios.addView(radioButton);
         }
@@ -101,7 +107,7 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
                 }
                 else if(jsonArray.length() > 0)
                 {
-                    timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(jsonArray.getString(0)));
+                    timeRadios.check(Arrays.asList(Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES).indexOf(jsonArray.getString(0)));
                     for(int i = 0; i < jsonArray.length(); i++)
                     {
                         RadioButton radioButton = new RadioButton(getContext());
@@ -126,7 +132,7 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
             case R.id.submit_button:
                 if (jsonArray.length() == whichCross) {
                     if(timeRadios.getCheckedRadioButtonId() > -1) {
-                        jsonArray.put(Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
+                        jsonArray.put(Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
                         RadioButton radioButton1 = new RadioButton(getContext());
                         radioButton1.setId(whichCross + 1);
                         crossNum.addView(radioButton1);
@@ -145,10 +151,10 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
                 } else {
                     if(timeRadios.getCheckedRadioButtonId() > -1) {
                         try {
-                            jsonArray.put(whichCross, Constants.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
+                            jsonArray.put(whichCross, Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES[timeRadios.getCheckedRadioButtonId()]);
                             crossNum.check(whichCross + 1);
                             String string1 = jsonArray.getString(whichCross + 1);
-                            timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(string1));
+                            timeRadios.check(Arrays.asList(Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES).indexOf(string1));
                         } catch (JSONException e) {
                             Log.d(TAG, e.getMessage());
                         }
@@ -163,7 +169,7 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
                 if(whichCross < jsonArray.length()) {
                     try {
                         String string1 = jsonArray.getString(whichCross);
-                        timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(string1));
+                        timeRadios.check(Arrays.asList(Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES).indexOf(string1));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -187,7 +193,7 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
         } else {
             try {
                 String time = jsonArray.getString(checkedId);
-                timeRadios.check(Arrays.asList(Constants.TELEOP_DEFENSE_TIMES).indexOf(time));
+                timeRadios.check(Arrays.asList(Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES).indexOf(time));
                 delete.setVisibility(VISIBLE);
                 submit.setText("Update");
             } catch (JSONException e) {

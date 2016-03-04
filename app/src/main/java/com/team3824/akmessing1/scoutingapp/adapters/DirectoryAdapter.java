@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,22 +24,18 @@ import java.util.ArrayList;
 public class DirectoryAdapter extends ArrayAdapter<String> {
 
     private final int KB = 1024;
-    private final int MG = KB * KB;
-    private final int GB = MG * KB;
-    FileManager fileManager;
-    ThumbnailCreator thumbnailCreator;
-    ArrayList<String> directory;
-    private String display_size;
+    private FileManager fileManager;
+    private ThumbnailCreator thumbnailCreator;
+    private ArrayList<String> directory;
     private Context context;
 
     /**
      * @param c
-     * @param resource
      * @param objects
      * @param fm       The file mangager
      */
-    public DirectoryAdapter(Context c, int resource, ArrayList<String> objects, FileManager fm) {
-        super(c, resource, objects);
+    public DirectoryAdapter(Context c, ArrayList<String> objects, FileManager fm) {
+        super(c, R.layout.list_item_file, objects);
         fileManager = fm;
         context = c;
         directory = objects;
@@ -50,7 +45,7 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
      * @param file The file to check the permissions of
      * @return String that represents the permissions
      */
-    public String getFilePermissions(File file) {
+    private String getFilePermissions(File file) {
         String per = "-";
 
         if (file.isDirectory())
@@ -229,12 +224,15 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
 
         if (file.isFile()) {
             double size = file.length();
+            String display_size;
+            int MG = KB * KB;
+            int GB = MG * KB;
             if (size > GB)
-                display_size = String.format("%.2f Gb ", (double) size / GB);
+                display_size = String.format("%.2f Gb ", size / GB);
             else if (size < GB && size > MG)
-                display_size = String.format("%.2f Mb ", (double) size / MG);
+                display_size = String.format("%.2f Mb ", size / MG);
             else if (size < MG && size > KB)
-                display_size = String.format("%.2f Kb ", (double) size / KB);
+                display_size = String.format("%.2f Kb ", size / KB);
             else
                 display_size = String.format("%.2f bytes ", (double) size);
 
@@ -252,7 +250,7 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
 
         topView.setText(file.getName());
 
-        ((Button)convertView.findViewById(R.id.delete)).setOnClickListener(new View.OnClickListener() {
+        convertView.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 directory.remove(file.getName());

@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 public class BracketResultsAdapter extends ArrayAdapter<String> {
 
-    ArrayList<String> alliances;
+    private ArrayList<String> alliances;
 
-    public BracketResultsAdapter(Context context, int resource, ArrayList<String> objects) {
-        super(context, resource, objects);
+    public BracketResultsAdapter(Context context, ArrayList<String> objects) {
+        super(context, android.R.layout.simple_spinner_dropdown_item, objects);
         alliances = objects;
     }
 

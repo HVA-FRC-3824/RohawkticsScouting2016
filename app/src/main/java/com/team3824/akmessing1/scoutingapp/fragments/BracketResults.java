@@ -32,7 +32,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * Sets up the bracket based on the alliance selection. Contains buttons linking to Elimination Match View.
  *
+ * @author Andrew Messing
+ * @version %I%
  */
 public class BracketResults extends Fragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -44,30 +47,18 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
     private final int FINAL_1_INDEX = 4;
     private final int FINAL_2_INDEX = 5;
     private final String SELECT_ALLIANCE = "Select Alliance";
-    File alliancesSaveFile;
-    File bracketSaveFile;
-    FileInputStream saveFIS;
-    FileOutputStream saveFOS;
-    JSONArray json = null;
-    ArrayList<Integer> teamList;
-    String alliances[];
-    Spinner spinners[];
-    BracketResultsAdapter adapters[];
-    TextView textViews[];
-    String previous[];
-    Button buttons[];
+    private File bracketSaveFile;
+    private JSONArray json = null;
+    private String[] alliances;
+    private Spinner[] spinners;
+    private BracketResultsAdapter[] adapters;
+    private TextView[] textViews;
+    private String[] previous;
+    private Button[] buttons;
 
-    Context context;
+    private Context context;
 
     public BracketResults() {
-    }
-
-    /**
-     * @param savedInstanceState
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     /**
@@ -83,9 +74,9 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
         context = getContext();
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
+        String eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
         PitScoutDB pitScoutDB = new PitScoutDB(context, eventId);
-        teamList = pitScoutDB.getTeamNumbers();
+        ArrayList<Integer> teamList = pitScoutDB.getTeamNumbers();
 
         alliances = new String[8];
 
@@ -113,15 +104,16 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
         buttons[2] = (Button) view.findViewById(R.id.f_1v2);
         buttons[2].setOnClickListener(this);
 
-        ((Button)view.findViewById(R.id.q_1v8)).setOnClickListener(this);
-        ((Button)view.findViewById(R.id.q_2v7)).setOnClickListener(this);
-        ((Button)view.findViewById(R.id.q_3v6)).setOnClickListener(this);
-        ((Button)view.findViewById(R.id.q_4v5)).setOnClickListener(this);
-        ((Button)view.findViewById(R.id.save)).setOnClickListener(this);
+        view.findViewById(R.id.q_1v8).setOnClickListener(this);
+        view.findViewById(R.id.q_2v7).setOnClickListener(this);
+        view.findViewById(R.id.q_3v6).setOnClickListener(this);
+        view.findViewById(R.id.q_4v5).setOnClickListener(this);
+        view.findViewById(R.id.save).setOnClickListener(this);
 
         previous = new String[6];
 
-        alliancesSaveFile = new File(context.getFilesDir(), String.format("%s_alliance_selection.txt", eventId));
+        File alliancesSaveFile = new File(context.getFilesDir(), String.format("%s_alliance_selection.txt", eventId));
+        FileInputStream saveFIS;
         if (alliancesSaveFile.exists()) {
             try {
                 saveFIS = new FileInputStream(alliancesSaveFile);
@@ -147,10 +139,10 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
             for (int i = 0; i < json.length(); i++) {
                 try {
                     String team = json.getString(i);
-                    if (team.equals(AllianceSelection.SELECT_TEAM)) {
+                    if (team.equals(Constants.Alliance_Selection.SELECT_TEAM)) {
                         allianceSelectionComplete = false;
                         break;
-                    } else if (i < Constants.FIRST_PICK_OFFSET) {
+                    } else if (i < Constants.Alliance_Selection.FIRST_PICK_OFFSET) {
                         alliances[i] = team;
                     } else {
                         alliances[i % 8] += String.format(" - %s", team);
@@ -161,25 +153,25 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 }
             }
             if (allianceSelectionComplete) {
-                ((TextView) view.findViewById(R.id.q_alliance1)).setText(alliances[Constants.ALLIANCE_1_INDEX]);
-                ((TextView) view.findViewById(R.id.q_alliance2)).setText(alliances[Constants.ALLIANCE_2_INDEX]);
-                ((TextView) view.findViewById(R.id.q_alliance3)).setText(alliances[Constants.ALLIANCE_3_INDEX]);
-                ((TextView) view.findViewById(R.id.q_alliance4)).setText(alliances[Constants.ALLIANCE_4_INDEX]);
-                ((TextView) view.findViewById(R.id.q_alliance5)).setText(alliances[Constants.ALLIANCE_5_INDEX]);
-                ((TextView) view.findViewById(R.id.q_alliance6)).setText(alliances[Constants.ALLIANCE_6_INDEX]);
-                ((TextView) view.findViewById(R.id.q_alliance7)).setText(alliances[Constants.ALLIANCE_7_INDEX]);
-                ((TextView) view.findViewById(R.id.q_alliance8)).setText(alliances[Constants.ALLIANCE_8_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance1)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_1_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance2)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_2_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance3)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_3_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance4)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_4_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance5)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_5_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance6)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_6_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance7)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_7_INDEX]);
+                ((TextView) view.findViewById(R.id.q_alliance8)).setText(alliances[Constants.Alliance_Selection.ALLIANCE_8_INDEX]);
 
-                String semi1Array[] = {SELECT_ALLIANCE, alliances[Constants.ALLIANCE_1_INDEX], alliances[Constants.ALLIANCE_8_INDEX]};
+                String semi1Array[] = {SELECT_ALLIANCE, alliances[Constants.Alliance_Selection.ALLIANCE_1_INDEX], alliances[Constants.Alliance_Selection.ALLIANCE_8_INDEX]};
                 ArrayList<String> semi1 = new ArrayList<>(Arrays.asList(semi1Array));
 
-                String semi2Array[] = {SELECT_ALLIANCE, alliances[Constants.ALLIANCE_4_INDEX], alliances[Constants.ALLIANCE_5_INDEX]};
+                String semi2Array[] = {SELECT_ALLIANCE, alliances[Constants.Alliance_Selection.ALLIANCE_4_INDEX], alliances[Constants.Alliance_Selection.ALLIANCE_5_INDEX]};
                 ArrayList<String> semi2 = new ArrayList<>(Arrays.asList(semi2Array));
 
-                String semi3Array[] = {SELECT_ALLIANCE, alliances[Constants.ALLIANCE_2_INDEX], alliances[Constants.ALLIANCE_7_INDEX]};
+                String semi3Array[] = {SELECT_ALLIANCE, alliances[Constants.Alliance_Selection.ALLIANCE_2_INDEX], alliances[Constants.Alliance_Selection.ALLIANCE_7_INDEX]};
                 ArrayList<String> semi3 = new ArrayList<>(Arrays.asList(semi3Array));
 
-                String semi4Array[] = {SELECT_ALLIANCE, alliances[Constants.ALLIANCE_3_INDEX], alliances[Constants.ALLIANCE_6_INDEX]};
+                String semi4Array[] = {SELECT_ALLIANCE, alliances[Constants.Alliance_Selection.ALLIANCE_3_INDEX], alliances[Constants.Alliance_Selection.ALLIANCE_6_INDEX]};
                 ArrayList<String> semi4 = new ArrayList<>(Arrays.asList(semi4Array));
 
                 String final1Array[] = {SELECT_ALLIANCE};
@@ -190,27 +182,27 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
 
                 adapters = new BracketResultsAdapter[6];
 
-                adapters[SEMI_1_INDEX] = new BracketResultsAdapter(context, android.R.layout.simple_spinner_dropdown_item, semi1);
+                adapters[SEMI_1_INDEX] = new BracketResultsAdapter(context, semi1);
                 spinners[SEMI_1_INDEX].setAdapter(adapters[SEMI_1_INDEX]);
                 spinners[SEMI_1_INDEX].setOnItemSelectedListener(this);
 
-                adapters[SEMI_2_INDEX] = new BracketResultsAdapter(context, android.R.layout.simple_spinner_dropdown_item, semi2);
+                adapters[SEMI_2_INDEX] = new BracketResultsAdapter(context, semi2);
                 spinners[SEMI_2_INDEX].setAdapter(adapters[SEMI_2_INDEX]);
                 spinners[SEMI_2_INDEX].setOnItemSelectedListener(this);
 
-                adapters[SEMI_3_INDEX] = new BracketResultsAdapter(context, android.R.layout.simple_spinner_dropdown_item, semi3);
+                adapters[SEMI_3_INDEX] = new BracketResultsAdapter(context, semi3);
                 spinners[SEMI_3_INDEX].setAdapter(adapters[SEMI_3_INDEX]);
                 spinners[SEMI_3_INDEX].setOnItemSelectedListener(this);
 
-                adapters[SEMI_4_INDEX] = new BracketResultsAdapter(context, android.R.layout.simple_spinner_dropdown_item, semi4);
+                adapters[SEMI_4_INDEX] = new BracketResultsAdapter(context, semi4);
                 spinners[SEMI_4_INDEX].setAdapter(adapters[SEMI_4_INDEX]);
                 spinners[SEMI_4_INDEX].setOnItemSelectedListener(this);
 
-                adapters[FINAL_1_INDEX] = new BracketResultsAdapter(context, android.R.layout.simple_spinner_dropdown_item, final1);
+                adapters[FINAL_1_INDEX] = new BracketResultsAdapter(context, final1);
                 spinners[FINAL_1_INDEX].setAdapter(adapters[FINAL_1_INDEX]);
                 spinners[FINAL_1_INDEX].setOnItemSelectedListener(this);
 
-                adapters[FINAL_2_INDEX] = new BracketResultsAdapter(context, android.R.layout.simple_spinner_dropdown_item, final2);
+                adapters[FINAL_2_INDEX] = new BracketResultsAdapter(context, final2);
                 spinners[FINAL_2_INDEX].setAdapter(adapters[FINAL_2_INDEX]);
                 spinners[FINAL_2_INDEX].setOnItemSelectedListener(this);
 
@@ -219,8 +211,7 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 }
 
                 bracketSaveFile = new File(context.getFilesDir(), String.format("%s_bracket_results.txt", eventId));
-                if(bracketSaveFile.exists())
-                {
+                if (bracketSaveFile.exists()) {
                     json = null;
                     try {
                         saveFIS = new FileInputStream(bracketSaveFile);
@@ -241,12 +232,10 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                         Log.d(TAG, e.getMessage());
                     }
 
-                    if(json != null)
-                    {
+                    if (json != null) {
 
                         //TODO: Figure out finals...
-                        for(int i = 0; i < json.length(); i++)
-                        {
+                        for (int i = 0; i < json.length(); i++) {
                             try {
                                 spinners[i].setSelection(adapters[i].getPosition(json.getString(i)));
                             } catch (JSONException e) {
@@ -272,12 +261,12 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 spinnerValue = String.valueOf(spinners[SEMI_1_INDEX].getSelectedItem());
                 if (spinnerValue.equals(SELECT_ALLIANCE)) {
                     textViews[SEMI_1_INDEX].setText("Alliance ?");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_1_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_1_INDEX])) {
                     textViews[SEMI_1_INDEX].setText("Alliance 1");
-                    adapters[FINAL_1_INDEX].add(alliances[Constants.ALLIANCE_1_INDEX]);
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_8_INDEX])) {
+                    adapters[FINAL_1_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_1_INDEX]);
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_8_INDEX])) {
                     textViews[SEMI_1_INDEX].setText("Alliance 8");
-                    adapters[FINAL_1_INDEX].add(alliances[Constants.ALLIANCE_8_INDEX]);
+                    adapters[FINAL_1_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_8_INDEX]);
                 } else {
                     assert false;
                 }
@@ -297,12 +286,12 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 spinnerValue = String.valueOf(spinners[SEMI_2_INDEX].getSelectedItem());
                 if (spinnerValue.equals(SELECT_ALLIANCE)) {
                     textViews[SEMI_2_INDEX].setText("Alliance ?");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_4_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_4_INDEX])) {
                     textViews[SEMI_2_INDEX].setText("Alliance 4");
-                    adapters[FINAL_1_INDEX].add(alliances[Constants.ALLIANCE_4_INDEX]);
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_5_INDEX])) {
+                    adapters[FINAL_1_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_4_INDEX]);
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_5_INDEX])) {
                     textViews[SEMI_2_INDEX].setText("Alliance 5");
-                    adapters[FINAL_1_INDEX].add(alliances[Constants.ALLIANCE_5_INDEX]);
+                    adapters[FINAL_1_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_5_INDEX]);
                 } else {
                     assert false;
                 }
@@ -322,12 +311,12 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 spinnerValue = String.valueOf(spinners[SEMI_3_INDEX].getSelectedItem());
                 if (spinnerValue.equals(SELECT_ALLIANCE)) {
                     textViews[SEMI_3_INDEX].setText("Alliance ?");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_2_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_2_INDEX])) {
                     textViews[SEMI_3_INDEX].setText("Alliance 2");
-                    adapters[FINAL_2_INDEX].add(alliances[Constants.ALLIANCE_2_INDEX]);
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_7_INDEX])) {
+                    adapters[FINAL_2_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_2_INDEX]);
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_7_INDEX])) {
                     textViews[SEMI_3_INDEX].setText("Alliance 7");
-                    adapters[FINAL_2_INDEX].add(alliances[Constants.ALLIANCE_7_INDEX]);
+                    adapters[FINAL_2_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_7_INDEX]);
                 } else {
                     assert false;
                 }
@@ -347,12 +336,12 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 spinnerValue = String.valueOf(spinners[SEMI_4_INDEX].getSelectedItem());
                 if (spinnerValue.equals(SELECT_ALLIANCE)) {
                     textViews[SEMI_4_INDEX].setText("Alliance ?");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_3_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_3_INDEX])) {
                     textViews[SEMI_4_INDEX].setText("Alliance 3");
-                    adapters[FINAL_2_INDEX].add(alliances[Constants.ALLIANCE_3_INDEX]);
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_6_INDEX])) {
+                    adapters[FINAL_2_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_3_INDEX]);
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_6_INDEX])) {
                     textViews[SEMI_4_INDEX].setText("Alliance 6");
-                    adapters[FINAL_2_INDEX].add(alliances[Constants.ALLIANCE_6_INDEX]);
+                    adapters[FINAL_2_INDEX].add(alliances[Constants.Alliance_Selection.ALLIANCE_6_INDEX]);
                 } else {
                     assert false;
                 }
@@ -369,13 +358,13 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 spinnerValue = String.valueOf(spinners[FINAL_1_INDEX].getSelectedItem());
                 if (spinnerValue.equals(SELECT_ALLIANCE)) {
                     textViews[FINAL_1_INDEX].setText("Alliance ?");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_1_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_1_INDEX])) {
                     textViews[FINAL_1_INDEX].setText("Alliance 1");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_8_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_8_INDEX])) {
                     textViews[FINAL_1_INDEX].setText("Alliance 8");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_4_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_4_INDEX])) {
                     textViews[FINAL_1_INDEX].setText("Alliance 4");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_5_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_5_INDEX])) {
                     textViews[FINAL_1_INDEX].setText("Alliance 5");
                 } else {
                     assert false;
@@ -392,13 +381,13 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
                 spinnerValue = String.valueOf(spinners[FINAL_2_INDEX].getSelectedItem());
                 if (spinnerValue.equals(SELECT_ALLIANCE)) {
                     textViews[FINAL_2_INDEX].setText("Alliance ?");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_2_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_2_INDEX])) {
                     textViews[FINAL_2_INDEX].setText("Alliance 2");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_7_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_7_INDEX])) {
                     textViews[FINAL_2_INDEX].setText("Alliance 7");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_3_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_3_INDEX])) {
                     textViews[FINAL_2_INDEX].setText("Alliance 3");
-                } else if (spinnerValue.equals(alliances[Constants.ALLIANCE_6_INDEX])) {
+                } else if (spinnerValue.equals(alliances[Constants.Alliance_Selection.ALLIANCE_6_INDEX])) {
                     textViews[FINAL_2_INDEX].setText("Alliance 6");
                 } else {
                     assert false;
@@ -427,259 +416,255 @@ public class BracketResults extends Fragment implements AdapterView.OnItemSelect
         Intent intent;
         String redSide, blueSide;
         int space;
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.q_1v8:
                 intent = new Intent(context, MatchView.class);
-                intent.putExtra(Constants.MATCH_TYPE, "Quarterfinal 1");
+                intent.putExtra(Constants.Alliance_Selection.MATCH_TYPE, "Quarterfinal 1");
 
-                redSide = alliances[Constants.ALLIANCE_1_INDEX];
+                redSide = alliances[Constants.Alliance_Selection.ALLIANCE_1_INDEX];
                 space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
-                redSide = redSide.substring(space+1);
-                space = redSide.indexOf(' ');
-                redSide = redSide.substring(space + 1);
-                space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.RED1, Integer.parseInt(redSide.substring(0, space)));
                 redSide = redSide.substring(space + 1);
                 space = redSide.indexOf(' ');
                 redSide = redSide.substring(space + 1);
-                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.RED3, Integer.parseInt(redSide));
 
-                blueSide = alliances[Constants.ALLIANCE_8_INDEX];
+                blueSide = alliances[Constants.Alliance_Selection.ALLIANCE_8_INDEX];
                 space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
-                blueSide = blueSide.substring(space+1);
-                space = blueSide.indexOf(' ');
-                blueSide = blueSide.substring(space + 1);
-                space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.BLUE1, Integer.parseInt(blueSide.substring(0, space)));
                 blueSide = blueSide.substring(space + 1);
                 space = blueSide.indexOf(' ');
                 blueSide = blueSide.substring(space + 1);
-                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.BLUE3, Integer.parseInt(blueSide));
 
                 startActivity(intent);
                 break;
             case R.id.q_2v7:
                 intent = new Intent(context, MatchView.class);
-                intent.putExtra(Constants.MATCH_TYPE,"Quarterfinal 3");
+                intent.putExtra(Constants.Alliance_Selection.MATCH_TYPE, "Quarterfinal 3");
 
-                redSide = alliances[Constants.ALLIANCE_2_INDEX];
+                redSide = alliances[Constants.Alliance_Selection.ALLIANCE_2_INDEX];
                 space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
-                redSide = redSide.substring(space+1);
-                space = redSide.indexOf(' ');
-                redSide = redSide.substring(space + 1);
-                space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.RED1, Integer.parseInt(redSide.substring(0, space)));
                 redSide = redSide.substring(space + 1);
                 space = redSide.indexOf(' ');
                 redSide = redSide.substring(space + 1);
-                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.RED3, Integer.parseInt(redSide));
 
-                blueSide = alliances[Constants.ALLIANCE_7_INDEX];
+                blueSide = alliances[Constants.Alliance_Selection.ALLIANCE_7_INDEX];
                 space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
-                blueSide = blueSide.substring(space+1);
-                space = blueSide.indexOf(' ');
-                blueSide = blueSide.substring(space + 1);
-                space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.BLUE1, Integer.parseInt(blueSide.substring(0, space)));
                 blueSide = blueSide.substring(space + 1);
                 space = blueSide.indexOf(' ');
                 blueSide = blueSide.substring(space + 1);
-                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.BLUE3, Integer.parseInt(blueSide));
 
                 startActivity(intent);
                 break;
             case R.id.q_3v6:
                 intent = new Intent(context, MatchView.class);
-                intent.putExtra(Constants.MATCH_TYPE,"Quarterfinal 4");
+                intent.putExtra(Constants.Alliance_Selection.MATCH_TYPE, "Quarterfinal 4");
 
-                redSide = alliances[Constants.ALLIANCE_3_INDEX];
+                redSide = alliances[Constants.Alliance_Selection.ALLIANCE_3_INDEX];
                 space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
-                redSide = redSide.substring(space+1);
-                space = redSide.indexOf(' ');
-                redSide = redSide.substring(space + 1);
-                space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.RED1, Integer.parseInt(redSide.substring(0, space)));
                 redSide = redSide.substring(space + 1);
                 space = redSide.indexOf(' ');
                 redSide = redSide.substring(space + 1);
-                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.RED3, Integer.parseInt(redSide));
 
-                blueSide = alliances[Constants.ALLIANCE_6_INDEX];
+                blueSide = alliances[Constants.Alliance_Selection.ALLIANCE_6_INDEX];
                 space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
-                blueSide = blueSide.substring(space+1);
-                space = blueSide.indexOf(' ');
-                blueSide = blueSide.substring(space + 1);
-                space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.BLUE1, Integer.parseInt(blueSide.substring(0, space)));
                 blueSide = blueSide.substring(space + 1);
                 space = blueSide.indexOf(' ');
                 blueSide = blueSide.substring(space + 1);
-                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.BLUE3, Integer.parseInt(blueSide));
 
                 startActivity(intent);
                 break;
             case R.id.q_4v5:
                 intent = new Intent(context, MatchView.class);
-                intent.putExtra(Constants.MATCH_TYPE,"Quarterfinal 2");
+                intent.putExtra(Constants.Alliance_Selection.MATCH_TYPE, "Quarterfinal 2");
 
-                redSide = alliances[Constants.ALLIANCE_4_INDEX];
+                redSide = alliances[Constants.Alliance_Selection.ALLIANCE_4_INDEX];
                 space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
-                redSide = redSide.substring(space+1);
-                space = redSide.indexOf(' ');
-                redSide = redSide.substring(space + 1);
-                space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.RED1, Integer.parseInt(redSide.substring(0, space)));
                 redSide = redSide.substring(space + 1);
                 space = redSide.indexOf(' ');
                 redSide = redSide.substring(space + 1);
-                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.RED3, Integer.parseInt(redSide));
 
-                blueSide = alliances[Constants.ALLIANCE_5_INDEX];
+                blueSide = alliances[Constants.Alliance_Selection.ALLIANCE_5_INDEX];
                 space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
-                blueSide = blueSide.substring(space+1);
-                space = blueSide.indexOf(' ');
-                blueSide = blueSide.substring(space + 1);
-                space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.BLUE1, Integer.parseInt(blueSide.substring(0, space)));
                 blueSide = blueSide.substring(space + 1);
                 space = blueSide.indexOf(' ');
                 blueSide = blueSide.substring(space + 1);
-                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.BLUE3, Integer.parseInt(blueSide));
 
                 startActivity(intent);
                 break;
             case R.id.s_1v2:
                 intent = new Intent(context, MatchView.class);
-                intent.putExtra(Constants.MATCH_TYPE,"Semifinal 1");
+                intent.putExtra(Constants.Alliance_Selection.MATCH_TYPE, "Semifinal 1");
 
                 redSide = String.valueOf(spinners[SEMI_1_INDEX].getSelectedItem());
                 space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
-                redSide = redSide.substring(space+1);
-                space = redSide.indexOf(' ');
-                redSide = redSide.substring(space + 1);
-                space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.RED1, Integer.parseInt(redSide.substring(0, space)));
                 redSide = redSide.substring(space + 1);
                 space = redSide.indexOf(' ');
                 redSide = redSide.substring(space + 1);
-                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.RED3, Integer.parseInt(redSide));
 
                 blueSide = String.valueOf(spinners[SEMI_2_INDEX].getSelectedItem());
                 space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
-                blueSide = blueSide.substring(space+1);
-                space = blueSide.indexOf(' ');
-                blueSide = blueSide.substring(space + 1);
-                space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.BLUE1, Integer.parseInt(blueSide.substring(0, space)));
                 blueSide = blueSide.substring(space + 1);
                 space = blueSide.indexOf(' ');
                 blueSide = blueSide.substring(space + 1);
-                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.BLUE3, Integer.parseInt(blueSide));
 
                 startActivity(intent);
                 break;
             case R.id.s_3v4:
                 intent = new Intent(context, MatchView.class);
-                intent.putExtra(Constants.MATCH_TYPE,"Semifinal 2");
+                intent.putExtra(Constants.Alliance_Selection.MATCH_TYPE, "Semifinal 2");
 
                 redSide = String.valueOf(spinners[SEMI_3_INDEX].getSelectedItem());
                 space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
-                redSide = redSide.substring(space+1);
-                space = redSide.indexOf(' ');
-                redSide = redSide.substring(space + 1);
-                space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.RED1, Integer.parseInt(redSide.substring(0, space)));
                 redSide = redSide.substring(space + 1);
                 space = redSide.indexOf(' ');
                 redSide = redSide.substring(space + 1);
-                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.RED3, Integer.parseInt(redSide));
 
                 blueSide = String.valueOf(spinners[SEMI_4_INDEX].getSelectedItem());
                 space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
-                blueSide = blueSide.substring(space+1);
-                space = blueSide.indexOf(' ');
-                blueSide = blueSide.substring(space + 1);
-                space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.BLUE1, Integer.parseInt(blueSide.substring(0, space)));
                 blueSide = blueSide.substring(space + 1);
                 space = blueSide.indexOf(' ');
                 blueSide = blueSide.substring(space + 1);
-                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.BLUE3, Integer.parseInt(blueSide));
 
                 startActivity(intent);
                 break;
             case R.id.f_1v2:
                 intent = new Intent(context, MatchView.class);
-                intent.putExtra(Constants.MATCH_TYPE,"Final");
+                intent.putExtra(Constants.Alliance_Selection.MATCH_TYPE, "Final");
 
                 redSide = String.valueOf(spinners[FINAL_1_INDEX].getSelectedItem());
                 space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED1,Integer.parseInt(redSide.substring(0, space)));
-                redSide = redSide.substring(space+1);
-                space = redSide.indexOf(' ');
-                redSide = redSide.substring(space + 1);
-                space = redSide.indexOf(' ');
-                intent.putExtra(Constants.RED2, Integer.parseInt(redSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.RED1, Integer.parseInt(redSide.substring(0, space)));
                 redSide = redSide.substring(space + 1);
                 space = redSide.indexOf(' ');
                 redSide = redSide.substring(space + 1);
-                intent.putExtra(Constants.RED3,Integer.parseInt(redSide));
+                space = redSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.RED2, Integer.parseInt(redSide.substring(0, space)));
+                redSide = redSide.substring(space + 1);
+                space = redSide.indexOf(' ');
+                redSide = redSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.RED3, Integer.parseInt(redSide));
 
                 blueSide = String.valueOf(spinners[FINAL_2_INDEX].getSelectedItem());
                 space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE1,Integer.parseInt(blueSide.substring(0, space)));
-                blueSide = blueSide.substring(space+1);
-                space = blueSide.indexOf(' ');
-                blueSide = blueSide.substring(space + 1);
-                space = blueSide.indexOf(' ');
-                intent.putExtra(Constants.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                intent.putExtra(Constants.Alliance_Selection.BLUE1, Integer.parseInt(blueSide.substring(0, space)));
                 blueSide = blueSide.substring(space + 1);
                 space = blueSide.indexOf(' ');
                 blueSide = blueSide.substring(space + 1);
-                intent.putExtra(Constants.BLUE3,Integer.parseInt(blueSide));
+                space = blueSide.indexOf(' ');
+                intent.putExtra(Constants.Alliance_Selection.BLUE2, Integer.parseInt(blueSide.substring(0, space)));
+                blueSide = blueSide.substring(space + 1);
+                space = blueSide.indexOf(' ');
+                blueSide = blueSide.substring(space + 1);
+                intent.putExtra(Constants.Alliance_Selection.BLUE3, Integer.parseInt(blueSide));
 
                 startActivity(intent);
                 break;
             case R.id.save:
                 json = new JSONArray();
-                for(int i = 0; i < spinners.length; i++)
-                {
+                for (int i = 0; i < spinners.length; i++) {
                     String spinnerValue = String.valueOf(spinners[i].getSelectedItem());
                     json.put(spinnerValue);
                 }
                 String text = json.toString();
-                Log.d(TAG,text);
-                if(bracketSaveFile.exists())
-                {
+                Log.d(TAG, text);
+                if (bracketSaveFile.exists()) {
                     bracketSaveFile.delete();
                     try {
                         bracketSaveFile.createNewFile();
                     } catch (IOException e) {
-                        Log.d(TAG,e.getMessage());
+                        Log.d(TAG, e.getMessage());
                     }
                 }
-                try
-                {
-                    saveFOS = new FileOutputStream(bracketSaveFile);
+                try {
+                    FileOutputStream saveFOS = new FileOutputStream(bracketSaveFile);
                     saveFOS.write(text.getBytes());
                     saveFOS.close();
                 } catch (FileNotFoundException e) {
-                    Log.d(TAG,e.getMessage());
+                    Log.d(TAG, e.getMessage());
                 } catch (IOException e) {
-                    Log.d(TAG,e.getMessage());
+                    Log.d(TAG, e.getMessage());
                 }
                 break;
         }

@@ -18,19 +18,15 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.FPA_PitScout;
+import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_PitScout;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Activity that holds the fragments for pit scouting
@@ -39,14 +35,11 @@ public class PitScouting extends Activity {
 
     final private String TAG = "PitScouting";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
     private FPA_PitScout adapter;
 
     private int teamNumber;
 
     private String eventId;
-    private String userType;
     private int prevTeamNumber = -1;
     private int nextTeamNumber = -1;
 
@@ -64,22 +57,22 @@ public class PitScouting extends Activity {
         setActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt(Constants.TEAM_NUMBER);
+        teamNumber = extras.getInt(Constants.Intent_Extras.TEAM_NUMBER);
         setTitle("Team Number: " + teamNumber);
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
-        viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
         adapter = new FPA_PitScout(getFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(5);
-        tabLayout = (TabLayout) findViewById(R.id.pit_tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.pit_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
-        eventId = sharedPreferences.getString(Constants.EVENT_ID, "");
-        userType = sharedPreferences.getString(Constants.USER_TYPE, "");
+        eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
+        String userType = sharedPreferences.getString(Constants.Settings.USER_TYPE, "");
         PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
         ScoutMap map = pitScoutDB.getTeamMap(teamNumber);
         if (map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0) {
@@ -139,8 +132,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *  The action that happens when the home button is pressed. Brings up dialog with options to save
-     *  and takes user to the home screen.
+     * The action that happens when the home button is pressed. Brings up dialog with options to save
+     * and takes user to the home screen.
      */
     private void home_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
@@ -191,8 +184,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *  The action that happens when the back button is pressed. Brings up dialog with options to save
-     *  and takes user to the team list.
+     * The action that happens when the back button is pressed. Brings up dialog with options to save
+     * and takes user to the team list.
      */
     private void back_press() {
         AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
@@ -217,7 +210,7 @@ public class PitScouting extends Activity {
                     new SaveTask().execute(data);
 
                     Intent intent = new Intent(PitScouting.this, TeamList.class);
-                    intent.putExtra(Constants.NEXT_PAGE,Constants.PIT_SCOUTING);
+                    intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.PIT_SCOUTING);
                     startActivity(intent);
                 } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -238,7 +231,7 @@ public class PitScouting extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent2 = new Intent(PitScouting.this, TeamList.class);
-                intent2.putExtra(Constants.NEXT_PAGE,Constants.PIT_SCOUTING);
+                intent2.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.PIT_SCOUTING);
                 startActivity(intent2);
             }
         });
@@ -246,8 +239,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *  The action that happens when the previous team button is pressed. Brings up dialog with options to save
-     *  and takes user to pit scout the previous team.
+     * The action that happens when the previous team button is pressed. Brings up dialog with options to save
+     * and takes user to pit scout the previous team.
      */
     private void previous_press() {
         Log.d(TAG, "previous team pressed");
@@ -273,7 +266,7 @@ public class PitScouting extends Activity {
 
                     // Go to the next match
                     Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                    intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
+                    intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, prevTeamNumber);
                     startActivity(intent);
                 } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -295,7 +288,7 @@ public class PitScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER, prevTeamNumber);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, prevTeamNumber);
                 startActivity(intent);
             }
         });
@@ -303,8 +296,8 @@ public class PitScouting extends Activity {
     }
 
     /**
-     *  The action that happens when the next team button is pressed. Brings up dialog with options to save
-     *  and takes user to pit scout the next team.
+     * The action that happens when the next team button is pressed. Brings up dialog with options to save
+     * and takes user to pit scout the next team.
      */
     private void next_press() {
         Log.d(TAG, "next team pressed");
@@ -330,7 +323,7 @@ public class PitScouting extends Activity {
 
                     // Go to the next match
                     Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                    intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                    intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
                     startActivity(intent);
                 } else {
                     Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
@@ -352,7 +345,7 @@ public class PitScouting extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
                 Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                intent.putExtra(Constants.TEAM_NUMBER, nextTeamNumber);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
                 startActivity(intent);
             }
         });
@@ -369,14 +362,14 @@ public class PitScouting extends Activity {
             ScoutMap data = maps[0];
 
             // Change picture filename to use event id and team number
-            String picture_filename = data.get(Constants.PIT_ROBOT_PICTURE).getString();
+            String picture_filename = data.get(Constants.Pit_Inputs.PIT_ROBOT_PICTURE).getString();
             File picture = new File(getFilesDir(), picture_filename);
             if (picture.exists()) {
                 String newPathName = String.format("%s_%d.jpg", eventId, teamNumber);
                 File newPath = new File(getFilesDir(), newPathName);
                 picture.renameTo(newPath);
-                data.remove(Constants.PIT_ROBOT_PICTURE);
-                data.put(Constants.PIT_ROBOT_PICTURE, newPathName);
+                data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                data.put(Constants.Pit_Inputs.PIT_ROBOT_PICTURE, newPathName);
             }
 
             PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);

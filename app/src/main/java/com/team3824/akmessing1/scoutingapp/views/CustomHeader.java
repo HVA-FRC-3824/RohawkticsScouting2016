@@ -14,9 +14,11 @@ import com.team3824.akmessing1.scoutingapp.activities.HomeScreen;
 
 public class CustomHeader extends RelativeLayout {
 
-    final Context mContext;
-    Button back;
-    Button home;
+    public final String TAG = "CustomHeader";
+
+    private final Context mContext;
+    private Button back;
+    private Button home;
     public CustomHeader(Context context, AttributeSet attrs)
     {
         super(context, attrs);

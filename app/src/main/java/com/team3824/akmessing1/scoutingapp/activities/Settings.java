@@ -32,8 +32,11 @@ import org.json.JSONArray;
 import java.util.Arrays;
 
 /**
- * Activity to setup the settings such as user type, alliance color and number, pit group, and the
- * event id
+ * @author Andrew Messing
+ * @version 1
+ *          <p/>
+ *          Activity to setup the settings such as user type, alliance color and number, pit group, and the
+ *          event id
  */
 public class Settings extends Activity {
 
@@ -42,6 +45,7 @@ public class Settings extends Activity {
     /**
      * Populate the settings fields with their respective values if previous ones saved. Otherwise
      * initializes the settings fields.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -52,59 +56,66 @@ public class Settings extends Activity {
         SharedPreferences sharedPref = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
 
         final Spinner colorSelector = (Spinner) findViewById(R.id.colorSelector);
-        String[] colors = new String[]{Constants.BLUE, Constants.RED};
+        String[] colors = new String[]{Constants.Alliance_Colors.BLUE, Constants.Alliance_Colors.RED};
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, colors);
         colorSelector.setAdapter(adapter1);
-        colorSelector.setSelection(Arrays.asList(colors).indexOf(sharedPref.getString(Constants.ALLIANCE_COLOR, Constants.BLUE)));
+        colorSelector.setSelection(Arrays.asList(colors).indexOf(sharedPref.getString(Constants.Settings.ALLIANCE_COLOR,
+                Constants.Alliance_Colors.BLUE)));
 
         final Spinner numSelector = (Spinner) findViewById(R.id.numSelector);
         String[] numbers = new String[]{"1", "2", "3"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, numbers);
         numSelector.setAdapter(adapter2);
-        numSelector.setSelection(Arrays.asList(numbers).indexOf(Integer.toString(sharedPref.getInt(Constants.ALLIANCE_NUMBER, 1))));
+        numSelector.setSelection(Arrays.asList(numbers).indexOf(Integer.toString(sharedPref.getInt(Constants.Settings.ALLIANCE_NUMBER, 1))));
 
         final Spinner pitGroupSelector = (Spinner) findViewById(R.id.pitGroupSelector);
         String[] numbers2 = new String[]{"1", "2", "3", "4", "5", "6"};
         ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, numbers2);
         pitGroupSelector.setAdapter(adapter3);
-        pitGroupSelector.setSelection(Arrays.asList(numbers2).indexOf(Integer.toString(sharedPref.getInt(Constants.PIT_GROUP_NUMBER, 1))));
+        pitGroupSelector.setSelection(Arrays.asList(numbers2).indexOf(Integer.toString(sharedPref.getInt(Constants.Settings.PIT_GROUP_NUMBER, 1))));
 
         Spinner typeSelector = (Spinner) findViewById(R.id.typeSelector);
-        String[] types = new String[]{Constants.MATCH_SCOUT, Constants.PIT_SCOUT, Constants.SUPER_SCOUT, Constants.DRIVE_TEAM, Constants.STRATEGY, Constants.SERVER, Constants.ADMIN};
+        String[] types = new String[]{Constants.User_Types.MATCH_SCOUT, Constants.User_Types.PIT_SCOUT,
+                Constants.User_Types.SUPER_SCOUT, Constants.User_Types.DRIVE_TEAM, Constants.User_Types.STRATEGY,
+                Constants.User_Types.SERVER, Constants.User_Types.ADMIN};
         ArrayAdapter<String> adapter0 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, types);
         typeSelector.setAdapter(adapter0);
         typeSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = parent.getItemAtPosition(position).toString();
-                if (selected.equals(Constants.ADMIN)) {
-                    findViewById(R.id.textView3).setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView2).setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView4).setVisibility(View.VISIBLE);
-                    colorSelector.setVisibility(View.VISIBLE);
-                    numSelector.setVisibility(View.VISIBLE);
-                    pitGroupSelector.setVisibility(View.VISIBLE);
-                } else if (selected.equals(Constants.MATCH_SCOUT)) {
-                    findViewById(R.id.textView3).setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView2).setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView4).setVisibility(View.GONE);
-                    colorSelector.setVisibility(View.VISIBLE);
-                    numSelector.setVisibility(View.VISIBLE);
-                    pitGroupSelector.setVisibility(View.GONE);
-                } else if (selected.equals(Constants.PIT_SCOUT)) {
-                    findViewById(R.id.textView3).setVisibility(View.GONE);
-                    findViewById(R.id.textView2).setVisibility(View.GONE);
-                    findViewById(R.id.textView4).setVisibility(View.VISIBLE);
-                    colorSelector.setVisibility(View.GONE);
-                    numSelector.setVisibility(View.GONE);
-                    pitGroupSelector.setVisibility(View.VISIBLE);
-                } else {
-                    findViewById(R.id.textView3).setVisibility(View.GONE);
-                    findViewById(R.id.textView2).setVisibility(View.GONE);
-                    findViewById(R.id.textView4).setVisibility(View.GONE);
-                    colorSelector.setVisibility(View.GONE);
-                    numSelector.setVisibility(View.GONE);
-                    pitGroupSelector.setVisibility(View.GONE);
+                switch (parent.getItemAtPosition(position).toString()) {
+                    case Constants.User_Types.ADMIN:
+                        findViewById(R.id.textView3).setVisibility(View.VISIBLE);
+                        findViewById(R.id.textView2).setVisibility(View.VISIBLE);
+                        findViewById(R.id.textView4).setVisibility(View.VISIBLE);
+                        colorSelector.setVisibility(View.VISIBLE);
+                        numSelector.setVisibility(View.VISIBLE);
+                        pitGroupSelector.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.User_Types.MATCH_SCOUT:
+                        findViewById(R.id.textView3).setVisibility(View.VISIBLE);
+                        findViewById(R.id.textView2).setVisibility(View.VISIBLE);
+                        findViewById(R.id.textView4).setVisibility(View.GONE);
+                        colorSelector.setVisibility(View.VISIBLE);
+                        numSelector.setVisibility(View.VISIBLE);
+                        pitGroupSelector.setVisibility(View.GONE);
+                        break;
+                    case Constants.User_Types.PIT_SCOUT:
+                        findViewById(R.id.textView3).setVisibility(View.GONE);
+                        findViewById(R.id.textView2).setVisibility(View.GONE);
+                        findViewById(R.id.textView4).setVisibility(View.VISIBLE);
+                        colorSelector.setVisibility(View.GONE);
+                        numSelector.setVisibility(View.GONE);
+                        pitGroupSelector.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        findViewById(R.id.textView3).setVisibility(View.GONE);
+                        findViewById(R.id.textView2).setVisibility(View.GONE);
+                        findViewById(R.id.textView4).setVisibility(View.GONE);
+                        colorSelector.setVisibility(View.GONE);
+                        numSelector.setVisibility(View.GONE);
+                        pitGroupSelector.setVisibility(View.GONE);
+                        break;
                 }
             }
 
@@ -113,19 +124,20 @@ public class Settings extends Activity {
 
             }
         });
-        typeSelector.setSelection(Arrays.asList(types).indexOf(sharedPref.getString(Constants.USER_TYPE, Constants.MATCH_SCOUT)));
-        if (!sharedPref.getString(Constants.USER_TYPE, "").equals("")) {
+        typeSelector.setSelection(Arrays.asList(types).indexOf(sharedPref.getString(Constants.Settings.USER_TYPE, Constants.User_Types.MATCH_SCOUT)));
+        if (!sharedPref.getString(Constants.Settings.USER_TYPE, "").equals("")) {
             Button homeButton = (Button) findViewById(R.id.homeButton);
             homeButton.setVisibility(View.VISIBLE);
         }
         EditText eventID = (EditText) findViewById(R.id.eventID);
-        eventID.setText(sharedPref.getString(Constants.EVENT_ID, ""));
+        eventID.setText(sharedPref.getString(Constants.Settings.EVENT_ID, ""));
 
         Utilities.setupUI(this, findViewById(android.R.id.content));
     }
 
     /**
      * Back button brings the user to the home screen
+     *
      * @param view
      */
     public void home(View view) {
@@ -135,6 +147,7 @@ public class Settings extends Activity {
 
     /**
      * Saves the current settings to shared preferences if an event id is set
+     *
      * @param view
      */
     public void save_settings(View view) {
@@ -148,17 +161,17 @@ public class Settings extends Activity {
 
         String eventId = String.valueOf(eventID.getText());
         if (!eventId.equals("")) {
-            prefEditor.putString(Constants.EVENT_ID, String.valueOf(eventID.getText()));
+            prefEditor.putString(Constants.Settings.EVENT_ID, String.valueOf(eventID.getText()));
             String type = String.valueOf(typeSelector.getSelectedItem());
-            prefEditor.putString(Constants.USER_TYPE, type);
+            prefEditor.putString(Constants.Settings.USER_TYPE, type);
 
-            if (String.valueOf(typeSelector.getSelectedItem()).equals(Constants.MATCH_SCOUT) || String.valueOf(typeSelector.getSelectedItem()).equals(Constants.ADMIN)) {
-                prefEditor.putString(Constants.ALLIANCE_COLOR, String.valueOf(colorSelector.getSelectedItem()));
-                prefEditor.putInt(Constants.ALLIANCE_NUMBER, Integer.parseInt(String.valueOf(numSelector.getSelectedItem())));
+            if (String.valueOf(typeSelector.getSelectedItem()).equals(Constants.User_Types.MATCH_SCOUT) || String.valueOf(typeSelector.getSelectedItem()).equals(Constants.User_Types.ADMIN)) {
+                prefEditor.putString(Constants.Settings.ALLIANCE_COLOR, String.valueOf(colorSelector.getSelectedItem()));
+                prefEditor.putInt(Constants.Settings.ALLIANCE_NUMBER, Integer.parseInt(String.valueOf(numSelector.getSelectedItem())));
             }
 
-            if (String.valueOf(typeSelector.getSelectedItem()).equals(Constants.PIT_SCOUT) || String.valueOf(typeSelector.getSelectedItem()).equals(Constants.ADMIN)) {
-                prefEditor.putInt(Constants.PIT_GROUP_NUMBER, Integer.parseInt(String.valueOf(pitGroupSelector.getSelectedItem())));
+            if (String.valueOf(typeSelector.getSelectedItem()).equals(Constants.User_Types.PIT_SCOUT) || String.valueOf(typeSelector.getSelectedItem()).equals(Constants.User_Types.ADMIN)) {
+                prefEditor.putInt(Constants.Settings.PIT_GROUP_NUMBER, Integer.parseInt(String.valueOf(pitGroupSelector.getSelectedItem())));
             }
 
             prefEditor.commit();
