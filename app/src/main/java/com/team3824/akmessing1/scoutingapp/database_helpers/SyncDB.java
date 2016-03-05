@@ -234,7 +234,7 @@ public class SyncDB extends SQLiteOpenHelper {
 
         ContentValues cvs = new ContentValues();
         cvs.put(KEY_ID, id);
-        cvs.put(KEY_STATS_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_STATS_LAST_UPDATED)));
+        cvs.put(KEY_STATS_LAST_UPDATED, dateFormat.format(new Date()));
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             cvs.put(KEY_MATCH_LAST_UPDATED, cursor.getString(cursor.getColumnIndex(KEY_MATCH_LAST_UPDATED)));

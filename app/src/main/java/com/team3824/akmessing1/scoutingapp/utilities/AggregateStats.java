@@ -2,6 +2,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
@@ -23,6 +24,8 @@ import java.util.Set;
  *  Utility class for aggregating the match and super data to be used for statistics.
  */
 public class AggregateStats {
+
+    private static final String TAG = "AggregateStats";
 
     /**
      * Updates the aggregated statistics for multiple teams
@@ -221,6 +224,7 @@ public class AggregateStats {
         ArrayList<Integer> teamList = statsDB.getTeamNumbers();
         for(int i = 0; i < Constants.Super_Inputs.SUPER_QUALITATIVE.length; i++)
         {
+            Log.d(TAG, Constants.Super_Inputs.SUPER_QUALITATIVE[i]);
             String[] rankings = SchulzeMethod.CardinalRankCalc(teamList, superData, eventID, Constants.Super_Inputs.SUPER_QUALITATIVE[i], context);
             for(int j = 0; j < teamList.size(); j++)
             {

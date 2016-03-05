@@ -278,6 +278,14 @@ public interface Constants {
         char REQUEST_HEADER = 'R';
         char RECEIVE_HEADER = 'r';
         char PING_HEADER = 'p';
+
+        String REQUEST_MATCH = String.format("%c%c",REQUEST_HEADER,MATCH_HEADER);
+        String REQUEST_SUPER = String.format("%c%c",REQUEST_HEADER,SUPER_HEADER);
+        String REQUEST_PIT = String.format("%c%c",REQUEST_HEADER,PIT_HEADER);
+        String REQUEST_STATS = String.format("%c%c",REQUEST_HEADER,STATS_HEADER);
+        String REQUEST_DRIVE_TEAM_FEEDBACK = String.format("%c%c",REQUEST_HEADER,DRIVE_TEAM_FEEDBACK_HEADER);
+        String REQUEST_SCHEDULE = String.format("%c%c",REQUEST_HEADER,SCHEDULE_HEADER);
+
         String PING = "ping";
         String PONG = "pong";
     }

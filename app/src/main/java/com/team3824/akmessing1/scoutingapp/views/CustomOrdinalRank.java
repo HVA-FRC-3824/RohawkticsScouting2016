@@ -112,7 +112,7 @@ public class CustomOrdinalRank extends CustomScoutView implements DragSortListVi
             Team team = adapter.getItem(i);
             try {
                 jsonObject.put(Constants.Intent_Extras.TEAM_NUMBER,team.getTeamNumber());
-                jsonObject.put(RANK, team.getMapElement(RANK));
+                jsonObject.put(RANK, team.getMapElement(RANK).getInt());
             } catch (JSONException e) {
             }
             jsonArray.put(jsonObject);

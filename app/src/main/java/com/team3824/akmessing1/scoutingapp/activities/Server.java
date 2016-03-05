@@ -150,7 +150,7 @@ public class Server extends Activity {
         @Override
         public void displayText(String text) {
             Log.d(TAG, text);
-            circularBuffer.insert(text);
+            circularBuffer.insert(text+"\n");
             logView.setText(circularBuffer.toString());
         }
 

@@ -36,9 +36,12 @@ import java.util.Set;
 
 /**
  * The home screen for the app. Different buttons appear based on the user type in settings.
+ *
+ * @author Andrew Messing
  */
 public class HomeScreen extends Activity implements View.OnClickListener {
     private final String TAG = "HomeScreen";
+    private SyncHandler handler;
     private BluetoothSync bluetoothSync;
 
     private MatchScoutDB matchScoutDB;
@@ -83,7 +86,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
 
         // If settings have been saved then set up the database helpers and the sync handler
         if (!eventID.equals("") && bluetoothAdapter != null) {
-            SyncHandler handler = new SyncHandler();
+            handler = new SyncHandler();
             bluetoothSync = new BluetoothSync(handler, false);
             handler.setDatabaseHelpers(matchScoutDB, pitScoutDB, superScoutDB, driveTeamFeedbackDB, statsDB, syncDB, scheduleDB);
             handler.setContext(this);
@@ -182,6 +185,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                     setupButton(R.id.syncPit_button);
                     setupButton(R.id.syncSuper_button);
                     setupButton(R.id.syncDriveTeam_button);
+                    setupButton(R.id.syncStrategy_button);
                     setupButton(R.id.picture_transer_button);
                     setupButton(R.id.bluetooth_button);
                     if (bluetoothAdapter.isEnabled()) {
@@ -254,6 +258,9 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.syncDriveTeam_button:
                 new SyncDriveTeam().execute();
+                break;
+            case R.id.syncStrategy_button:
+                new SyncStrategy().execute();
                 break;
             case R.id.matchPlanning_button:
                 intent = new Intent(this, MatchPlanning.class);
@@ -332,7 +339,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
      */
     private boolean timeout() {
         long time = SystemClock.currentThreadTimeMillis();
-        while (bluetoothSync.getState() != BluetoothSync.STATE_CONNECTED) {
+        while (!bluetoothSync.isConnected()) {
             if (SystemClock.currentThreadTimeMillis() > time + Constants.Bluetooth.CONNECTION_TIMEOUT) {
                 return false;
             }
@@ -605,8 +612,6 @@ public class HomeScreen extends Activity implements View.OnClickListener {
         }
     }
 
-    //TODO: Async for request for match data, pit data, super data, and stats data
-
     /**
      * Asynchronous Task that syncs the drive team feedback with the server tablet
      */
@@ -674,7 +679,250 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 publishProgress("No new Drive Team Feedback to send");
             }
 
-            //TODO: Request for match data, pit data, super data, and stats data
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_MATCH.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Match Data Sent");
+                while (!handler.getReceived()) {
+                    Log.d(TAG, String.format("Received: %d", handler.getReceived() ? 1 : 0));
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                    SystemClock.sleep(500);
+                }
+            }
+
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_PIT.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Pit Data Sent");
+                while (!handler.getReceived()) {
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                }
+            }
+
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_SUPER.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Super Data Sent");
+                while (!handler.getReceived()) {
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                }
+            }
+
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_STATS.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Stats Data Sent");
+                while (!handler.getReceived()) {
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                }
+            }
+
+            bluetoothSync.stop();
+            return null;
+        }
+
+        /**
+         * Displays text to the screen through Toast
+         *
+         * @param values First element is the text to be displayed to the screen
+         */
+        @Override
+        protected void onProgressUpdate(String... values) {
+            String text = values[0];
+            Log.d(TAG, text);
+            Toast.makeText(HomeScreen.this, text, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Asynchronous Task that requests data from the server tablet
+     */
+    private class SyncStrategy extends AsyncTask<Void, String, Void> {
+        /**
+         * Connects to the server tablet and sends the drive team feedback from the database table for
+         * the current event
+         *
+         * @param params nothing
+         * @return nothing
+         */
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
+            BluetoothDevice server = null;
+            for (BluetoothDevice device : devices) {
+                String connectedName = device.getName();
+                if (connectedName.equals(Constants.Bluetooth.SERVER_NAME)) {
+                    server = device;
+                    break;
+                }
+            }
+
+            if (server == null) {
+                publishProgress("Cannot find Server in Paired Devices List");
+                return null;
+            }
+
+            int i;
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                bluetoothSync.connect(server, false);
+                if (timeout()) {
+                    break;
+                }
+            }
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                publishProgress("Connection to Server Failed");
+                return null;
+            }
+
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_MATCH.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Match Data Sent");
+                while (!handler.getReceived()) {
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                }
+            }
+
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_PIT.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Pit Data Sent");
+                while (!handler.getReceived()) {
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                }
+            }
+
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_SUPER.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Super Data Sent");
+                while (!handler.getReceived()) {
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                }
+            }
+
+            handler.setReceived(false);
+            for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
+                if (bluetoothSync.write(Constants.Bluetooth.REQUEST_STATS.getBytes())) {
+                    break;
+                } else {
+                    publishProgress(String.format("Attempt %d of %d failed", i + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                }
+            }
+
+            if (i == Constants.Bluetooth.NUM_ATTEMPTS) {
+                bluetoothSync.stop();
+                return null;
+            } else {
+                publishProgress("Request for Stats Data Sent");
+                while (!handler.getReceived()) {
+                    if (!bluetoothSync.isConnected()) {
+                        publishProgress("Connection lost during request");
+                        bluetoothSync.stop();
+                        return null;
+                    }
+                }
+            }
 
             bluetoothSync.stop();
             return null;

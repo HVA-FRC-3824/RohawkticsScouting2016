@@ -41,18 +41,15 @@ public class BluetoothHandler extends Handler {
 
     private boolean received = false;
 
-    public void setBluetoothSync(BluetoothSync b)
-    {
+    public void setBluetoothSync(BluetoothSync b) {
         bluetoothSync = b;
     }
 
-    public void setContext(Context c)
-    {
+    public void setContext(Context c) {
         context = c;
     }
 
-    public void setDatabaseHelpers(MatchScoutDB m, PitScoutDB p, SuperScoutDB s, DriveTeamFeedbackDB d, StatsDB st, SyncDB sy, ScheduleDB sc)
-    {
+    public void setDatabaseHelpers(MatchScoutDB m, PitScoutDB p, SuperScoutDB s, DriveTeamFeedbackDB d, StatsDB st, SyncDB sy, ScheduleDB sc) {
         matchScoutDB = m;
         pitScoutDB = p;
         superScoutDB = s;
@@ -62,9 +59,18 @@ public class BluetoothHandler extends Handler {
         scheduleDB = sc;
     }
 
+    public void setReceived(boolean r) {
+        received = r;
+    }
+
+    public boolean getReceived() {
+        return received;
+    }
+
     @Override
-    public void handleMessage(Message msg)
-    {
+    public void handleMessage(Message msg) {
+
+        int j;
         switch (msg.what) {
             case Constants.Message_Type.COULD_NOT_CONNECT:
                 displayText("Could not connect");
@@ -86,11 +92,9 @@ public class BluetoothHandler extends Handler {
                 break;
             case Constants.Message_Type.DATA_RECEIVED:
                 String message = new String((byte[]) msg.obj);
-                if(message.length() > 30)
-                {
+                if (message.length() > 30) {
                     displayText(String.format("Received: %s ... %s", message.substring(0, 15), message.substring(message.length() - 15)));
-                }
-                else {
+                } else {
                     displayText(String.format("Received: %s", message));
                 }
 
@@ -103,27 +107,32 @@ public class BluetoothHandler extends Handler {
                         Utilities.JsonToMatchDB(matchScoutDB, message);
                         receivedData(message);
                         displayText("Match Data Received");
+                        received = true;
                         break;
                     case Constants.Bluetooth.PIT_HEADER:
                         filename = "";
                         Utilities.JsonToPitDB(pitScoutDB, message);
                         displayText("Pit Data Received");
+                        received = true;
                         break;
                     case Constants.Bluetooth.SUPER_HEADER:
                         filename = "";
-                        Utilities.JsonToSuperDB(superScoutDB,message);
+                        Utilities.JsonToSuperDB(superScoutDB, message);
                         receivedData(message);
                         displayText("Super Data Received");
+                        received = true;
                         break;
                     case Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER:
                         filename = "";
                         Utilities.JsonToDriveTeamDB(driveTeamFeedbackDB, message);
                         displayText("Drive Team Feedback Data Received");
+                        received = true;
                         break;
                     case Constants.Bluetooth.STATS_HEADER:
                         filename = "";
-                        Utilities.JsonToStatsDB(statsDB,message);
+                        Utilities.JsonToStatsDB(statsDB, message);
                         displayText("Stats Data Received");
+                        received = true;
                         break;
                     case Constants.Bluetooth.SCHEDULE_HEADER:
                         filename = "";
@@ -142,6 +151,7 @@ public class BluetoothHandler extends Handler {
                         } catch (JSONException e) {
                         }
                         displayText("Schedule Received");
+                        received = true;
                         break;
                     case Constants.Bluetooth.FILENAME_HEADER:
                         filename = message.substring(1);
@@ -159,85 +169,126 @@ public class BluetoothHandler extends Handler {
                             }
                             displayText(String.format("File %s Received", filename));
                         }
+                        received = true;
                         break;
                     case Constants.Bluetooth.PING_HEADER:
-                        if(message.equals(Constants.Bluetooth.PING))
-                        {
+                        if (message.equals(Constants.Bluetooth.PING)) {
                             displayText("Ping Received, sending Pong");
                             for (int i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                                 if (bluetoothSync.write(Constants.Bluetooth.PONG.getBytes())) {
                                     break;
                                 }
                             }
-                        }
-                        else if(message.equals(Constants.Bluetooth.PONG))
-                        {
+                        } else if (message.equals(Constants.Bluetooth.PONG)) {
                             displayText("Pong Received");
                         }
+                        break;
                     case Constants.Bluetooth.REQUEST_HEADER:
                         String lastUpdated;
                         switch (message.charAt(1)) {
                             case Constants.Bluetooth.MATCH_HEADER:
                                 lastUpdated = syncDB.getMatchLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateMatchSync(bluetoothSync.getConnectedAddress());
-                                String matchText = Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
-                                while(!bluetoothSync.write(matchText.getBytes()));
-                                displayText("Responded with Match Data");
+                                String matchText = Constants.Bluetooth.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
+                                for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
+                                    if (bluetoothSync.write(matchText.getBytes())) {
+                                        break;
+                                    } else {
+                                        displayText(String.format("Attempt %d of %d failed", j + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                                    }
+                                }
+                                if (j != Constants.Bluetooth.NUM_ATTEMPTS) {
+                                    displayText("Responded with Match Data");
+                                }
                                 break;
                             case Constants.Bluetooth.PIT_HEADER:
                                 lastUpdated = syncDB.getMatchLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updatePitSync(bluetoothSync.getConnectedAddress());
-                                String pitText = Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
-                                while(!bluetoothSync.write(pitText.getBytes()));
-                                displayText("Responded with Pit Data");
+                                String pitText = Constants.Bluetooth.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
+                                for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
+                                    if (bluetoothSync.write(pitText.getBytes())) {
+                                        break;
+                                    } else {
+                                        displayText(String.format("Attempt %d of %d failed", j + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                                    }
+                                }
+                                if (j != Constants.Bluetooth.NUM_ATTEMPTS) {
+                                    displayText("Responded with Pit Data");
+                                }
                                 break;
                             case Constants.Bluetooth.SUPER_HEADER:
                                 lastUpdated = syncDB.getSuperLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateSuperSync(bluetoothSync.getConnectedAddress());
-                                String superText = Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
-                                while(!bluetoothSync.write(superText.getBytes()));
-                                displayText("Responded with Super Data");
+                                String superText = Constants.Bluetooth.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+                                for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
+                                    if (bluetoothSync.write(superText.getBytes())) {
+                                        break;
+                                    } else {
+                                        displayText(String.format("Attempt %d of %d failed", j + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                                    }
+                                }
+                                if (j != Constants.Bluetooth.NUM_ATTEMPTS) {
+                                    displayText("Responded with Super Data");
+                                }
                                 break;
                             case Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER:
                                 lastUpdated = syncDB.getDriveTeamLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateDriveTeamSync(bluetoothSync.getConnectedAddress());
-                                String driveTeamText = Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
-                                while(!bluetoothSync.write(driveTeamText.getBytes()));
-                                displayText("Responded with Drive Team Feedback");
+                                String driveTeamText = Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                                for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
+                                    if (bluetoothSync.write(driveTeamText.getBytes())) {
+                                        break;
+                                    } else {
+                                        displayText(String.format("Attempt %d of %d failed", j + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                                    }
+                                }
+                                if (j != Constants.Bluetooth.NUM_ATTEMPTS) {
+                                    displayText("Responded with Drive Team Feedback");
+                                }
                                 break;
                             case Constants.Bluetooth.STATS_HEADER:
                                 lastUpdated = syncDB.getStatsLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateStatsSync(bluetoothSync.getConnectedAddress());
-                                String statsText = Utilities.CursorToJsonString(statsDB.getStatsSince(lastUpdated));
-                                while(!bluetoothSync.write(statsText.getBytes()));
-                                displayText("Responded with Stats");
+                                String statsText = Constants.Bluetooth.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStatsSince(lastUpdated));
+                                for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
+                                    if (bluetoothSync.write(statsText.getBytes())) {
+                                        break;
+                                    } else {
+                                        displayText(String.format("Attempt %d of %d failed", j + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                                    }
+                                }
+                                if (j != Constants.Bluetooth.NUM_ATTEMPTS) {
+                                    displayText("Responded with Stats Data");
+                                }
                                 break;
                             case Constants.Bluetooth.SCHEDULE_HEADER:
-                                String scheduleText = Utilities.CursorToJsonString(scheduleDB.getSchedule());
-                                while(!bluetoothSync.write(scheduleText.getBytes()));
-                                displayText("Responded with Schedule");
+                                String scheduleText = Constants.Bluetooth.SCHEDULE_HEADER + Utilities.CursorToJsonString(scheduleDB.getSchedule());
+                                for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
+                                    if (bluetoothSync.write(scheduleText.getBytes())) {
+                                        break;
+                                    } else {
+                                        displayText(String.format("Attempt %d of %d failed", j + 1, Constants.Bluetooth.NUM_ATTEMPTS));
+                                    }
+                                }
+                                if (j != Constants.Bluetooth.NUM_ATTEMPTS) {
+                                    displayText("Responded with Schedule Data");
+                                }
                                 break;
                         }
-                        while (!bluetoothSync.write("r".getBytes()));
-                        break;
-                    case Constants.Bluetooth.RECEIVE_HEADER:
-                        received = true;
                         break;
                 }
                 break;
         }
     }
 
-    ArrayList<String> getImageFiles(Cursor cursor)
-    {
+    ArrayList<String> getImageFiles(Cursor cursor) {
         ArrayList<String> filenames = new ArrayList<>();
         //noinspection UnusedAssignment
-        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
-        {
-            if(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE) != -1) {
-                if(cursor.getType(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            if (cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE) != -1) {
+                if (cursor.getType(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE)) == Cursor.FIELD_TYPE_STRING) {
                     String filename = cursor.getString(cursor.getColumnIndex(Constants.Pit_Inputs.PIT_ROBOT_PICTURE));
-                    if(!filename.equals("")) {
+                    if (!filename.equals("")) {
                         displayText(filename);
                         filenames.add(filename);
                     }
@@ -247,13 +298,11 @@ public class BluetoothHandler extends Handler {
         return filenames;
     }
 
-    public void displayText(String text)
-    {
+    public void displayText(String text) {
 
     }
 
-    public void receivedData(String data)
-    {
+    public void receivedData(String data) {
 
     }
 }

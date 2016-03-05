@@ -150,7 +150,6 @@
                 android:visibility="gone"
                 android:background="@color/navy_blue" />
 
-
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

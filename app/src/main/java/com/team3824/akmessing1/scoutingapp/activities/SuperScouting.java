@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -452,6 +453,9 @@ public class SuperScouting extends Activity {
 
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter != null && bluetoothAdapter.isEnabled()) {
+                if(Looper.myLooper() == null) {
+                    Looper.prepare();
+                }
                 bluetoothSync = new BluetoothSync(new BluetoothHandler(), false);
                 Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
                 BluetoothDevice server = null;
