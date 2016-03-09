@@ -39,11 +39,22 @@
         android:background="@color/brightRed"
         android:layout_marginLeft="10dp" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/delete"
+        android:id="@+id/send"
+        android:text="Send"
+        android:textColor="@color/white"
+        android:background="@color/brightBlue"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/top_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/delete"
+        android:layout_toLeftOf="@id/send"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/row_image"
         android:textColor="@color/black"
@@ -54,7 +65,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/delete"
+        android:layout_toLeftOf="@id/send"
         android:layout_below="@id/top_view"
         android:gravity="right"
         android:textColor="@color/lightGray" />

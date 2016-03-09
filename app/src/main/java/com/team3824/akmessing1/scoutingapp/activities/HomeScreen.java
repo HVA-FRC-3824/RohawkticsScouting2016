@@ -131,6 +131,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.feedback_button);
                 if (bluetoothAdapter != null) {
                     setupButton(R.id.syncDriveTeam_button);
+                    setupButton(R.id.picture_transer_button);
                     setupButton(R.id.bluetooth_button);
                     if (bluetoothAdapter.isEnabled()) {
                         findViewById(R.id.bluetooth_button).setBackgroundColor(Color.GREEN);
@@ -148,12 +149,19 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.eliminationMatches_button);
                 setupButton(R.id.viewEvent_button);
                 setupButton(R.id.viewPickList_button);
-                setupButton(R.id.syncStrategy_button);
+                if(bluetoothAdapter != null) {
+                    setupButton(R.id.syncStrategy_button);
+                    setupButton(R.id.picture_transer_button);
+
+                }
                 break;
             }
             case Constants.User_Types.SERVER: {
-                setupButton(R.id.server_button);
                 setupButton(R.id.upload_download_button);
+                if(bluetoothAdapter != null) {
+                    setupButton(R.id.server_button);
+                    setupButton(R.id.picture_transer_button);
+                }
                 break;
             }
             case Constants.User_Types.ADMIN: {
@@ -310,7 +318,8 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 //TODO: Fill in
                 break;
             case R.id.picture_transer_button:
-                //TODO: Fill in
+                intent = new Intent(this, PictureTransfer.class);
+                startActivity(intent);
                 break;
             case R.id.teamlist_button:
                 intent = new Intent(this, TeamListBuilder.class);

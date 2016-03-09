@@ -381,4 +381,10 @@ public class PitScouting extends Activity {
         }
     }
 
+
+    @Override
+    public void onBackPressed()
+    {
+        back_press();
+    }
 }

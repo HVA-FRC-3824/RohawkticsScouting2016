@@ -61,13 +61,6 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
         // Add the custom header and have the back button take the user to the home screen
         CustomHeader customHeader = (CustomHeader) findViewById(R.id.event_view_header);
         customHeader.removeHome();
-        customHeader.setBackOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EventView.this, HomeScreen.class);
-                startActivity(intent);
-            }
-        });
 
         // Set up the dropdown menu for all the comparison categories
         Spinner spinner = (Spinner) findViewById(R.id.event_view_spinner);

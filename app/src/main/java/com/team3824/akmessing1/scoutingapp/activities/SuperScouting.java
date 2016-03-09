@@ -543,4 +543,9 @@ public class SuperScouting extends Activity {
     }
 
 
+    @Override
+    public void onBackPressed()
+    {
+        back_press();
+    }
 }

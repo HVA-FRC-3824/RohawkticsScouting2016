@@ -243,4 +243,10 @@ public class Settings extends Activity {
             Toast.makeText(this, "Event ID must be entered", Toast.LENGTH_LONG);
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+
+    }
 }

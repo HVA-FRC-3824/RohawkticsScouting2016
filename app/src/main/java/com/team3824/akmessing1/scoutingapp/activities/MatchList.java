@@ -156,4 +156,11 @@ public class MatchList extends Activity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(MatchList.this, HomeScreen.class);
+        startActivity(intent);
+    }
 }

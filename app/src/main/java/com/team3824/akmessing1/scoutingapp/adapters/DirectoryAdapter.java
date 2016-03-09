@@ -1,33 +1,51 @@
 package com.team3824.akmessing1.scoutingapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.nfc.NfcAdapter;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.utilities.file_manager.FileManager;
 import com.team3824.akmessing1.scoutingapp.utilities.file_manager.ThumbnailCreator;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Adapter that sets up the list view in the file view with the files in the directory
+ *
+ * @author Andrew Messing
+ * @version
  */
 public class DirectoryAdapter extends ArrayAdapter<String> {
+
+    private final String TAG = "DirectoryAdapter";
 
     private final int KB = 1024;
     private FileManager fileManager;
     private ThumbnailCreator thumbnailCreator;
     private ArrayList<String> directory;
     private Context context;
+    private Activity activity;
+    private NfcAdapter nfcAdapter = null;
 
     /**
      * @param c
@@ -39,6 +57,16 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
         fileManager = fm;
         context = c;
         directory = objects;
+    }
+
+    public void setNfcAdapter(NfcAdapter n)
+    {
+        nfcAdapter = n;
+    }
+
+    public void setActivity(Activity a)
+    {
+        activity = a;
     }
 
     /**
@@ -116,7 +144,7 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
         ImageView icon = (ImageView) convertView.findViewById(R.id.row_image);
 
         if (thumbnailCreator == null)
-            thumbnailCreator = new ThumbnailCreator(68, 68);
+            thumbnailCreator = new ThumbnailCreator(100, 100);
 
         if (file != null && file.isFile()) {
             String ext = file.toString();
@@ -258,6 +286,29 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
                 DirectoryAdapter.this.notifyDataSetChanged();
             }
         });
+
+        if(nfcAdapter != null)
+        {
+            Button button = (Button)convertView.findViewById(R.id.send);
+            button.setVisibility(View.VISIBLE);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Attempting to send");
+                    File fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                    File transferFile = new File(fileDirectory,file.getName());
+                    transferFile.setReadable(true, false);
+                    try {
+                        Utilities.copyFile(new FileInputStream(file),new FileOutputStream(transferFile));
+                        nfcAdapter.setBeamPushUris(
+                                new Uri[]{Uri.fromFile(transferFile)}, activity);
+                        Toast.makeText(context,"Sending Picture via NFC beam",Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Log.d(TAG,e.getMessage());
+                    }
+                }
+            });
+        }
 
         return convertView;
     }

@@ -136,4 +136,11 @@ public class TeamList extends Activity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(TeamList.this,HomeScreen.class);
+        startActivity(intent);
+    }
 }

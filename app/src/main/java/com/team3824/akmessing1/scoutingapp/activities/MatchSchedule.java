@@ -163,4 +163,11 @@ public class MatchSchedule extends Activity {
         MatchScheduleAdapter matchScheduleAdapter = new MatchScheduleAdapter(this, matches);
         listview.setAdapter(matchScheduleAdapter);
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(MatchSchedule.this, HomeScreen.class);
+        startActivity(intent);
+    }
 }

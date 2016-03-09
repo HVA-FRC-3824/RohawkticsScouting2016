@@ -88,12 +88,6 @@ public class Server extends Activity {
         setContentView(R.layout.activity_server);
 
         CustomHeader header = (CustomHeader) findViewById(R.id.header);
-        header.setBackOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Server.this.finish();
-            }
-        });
         header.removeHome();
 
         findViewById(android.R.id.content).setKeepScreenOn(true);

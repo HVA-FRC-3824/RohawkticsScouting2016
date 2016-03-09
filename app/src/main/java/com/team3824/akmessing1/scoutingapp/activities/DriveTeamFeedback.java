@@ -239,4 +239,10 @@ public class DriveTeamFeedback extends Activity {
         });
         builder.show();
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        back_press();
+    }
 }

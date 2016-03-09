@@ -536,4 +536,10 @@ public class MatchScouting extends Activity {
             Toast.makeText(MatchScouting.this, text, Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        back_press();
+    }
 }
