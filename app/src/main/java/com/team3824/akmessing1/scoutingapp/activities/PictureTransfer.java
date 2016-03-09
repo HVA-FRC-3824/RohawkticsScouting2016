@@ -5,26 +5,18 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.MifareClassic;
-import android.nfc.tech.MifareUltralight;
-import android.nfc.tech.Ndef;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,27 +27,22 @@ import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 import com.team3824.akmessing1.scoutingapp.utilities.file_manager.FileManager;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author Andrew Messing
  */
-public class PictureTransfer extends Activity {
+public class PictureTransfer extends Activity implements View.OnClickListener{
 
     private final String TAG = "PictureTransfer";
 
     private FileManager fileManager;
     private DirectoryAdapter directoryAdapter;
+    ArrayList<String> filenames;
 
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
@@ -80,20 +67,20 @@ public class PictureTransfer extends Activity {
         fileManager = new FileManager();
         fileManager.setHomeDir(getFilesDir().getAbsolutePath());
 
-        ArrayList<String> directory = new ArrayList<String>(fileManager.setHomeDir(getFilesDir().getPath()));
+        filenames = new ArrayList<String>(fileManager.setHomeDir(getFilesDir().getPath()));
 
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
         eventID = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
 
-        for (int i = 0; i < directory.size(); i++) {
-            String filename = directory.get(i);
+        for (int i = 0; i < filenames.size(); i++) {
+            String filename = filenames.get(i);
             if (!filename.contains(eventID)) {
-                directory.remove(i);
+                filenames.remove(i);
                 i--;
             } else {
                 String sub_ext = filename.substring(filename.lastIndexOf(".") + 1);
                 if (!sub_ext.equalsIgnoreCase("jpg")) {
-                    directory.remove(i);
+                    filenames.remove(i);
                     i--;
                 }
             }
@@ -113,7 +100,7 @@ public class PictureTransfer extends Activity {
             startActivity(new Intent(android.provider.Settings.ACTION_NFCSHARING_SETTINGS));
         }
 
-        directoryAdapter = new DirectoryAdapter(this, directory, fileManager);
+        directoryAdapter = new DirectoryAdapter(this, filenames, fileManager);
         directoryAdapter.setNfcAdapter(nfcAdapter);
         directoryAdapter.setActivity(this);
 
@@ -124,6 +111,10 @@ public class PictureTransfer extends Activity {
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
         handleIntent(getIntent());
+
+        Button sendAll = (Button)findViewById(R.id.send_all);
+        sendAll.setVisibility(View.VISIBLE);
+        sendAll.setOnClickListener(this);
 
     }
 
@@ -176,7 +167,7 @@ public class PictureTransfer extends Activity {
              * Test for the type of URI, by getting its scheme value
              */
 
-            String dirPath="";
+            String dirPath = "";
             if (TextUtils.equals(beamUri.getScheme(), "file")) {
                 dirPath = handleFileUri(beamUri);
             } else if (TextUtils.equals(
@@ -184,51 +175,45 @@ public class PictureTransfer extends Activity {
                 dirPath = handleContentUri(beamUri);
             }
             File beamDir = new File(dirPath);
-            for(File file: beamDir.listFiles())
-            {
-                if(file.getName().contains("-"))
-                {
+            for (File file : beamDir.listFiles()) {
+                if (file.getName().contains("-")) {
                     file.delete();
                     continue;
                 }
 
-                if(file.getName().contains(eventID))
-                {
-                    File newFile = new File(getFilesDir(),file.getName());
-                    if(newFile.exists() && file.lastModified() > newFile.lastModified())
-                    {
+                if (file.getName().contains(eventID)) {
+                    File newFile = new File(getFilesDir(), file.getName());
+                    if (newFile.exists() && file.lastModified() > newFile.lastModified()) {
                         newFile.delete();
                         try {
                             newFile.createNewFile();
-                            Utilities.copyFile(new FileInputStream(file),new FileOutputStream(newFile));
+                            Utilities.copyFile(new FileInputStream(file), new FileOutputStream(newFile));
                         } catch (IOException e) {
                         }
-                    }
-                    else if(!newFile.exists())
-                    {
+                    } else if (!newFile.exists()) {
                         try {
                             newFile.createNewFile();
-                            Utilities.copyFile(new FileInputStream(file),new FileOutputStream(newFile));
+                            Utilities.copyFile(new FileInputStream(file), new FileOutputStream(newFile));
                         } catch (IOException e) {
                         }
                     }
                 }
             }
-            ArrayList<String> directory = new ArrayList<String>(fileManager.setHomeDir(getFilesDir().getPath()));
-            for (int i = 0; i < directory.size(); i++) {
-                String filename = directory.get(i);
+            filenames = new ArrayList<String>(fileManager.setHomeDir(getFilesDir().getPath()));
+            for (int i = 0; i < filenames.size(); i++) {
+                String filename = filenames.get(i);
                 if (!filename.contains(eventID)) {
-                    directory.remove(i);
+                    filenames.remove(i);
                     i--;
                 } else {
                     String sub_ext = filename.substring(filename.lastIndexOf(".") + 1);
                     if (!sub_ext.equalsIgnoreCase("jpg")) {
-                        directory.remove(i);
+                        filenames.remove(i);
                         i--;
                     }
                 }
             }
-            directoryAdapter.updateDirectory(directory);
+            directoryAdapter.updateDirectory(filenames);
         }
     }
 
@@ -256,7 +241,7 @@ public class PictureTransfer extends Activity {
             // For a MediaStore content URI
         } else {
             // Get the column that contains the file name
-            String[] projection = { MediaStore.MediaColumns.DATA };
+            String[] projection = {MediaStore.MediaColumns.DATA};
             Cursor pathCursor =
                     getContentResolver().query(beamUri, projection,
                             null, null, null);
@@ -278,5 +263,23 @@ public class PictureTransfer extends Activity {
             }
         }
         return null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Uri[] uris = new Uri[filenames.size()];
+        File fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        for(int i = 0; i < filenames.size(); i++)
+        {
+            File file = new File(fileManager.getCurrentDir() + "/" + filenames.get(i));
+            File transferFile = new File(fileDirectory, filenames.get(i));
+            transferFile.setReadable(true, false);
+            try {
+                Utilities.copyFile(new FileInputStream(file), new FileOutputStream(transferFile));
+            } catch (IOException e) {
+            Log.d(TAG,e.getMessage());
+            }
+        }
+        nfcAdapter.setBeamPushUris(uris, this);
     }
 }
