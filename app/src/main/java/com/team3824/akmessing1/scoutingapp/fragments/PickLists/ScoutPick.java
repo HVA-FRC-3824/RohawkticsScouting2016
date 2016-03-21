@@ -117,6 +117,8 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
                 team.setMapElement(Constants.Calculated_Totals.TOTAL_RED_CARDS, new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_RED_CARDS))));
             }
 
+            team.setMapElement(StatsDB.KEY_DNP, new ScoutValue(statsCursor.getInt(statsCursor.getColumnIndex(StatsDB.KEY_DNP))));
+
             team = setupTeam(team, statsCursor);
 
             teams.add(team);
@@ -288,6 +290,17 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
         return picked;
     }
 
+    public ArrayList<Integer> getDNP() {
+        ArrayList<Integer> dnp = new ArrayList<>();
+        for (Team team : teams) {
+            if (team.getMapElement(StatsDB.KEY_DNP).getInt() > 0) {
+                dnp.add(team.getTeamNumber());
+            }
+        }
+        Collections.sort(dnp);
+        return dnp;
+    }
+
     /**
      * Updates the list of team with which ones are picked/unpicked
      *
@@ -303,5 +316,18 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
         }
         adapter.sort();
         adapter.notifyDataSetChanged();
+    }
+
+    public void setDnpUndnp(ArrayList<Integer> dnp, ArrayList<Integer> undnp)
+    {
+        for(int i = 0; i < dnp.size(); i++)
+        {
+            teamsMap.get(dnp.get(i)).setMapElement(StatsDB.KEY_DNP, new ScoutValue(1));
+        }
+        for(int i = 0; i < undnp.size(); i++)
+        {
+            teamsMap.get(dnp.get(i)).setMapElement(StatsDB.KEY_DNP, new ScoutValue(0));
+        }
+        adapter.setDnpDecline();
     }
 }

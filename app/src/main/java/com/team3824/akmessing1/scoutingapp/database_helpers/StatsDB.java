@@ -36,7 +36,6 @@ public class StatsDB extends SQLiteOpenHelper {
     public static final String KEY_TEAM_NUMBER = "_id";
     public static final String KEY_PICKED = "picked";
     public static final String KEY_DNP = "dnp";
-    public static final String KEY_DECLINE = "decline";
     private final String KEY_LAST_UPDATED = "last_updated";
 
 
@@ -66,7 +65,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 "( " + KEY_ID + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
                 " " + KEY_PICKED + " INTEGER NOT NULL," +
                 " " + KEY_DNP + " INTEGER NOT NULL," +
-                " " + KEY_DECLINE + " INTEGER NOT NULL," +
                 " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
@@ -127,7 +125,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 ContentValues values = new ContentValues();
                 values.put(KEY_TEAM_NUMBER, teamNumber);
                 values.put(KEY_PICKED, 0);
-                values.put(KEY_DECLINE, 0);
                 values.put(KEY_DNP, 0);
                 values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
                 db.insert(tableName, null, values);
@@ -146,7 +143,6 @@ public class StatsDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_TEAM_NUMBER, teamNumber);
         values.put(KEY_PICKED, 0);
-        values.put(KEY_DECLINE, 0);
         values.put(KEY_DNP, 0);
         values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
         db.insert(tableName, null, values);
@@ -417,7 +413,6 @@ public class StatsDB extends SQLiteOpenHelper {
                 "( " + KEY_ID + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
                 " " + KEY_PICKED + " INTEGER NOT NULL," +
                 " " + KEY_DNP + " INTEGER NOT NULL," +
-                " " + KEY_DECLINE + " INTEGER NOT NULL," +
                 " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(query);
         for (int i = 0; i < teams.size(); i++) {
@@ -425,7 +420,6 @@ public class StatsDB extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(KEY_TEAM_NUMBER, teamNumber);
             values.put(KEY_PICKED, 0);
-            values.put(KEY_DECLINE, 0);
             values.put(KEY_DNP, 0);
             values.put(KEY_LAST_UPDATED, dateFormat.format(new Date()));
             db.insert(tableName, null, values);

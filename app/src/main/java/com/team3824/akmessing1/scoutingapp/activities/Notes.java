@@ -14,7 +14,9 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.NotesFilterAdapter;
+import com.team3824.akmessing1.scoutingapp.database_helpers.DriveTeamFeedbackDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
+import com.team3824.akmessing1.scoutingapp.database_helpers.SuperScoutDB;
 import com.team3824.akmessing1.scoutingapp.list_items.MatchTeamNote;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
@@ -58,7 +60,8 @@ public class Notes extends Activity implements OnCheckedChangeListener, ImageBut
 
         notes = new ArrayList<>();
 
-        for (matchCursor.moveToFirst(); !matchCursor.isAfterLast(); matchCursor.moveToNext()) {
+        for (matchCursor.moveToFirst(); !matchCursor.isAfterLast(); matchCursor.moveToNext())
+        {
             int matchNumber = matchCursor.getInt(matchCursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER));
             int teamNumber = matchCursor.getInt(matchCursor.getColumnIndex(MatchScoutDB.KEY_TEAM_NUMBER));
             String note = matchCursor.getString(matchCursor.getColumnIndex(Constants.Post_Match_Inputs.POST_NOTES));
@@ -68,6 +71,21 @@ public class Notes extends Activity implements OnCheckedChangeListener, ImageBut
             MatchTeamNote matchTeamNote = new MatchTeamNote(matchNumber, teamNumber, note);
             notes.add(matchTeamNote);
         }
+
+        SuperScoutDB superScoutDB = new SuperScoutDB(this, eventId);
+        Cursor superCursor = superScoutDB.getAllMatches();
+        for(superCursor.moveToFirst(); !superCursor.isAfterLast(); superCursor.moveToNext())
+        {
+            int matchNumber = superCursor.getInt(superCursor.getColumnIndex(SuperScoutDB.KEY_MATCH_NUMBER));
+            int teamNumber = 9998;
+            String note = superCursor.getString(superCursor.getColumnIndex(Constants.Super_Inputs.SUPER_NOTES));
+            if(note == null || note.equals("")) {
+                continue;
+            }
+            MatchTeamNote matchTeamNote = new MatchTeamNote(matchNumber, teamNumber, note);
+            notes.add(matchTeamNote);
+        }
+
 
         Collections.sort(notes, new Comparator<MatchTeamNote>() {
             @Override

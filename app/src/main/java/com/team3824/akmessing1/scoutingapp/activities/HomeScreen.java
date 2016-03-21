@@ -180,6 +180,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.eliminationMatches_button);
                 setupButton(R.id.viewEvent_button);
+                setupButton(R.id.viewNotes_button);
                 setupButton(R.id.viewPickList_button);
 
                 setupButton(R.id.sync_button);

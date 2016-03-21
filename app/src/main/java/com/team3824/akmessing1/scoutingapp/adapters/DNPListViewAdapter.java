@@ -59,16 +59,7 @@ public class DNPListViewAdapter extends ArrayAdapter<Integer> {
                 doNotPick.addToSpinner(teams.get(pos));
                 ScoutMap map = new ScoutMap();
                 map.put(StatsDB.KEY_TEAM_NUMBER, teams.get(pos));
-                switch (doNotPick.getType()) {
-                    case Constants.Pick_List.DNP:
-                        map.put(StatsDB.KEY_DNP, 0);
-                        break;
-                    case Constants.Pick_List.DECLINE:
-                        map.put(StatsDB.KEY_DECLINE, 0);
-                        break;
-                    default:
-                        assert false;
-                }
+                map.put(StatsDB.KEY_DNP, 0);
                 statsDB.updateStats(map);
                 teams.remove(pos);
                 DNPListViewAdapter.this.notifyDataSetChanged();
@@ -84,5 +75,10 @@ public class DNPListViewAdapter extends ArrayAdapter<Integer> {
         teams.add(newTeamNumber);
         Collections.sort(teams);
         notifyDataSetChanged();
+    }
+
+    public ArrayList<Integer> getArrayList()
+    {
+        return teams;
     }
 }

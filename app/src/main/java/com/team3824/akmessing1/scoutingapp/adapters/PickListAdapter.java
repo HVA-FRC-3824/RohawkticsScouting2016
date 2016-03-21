@@ -40,17 +40,33 @@ public class PickListAdapter extends ArrayAdapter<Team> {
     private StatsDB statsDB;
     private Comparator<Team> comparator;
     private ArrayList<Team> teams;
+    private ArrayList<Team> dnp;
 
     /**
      * @param context
-     * @param teams
+     * @param objects
      * @param statsDB    The database helper for the stats database table
      * @param comparator The comparator to use to sort the teams
      */
-    public PickListAdapter(Context context, ArrayList<Team> teams, StatsDB statsDB, Comparator<Team> comparator) {
-        super(context, R.layout.list_item_pick, teams);
+    public PickListAdapter(Context context, ArrayList<Team> objects, StatsDB statsDB, Comparator<Team> comparator) {
+        super(context, R.layout.list_item_pick, objects);
         this.context = context;
-        this.teams = teams;
+        teams = new ArrayList<>();
+        dnp = new ArrayList<>();
+        for(int i = 0; i < objects.size(); i++) {
+            Team team = objects.get(i);
+            if(team.getMapElement(StatsDB.KEY_DNP).getInt() > 0)
+            {
+                dnp.add(team);
+            }
+            else
+            {
+                teams.add(team);
+            }
+        }
+        clear();
+        addAll(teams);
+        notifyDataSetChanged();
         this.statsDB = statsDB;
         this.comparator = comparator;
     }
@@ -175,5 +191,37 @@ public class PickListAdapter extends ArrayAdapter<Team> {
      */
     public void sort() {
         Collections.sort(teams, comparator);
+    }
+
+    public void setDnpDecline()
+    {
+        for(int i = 0; i < dnp.size(); i++)
+        {
+            Team team = dnp.get(i);
+            if(team.getMapElement(StatsDB.KEY_DNP).getInt() > 0)
+            {
+                continue;
+            }
+            else
+            {
+                teams.add(team);
+                dnp.remove(i);
+                i--;
+            }
+        }
+        for(int i = 0; i < teams.size(); i++)
+        {
+            Team team = teams.get(i);
+            if(team.getMapElement(StatsDB.KEY_DNP).getInt() > 0)
+            {
+                dnp.add(team);
+                teams.remove(i);
+                i--;
+            }
+        }
+        clear();
+        addAll(teams);
+        sort();
+        notifyDataSetChanged();
     }
 }

@@ -17,10 +17,12 @@ import com.team3824.akmessing1.scoutingapp.adapters.DNPListViewAdapter;
 import com.team3824.akmessing1.scoutingapp.adapters.DNPSpinnerAdapter;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
+import com.team3824.akmessing1.scoutingapp.list_items.Team;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Andrew Messing
@@ -37,8 +39,6 @@ public class DNP extends Fragment implements View.OnClickListener {
     private DNPSpinnerAdapter dnpSpinnerAdapter;
     private DNPListViewAdapter dnpListViewAdapter;
     private StatsDB statsDB;
-
-    private int type;
 
     public DNP() {
     }
@@ -66,14 +66,11 @@ public class DNP extends Fragment implements View.OnClickListener {
         ArrayList<Integer> listViewTeams = new ArrayList<>();
         for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
         {
-            if(type == Constants.Pick_List.DNP && cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_DNP)) > 0)
+            if(cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_DNP)) > 0)
             {
                 listViewTeams.add(cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER)));
             }
-            else if(type == Constants.Pick_List.DECLINE && cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_DECLINE)) > 0)
-            {
-                listViewTeams.add(cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER)));
-            }
+
         }
 
         ArrayList<Integer> teams = pitScoutDB.getTeamNumbers();
@@ -105,17 +102,7 @@ public class DNP extends Fragment implements View.OnClickListener {
                 dnpSpinnerAdapter.remove(teamNumber);
                 ScoutMap map = new ScoutMap();
                 map.put(StatsDB.KEY_TEAM_NUMBER,teamNumber);
-                switch (type)
-                {
-                    case Constants.Pick_List.DNP:
-                        map.put(StatsDB.KEY_DNP,1);
-                        break;
-                    case Constants.Pick_List.DECLINE:
-                        map.put(StatsDB.KEY_DECLINE,1);
-                        break;
-                    default:
-                        assert false;
-                }
+                map.put(StatsDB.KEY_DNP,1);
                 statsDB.updateStats(map);
                 break;
             default:
@@ -130,18 +117,9 @@ public class DNP extends Fragment implements View.OnClickListener {
         dnpSpinnerAdapter.add(teamNumber);
     }
 
-    public void setDNP() {
-        type = Constants.Pick_List.DNP;
+    public ArrayList<Integer> getDNP() {
+        if(dnpListViewAdapter == null)
+            return new ArrayList<>();
+        return dnpListViewAdapter.getArrayList();
     }
-
-    public void setDecline() {
-        type = Constants.Pick_List.DECLINE;
-    }
-
-    public int getType()
-    {
-        return type;
-    }
-
-
 }

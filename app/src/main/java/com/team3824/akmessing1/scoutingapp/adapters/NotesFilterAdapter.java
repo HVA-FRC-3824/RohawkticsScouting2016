@@ -52,12 +52,21 @@ public class NotesFilterAdapter extends ArrayAdapter<MatchTeamNote> {
             match_number = (TextView) convertView.findViewById(R.id.team_number);
             match_number.setText(String.format("M%d", matchTeamNote.getMatchNumber()));
             team_number = (TextView) convertView.findViewById(R.id.match_number);
-            team_number.setText(String.valueOf(matchTeamNote.getTeamNumber()));
+            if (matchTeamNote.getTeamNumber() < 9998) {
+                team_number.setText(String.valueOf(matchTeamNote.getTeamNumber()));
+            } else{
+                team_number.setText("Super");
+            }
         } else {
             match_number = (TextView) convertView.findViewById(R.id.match_number);
             match_number.setText(String.format("M%d", matchTeamNote.getMatchNumber()));
             team_number = (TextView) convertView.findViewById(R.id.team_number);
-            team_number.setText(String.valueOf(matchTeamNote.getTeamNumber()));
+            if (matchTeamNote.getTeamNumber() < 9998) {
+                team_number.setText(String.valueOf(matchTeamNote.getTeamNumber()));
+            }
+            else{
+                team_number.setText("Super");
+            }
         }
         note = (TextView) convertView.findViewById(R.id.note);
         note.setText(matchTeamNote.getNote());

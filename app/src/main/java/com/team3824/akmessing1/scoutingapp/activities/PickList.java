@@ -24,6 +24,7 @@ public class PickList extends Activity implements ViewPager.OnPageChangeListener
     private FPA_PickList adapter;
 
     private int previousPage = 0;
+    private int previousPickListPage = 0;
 
     /**
      * Sets up the view pager, pager adapter, and tab layout.
@@ -67,13 +68,9 @@ public class PickList extends Activity implements ViewPager.OnPageChangeListener
     @Override
     public void onPageSelected(int position) {
 
-        if (position > 3)
-            return;
-
-        if (previousPage != position) {
-            ArrayList<Integer> teamsPicked1 = adapter.getPicked(previousPage);
+        if (position < 4) {
+            ArrayList<Integer> teamsPicked1 = adapter.getPicked(previousPickListPage);
             ArrayList<Integer> teamsPicked2 = adapter.getPicked(position);
-
 
             ArrayList<Integer> picked = new ArrayList<>();
             for (int i = 0; i < teamsPicked1.size(); i++) {
@@ -89,8 +86,27 @@ public class PickList extends Activity implements ViewPager.OnPageChangeListener
 
             adapter.setPickedUnpicked(position, picked, unpicked);
 
-            previousPage = position;
+            ArrayList<Integer> teamsDNP = adapter.getDNP(4);
+            ArrayList<Integer> teamsDNP2 = adapter.getDNP(position);
+
+            ArrayList<Integer> dnp = new ArrayList<>();
+            for( int i = 0; i < teamsDNP.size(); i++)
+            {
+                dnp.add(teamsDNP.get(i));
+            }
+            dnp.removeAll(teamsDNP2);
+
+            ArrayList<Integer> undnp = new ArrayList<>();
+            for (int i = 0; i < teamsDNP2.size(); i++) {
+                undnp.add(teamsDNP2.get(i));
+            }
+            undnp.removeAll(teamsDNP);
+            adapter.setDnpUndnp(position, dnp, undnp);
+
+
+            previousPickListPage = position;
         }
+
     }
 
     /**

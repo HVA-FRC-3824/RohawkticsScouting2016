@@ -22,14 +22,13 @@ public class FPA_PickList extends FragmentPagerAdapter {
 
     private final String TAG = "FPA_PickList";
 
-    private String tabTitles[] = new String[]{"Offensive Pick", "Shooter Pick", "Breacher Pick", "Defensive Pick", "DNP List", "Decline List"};
+    private String tabTitles[] = new String[]{"Offensive Pick", "Shooter Pick", "Breacher Pick", "Defensive Pick", "DNP List"};
 
     private OffensivePick offensivePick;
     private ShooterPick shooterPick;
     private BreacherPick breacherPick;
     private DefensivePick defensivePick;
     private DNP doNotPick;
-    private DNP declinePick;
 
     /**
      * @param fm
@@ -41,9 +40,6 @@ public class FPA_PickList extends FragmentPagerAdapter {
         breacherPick = new BreacherPick();
         defensivePick = new DefensivePick();
         doNotPick = new DNP();
-        doNotPick.setDNP();
-        declinePick = new DNP();
-        declinePick.setDecline();
     }
 
     /**
@@ -86,9 +82,6 @@ public class FPA_PickList extends FragmentPagerAdapter {
             case 4:
                 fragment = doNotPick;
                 break;
-            case 5:
-                fragment = declinePick;
-                break;
             default:
                 assert false;
         }
@@ -119,6 +112,25 @@ public class FPA_PickList extends FragmentPagerAdapter {
         return new ArrayList<>();
     }
 
+    public ArrayList<Integer> getDNP(int position)
+    {
+        switch (position) {
+            case 0:
+                return offensivePick.getDNP();
+            case 1:
+                return shooterPick.getDNP();
+            case 2:
+                return breacherPick.getDNP();
+            case 3:
+                return defensivePick.getDNP();
+            case 4:
+                return doNotPick.getDNP();
+            default:
+                assert false;
+        }
+        return new ArrayList<>();
+    }
+
     /**
      * Updates which teams are picked or unpicked for a given fragment
      *
@@ -131,10 +143,10 @@ public class FPA_PickList extends FragmentPagerAdapter {
         switch (position)
         {
             case 0:
-                offensivePick.setPickedUnpicked(picked,unpicked);
+                offensivePick.setPickedUnpicked(picked, unpicked);
                 break;
             case 1:
-                shooterPick.setPickedUnpicked(picked,unpicked);
+                shooterPick.setPickedUnpicked(picked, unpicked);
                 break;
             case 2:
                 breacherPick.setPickedUnpicked(picked, unpicked);
@@ -146,4 +158,26 @@ public class FPA_PickList extends FragmentPagerAdapter {
                 assert false;
         }
     }
+
+    public void setDnpUndnp(int position, ArrayList<Integer> dnp, ArrayList<Integer> undnp)
+    {
+        switch (position)
+        {
+            case 0:
+                offensivePick.setDnpUndnp(dnp, undnp);
+                break;
+            case 1:
+                shooterPick.setDnpUndnp(dnp, undnp);
+                break;
+            case 2:
+                breacherPick.setDnpUndnp(dnp, undnp);
+                break;
+            case 3:
+                defensivePick.setDnpUndnp(dnp, undnp);
+                break;
+            default:
+                assert false;
+        }
+    }
+
 }
