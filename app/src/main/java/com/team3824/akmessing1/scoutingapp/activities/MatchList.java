@@ -91,7 +91,7 @@ public class MatchList extends Activity {
                         if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
                             intent = new Intent(MatchList.this, MatchScouting.class);
                         } else if (nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
-                            intent = new Intent(MatchList.this, MatchScouting.class);
+                            intent = new Intent(MatchList.this, SuperScouting.class);
                         }
                         intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
                         startActivity(intent);

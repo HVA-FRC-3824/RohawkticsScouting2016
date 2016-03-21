@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp.list_items;
+package com.team3824.akmessing1.scoutingapp.list_items.event_list_items;
 
 public class ELI_Points {
     public int mRank, mTeamNumber, mTotalPoints, mDefensePoints, mHighPoints, mLowPoints, mAutoPoints,

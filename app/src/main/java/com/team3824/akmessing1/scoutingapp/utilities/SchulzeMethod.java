@@ -65,8 +65,9 @@ class SchulzeMethod {
         */
         JSONArray jsonArray = null;
         for (matchCursor.moveToFirst(); !matchCursor.isAfterLast(); matchCursor.moveToNext()) {
-
             String line = matchCursor.getString(matchCursor.getColumnIndex(key));
+            if(line == null || line.length() == 0)
+                continue;
             try {
                 jsonArray = new JSONArray(line);
                 for (int i = 0; i < jsonArray.length(); i++) {

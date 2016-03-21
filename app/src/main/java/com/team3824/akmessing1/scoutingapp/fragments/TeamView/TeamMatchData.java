@@ -15,7 +15,7 @@ import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Points;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Points;
 
 /**
  * The fragment for the team view which shows match data statistics in a tabular format.

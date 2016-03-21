@@ -206,7 +206,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 new String[]{String.valueOf(teamNum)}, // d. selections args
                 null, // e. group by
                 null, // f. having
-                null, // g. order by
+                KEY_MATCH_NUMBER, // g. order by
                 null); // h. limit
         if (cursor != null)
             cursor.moveToFirst();
@@ -322,7 +322,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 new String[]{String.valueOf(teamNumber)}, // d. selections args
                 null, // e. group by
                 null, // f. having
-                null, // g. order by
+                KEY_MATCH_NUMBER, // g. order by
                 null); // h. limit
         if (cursor != null)
             cursor.moveToFirst();
@@ -371,7 +371,7 @@ public class MatchScoutDB extends SQLiteOpenHelper {
                 null, // d. selections args
                 null, // e. group by
                 null, // f. having
-                null, // g. order by
+                KEY_MATCH_NUMBER, // g. order by
                 null); // h. limit
         if (cursor != null)
             cursor.moveToFirst();

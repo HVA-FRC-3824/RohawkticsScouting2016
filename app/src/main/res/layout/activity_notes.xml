@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.team3824.akmessing1.scoutingapp.views.CustomHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/header"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radio_group"
+        android:checkedButton="@+id/radio_team_numbers"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@id/radio_team_numbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Team Numbers" />
+
+        <RadioButton
+            android:id="@+id/radio_match_numbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Match Numbers" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/search"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".1"
+            android:id="@+id/search_button"
+            android:src="@drawable/search"/>
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".1"
+            android:id="@+id/clear_button"
+            android:src="@drawable/ic_highlight_off_black_24dp"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+</LinearLayout>

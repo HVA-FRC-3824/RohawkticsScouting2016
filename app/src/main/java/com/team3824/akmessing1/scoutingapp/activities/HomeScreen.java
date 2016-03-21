@@ -128,6 +128,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.eliminationMatches_button);
                 setupButton(R.id.viewEvent_button);
+                setupButton(R.id.viewNotes_button);
                 setupButton(R.id.feedback_button);
                 if (bluetoothAdapter != null) {
                     setupButton(R.id.syncDriveTeam_button);
@@ -148,6 +149,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 setupButton(R.id.viewMatch_button);
                 setupButton(R.id.eliminationMatches_button);
                 setupButton(R.id.viewEvent_button);
+                setupButton(R.id.viewNotes_button);
                 setupButton(R.id.viewPickList_button);
                 if(bluetoothAdapter != null) {
                     setupButton(R.id.syncStrategy_button);
@@ -290,6 +292,10 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             case R.id.viewEvent_button:
                 intent = new Intent(this, EventView.class);
+                startActivity(intent);
+                break;
+            case R.id.viewNotes_button:
+                intent = new Intent(this, Notes.class);
                 startActivity(intent);
                 break;
             case R.id.viewPickList_button:

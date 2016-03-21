@@ -115,14 +115,18 @@
             android:name=".activities.PictureTransfer"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/jpeg" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.EliminationMatchList"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.Notes"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

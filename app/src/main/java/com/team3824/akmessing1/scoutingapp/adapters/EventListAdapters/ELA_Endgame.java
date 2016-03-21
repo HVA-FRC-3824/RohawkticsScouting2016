@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Endgame;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Endgame;
 
 import java.util.ArrayList;
 

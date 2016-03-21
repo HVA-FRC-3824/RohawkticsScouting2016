@@ -2,7 +2,6 @@ package com.team3824.akmessing1.scoutingapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,14 +21,14 @@ import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Indivi
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Points;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Shot;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Qualitative;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Auto;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Defenses;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Endgame;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Fouls;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_IndividualDefense;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Points;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Shots;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Qualitative;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Auto;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Defenses;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Endgame;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Fouls;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_IndividualDefense;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Points;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Shots;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 

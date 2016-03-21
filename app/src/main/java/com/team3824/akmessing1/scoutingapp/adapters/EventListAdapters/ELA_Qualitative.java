@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.list_items.ELI_Qualitative;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Qualitative;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ELA_Qualitative extends ArrayAdapter<ELI_Qualitative> {
             textView.setText("Driver Control");
         } else {
             textView = (TextView) convertView.findViewById(R.id.event_rank);
-            textView.setText(String.valueOf(position+1));
+            textView.setText(String.valueOf(position));
             textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText(String.valueOf(team.mTeamNumber));
             textView = (TextView) convertView.findViewById(R.id.event_evasiveness);
