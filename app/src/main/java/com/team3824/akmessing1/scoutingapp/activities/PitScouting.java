@@ -362,7 +362,7 @@ public class PitScouting extends Activity {
             ScoutMap data = maps[0];
 
             // Change picture filename to use event id and team number
-            String picture_filename = data.get(Constants.Pit_Inputs.PIT_ROBOT_PICTURE).getString();
+            String picture_filename = data.getString(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
             File picture = new File(getFilesDir(), picture_filename);
             if (picture.exists()) {
                 String newPathName = String.format("%s_%d.jpg", eventId, teamNumber);

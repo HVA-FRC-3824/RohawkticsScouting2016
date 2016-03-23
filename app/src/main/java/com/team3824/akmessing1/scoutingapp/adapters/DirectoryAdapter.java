@@ -1,8 +1,14 @@
 package com.team3824.akmessing1.scoutingapp.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Environment;
@@ -12,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,7 +40,6 @@ import java.util.ArrayList;
  * Adapter that sets up the list view in the file view with the files in the directory
  *
  * @author Andrew Messing
- * @version
  */
 public class DirectoryAdapter extends ArrayAdapter<String> {
 
@@ -41,7 +47,6 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
 
     private final int KB = 1024;
     private FileManager fileManager;
-    private ThumbnailCreator thumbnailCreator;
     private ArrayList<String> directory;
     private Context context;
     private Activity activity;
@@ -50,7 +55,7 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
     /**
      * @param c
      * @param objects
-     * @param fm       The file mangager
+     * @param fm      The file mangager
      */
     public DirectoryAdapter(Context c, ArrayList<String> objects, FileManager fm) {
         super(c, R.layout.list_item_file, objects);
@@ -59,13 +64,11 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
         directory = objects;
     }
 
-    public void setNfcAdapter(NfcAdapter n)
-    {
+    public void setNfcAdapter(NfcAdapter n) {
         nfcAdapter = n;
     }
 
-    public void setActivity(Activity a)
-    {
+    public void setActivity(Activity a) {
         activity = a;
     }
 
@@ -92,6 +95,8 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
      * @param newDirectory List of the filenames in the new directory
      */
     public void updateDirectory(ArrayList<String> newDirectory) {
+        clear();
+        addAll(newDirectory);
         directory = newDirectory;
         notifyDataSetChanged();
     }
@@ -106,15 +111,6 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
         return "";
     }
 
-    /**
-     * Stops the thumbnail creator thread
-     */
-    public void stopThumbnailThread() {
-        if (thumbnailCreator != null) {
-            thumbnailCreator.setCancelThumbnails(true);
-            thumbnailCreator = null;
-        }
-    }
 
     /**
      * @param position
@@ -143,9 +139,6 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
         TextView bottomView = (TextView) convertView.findViewById(R.id.bottom_view);
         ImageView icon = (ImageView) convertView.findViewById(R.id.row_image);
 
-        if (thumbnailCreator == null)
-            thumbnailCreator = new ThumbnailCreator(100, 100);
-
         if (file != null && file.isFile()) {
             String ext = file.toString();
             String sub_ext = ext.substring(ext.lastIndexOf(".") + 1);
@@ -155,76 +148,47 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
     		*/
             if (sub_ext.equalsIgnoreCase("pdf")) {
                 icon.setImageResource(R.drawable.pdf);
-
-            } else if (sub_ext.equalsIgnoreCase("mp3") ||
-                    sub_ext.equalsIgnoreCase("wma") ||
-                    sub_ext.equalsIgnoreCase("m4a") ||
-                    sub_ext.equalsIgnoreCase("m4p")) {
-
+            } else if (sub_ext.equalsIgnoreCase("mp3") || sub_ext.equalsIgnoreCase("wma") ||
+                    sub_ext.equalsIgnoreCase("m4a") || sub_ext.equalsIgnoreCase("m4p")) {
                 icon.setImageResource(R.drawable.music);
-
-            } else if (sub_ext.equalsIgnoreCase("png") ||
-                    sub_ext.equalsIgnoreCase("jpg") ||
-                    sub_ext.equalsIgnoreCase("jpeg") ||
-                    sub_ext.equalsIgnoreCase("gif") ||
+            } else if (sub_ext.equalsIgnoreCase("png") || sub_ext.equalsIgnoreCase("jpg") ||
+                    sub_ext.equalsIgnoreCase("jpeg") || sub_ext.equalsIgnoreCase("gif") ||
                     sub_ext.equalsIgnoreCase("tiff")) {
-
                 if (file.length() != 0) {
-                    Bitmap thumb = thumbnailCreator.isBitmapCached(file.getPath());
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(file.getAbsolutePath()), 100, 100);
+                    icon.setImageBitmap(thumbnail);
+                    if(activity != null) {
+                        icon.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                LayoutInflater inflater = activity.getLayoutInflater();
+                                View view = inflater.inflate(R.layout.dialog_preview_image, null);
+                                ImageView image = (ImageView) view.findViewById(R.id.preview_image);
+                                image.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+                                builder.setView(view);
+                                builder.show();
 
-                    if (thumb == null) {
-                        final Handler handle = new Handler(new Handler.Callback() {
-                            public boolean handleMessage(Message msg) {
-                                notifyDataSetChanged();
-
-                                return true;
                             }
                         });
-
-                        thumbnailCreator.createNewThumbnail(directory, fileManager.getCurrentDir(), handle);
-
-                        if (!thumbnailCreator.isAlive())
-                            thumbnailCreator.start();
-
-                    } else {
-                        icon.setImageBitmap(thumb);
                     }
-
                 } else {
                     icon.setImageResource(R.drawable.image);
                 }
-
-            } else if (sub_ext.equalsIgnoreCase("zip") ||
-                    sub_ext.equalsIgnoreCase("gzip") ||
+            } else if (sub_ext.equalsIgnoreCase("zip") || sub_ext.equalsIgnoreCase("gzip") ||
                     sub_ext.equalsIgnoreCase("gz")) {
-
                 icon.setImageResource(R.drawable.zip);
-
-            } else if (sub_ext.equalsIgnoreCase("m4v") ||
-                    sub_ext.equalsIgnoreCase("wmv") ||
-                    sub_ext.equalsIgnoreCase("3gp") ||
-                    sub_ext.equalsIgnoreCase("mp4")) {
-
+            } else if (sub_ext.equalsIgnoreCase("m4v") || sub_ext.equalsIgnoreCase("wmv") ||
+                    sub_ext.equalsIgnoreCase("3gp") || sub_ext.equalsIgnoreCase("mp4")) {
                 icon.setImageResource(R.drawable.movies);
-
-            } else if (sub_ext.equalsIgnoreCase("doc") ||
-                    sub_ext.equalsIgnoreCase("docx")) {
-
+            } else if (sub_ext.equalsIgnoreCase("doc") || sub_ext.equalsIgnoreCase("docx")) {
                 icon.setImageResource(R.drawable.word);
-
-            } else if (sub_ext.equalsIgnoreCase("xls") ||
-                    sub_ext.equalsIgnoreCase("xlsx")) {
-
+            } else if (sub_ext.equalsIgnoreCase("xls") || sub_ext.equalsIgnoreCase("xlsx")) {
                 icon.setImageResource(R.drawable.excel);
-
-            } else if (sub_ext.equalsIgnoreCase("ppt") ||
-                    sub_ext.equalsIgnoreCase("pptx")) {
-
+            } else if (sub_ext.equalsIgnoreCase("ppt") || sub_ext.equalsIgnoreCase("pptx")) {
                 icon.setImageResource(R.drawable.ppt);
-
             } else if (sub_ext.equalsIgnoreCase("html")) {
                 icon.setImageResource(R.drawable.html32);
-
             } else if (sub_ext.equalsIgnoreCase("xml")) {
                 icon.setImageResource(R.drawable.xml32);
 
@@ -237,6 +201,8 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
             } else if (sub_ext.equalsIgnoreCase("jar")) {
                 icon.setImageResource(R.drawable.jar32);
 
+            } else if (sub_ext.equalsIgnoreCase("txt")) {
+                icon.setImageResource(R.drawable.text);
             } else {
                 icon.setImageResource(R.drawable.text);
             }
@@ -287,24 +253,23 @@ public class DirectoryAdapter extends ArrayAdapter<String> {
             }
         });
 
-        if(nfcAdapter != null)
-        {
-            Button button = (Button)convertView.findViewById(R.id.send);
+        if (nfcAdapter != null) {
+            Button button = (Button) convertView.findViewById(R.id.send);
             button.setVisibility(View.VISIBLE);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Attempting to send");
                     File fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                    File transferFile = new File(fileDirectory,file.getName());
+                    File transferFile = new File(fileDirectory, file.getName());
                     transferFile.setReadable(true, false);
                     try {
-                        Utilities.copyFile(new FileInputStream(file),new FileOutputStream(transferFile));
+                        Utilities.copyFile(new FileInputStream(file), new FileOutputStream(transferFile));
                         nfcAdapter.setBeamPushUris(
                                 new Uri[]{Uri.fromFile(transferFile)}, activity);
-                        Toast.makeText(context,"Sending Picture via NFC beam",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Sending Picture via NFC beam", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
-                        Log.d(TAG,e.getMessage());
+                        Log.d(TAG, e.getMessage());
                     }
                 }
             });

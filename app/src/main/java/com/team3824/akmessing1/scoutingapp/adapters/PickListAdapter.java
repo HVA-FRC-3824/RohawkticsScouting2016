@@ -1,5 +1,7 @@
 package com.team3824.akmessing1.scoutingapp.adapters;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,6 +39,7 @@ public class PickListAdapter extends ArrayAdapter<Team> {
     private final String TAG = "PickListAdapter";
 
     private Context context;
+    private Activity activity;
     private StatsDB statsDB;
     private Comparator<Team> comparator;
     private ArrayList<Team> teams;
@@ -69,6 +72,11 @@ public class PickListAdapter extends ArrayAdapter<Team> {
         notifyDataSetChanged();
         this.statsDB = statsDB;
         this.comparator = comparator;
+    }
+
+    public void setActivity(Activity a)
+    {
+        activity = a;
     }
 
     /**
@@ -147,16 +155,32 @@ public class PickListAdapter extends ArrayAdapter<Team> {
             });
 
             // Set up thumbnail
-            //TODO: change to be based on the event id and the team number
-            //TODO: use thumbnail creator?
-            ScoutValue robotPicture = t.getMapElement(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-            if (robotPicture != null) {
-                String imagePath = robotPicture.getString();
-                if (!imagePath.equals("")) {
-                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + imagePath),
-                            64, 64);
-                    imageView.setImageBitmap(thumbnail);
+            if(t.containsMapElement(Constants.Pit_Inputs.PIT_ROBOT_PICTURE)) {
+                ScoutValue robotPicture = t.getMapElement(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
+                if (robotPicture != null) {
+                    final String imagePath = robotPicture.getString();
+                    if (imagePath != null && !imagePath.equals("")) {
+                        Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + imagePath),
+                                100, 100);
+                        imageView.setImageBitmap(thumbnail);
+
+                        if(activity != null) {
+                            imageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                                    LayoutInflater inflater = activity.getLayoutInflater();
+                                    View view = inflater.inflate(R.layout.dialog_preview_image, null);
+                                    ImageView image = (ImageView) view.findViewById(R.id.preview_image);
+                                    image.setImageBitmap(BitmapFactory.decodeFile(context.getFilesDir().getAbsolutePath() + "/" + imagePath));
+                                    builder.setView(view);
+                                    builder.show();
+
+                                }
+                            });
+                        }
+                    }
                 }
             }
 

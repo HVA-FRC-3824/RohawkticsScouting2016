@@ -66,7 +66,7 @@ public class PitRobotPicture extends ScoutFragment implements View.OnClickListen
                     }
                 }
             }
-            restoreContentsFromMap(valueMap, (ViewGroup) view);
+            //restoreContentsFromMap(valueMap, (ViewGroup) view);
         }
 
         mButton.setOnClickListener(this);

@@ -52,6 +52,7 @@ public final class FileView extends Activity implements AdapterView.OnItemSelect
 
         directoryAdapter = new DirectoryAdapter(this, new ArrayList<String>(fileManager.setHomeDir
                 (getFilesDir().getPath())),fileManager);
+        directoryAdapter.setActivity(this);
 
         ListView listView = (ListView)findViewById(R.id.directory);
         listView.setAdapter(directoryAdapter);
@@ -86,7 +87,6 @@ public final class FileView extends Activity implements AdapterView.OnItemSelect
         // Directory selected
         if (file.isDirectory()) {
             if(file.canRead()) {
-                directoryAdapter.stopThumbnailThread();
                 directoryAdapter.updateDirectory(fileManager.getNextDir(item, false));
 
             } else {
@@ -119,7 +119,6 @@ public final class FileView extends Activity implements AdapterView.OnItemSelect
                 picIntent.setAction(android.content.Intent.ACTION_VIEW);
                 picIntent.setDataAndType(Uri.fromFile(file), "image/*");
                 startActivity(picIntent);
-
             }
         }
 

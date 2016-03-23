@@ -175,6 +175,7 @@ public class ScoutPick extends ScoutFragment implements DragSortListView.DropLis
         }
 
         adapter = new PickListAdapter(getContext(), teams, statsDB, compare);
+        adapter.setActivity(getActivity());
 
         list.setAdapter(adapter);
 

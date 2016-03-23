@@ -240,44 +240,36 @@ public class TeamMatchData extends Fragment {
             ((TextView) linearLayout.findViewById(R.id.event_teleop_percentage)).setText("0.0%");
         }
 
-        /*
-        if(hasPlayed && statsMap.containsKey(Constants.DEFENSE_ABILITY_RANKING)) {
-            String ranking = statsMap.get(Constants.DEFENSE_ABILITY_RANKING).getString();
-            switch(ranking.charAt(ranking.length()-1))
-            {
-                case '1':
-                    ranking += "st";
-                    break;
-                case '2':
-                    ranking += "nd";
-                    break;
-                case '3':
-                    ranking += "rd";
-                    break;
-                default:
-                    ranking += "th";
-                    break;
-            }
-            ((TextView) view.findViewById(R.id.defense_ability)).setText(ranking);
-            ranking = statsMap.getString(Constants.DRIVER_ABILITY_RANKING);
-            switch(ranking.charAt(ranking.length()-1))
-            {
-                case '1':
-                    ranking += "st";
-                    break;
-                case '2':
-                    ranking += "nd";
-                    break;
-                case '3':
-                    ranking += "rd";
-                    break;
-                default:
-                    ranking += "th";
-                    break;
-            }
-            ((TextView) view.findViewById(R.id.driver_ability)).setText(ranking);
+        // Setup qualitative header row
+        linearLayout = (LinearLayout)view.findViewById(R.id.qualitative_header);
+        linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
+        linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
+        ((TextView)linearLayout.findViewById(R.id.event_evasiveness)).setText("Evasiveness");
+        ((TextView)linearLayout.findViewById(R.id.event_blocking)).setText("Blocking");
+        ((TextView)linearLayout.findViewById(R.id.event_driver_control)).setText("Driver Control");
+        ((TextView)linearLayout.findViewById(R.id.event_pushing)).setText("Pushing");
+        ((TextView)linearLayout.findViewById(R.id.event_speed)).setText("Speed");
+
+        // Set qualitative row
+        linearLayout = (LinearLayout)view.findViewById(R.id.qualitative);
+        linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
+        linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
+        if(hasPlayed)
+        {
+            ((TextView) linearLayout.findViewById(R.id.event_evasiveness)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.EVASION_ABILITY_RANKING));
+            ((TextView) linearLayout.findViewById(R.id.event_blocking)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.BLOCKING_ABILITY_RANKING));
+            ((TextView) linearLayout.findViewById(R.id.event_driver_control)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.DRIVER_CONTROL_RANKING));
+            ((TextView) linearLayout.findViewById(R.id.event_pushing)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.PUSHING_ABILITY_RANKING));
+            ((TextView) linearLayout.findViewById(R.id.event_speed)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.SPEED_RANKING));
         }
-        */
+        else {
+            ((TextView) linearLayout.findViewById(R.id.event_evasiveness)).setText("N/A");
+            ((TextView) linearLayout.findViewById(R.id.event_blocking)).setText("N/A");
+            ((TextView) linearLayout.findViewById(R.id.event_driver_control)).setText("N/A");
+            ((TextView) linearLayout.findViewById(R.id.event_pushing)).setText("N/A");
+            ((TextView) linearLayout.findViewById(R.id.event_speed)).setText("N/A");
+        }
+
 
 
         // Setup endgame header row
@@ -371,5 +363,26 @@ public class TeamMatchData extends Fragment {
             ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
         }
+    }
+
+    String getRankingText(ScoutMap statsMap, String key)
+    {
+        String ranking = statsMap.getString(key);
+        switch(ranking.charAt(ranking.length()-1))
+        {
+            case '1':
+                ranking += "st";
+                break;
+            case '2':
+                ranking += "nd";
+                break;
+            case '3':
+                ranking += "rd";
+                break;
+            default:
+                ranking += "th";
+                break;
+        }
+        return ranking;
     }
 }

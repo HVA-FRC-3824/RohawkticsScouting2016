@@ -267,19 +267,22 @@ public class PictureTransfer extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        Uri[] uris = new Uri[filenames.size()];
-        File fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        for(int i = 0; i < filenames.size(); i++)
-        {
-            File file = new File(fileManager.getCurrentDir() + "/" + filenames.get(i));
-            File transferFile = new File(fileDirectory, filenames.get(i));
-            transferFile.setReadable(true, false);
-            try {
-                Utilities.copyFile(new FileInputStream(file), new FileOutputStream(transferFile));
-            } catch (IOException e) {
-            Log.d(TAG,e.getMessage());
+        if(filenames.size() > 0) {
+            Uri[] uris = new Uri[filenames.size()];
+            File fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            for (int i = 0; i < filenames.size(); i++) {
+                File file = new File(fileManager.getCurrentDir() + "/" + filenames.get(i));
+                File transferFile = new File(fileDirectory, filenames.get(i));
+                transferFile.setReadable(true, false);
+                try {
+                    Utilities.copyFile(new FileInputStream(file), new FileOutputStream(transferFile));
+                    uris[i] = Uri.fromFile(transferFile);
+                } catch (IOException e) {
+                    Log.d(TAG, e.getMessage());
+                }
             }
+            Toast.makeText(this,"Sending All Pictures via NFC beam",Toast.LENGTH_SHORT).show();
+            nfcAdapter.setBeamPushUris(uris, this);
         }
-        nfcAdapter.setBeamPushUris(uris, this);
     }
 }
