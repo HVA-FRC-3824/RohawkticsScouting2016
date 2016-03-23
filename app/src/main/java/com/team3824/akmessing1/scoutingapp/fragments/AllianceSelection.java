@@ -34,15 +34,17 @@ import java.util.ArrayList;
  * @author Andrew Messing
  * @version
  */
-public class AllianceSelection extends Fragment implements AdapterView.OnItemSelectedListener, OnClickListener {
+public class AllianceSelection extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private final String TAG = "AllianceSelection";
     private Spinner[] spinners;
     private int[] ids;
     private AllianceSelectionAdapter[] adapters;
     private String[] previousTeam;
-    private File saveFile;
+    private File bracketSaveFile;
+    private File alliancesSaveFile;
     private JSONArray json = null;
+    private boolean saved = false;
 
     public AllianceSelection() {
     }
@@ -98,10 +100,12 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
         PitScoutDB pitScoutDB = new PitScoutDB(context, eventId);
         ArrayList<Integer> teamList = pitScoutDB.getTeamNumbers();
 
-        saveFile = new File(getContext().getFilesDir(), String.format("%s_alliance_selection.txt", eventId));
-        if (saveFile.exists()) {
+        bracketSaveFile = new File(context.getFilesDir(), String.format("%s_bracket_results.txt", eventId));
+
+        alliancesSaveFile = new File(getContext().getFilesDir(), String.format("%s_alliance_selection.txt", eventId));
+        if (alliancesSaveFile.exists()) {
             try {
-                FileInputStream saveFIS = new FileInputStream(saveFile);
+                FileInputStream saveFIS = new FileInputStream(alliancesSaveFile);
                 String jsonText = "";
                 char current;
                 while (saveFIS.available() > 0) {
@@ -139,9 +143,6 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
                 }
             }
         }
-
-        Button save = (Button) view.findViewById(R.id.save);
-        save.setOnClickListener(this);
 
         return view;
     }
@@ -186,6 +187,7 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
         }
 
         previousTeam[index] = teamSelected;
+        save();
     }
 
     @Override
@@ -193,37 +195,47 @@ public class AllianceSelection extends Fragment implements AdapterView.OnItemSel
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.save:
-                json = new JSONArray();
-                for (int i = 0; i < spinners.length; i++) {
-                    String spinnerValue = String.valueOf(spinners[i].getSelectedItem());
-                    json.put(spinnerValue);
-                }
-                String text = json.toString();
-                Log.d(TAG, text);
-                if (saveFile.exists()) {
-                    saveFile.delete();
-                    try {
-                        saveFile.createNewFile();
-                    } catch (IOException e) {
-                        Log.d(TAG, e.getMessage());
-                    }
-                }
-                try {
-                    FileOutputStream saveFOS = new FileOutputStream(saveFile);
-                    saveFOS.write(text.getBytes());
-                    saveFOS.close();
-                } catch (FileNotFoundException e) {
-                    Log.d(TAG, e.getMessage());
-                } catch (IOException e) {
-                    Log.d(TAG, e.getMessage());
-                }
-                break;
-            default:
-                assert false;
+    public void save()
+    {
+        saved = true;
+        json = new JSONArray();
+        for (int i = 0; i < spinners.length; i++) {
+            String spinnerValue = String.valueOf(spinners[i].getSelectedItem());
+            json.put(spinnerValue);
         }
+        String text = json.toString();
+        Log.d(TAG, text);
+        if (alliancesSaveFile.exists()) {
+            alliancesSaveFile.delete();
+            try {
+                alliancesSaveFile.createNewFile();
+            } catch (IOException e) {
+                Log.d(TAG, e.getMessage());
+            }
+        }
+        try {
+            FileOutputStream saveFOS = new FileOutputStream(alliancesSaveFile);
+            saveFOS.write(text.getBytes());
+            saveFOS.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+        }
+
+        if(bracketSaveFile.exists())
+        {
+            bracketSaveFile.delete();
+        }
+    }
+
+    public boolean getSaved()
+    {
+        return saved;
+    }
+
+    public void resetSaved()
+    {
+        saved = false;
     }
 }

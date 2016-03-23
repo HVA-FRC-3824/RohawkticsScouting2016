@@ -7,13 +7,20 @@ import android.support.v13.app.FragmentPagerAdapter;
 import com.team3824.akmessing1.scoutingapp.fragments.AllianceSelection;
 import com.team3824.akmessing1.scoutingapp.fragments.BracketResults;
 
+import java.util.ArrayList;
+
 public class FPA_EliminationMatchList extends FragmentPagerAdapter{
 
     private String tabTitles[] = new String[]{"Alliance Selection", "Bracket Results"};
 
+    AllianceSelection allianceSelection;
+    BracketResults bracketResults;
+
     public FPA_EliminationMatchList(FragmentManager fm)
     {
         super(fm);
+        allianceSelection = new AllianceSelection();
+        bracketResults = new BracketResults();
     }
 
     /**
@@ -35,19 +42,24 @@ public class FPA_EliminationMatchList extends FragmentPagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
         switch (position)
         {
             case 0:
-                fragment = new AllianceSelection();
-                break;
+                return allianceSelection;
             case 1:
-                fragment = new BracketResults();
-                break;
+                return bracketResults;
             default:
                 assert false;
         }
-        return fragment;
+        return null;
+    }
+
+    public void moveAlliances()
+    {
+        if(allianceSelection.getSaved()) {
+            bracketResults.setAlliances();
+            allianceSelection.resetSaved();
+        }
     }
 
 }

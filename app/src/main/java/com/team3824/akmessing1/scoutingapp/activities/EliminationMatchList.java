@@ -10,6 +10,8 @@ import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_EliminationMatchList;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
+import java.util.ArrayList;
+
 /**
  * Activity which contains Alliance Selection Fragments and Bracket Results fragments in order to set
  * up Elimination Match Views.
@@ -18,6 +20,8 @@ import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
  * @version
  */
 public class EliminationMatchList extends Activity implements ViewPager.OnPageChangeListener{
+
+    FPA_EliminationMatchList adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +32,7 @@ public class EliminationMatchList extends Activity implements ViewPager.OnPageCh
         customHeader.removeHome();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        FPA_EliminationMatchList adapter = new FPA_EliminationMatchList(getFragmentManager());
+        adapter = new FPA_EliminationMatchList(getFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(this);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -49,7 +53,7 @@ public class EliminationMatchList extends Activity implements ViewPager.OnPageCh
         // Move from 0 to 1
         if(position == 1)
         {
-
+            adapter.moveAlliances();
         }
 
     }

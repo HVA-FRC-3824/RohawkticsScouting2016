@@ -25,4 +25,9 @@ public class BracketResultsAdapter extends ArrayAdapter<String> {
         alliances.add(s);
         notifyDataSetChanged();
     }
+
+    public boolean contains(String s)
+    {
+        return alliances.contains(s);
+    }
 }
