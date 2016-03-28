@@ -188,7 +188,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
 
                 setupButton(R.id.database_button);
                 setupButton(R.id.file_button);
-                setupButton(R.id.upload_download_button);
+                //setupButton(R.id.upload_download_button);
                 setupButton(R.id.teamlist_button);
 
                 if (bluetoothAdapter != null) {
