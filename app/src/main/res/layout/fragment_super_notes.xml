@@ -10,4 +10,11 @@
         android:id="@+id/super_notes"
         app:label="Notes:"
         app:key="super_notes"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:text="Keywords:\ndefense\nblocking\nhigh goal\nlow goal\npush\nbroke\nflip\nbattery" />
 </LinearLayout>

@@ -271,47 +271,48 @@ public class TeamMatchData extends Fragment {
         }
 
 
-
         // Setup endgame header row
-        linearLayout = (LinearLayout)view.findViewById(R.id.endgame_header);
+        linearLayout = (LinearLayout) view.findViewById(R.id.endgame_header);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
-        ((TextView)linearLayout.findViewById(R.id.event_challenge)).setText("Challenge");
-        ((TextView)linearLayout.findViewById(R.id.event_scale)).setText("Scale");
+        ((TextView) linearLayout.findViewById(R.id.event_failed_challenge)).setText("Failed Challenge");
+        ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText("Challenge");
+        ((TextView) linearLayout.findViewById(R.id.event_failed_scale)).setText("Failed Scale");
+        ((TextView) linearLayout.findViewById(R.id.event_scale)).setText("Scale");
 
-        linearLayout = (LinearLayout)view.findViewById(R.id.endgame);
+        linearLayout = (LinearLayout) view.findViewById(R.id.endgame);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
-        if(hasPlayed) {
+        if (hasPlayed) {
+            ((TextView) linearLayout.findViewById(R.id.event_failed_challenge)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_FAILED_CHALLENGE)));
             ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_CHALLENGE)));
+            ((TextView) linearLayout.findViewById(R.id.event_failed_scale)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_FAILED_SCALE)));
             ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_SCALE)));
-        }
-        else
-        {
+        } else {
+            ((TextView) linearLayout.findViewById(R.id.event_failed_challenge)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText("0");
+            ((TextView) linearLayout.findViewById(R.id.event_failed_scale)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_scale)).setText("0");
         }
 
         // Setup fouls header row
-        linearLayout = (LinearLayout)view.findViewById(R.id.fouls_header);
+        linearLayout = (LinearLayout) view.findViewById(R.id.fouls_header);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
-        ((TextView)linearLayout.findViewById(R.id.event_fouls)).setText("Fouls");
-        ((TextView)linearLayout.findViewById(R.id.event_tech_fouls)).setText("Tech Fouls");
-        ((TextView)linearLayout.findViewById(R.id.event_yellow_cards)).setText("Yellow Cards");
-        ((TextView)linearLayout.findViewById(R.id.event_red_cards)).setText("Red Cards");
+        ((TextView) linearLayout.findViewById(R.id.event_fouls)).setText("Fouls");
+        ((TextView) linearLayout.findViewById(R.id.event_tech_fouls)).setText("Tech Fouls");
+        ((TextView) linearLayout.findViewById(R.id.event_yellow_cards)).setText("Yellow Cards");
+        ((TextView) linearLayout.findViewById(R.id.event_red_cards)).setText("Red Cards");
 
-        linearLayout = (LinearLayout)view.findViewById(R.id.fouls);
+        linearLayout = (LinearLayout) view.findViewById(R.id.fouls);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
         linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
-        if(hasPlayed) {
+        if (hasPlayed) {
             ((TextView) linearLayout.findViewById(R.id.event_fouls)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_FOULS)));
             ((TextView) linearLayout.findViewById(R.id.event_tech_fouls)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_TECH_FOULS)));
             ((TextView) linearLayout.findViewById(R.id.event_yellow_cards)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_YELLOW_CARDS)));
             ((TextView) linearLayout.findViewById(R.id.event_red_cards)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_RED_CARDS)));
-        }
-        else
-        {
+        } else {
             ((TextView) linearLayout.findViewById(R.id.event_fouls)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_tech_fouls)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_yellow_cards)).setText("0");
@@ -319,21 +320,19 @@ public class TeamMatchData extends Fragment {
         }
 
         //Setup Misc
-        linearLayout = (LinearLayout)view.findViewById(R.id.misc_header);
+        linearLayout = (LinearLayout) view.findViewById(R.id.misc_header);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
-        ((TextView)linearLayout.findViewById(R.id.event_teamNum)).setText("DQs");
-        ((TextView)linearLayout.findViewById(R.id.event_challenge)).setText("Didn't Show Up");
-        ((TextView)linearLayout.findViewById(R.id.event_scale)).setText("Stopped Working");
+        ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText("DQs");
+        ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText("Didn't Show Up");
+        ((TextView) linearLayout.findViewById(R.id.event_scale)).setText("Stopped Working");
 
-        linearLayout = (LinearLayout)view.findViewById(R.id.misc);
+        linearLayout = (LinearLayout) view.findViewById(R.id.misc);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
-        if(hasPlayed) {
+        if (hasPlayed) {
             ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_DQ)));
             ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_DIDNT_SHOW_UP)));
             ((TextView) linearLayout.findViewById(R.id.event_scale)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_STOPPED)));
-        }
-        else
-        {
+        } else {
             ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_scale)).setText("0");
@@ -344,32 +343,27 @@ public class TeamMatchData extends Fragment {
     }
 
 
-    private void setupDefenseRow(LinearLayout linearLayout, ScoutMap statsMap, boolean hasPlayed, int defense_index)
-    {
+    private void setupDefenseRow(LinearLayout linearLayout, ScoutMap statsMap, boolean hasPlayed, int defense_index) {
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
-        ((TextView)linearLayout.findViewById(R.id.event_teamNum)).setText(Constants.Defense_Arrays.DEFENSES_LABEL[defense_index]);
-        if(hasPlayed) {
+        ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText(Constants.Defense_Arrays.DEFENSES_LABEL[defense_index]);
+        if (hasPlayed) {
             ((TextView) linearLayout.findViewById(R.id.event_cross)).setText(statsMap.getString(Constants.Calculated_Totals.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]));
             ((TextView) linearLayout.findViewById(R.id.event_reach)).setText(statsMap.getString(Constants.Calculated_Totals.TOTAL_DEFENSES_AUTO_REACHED[defense_index]));
             ((TextView) linearLayout.findViewById(R.id.event_seen)).setText(statsMap.getString(Constants.Calculated_Totals.TOTAL_DEFENSES_SEEN[defense_index]));
             ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText(statsMap.getString(Constants.Calculated_Totals.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]));
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText((statsMap.getInt(Constants.Calculated_Totals.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]) > 0) ? statsMap.getString(Constants.Calculated_Totals.TOTAL_DEFENSES_TELEOP_TIME[defense_index]) : "-1");
-        }
-        else
-        {
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText((statsMap.getInt(Constants.Calculated_Totals.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]) > 0) ? statsMap.getString(Constants.Calculated_Totals.TOTAL_DEFENSES_TELEOP_TIME[defense_index]) : "N/A");
+        } else {
             ((TextView) linearLayout.findViewById(R.id.event_cross)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_reach)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_seen)).setText("0");
             ((TextView) linearLayout.findViewById(R.id.event_teleop_cross)).setText("0");
-            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("-1");
+            ((TextView) linearLayout.findViewById(R.id.event_time)).setText("N/A");
         }
     }
 
-    String getRankingText(ScoutMap statsMap, String key)
-    {
+    String getRankingText(ScoutMap statsMap, String key) {
         String ranking = statsMap.getString(key);
-        switch(ranking.charAt(ranking.length()-1))
-        {
+        switch (ranking.charAt(ranking.length() - 1)) {
             case '1':
                 ranking += "st";
                 break;

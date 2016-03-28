@@ -55,8 +55,12 @@ public class ELA_Endgame extends ArrayAdapter<ELI_Endgame> {
             textView.setText("Rank");
             textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText("Team Number");
+            textView = (TextView) convertView.findViewById(R.id.event_failed_challenge);
+            textView.setText("Failed Challenge");
             textView = (TextView) convertView.findViewById(R.id.event_challenge);
             textView.setText("Challenge");
+            textView = (TextView) convertView.findViewById(R.id.event_failed_scale);
+            textView.setText("Failed Scale");
             textView = (TextView) convertView.findViewById(R.id.event_scale);
             textView.setText("Scale");
         } else {
@@ -64,8 +68,12 @@ public class ELA_Endgame extends ArrayAdapter<ELI_Endgame> {
             textView.setText(String.valueOf(team.mRank));
             textView = (TextView) convertView.findViewById(R.id.event_teamNum);
             textView.setText(String.valueOf(team.mTeamNumber));
+            textView = (TextView) convertView.findViewById(R.id.event_failed_challenge);
+            textView.setText(String.valueOf(team.mFailedChallenge));
             textView = (TextView) convertView.findViewById(R.id.event_challenge);
             textView.setText(String.valueOf(team.mChallenge));
+            textView = (TextView) convertView.findViewById(R.id.event_failed_scale);
+            textView.setText(String.valueOf(team.mFailedScale));
             textView = (TextView) convertView.findViewById(R.id.event_scale);
             textView.setText(String.valueOf(team.mScale));
         }

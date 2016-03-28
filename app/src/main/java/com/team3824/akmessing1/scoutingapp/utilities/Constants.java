@@ -79,6 +79,15 @@ public interface Constants {
     // Endgame
     interface Endgame_Inputs {
         String ENDGAME_CHALLENGE_SCALE = "endgame_challenge_scale";
+
+        int ENDGAME_NOTHING = 0;
+        int ENDGAME_FAILED_CHALLENGE = 1;
+        int ENDGAME_CHALLENGE = 2;
+        int ENDGAME_FAILED_SCALE = 3;
+        int ENDGAME_SCALE =4;
+
+        String[] ENDGAME_OPTIONS = {"Nothing", "Failed Challenge", "Challenge", "Failed Scale", "Scale"};
+
     }
 
     // Post Match
@@ -177,6 +186,9 @@ public interface Constants {
 
         String[] QUALITATIVE_RANKING = {EVASION_ABILITY_RANKING, BLOCKING_ABILITY_RANKING,
                 SPEED_RANKING, PUSHING_ABILITY_RANKING, DRIVER_CONTROL_RANKING};
+
+        String[] QUALITATIVE_LABELS = {"Evasion", "Blocking",
+                "Speed", "Pushing", "Driver Control"};
     }
 
     // Totals
@@ -216,7 +228,9 @@ public interface Constants {
         String TOTAL_TELEOP_LOW_HIT = "total_teleop_low_hit";
         String TOTAL_TELEOP_LOW_MISS = "total_teleop_low_miss";
 
+        String TOTAL_FAILED_CHALLENGE = "total_failed_challenge";
         String TOTAL_CHALLENGE = "total_challenge";
+        String TOTAL_FAILED_SCALE = "total_failed_scale";
         String TOTAL_SCALE = "total_scale";
 
         String TOTAL_DQ = "total_dq";

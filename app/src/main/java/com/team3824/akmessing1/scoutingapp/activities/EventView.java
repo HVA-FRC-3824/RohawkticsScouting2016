@@ -568,7 +568,9 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
 
             if (totalMatches > -1) {
                 team.mTotalMatches = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_MATCHES));
+                team.mFailedChallenge = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_FAILED_CHALLENGE));
                 team.mChallenge = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_CHALLENGE));
+                team.mFailedScale = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_FAILED_SCALE));
                 team.mScale = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_SCALE));
             }
             teams.add(team);

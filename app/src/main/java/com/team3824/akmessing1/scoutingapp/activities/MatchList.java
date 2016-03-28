@@ -126,6 +126,7 @@ public class MatchList extends Activity {
                 switch (alliance_color) {
                     case Constants.Alliance_Colors.BLUE:
                         button.setBackgroundColor(Color.BLUE);
+                        button.setTextColor(Color.WHITE);
                         break;
                     case Constants.Alliance_Colors.RED:
                         button.setBackgroundColor(Color.RED);
