@@ -338,9 +338,13 @@ public class TeamMatchData extends Fragment {
         ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText("DQs");
         ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText("Didn't Show Up");
         ((TextView) linearLayout.findViewById(R.id.event_scale)).setText("Stopped Working");
+        linearLayout.findViewById(R.id.event_failed_challenge).setVisibility(View.GONE);
+        linearLayout.findViewById(R.id.event_failed_scale).setVisibility(View.GONE);
 
         linearLayout = (LinearLayout) view.findViewById(R.id.misc);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
+        linearLayout.findViewById(R.id.event_failed_challenge).setVisibility(View.GONE);
+        linearLayout.findViewById(R.id.event_failed_scale).setVisibility(View.GONE);
         if (hasPlayed) {
             ((TextView) linearLayout.findViewById(R.id.event_teamNum)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_DQ)));
             ((TextView) linearLayout.findViewById(R.id.event_challenge)).setText(String.valueOf(statsMap.getInt(Constants.Calculated_Totals.TOTAL_DIDNT_SHOW_UP)));
