@@ -75,6 +75,7 @@ public class TeamSchedule extends Fragment{
             final int matchNumber = matches.get(i);
             button.setText("Match " + matchNumber);
             button.setBackgroundColor(Color.BLUE);
+            button.setTextColor(Color.WHITE);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
