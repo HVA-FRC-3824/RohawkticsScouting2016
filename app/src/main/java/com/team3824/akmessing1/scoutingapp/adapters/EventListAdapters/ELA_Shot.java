@@ -69,6 +69,8 @@ public class ELA_Shot extends ArrayAdapter<ELI_Shots> {
             textView.setText("Teleop Taken");
             textView = (TextView) convertView.findViewById(R.id.event_teleop_percentage);
             textView.setText("Teleop Percentage");
+            textView = (TextView) convertView.findViewById(R.id.event_teleop_aim_time);
+            textView.setText("Teleop Aim Time");
         } else {
             textView = (TextView) convertView.findViewById(R.id.event_rank);
             textView.setText(String.valueOf(team.mRank));
@@ -79,13 +81,21 @@ public class ELA_Shot extends ArrayAdapter<ELI_Shots> {
             textView = (TextView) convertView.findViewById(R.id.event_auto_taken);
             textView.setText(String.valueOf(team.mAutoTaken));
             textView = (TextView) convertView.findViewById(R.id.event_auto_percentage);
-            textView.setText(String.valueOf(team.mAutoPercentage) + "%");
+            textView.setText(String.format("%.1f%%", team.mAutoPercentage));
             textView = (TextView) convertView.findViewById(R.id.event_teleop_made);
             textView.setText(String.valueOf(team.mTeleopMade));
             textView = (TextView) convertView.findViewById(R.id.event_teleop_taken);
             textView.setText(String.valueOf(team.mTeleopTaken));
             textView = (TextView) convertView.findViewById(R.id.event_teleop_percentage);
-            textView.setText(String.valueOf(team.mTeleopPercentage) + "%");
+            textView.setText(String.format("%.1f%%",team.mTeleopPercentage));
+            textView = (TextView) convertView.findViewById(R.id.event_teleop_aim_time);
+            if(team.mTime == 0)
+            {
+                textView.setText("N/A");
+            }
+            else {
+                textView.setText(String.format("%.1f s", team.mTime));
+            }
         }
 
         return convertView;

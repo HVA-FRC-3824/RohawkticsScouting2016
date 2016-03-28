@@ -15,7 +15,7 @@ import android.widget.Toolbar;
 
 import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.ScheduleDB;
-import com.team3824.akmessing1.scoutingapp.fragments.MatchTeamFragment;
+import com.team3824.akmessing1.scoutingapp.fragments.MatchView.MatchTeamFragment;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
 /**

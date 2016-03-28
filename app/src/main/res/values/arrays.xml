@@ -14,13 +14,15 @@
     </string-array>
     <string-array name="endGame_challenge_scale_radio">
         <item>Nothing</item>
+        <item>Failed Challenge</item>
         <item>Challenge</item>
+        <item>Failed Scale</item>
         <item>Scale</item>
     </string-array>
-    <!-- 
-    
+    <!--
+
     Break Between
-    
+
     -->
     <!-- Dropdown Values -->
     <string-array name="auto_start_position_dropdown">
@@ -31,27 +33,6 @@
         <item>Defense 5</item>
         <item>Spybox</item>
         <item>Secret Passage</item>
-    </string-array>
-
-
-    <string-array name="event_view_options">
-        <item>Points</item>
-        <item>Defenses</item>
-        <item>Low Bar</item>
-	    <item>Portcullis</item>
-        <item>Cheval de Frise</item>
-        <item>Moat</item>
-        <item>Ramparts</item>
-        <item>Drawbridge</item>
-        <item>Sally Port</item>
-        <item>Rock Wall</item>
-	    <item>Rough Terrain</item>
-        <item>High Goal</item>
-        <item>Low Goal</item>
-        <item>Qualitative</item>
-        <item>Auto</item>
-        <item>Endgame</item>
-        <item>Fouls</item>
     </string-array>
 
     <string-array name="defense_type_dropdown">

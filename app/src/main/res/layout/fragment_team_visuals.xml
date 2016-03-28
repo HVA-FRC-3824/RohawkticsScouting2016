@@ -1,24 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/robotPictureLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Robot Picture"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
 
         <ImageView
+            android:id="@+id/robotPicture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/robotPicture"
             android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Defenses"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <com.github.mikephil.charting.charts.RadarChart
                 android:id="@+id/radar_chart"
@@ -26,121 +44,220 @@
                 android:layout_height="260dp"
                 android:layout_margin="10dp"
                 android:padding="10dp" />
+
             <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/seen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Seen" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/started"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Started in front of" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/reach"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Reached" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Auto Crossed" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/teleop"
-                    android:text="Teleop Crossed" />
-                <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:text="Teleop Crossed" />
+
+                <RadioButton
                     android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Time" />
             </RadioGroup>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Shooting"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/line_chart"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
-                android:layout_weight=".8"
                 android:layout_margin="10dp"
+                android:layout_weight=".8"
                 android:padding="10dp" />
+
             <RadioGroup
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".2"
                 android:orientation="vertical">
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/auto_high_made"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Auto High Made" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/auto_high_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Auto High Percentage" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/auto_low_made"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Auto Low Made" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/auto_low_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Auto Low Percent" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/teleop_high_made"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Teleop High Made" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/teleop_high_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Teleop High Percentage" />
+
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
                     android:id="@+id/teleop_low_made"
-                    android:text="Teleop Low Made" />
-                <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:text="Teleop Low Made" />
+
+                <RadioButton
                     android:id="@+id/teleop_low_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:text="Teleop Low Percent" />
             </RadioGroup>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Shooting Locations"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomShotHeatmap
+                android:id="@+id/shot_heatmap"
+                android:layout_width="300dp"
+                android:layout_height="400dp" />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+                <RadioButton
+                    android:id="@+id/high_goal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="High Goal" />
+
+                <RadioButton
+                    android:id="@+id/low_goal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Low Goal" />
+
+                <RadioButton
+                    android:id="@+id/both"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Both" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Intake"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
+
+        <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomIntakeHeatmap
+            android:id="@+id/intake_heatmap"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Endgame"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="40sp" />
+
         <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/bar_chart"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:id="@+id/bar_chart"/>
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 </ScrollView>

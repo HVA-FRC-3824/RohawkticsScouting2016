@@ -171,7 +171,7 @@ public class CustomDefense extends CustomScoutView implements View.OnClickListen
                         String string1 = jsonArray.getString(whichCross);
                         timeRadios.check(Arrays.asList(Constants.Teleop_Inputs.TELEOP_DEFENSE_TIMES).indexOf(string1));
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "Error: ", e);
                     }
                 }
                 else

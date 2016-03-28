@@ -21,6 +21,14 @@
         android:layout_marginBottom="8dp"
         android:background="@color/white" />
 
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_view_spinner_sub"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/white" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

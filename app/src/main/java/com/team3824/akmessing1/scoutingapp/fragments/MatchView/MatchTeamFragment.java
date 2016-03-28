@@ -1,4 +1,4 @@
-package com.team3824.akmessing1.scoutingapp.fragments;
+package com.team3824.akmessing1.scoutingapp.fragments.MatchView;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -195,6 +195,102 @@ public class MatchTeamFragment extends Fragment {
 
                 textView.setText(String.format("%.2f (%.2f%%)", mTeleopLowAverage, mTeleopLowAccuracy));
 
+                textView = (TextView)view.findViewById(R.id.best_shooting_location_high);
+
+                ArrayList<ShootingLocation> shootingLocations = new ArrayList<>();
+                for(int i = 0; i < Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS.length; i++)
+                {
+                    ShootingLocation shootingLocation = new ShootingLocation();
+                    shootingLocation.mLocationIndex = i;
+                    shootingLocation.mMade = statsMap.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS_HIT[i]);
+                    shootingLocation.mTotal = statsMap.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS[i]);
+                    shootingLocations.add(shootingLocation);
+                }
+
+                Collections.sort(shootingLocations, new Comparator<ShootingLocation>() {
+                    @Override
+                    public int compare(ShootingLocation lhs, ShootingLocation rhs) {
+                        if (lhs.mMade < 5 && rhs.mMade < 5) {
+                            return rhs.mMade - lhs.mMade;
+                        } else if (lhs.mMade < 5) {
+                            return -1;
+                        } else if (rhs.mMade < 5) {
+                            return 1;
+                        } else {
+                            float l_percent = 0.0f;
+                            if (lhs.mTotal != 0) {
+                                l_percent = (float) lhs.mMade / (float) lhs.mTotal;
+                            }
+                            float r_percent = 0.0f;
+                            if (rhs.mTotal != 0) {
+                                r_percent = (float) rhs.mMade / (float) rhs.mTotal;
+                            }
+                            return Float.compare(r_percent, l_percent);
+                        }
+                    }
+                });
+
+                if(shootingLocations.get(0).mMade > 0)
+                {
+                    textView.setText(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS_LABEL[shootingLocations.get(0).mLocationIndex]);
+                }
+                else
+                {
+                    textView.setText("None");
+                }
+
+                textView = (TextView)view.findViewById(R.id.best_shooting_location_low);
+
+                shootingLocations = new ArrayList<>();
+                for(int i = 0; i < Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS.length; i++)
+                {
+                    ShootingLocation shootingLocation = new ShootingLocation();
+                    shootingLocation.mLocationIndex = i;
+                    shootingLocation.mMade = statsMap.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_HIT[i]);
+                    shootingLocation.mTotal = statsMap.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS[i]);
+                    shootingLocations.add(shootingLocation);
+                }
+
+                Collections.sort(shootingLocations, new Comparator<ShootingLocation>() {
+                    @Override
+                    public int compare(ShootingLocation lhs, ShootingLocation rhs) {
+                        if(lhs.mMade < 5 && rhs.mMade < 5 )
+                        {
+                            return rhs.mMade - lhs.mMade;
+                        }
+                        else if(lhs.mMade < 5)
+                        {
+                            return -1;
+                        }
+                        else if(rhs.mMade < 5)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            float l_percent = 0.0f;
+                            if(lhs.mTotal != 0)
+                            {
+                                l_percent = (float)lhs.mMade / (float)lhs.mTotal;
+                            }
+                            float r_percent = 0.0f;
+                            if(rhs.mTotal != 0)
+                            {
+                                r_percent = (float)rhs.mMade / (float)rhs.mTotal;
+                            }
+                            return Float.compare(r_percent,l_percent);
+                        }
+                    }
+                });
+
+                if(shootingLocations.get(0).mMade > 0)
+                {
+                    textView.setText(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_LABEL[shootingLocations.get(0).mLocationIndex]);
+                }
+                else
+                {
+                    textView.setText("None");
+                }
 
                 textView = (TextView) view.findViewById(R.id.can_scale);
                 int mCanScale = statsMap.getInt(Constants.Calculated_Totals.TOTAL_SCALE);
@@ -263,47 +359,12 @@ public class MatchTeamFragment extends Fragment {
                     textView.setText(DefenseString);
                 } else {
                     String bestDefenseString = "None";
-                    for (int i = 0; i < 8; i++) ;
-                    bestDefenseString += "\n";
+                    for (int i = 0; i < 8; i++) {
+                        bestDefenseString += "\n";
+                    }
                     textView.setText(bestDefenseString);
                 }
 
-                //TODO: Fix with new Qualitative rankings
-                textView = (TextView) view.findViewById(R.id.driver_ability);
-                /*
-                if (statsMap.containsKey(Constants.DRIVER_ABILITY_RANKING)) {
-                    String ranking = statsMap.getString(Constants.DRIVER_ABILITY_RANKING);
-                    if (ranking.charAt(ranking.length() - 1) == '1')
-                        ranking += "st";
-                    else if (ranking.charAt(ranking.length() - 1) == '2')
-                        ranking += "nd";
-                    else if (ranking.charAt(ranking.length() - 1) == '3')
-                        ranking += "rd";
-                    else
-                        ranking += "th";
-                    textView.setText(ranking);
-                } else {
-                    textView.setText("N/A");
-                }
-                */
-
-                textView = (TextView) view.findViewById(R.id.defense_ability);
-                /*
-                if (statsMap.containsKey(Constants.DEFENSE_ABILITY_RANKING)) {
-                    String ranking = statsMap.getString(Constants.DEFENSE_ABILITY_RANKING);
-                    if (ranking.charAt(ranking.length() - 1) == '1')
-                        ranking += "st";
-                    else if (ranking.charAt(ranking.length() - 1) == '2')
-                        ranking += "nd";
-                    else if (ranking.charAt(ranking.length() - 1) == '3')
-                        ranking += "rd";
-                    else
-                        ranking += "th";
-                    textView.setText(ranking);
-                } else {
-                    textView.setText("N/A");
-                }
-                */
             } else {
                 textView = (TextView) view.findViewById(R.id.defenses);
                 String spacing = "";
@@ -333,6 +394,12 @@ public class MatchTeamFragment extends Fragment {
         int mDefenseIndex;
         int mNumCrosses;
         int mNumSeen;
+    }
+
+    private class ShootingLocation{
+        int mLocationIndex;
+        int mMade;
+        int mTotal;
     }
 
     /**

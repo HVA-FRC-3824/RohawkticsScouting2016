@@ -78,7 +78,13 @@ public class ELA_IndividualDefense extends ArrayAdapter<ELI_IndividualDefense> {
             textView = (TextView) convertView.findViewById(R.id.event_teleop_cross);
             textView.setText(String.valueOf(team.mTeleopCross));
             textView = (TextView) convertView.findViewById(R.id.event_time);
-            textView.setText(String.valueOf(team.mTime));
+            if (team.mTime == -1) {
+                textView.setText("NS");
+            } else if (team.mTime == 0) {
+                textView.setText("NC");
+            } else {
+                textView.setText(String.valueOf(team.mTime));
+            }
         }
 
         return convertView;

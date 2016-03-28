@@ -1,120 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
-    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/team_number"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/total_matches"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/average_points"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/best_start_position"
-        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:textColor="#000000"
-        android:gravity="center_horizontal" />
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:gravity="center_horizontal"
         android:textColor="#000000"
-        android:gravity="center_horizontal" />
+        android:textSize="20sp" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/auto_high"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/auto_low"
-        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:textColor="#000000"
-        android:gravity="center_horizontal" />
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:gravity="center_horizontal"
         android:textColor="#000000"
-        android:gravity="center_horizontal" />
+        android:textSize="20sp" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/teleop_high"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/teleop_low"
-        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:textColor="#000000"
-        android:gravity="center_horizontal" />
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/best_shooting_location_high"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/best_shooting_location_low"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/defenses"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/can_scale"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/driver_ability"
-        android:textSize="20sp"
+        android:gravity="center_horizontal"
         android:textColor="#000000"
-        android:gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/defense_ability"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:gravity="center_horizontal" />
+        android:textSize="20sp" />
 
     <Button
+        android:id="@+id/view_team"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Team"
-        android:id="@+id/view_team"/>
+        android:text="View Team" />
 
 </LinearLayout>

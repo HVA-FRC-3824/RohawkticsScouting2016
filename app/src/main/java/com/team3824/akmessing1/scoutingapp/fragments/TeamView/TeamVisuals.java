@@ -1,6 +1,7 @@
 package com.team3824.akmessing1.scoutingapp.fragments.TeamView;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,12 +32,18 @@ import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.team3824.akmessing1.scoutingapp.utilities.Constants;
-import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
+import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.MatchScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
-import com.team3824.akmessing1.scoutingapp.R;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
+import com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomIntakeHeatmap;
+import com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomShotHeatmap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -47,7 +53,7 @@ import java.util.ArrayList;
  * @author Andrew Messing
  * @version
  */
-public class TeamVisuals extends Fragment {
+public class TeamVisuals extends Fragment implements RadioButton.OnClickListener{
     @SuppressWarnings("FieldCanBeLocal")
     private final String TAG = "TeamVisuals";
 
@@ -69,6 +75,9 @@ public class TeamVisuals extends Fragment {
     private LineDataSet mTeleopHighPercent;
     private LineDataSet mTeleopLowMade;
     private LineDataSet mTeleopLowPercent;
+
+    private CustomShotHeatmap shotHeatmap;
+    private CustomIntakeHeatmap intakeHeatmap;
 
     private ValueFormatter intVF;
     private ValueFormatter percentVF;
@@ -155,6 +164,10 @@ public class TeamVisuals extends Fragment {
             Bitmap bitmap = BitmapFactory.decodeFile(fullPath, bmOptions);
             imageView.setImageBitmap(bitmap);
         }
+        else
+        {
+            view.findViewById(R.id.robotPictureLabel).setVisibility(View.GONE);
+        }
 
         mRadarChart = (RadarChart)view.findViewById(R.id.radar_chart);
         mRadarChart.getLegend().setEnabled(false);
@@ -171,98 +184,24 @@ public class TeamVisuals extends Fragment {
         mRadarChart.invalidate();
 
         RadioButton radioButton = (RadioButton)view.findViewById(R.id.seen);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mSeen));
-                mRadarChart.getYAxis().setAxisMaxValue((int) mSeen.getYMax() + 1);
-                mRadarChart.getYAxis().setLabelCount((int) mSeen.getYMax() + 2, true);
-                mRadarChart.notifyDataSetChanged();
-                mRadarChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton.setChecked(true);
 
         radioButton = (RadioButton)view.findViewById(R.id.started);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mStarted));
-                mRadarChart.getYAxis().setAxisMaxValue((int) mStarted.getYMax() + 1);
-                mRadarChart.getYAxis().setLabelCount((int) mStarted.getYMax() + 2, true);
-                mRadarChart.notifyDataSetChanged();
-                mRadarChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.time);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mTime));
-                switch ((int) mTime.getYMax()) {
-                    case 30:
-                        mRadarChart.getYAxis().setAxisMaxValue(30);
-                        mRadarChart.getYAxis().setLabelCount(7, true);
-                        break;
-                    case 15:
-                        mRadarChart.getYAxis().setAxisMaxValue(15);
-                        mRadarChart.getYAxis().setLabelCount(4, true);
-                        break;
-                    case 10:
-                        mRadarChart.getYAxis().setAxisMaxValue(10);
-                        mRadarChart.getYAxis().setLabelCount(3, true);
-                        break;
-                    case 5:
-                        mRadarChart.getYAxis().setAxisMaxValue(5);
-                        mRadarChart.getYAxis().setLabelCount(2, true);
-                        break;
-                    case 0:
-                        mRadarChart.getYAxis().setAxisMaxValue(1);
-                        mRadarChart.getYAxis().setLabelCount(2, true);
-                        break;
-                }
-                mRadarChart.notifyDataSetChanged();
-                mRadarChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.auto);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mAutoCross));
-                mRadarChart.getYAxis().setAxisMaxValue((int) mAutoCross.getYMax() + 1);
-                mRadarChart.getYAxis().setLabelCount((int) mAutoCross.getYMax() + 2, true);
-                mRadarChart.notifyDataSetChanged();
-                mRadarChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.teleop);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES,mTeleopCross));
-                mRadarChart.getYAxis().setAxisMaxValue((int)mTeleopCross.getYMax()+1);
-                mRadarChart.getYAxis().setLabelCount((int) mTeleopCross.getYMax() + 2, true);
-                mRadarChart.notifyDataSetChanged();
-                mRadarChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.reach);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mReached));
-                mRadarChart.getYAxis().setAxisMaxValue((int)mReached.getYMax()+1);
-                mRadarChart.getYAxis().setLabelCount((int) mReached.getYMax() + 2, true);
-                mRadarChart.notifyDataSetChanged();
-                mRadarChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         mLineChart = (LineChart)view.findViewById(R.id.line_chart);
         mLineChart.getLegend().setEnabled(false);
@@ -287,114 +226,47 @@ public class TeamVisuals extends Fragment {
         mLineChart.invalidate();
 
         radioButton = (RadioButton)view.findViewById(R.id.auto_high_made);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches, mAutoHighMade));
-                mLineY.setAxisMaxValue((int) mAutoHighMade.getYMax() + 1);
-                mLineY.setLabelCount((int) mAutoHighMade.getYMax() + 2, true);
-                mLineY.setValueFormatter(intYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton.setChecked(true);
 
         radioButton = (RadioButton)view.findViewById(R.id.auto_low_made);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches, mAutoLowMade));
-                mLineY.setAxisMaxValue((int) mAutoLowMade.getYMax()+1);
-                mLineY.setLabelCount((int) mAutoLowMade.getYMax() + 2, true);
-                mLineY.setValueFormatter(intYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.teleop_high_made);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches, mTeleopHighMade));
-                mLineY.setAxisMaxValue((int) mTeleopHighMade.getYMax()+1);
-                mLineY.setLabelCount((int) mTeleopHighMade.getYMax() + 2, true);
-                mLineY.setValueFormatter(intYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.teleop_low_made);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches, mTeleopLowMade));
-                mLineY.setAxisMaxValue((int) mTeleopLowMade.getYMax()+1);
-                mLineY.setLabelCount((int) mTeleopLowMade.getYMax() + 2, true);
-                mLineY.setValueFormatter(intYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.auto_high_percent);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches, mAutoHighPercent));
-                mLineY.setValueFormatter(percentYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.auto_low_percent);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches, mAutoLowPercent));
-                mLineY.setValueFormatter(percentYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.teleop_high_percent);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches, mTeleopHighPercent));
-                mLineY.setValueFormatter(percentYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
 
         radioButton = (RadioButton)view.findViewById(R.id.teleop_low_percent);
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
-                mLineChart.clear();
-                mLineChart.setData(new LineData(mMatches,mTeleopLowPercent));
-                mLineY.setValueFormatter(percentYVF);
-                mLineChart.notifyDataSetChanged();
-                mLineChart.invalidate();
-            }
-        });
+        radioButton.setOnClickListener(this);
+
+        shotHeatmap = (CustomShotHeatmap)view.findViewById(R.id.shot_heatmap);
+        shotHeatmap.setPaints(statsMap);
+        shotHeatmap.setMode(CustomShotHeatmap.BOTH);
+
+        radioButton = (RadioButton)view.findViewById(R.id.high_goal);
+        radioButton.setOnClickListener(this);
+
+        radioButton = (RadioButton)view.findViewById(R.id.low_goal);
+        radioButton.setOnClickListener(this);
+
+        radioButton = (RadioButton)view.findViewById(R.id.both);
+        radioButton.setOnClickListener(this);
+        radioButton.setChecked(true);
+
+        intakeHeatmap = (CustomIntakeHeatmap)view.findViewById(R.id.intake_heatmap);
+        intakeHeatmap.setPaints(statsMap);
 
         BarChart mBarChart = (BarChart) view.findViewById(R.id.bar_chart);
         mBarChart.setDescription("");
@@ -512,11 +384,43 @@ public class TeamVisuals extends Fragment {
             int autoLowHit = cursor.getInt(cursor.getColumnIndex(Constants.Auto_Inputs.AUTO_LOW_HIT));
             int autoLowMiss = cursor.getInt(cursor.getColumnIndex(Constants.Auto_Inputs.AUTO_LOW_MISS));
 
-            int teleopHighHit = cursor.getInt(cursor.getColumnIndex(Constants.Teleop_Inputs.TELEOP_HIGH_HIT));
-            int teleopHighMiss = cursor.getInt(cursor.getColumnIndex(Constants.Teleop_Inputs.TELEOP_HIGH_MISS));
+            int teleopHighHit = 0;
+            int teleopHighMiss = 0;
 
-            int teleopLowHit = cursor.getInt(cursor.getColumnIndex(Constants.Teleop_Inputs.TELEOP_LOW_HIT));
-            int teleopLowMiss = cursor.getInt(cursor.getColumnIndex(Constants.Teleop_Inputs.TELEOP_LOW_MISS));
+            String high_goal_string = cursor.getString(cursor.getColumnIndex(Constants.Teleop_Inputs.TELEOP_HIGH_SHOT));
+            try {
+                JSONArray jsonArray = new JSONArray(high_goal_string);
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
+                        teleopHighHit++;
+                    } else {
+                        teleopHighMiss++;
+                    }
+                }
+
+            } catch (JSONException e) {
+                Log.e(TAG, "Error: ", e);
+            }
+
+            int teleopLowHit = 0;
+            int teleopLowMiss = 0;
+
+            String low_goal_string = cursor.getString(cursor.getColumnIndex(Constants.Teleop_Inputs.TELEOP_LOW_SHOT));
+            try {
+                JSONArray jsonArray = new JSONArray(low_goal_string);
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
+                        teleopLowHit++;
+                    } else {
+                        teleopLowMiss++;
+                    }
+                }
+
+            } catch (JSONException e) {
+                Log.e(TAG, "Error: ", e);
+            }
 
             autoHighMadeEntries.add(new Entry(autoHighHit, i));
             autoLowMadeEntries.add(new Entry(autoLowHit, i));
@@ -607,4 +511,149 @@ public class TeamVisuals extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.seen:
+                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mSeen));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mSeen.getYMax() + 1);
+                mRadarChart.getYAxis().setLabelCount((int) mSeen.getYMax() + 2, true);
+                mRadarChart.notifyDataSetChanged();
+                mRadarChart.invalidate();
+                break;
+            case R.id.started:
+                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mStarted));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mStarted.getYMax() + 1);
+                mRadarChart.getYAxis().setLabelCount((int) mStarted.getYMax() + 2, true);
+                mRadarChart.notifyDataSetChanged();
+                mRadarChart.invalidate();
+                break;
+            case R.id.time:
+                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mTime));
+                switch ((int) mTime.getYMax()) {
+                    case 30:
+                        mRadarChart.getYAxis().setAxisMaxValue(30);
+                        mRadarChart.getYAxis().setLabelCount(7, true);
+                        break;
+                    case 15:
+                        mRadarChart.getYAxis().setAxisMaxValue(15);
+                        mRadarChart.getYAxis().setLabelCount(4, true);
+                        break;
+                    case 10:
+                        mRadarChart.getYAxis().setAxisMaxValue(10);
+                        mRadarChart.getYAxis().setLabelCount(3, true);
+                        break;
+                    case 5:
+                        mRadarChart.getYAxis().setAxisMaxValue(5);
+                        mRadarChart.getYAxis().setLabelCount(2, true);
+                        break;
+                    case 0:
+                        mRadarChart.getYAxis().setAxisMaxValue(1);
+                        mRadarChart.getYAxis().setLabelCount(2, true);
+                        break;
+                }
+                mRadarChart.notifyDataSetChanged();
+                mRadarChart.invalidate();
+                break;
+            case R.id.auto:
+                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mAutoCross));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mAutoCross.getYMax() + 1);
+                mRadarChart.getYAxis().setLabelCount((int) mAutoCross.getYMax() + 2, true);
+                mRadarChart.notifyDataSetChanged();
+                mRadarChart.invalidate();
+                break;
+            case R.id.teleop:
+                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mTeleopCross));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mTeleopCross.getYMax() + 1);
+                mRadarChart.getYAxis().setLabelCount((int) mTeleopCross.getYMax() + 2, true);
+                mRadarChart.notifyDataSetChanged();
+                mRadarChart.invalidate();
+                break;
+            case R.id.reach:
+                mRadarChart.setData(new RadarData(Constants.Defense_Arrays.DEFENSES, mReached));
+                mRadarChart.getYAxis().setAxisMaxValue((int) mReached.getYMax() + 1);
+                mRadarChart.getYAxis().setLabelCount((int) mReached.getYMax() + 2, true);
+                mRadarChart.notifyDataSetChanged();
+                mRadarChart.invalidate();
+                break;
+            case R.id.auto_high_made:
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoHighMade));
+                mLineY.setAxisMaxValue((int) mAutoHighMade.getYMax() + 1);
+                mLineY.setLabelCount((int) mAutoHighMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.auto_low_made:
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoLowMade));
+                mLineY.setAxisMaxValue((int) mAutoLowMade.getYMax() + 1);
+                mLineY.setLabelCount((int) mAutoLowMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.teleop_high_made:
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mTeleopHighMade));
+                mLineY.setAxisMaxValue((int) mTeleopHighMade.getYMax() + 1);
+                mLineY.setLabelCount((int) mTeleopHighMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.teleop_low_made:
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mTeleopLowMade));
+                mLineY.setAxisMaxValue((int) mTeleopLowMade.getYMax() + 1);
+                mLineY.setLabelCount((int) mTeleopLowMade.getYMax() + 2, true);
+                mLineY.setValueFormatter(intYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.auto_high_percent:
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoHighPercent));
+                mLineY.setValueFormatter(percentYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.auto_low_percent:
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mAutoLowPercent));
+                mLineY.setValueFormatter(percentYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.teleop_high_percent:
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches, mTeleopHighPercent));
+                mLineY.setValueFormatter(percentYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.teleop_low_percent:
+                mLineChart.getAxisLeft().setAxisMaxValue(100.0f);
+                mLineChart.clear();
+                mLineChart.setData(new LineData(mMatches,mTeleopLowPercent));
+                mLineY.setValueFormatter(percentYVF);
+                mLineChart.notifyDataSetChanged();
+                mLineChart.invalidate();
+                break;
+            case R.id.high_goal:
+                shotHeatmap.setMode(CustomShotHeatmap.HIGH);
+                break;
+            case R.id.low_goal:
+                shotHeatmap.setMode(CustomShotHeatmap.LOW);
+                break;
+            case R.id.both:
+                shotHeatmap.setMode(CustomShotHeatmap.BOTH);
+                break;
+        }
+    }
 }

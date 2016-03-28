@@ -5,7 +5,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
  */
 public interface Constants {
 
-    String VERSION = "Version: 1.1.0";
+    String VERSION = "Version: 1.1.2";
     String APP_DATA = "appData";
     int OUR_TEAM_NUMBER = 3824;
 
@@ -60,6 +60,7 @@ public interface Constants {
 
     // Teleop
     interface Teleop_Inputs {
+        // Defenses
         String TELEOP_DEFENSE_1 = "teleop_defense_1";
         String TELEOP_DEFENSE_2 = "teleop_defense_2";
         String TELEOP_DEFENSE_3 = "teleop_defense_3";
@@ -70,10 +71,36 @@ public interface Constants {
         String[] TELEOP_DEFENSE_TIMES = {"< 5s", "< 10s", "> 10s", "Stuck"};
         int[] TELEOP_DEFENSE_TIMES_VALUE = {5, 10, 15, 30};
 
-        String TELEOP_HIGH_HIT = "teleop_high_hit";
-        String TELEOP_HIGH_MISS = "teleop_high_miss";
-        String TELEOP_LOW_HIT = "teleop_low_hit";
-        String TELEOP_LOW_MISS = "teleop_low_miss";
+        // Shooting
+        String SELECT_AIM_TIME = "Select Aim Time";
+        String[] TELEOP_AIM_TIMES = {SELECT_AIM_TIME,"< 2s", "< 5s", "< 8s", "< 10s", "< 15s", "> 15s"};
+        int[] TELEOP_AIM_TIMES_VALUE = {2, 5, 8, 10, 15, 20};
+
+        String SELECT_SHOT_POSITION = "Select Position";
+        String OUTER_WORKS= "Outer Works";
+        String ON_NEAR_CENTER_BATTER = "On/Near Center Batter";
+        String ALIGNMENT_LINE = "Alignment Line";
+        String[] TELEOP_SHOT_POSITIONS = {SELECT_SHOT_POSITION, OUTER_WORKS, "On/Near Left Batter", ON_NEAR_CENTER_BATTER, "On/Near Right Batter", ALIGNMENT_LINE, "Open Space"};
+
+        String TELEOP_HIGH_SHOT = "teleop_high_shot";
+        String TELEOP_LOW_SHOT = "teleop_low_shot";
+
+        String SHOT_POSITION = "shot_position";
+        String AIM_TIME = "aim_time";
+        String SHOT_HIT_MISS = "shot_hit_miss";
+
+        // Intaking
+        String SELECT_INTAKE_TIME = "Select Intake Time";
+        String[] TELEOP_INTAKE_TIMES = {SELECT_INTAKE_TIME, "< 2s", "< 5s", "< 8s","< 10s", "> 10s"};
+        int[] TELEOP_INTAKE_TIMES_VALUE = {2, 5, 8, 10, 15};
+
+        String SELECT_INTAKE_POSITION = "Select Position";
+        String[] TELEOP_INTAKE_POSITIONS = {SELECT_INTAKE_POSITION, "Neutral Zone", "Team Secret Passage", "Opponent Secret Passage", "Team Court Yard", "Opponent Court Yard"};
+
+        String INTAKE_POSITION = "intake_position";
+        String INTAKE_TIME = "intake_time";
+
+        String TELEOP_INTAKE = "teleop_intake";
     }
 
     // Endgame
@@ -225,8 +252,39 @@ public interface Constants {
 
         String TOTAL_TELEOP_HIGH_HIT = "total_teleop_high_hit";
         String TOTAL_TELEOP_HIGH_MISS = "total_teleop_high_miss";
+        String[] TOTAL_TELEOP_HIGH_POSITIONS = {"total_teleop_high_outer_works", "total_teleop_high_left_batter", "total_teleop_high_center_batter", "total_teleop_high_right_batter", "total_teleop_high_alignment_line", "total_teleop_high_open_space"};
+        String[] TOTAL_TELEOP_HIGH_POSITIONS_HIT = {"total_teleop_high_outer_works_hit", "total_teleop_high_left_batter_hit", "total_teleop_high_center_batter_hit", "total_teleop_high_right_batter_hit", "total_teleop_high_alignment_line_hit", "total_teleop_high_open_space_hit"};
+        String[] TOTAL_TELEOP_HIGH_POSITIONS_MISS = {"total_teleop_high_outer_works_miss", "total_teleop_high_left_batter_miss", "total_teleop_high_center_batter_miss", "total_teleop_high_right_batter_miss", "total_teleop_high_alignment_line_miss", "total_teleop_high_open_space_miss"};
+        String[] TOTAL_TELEOP_HIGH_POSITIONS_LABEL = {"Outer Works", "Left Batter", "Center Batter", "Right Batter", "Alignment Line", "Open Space"};
+        String TOTAL_TELEOP_HIGH_AIM_TIME = "total_teleop_high_aim_time";
+
+        int SHOT_POSITION_HIGH_OUTER_WORKS = 0;
+        int SHOT_POSITION_HIGH_LEFT_BATTER = 1;
+        int SHOT_POSITION_HIGH_CENTER_BATTER = 2;
+        int SHOT_POSITION_HIGH_RIGHT_BATTER = 3;
+        int SHOT_POSITION_HIGH_ALIGNMENT_LINE = 4;
+        int SHOT_POSITION_HIGH_OPEN_SPACE = 5;
+
         String TOTAL_TELEOP_LOW_HIT = "total_teleop_low_hit";
         String TOTAL_TELEOP_LOW_MISS = "total_teleop_low_miss";
+        String[] TOTAL_TELEOP_LOW_POSITIONS = {"total_teleop_low_left_batter", "total_teleop_low_right_batter", "total_teleop_low_open_space"};
+        String[] TOTAL_TELEOP_LOW_POSITIONS_HIT = {"total_teleop_low_left_batter_hit", "total_teleop_low_right_batter_hit", "total_teleop_low_open_space_hit"};
+        String[] TOTAL_TELEOP_LOW_POSITIONS_MISS = {"total_teleop_low_left_batter_miss", "total_teleop_low_right_batter_miss", "total_teleop_low_open_space_miss"};
+        String[] TOTAL_TELEOP_LOW_POSITIONS_LABEL = {"Left Batter", "Right Batter", "Open Space"};
+        String TOTAL_TELEOP_LOW_AIM_TIME = "total_teleop_low_aim_time";
+
+        int SHOT_POSITION_LOW_LEFT_BATTER = 0;
+        int SHOT_POSITION_LOW_RIGHT_BATTER = 1;
+        int SHOT_POSITION_LOW_OPEN_SPACE = 2;
+
+        String[] TOTAL_TELEOP_INTAKE_POSITIONS = {"total_teleop_intake_neutral_zone", "total_teleop_intake_team_secret_passage", "total_teleop_intake_opponent_secret_passage", "total_teleop_intake_team_court_yard", "total_teleop_intake_opponent_court_yard"};
+        String TOTAL_TELEOP_INTAKE_TIME = "total_teleop_intake_time";
+
+        int INTAKE_POSITION_NEUTRAL_ZONE = 0;
+        int INTAKE_POSITION_TEAM_SECRET_PASSAGE = 1;
+        int INTAKE_POSITION_OPPONENT_SECRET_PASSAGE = 2;
+        int INTAKE_POSITION_TEAM_COURTYARD = 3;
+        int INTAKE_POSITION_OPPONENT_COURTYARD = 4;
 
         String TOTAL_FAILED_CHALLENGE = "total_failed_challenge";
         String TOTAL_CHALLENGE = "total_challenge";
@@ -396,5 +454,20 @@ public interface Constants {
         String RED3 = "red3";
 
         String SELECT_TEAM = "Select Team";
+    }
+
+    //Event View
+    interface EVENT_VIEW {
+        String[] EVENT_VIEW_DROPDOWN = {"Points", "Defenses", "High Goal", "Low Goal", "Qualitative",
+                "Auto", "Endgame", "Fouls"};
+
+        int POINTS = 0;
+        int DEFENSES = 1;
+        int HIGH_GOAL = 2;
+        int LOW_GOAL = 3;
+        int QUALITATIVE = 4;
+        int AUTO = 5;
+        int ENDGAME = 6;
+        int FOULS = 7;
     }
 }

@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.team3824.akmessing1.scoutingapp.R;
+import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_IndividualQualitative;
+import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_PositionalShot;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Qualitative;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Auto;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Defenses;
@@ -21,6 +23,7 @@ import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Indivi
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Points;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Shot;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
+import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_PositionalShot;
 import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Qualitative;
 import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Auto;
 import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Defenses;
@@ -33,6 +36,7 @@ import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -45,6 +49,8 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
     private static String TAG = "EventView";
     private ListView listView;
     private StatsDB statsDB;
+    private Spinner mainSpinner;
+    private Spinner subSpinner;
 
     /**
      * Sets up dropdown menu, the list view, and the stats database helper.
@@ -62,12 +68,15 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
         customHeader.removeHome();
 
         // Set up the dropdown menu for all the comparison categories
-        Spinner spinner = (Spinner) findViewById(R.id.event_view_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.event_view_options, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        mainSpinner = (Spinner) findViewById(R.id.event_view_spinner);
+        ArrayList<String> mainList = new ArrayList<>(Arrays.asList(Constants.EVENT_VIEW.EVENT_VIEW_DROPDOWN));
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, mainList);
+        mainSpinner.setAdapter(adapter);
+        mainSpinner.setOnItemSelectedListener(this);
+
+        subSpinner = (Spinner) findViewById(R.id.event_view_spinner_sub);
+        subSpinner.setVisibility(View.GONE);
+        subSpinner.setOnItemSelectedListener(this);
 
         listView = (ListView) findViewById(R.id.event_view_list);
 
@@ -83,74 +92,128 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
      * columns and display.
      *
      * @param parent The parent adapter view of the view that is selected
-     * @param view The view that is selected
-     * @param pos The position of the selected item in the menu
-     * @param id The id of the selected item
+     * @param view   The view that is selected
+     * @param pos    The position of the selected item in the menu
+     * @param id     The id of the selected item
      */
     //TODO: Fix with new qualitatve rankings
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         findViewById(R.id.key1).setVisibility(View.GONE);
         findViewById(R.id.key2).setVisibility(View.GONE);
         findViewById(R.id.key3).setVisibility(View.GONE);
+
         Cursor cursor = statsDB.getStats();
-        switch (pos) {
-            case 0: // Points
-                points(cursor);
-                break;
-            case 1: // Defenses
-                defenses(cursor);
-                findViewById(R.id.key1).setVisibility(View.VISIBLE);
-                break;
-            case 2: // Low Bar
-                individual_defense(cursor, Constants.Defense_Arrays.LOW_BAR_INDEX);
-                break;
-            case 3: // Portcullis
-                individual_defense(cursor, Constants.Defense_Arrays.PORTCULLIS_INDEX);
-                break;
-            case 4: // Cheval de Frise
-                individual_defense(cursor, Constants.Defense_Arrays.CHEVAL_DE_FRISE_INDEX);
-                break;
-            case 5: // Moat
-                individual_defense(cursor, Constants.Defense_Arrays.MOAT_INDEX);
-                break;
-            case 6: // Ramparts
-                individual_defense(cursor, Constants.Defense_Arrays.RAMPARTS_INDEX);
-                break;
-            case 7: // Drawbridge
-                individual_defense(cursor, Constants.Defense_Arrays.DRAWBRIDGE_INDEX);
-                break;
-            case 8: // Sally Port
-                individual_defense(cursor, Constants.Defense_Arrays.SALLY_PORT_INDEX);
-                break;
-            case 9: // Rock Wall
-                individual_defense(cursor, Constants.Defense_Arrays.ROCK_WALL_INDEX);
-                break;
-            case 10: // Rough Terrain
-                individual_defense(cursor, Constants.Defense_Arrays.ROUGH_TERRAIN_INDEX);
-                break;
-            case 11: // High Goal
-                goal(cursor, "high");
-                break;
-            case 12: // Low Goal
-                goal(cursor, "low");
-                break;
-            case 13: // Qualitative
-                qualitative(cursor);
-                break;
-            case 15: // Auto
-                auto(cursor);
-                findViewById(R.id.key2).setVisibility(View.VISIBLE);
-                findViewById(R.id.key3).setVisibility(View.VISIBLE);
-                break;
-            case 16: // Endgame
-                endgame(cursor);
-                break;
-            case 17: // Fouls
-                fouls(cursor);
-                break;
-            default:
-                assert false;
-                break;
+        switch (parent.getId()) {
+            case R.id.event_view_spinner: {
+                ArrayList<String> subList;
+                ArrayAdapter<String> subAdapter;
+                switch (pos) {
+                    case Constants.EVENT_VIEW.POINTS:
+                        points(cursor);
+                        subSpinner.setVisibility(View.GONE);
+                        break;
+                    case Constants.EVENT_VIEW.DEFENSES:
+                        defenses(cursor);
+                        findViewById(R.id.key1).setVisibility(View.VISIBLE);
+
+                        subList = new ArrayList<>(Arrays.asList(Constants.Defense_Arrays.DEFENSES_LABEL));
+                        subList.add(0, "All");
+                        subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, subList);
+                        subSpinner.setAdapter(subAdapter);
+                        subSpinner.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.EVENT_VIEW.HIGH_GOAL:
+                        goal(cursor, "high");
+
+                        subList = new ArrayList<>(Arrays.asList(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS_LABEL));
+                        subList.add(0, "All");
+                        subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, subList);
+                        subSpinner.setAdapter(subAdapter);
+                        subSpinner.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.EVENT_VIEW.LOW_GOAL:
+                        goal(cursor, "low");
+
+                        subList = new ArrayList<>(Arrays.asList(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_LABEL));
+                        subList.add(0, "All");
+                        subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, subList);
+                        subSpinner.setAdapter(subAdapter);
+                        subSpinner.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.EVENT_VIEW.QUALITATIVE:
+                        qualitative(cursor);
+
+                        subList = new ArrayList<>(Arrays.asList(Constants.Qualitative_Rankings.QUALITATIVE_LABELS));
+                        subList.add(0, "All");
+                        subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, subList);
+                        subSpinner.setAdapter(subAdapter);
+                        subSpinner.setVisibility(View.VISIBLE);
+                        break;
+                    case Constants.EVENT_VIEW.AUTO:
+                        auto(cursor);
+                        findViewById(R.id.key2).setVisibility(View.VISIBLE);
+                        findViewById(R.id.key3).setVisibility(View.VISIBLE);
+                        subSpinner.setVisibility(View.GONE);
+                        break;
+                    case Constants.EVENT_VIEW.ENDGAME:
+                        endgame(cursor);
+                        subSpinner.setVisibility(View.GONE);
+                        break;
+                    case Constants.EVENT_VIEW.FOULS:
+                        fouls(cursor);
+                        subSpinner.setVisibility(View.GONE);
+                        break;
+                    default:
+                        assert false;
+                        break;
+                }
+            }
+            break;
+            case R.id.event_view_spinner_sub: {
+                switch (mainSpinner.getSelectedItemPosition()) {
+                    case Constants.EVENT_VIEW.DEFENSES:
+                        switch (pos - 1) {
+                            case -1: // All
+                                defenses(cursor);
+                                break;
+                            default:
+                                individual_defense(cursor, pos - 1);
+                                break;
+                        }
+                        break;
+                    case Constants.EVENT_VIEW.HIGH_GOAL:
+                        switch (pos - 1) {
+                            case -1: // All
+                                goal(cursor, "high");
+                                break;
+                            default:
+                                positional_shooting(cursor, "high", pos - 1);
+                                break;
+                        }
+                        break;
+                    case Constants.EVENT_VIEW.LOW_GOAL:
+                        switch (pos - 1) {
+                            case -1: // All
+                                goal(cursor, "low");
+                                break;
+                            default:
+                                positional_shooting(cursor, "low", pos - 1);
+                                break;
+                        }
+                        break;
+                    case Constants.EVENT_VIEW.QUALITATIVE:
+                        switch (pos - 1) {
+                            case -1: // All
+                                qualitative(cursor);
+                                break;
+                            default:
+                                individual_qualitative(cursor, pos - 1);
+                                break;
+                        }
+                        break;
+                }
+            }
+            break;
         }
     }
 
@@ -223,7 +286,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
         Collections.sort(teams, new Comparator<ELI_Points>() {
             @Override
             public int compare(ELI_Points lhs, ELI_Points rhs) {
-                return Float.compare(rhs.mAvgPoints,lhs.mAvgPoints);
+                return Float.compare(rhs.mAvgPoints, lhs.mAvgPoints);
             }
         });
 
@@ -247,7 +310,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
 
             int totalMatches = cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_MATCHES);
 
-            if (totalMatches > -1) {
+            if (totalMatches > 0) {
                 for (int i = 0; i < 9; i++) {
                     team.crosses[i] = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_DEFENSES_TELEOP_CROSSED[i])) +
                             cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_DEFENSES_AUTO_CROSSED[i]));
@@ -273,7 +336,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
                 // tertiary statement make the values 0 if the team has been in no matches
                 float leftValue = (lhs.seens[Constants.Defense_Arrays.LOW_BAR_INDEX] == 0) ? 0 : (lhs.totalCrosses / (float) lhs.seens[Constants.Defense_Arrays.LOW_BAR_INDEX]);
                 float rightValue = (rhs.seens[Constants.Defense_Arrays.LOW_BAR_INDEX] == 0) ? 0 : (rhs.totalCrosses / (float) rhs.seens[Constants.Defense_Arrays.LOW_BAR_INDEX]);
-                return Float.compare(rightValue,leftValue);
+                return Float.compare(rightValue, leftValue);
             }
         });
 
@@ -286,7 +349,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
     /**
      * Calculates all the values for comparing teams by their performance with an individual defense
      *
-     * @param cursor The response from the stats database table
+     * @param cursor        The response from the stats database table
      * @param defense_index The index of the individual defense for which the values are
      *                      being calculated
      */
@@ -302,7 +365,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
 
             int totalMatches = cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_MATCHES);
 
-            if (totalMatches > -1) {
+            if (totalMatches > 0) {
                 team.mTeleopCross = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_DEFENSES_TELEOP_CROSSED[defense_index]));
                 team.mAutoCross = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_DEFENSES_AUTO_CROSSED[defense_index]));
                 team.mAutoReach = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_DEFENSES_AUTO_REACHED[defense_index]));
@@ -317,7 +380,6 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
                 }
             }
             teams.add(team);
-            cursor.moveToNext();
         }
 
         // Sorts based on the speed of crossing if a team has crossed this defense
@@ -353,7 +415,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
      * Calculates all the values for comparing teams by their shoot performance
      *
      * @param cursor The response from the stats database table
-     * @param goal Which goal to calculate values for (high or low)
+     * @param goal   Which goal to calculate values for (high or low)
      */
     private void goal(Cursor cursor, String goal) {
 
@@ -367,7 +429,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
 
             float totalMatches = cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_MATCHES);
 
-            if (totalMatches > -1) {
+            if (totalMatches > 0) {
                 team.mAutoMade = cursor.getInt(cursor.getColumnIndex("total_auto_" + goal + "_hit"));
                 team.mAutoTaken = cursor.getInt(cursor.getColumnIndex("total_auto_" + goal + "_miss")) + team.mAutoMade;
                 team.mAutoPercentage = (team.mAutoTaken == 0) ? 0 : (float) team.mAutoMade / (float) team.mAutoTaken * 100.0f;
@@ -375,6 +437,9 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
                 team.mTeleopMade = cursor.getInt(cursor.getColumnIndex("total_teleop_" + goal + "_hit"));
                 team.mTeleopTaken = cursor.getInt(cursor.getColumnIndex("total_teleop_" + goal + "_miss")) + team.mTeleopMade;
                 team.mTeleopPercentage = (team.mTeleopTaken == 0) ? 0 : (float) team.mTeleopMade / (float) team.mTeleopTaken * 100.0f;
+
+                team.mTime = cursor.getInt(cursor.getColumnIndex("total_teleop_" + goal + "_aim_time"));
+                team.mTime = (team.mTeleopTaken == 0) ? 0 : team.mTime / (float) team.mTeleopTaken;
             }
             teams.add(team);
         }
@@ -385,7 +450,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
             @Override
             public int compare(ELI_Shots lhs, ELI_Shots rhs) {
 
-                if (lhs.mTeleopTaken > 10 && rhs.mTeleopTaken > 10) {
+                if (lhs.mTeleopMade > 5 && rhs.mTeleopMade > 5) {
                     if (lhs.mTeleopPercentage > rhs.mTeleopPercentage) {
                         return -1;
                     } else if (rhs.mTeleopPercentage > lhs.mTeleopPercentage) {
@@ -393,10 +458,10 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
                     } else {
                         return 0;
                     }
-                } else if (lhs.mTeleopTaken > 10) {
+                } else if (lhs.mTeleopMade > 5) {
                     return -1;
-                } else if (rhs.mTeleopTaken > 10) {
-                    return -1;
+                } else if (rhs.mTeleopMade > 5) {
+                    return 1;
                 } else {
                     return rhs.mTeleopMade - lhs.mTeleopMade;
                 }
@@ -406,6 +471,66 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
         // Header row hack
         teams.add(0, new ELI_Shots(-1));
         ELA_Shot eventShotListAdapter = new ELA_Shot(this, teams);
+        listView.setAdapter(eventShotListAdapter);
+    }
+
+    /**
+     * @param cursor
+     * @param goal
+     * @param position
+     */
+    private void positional_shooting(Cursor cursor, String goal, int position) {
+        assert goal.equals("high") || goal.equals("low");
+        assert position > -1 && position < Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS.length;
+
+        ArrayList<ELI_PositionalShot> teams = new ArrayList<>();
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
+
+            ELI_PositionalShot team = new ELI_PositionalShot(teamNumber);
+            int totalMatches = cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_MATCHES);
+            if (totalMatches > 0) {
+                switch (goal) {
+                    case "high":
+                        team.mMade = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS_HIT[position]));
+                        team.mTotal = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS[position]));
+                        team.mPercent = (team.mTotal == 0) ? 0.0f : (float) team.mMade / (float) team.mTotal * 100.0f;
+                        break;
+                    case "low":
+                        team.mMade = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_HIT[position]));
+                        team.mTotal = cursor.getInt(cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS[position]));
+                        team.mPercent = (team.mTotal == 0) ? 0.0f : (float) team.mMade / (float) team.mTotal * 100.0f;
+                        break;
+                }
+            }
+
+            teams.add(team);
+        }
+
+        Collections.sort(teams, new Comparator<ELI_PositionalShot>() {
+            @Override
+            public int compare(ELI_PositionalShot lhs, ELI_PositionalShot rhs) {
+                if (lhs.mMade > 5 && rhs.mMade > 5) {
+                    if (lhs.mPercent > rhs.mPercent) {
+                        return -1;
+                    } else if (rhs.mPercent > lhs.mPercent) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } else if (lhs.mMade > 5) {
+                    return -1;
+                } else if (rhs.mMade > 5) {
+                    return 1;
+                } else {
+                    return rhs.mMade - lhs.mMade;
+                }
+            }
+        });
+
+        teams.add(0, new ELI_PositionalShot(-1));
+        ELA_PositionalShot eventShotListAdapter = new ELA_PositionalShot(this, teams);
         listView.setAdapter(eventShotListAdapter);
     }
 
@@ -464,7 +589,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
                 } else {
                     float leftValue = (lhs.mDefenses.totalCrosses * 10.0f + lhs.mHigh.mAutoMade * 10.0f + lhs.mLow.mAutoMade * 5.0f) / (float) lhs.mDefenses.seens[Constants.Defense_Arrays.LOW_BAR_INDEX];
                     float rightValue = (rhs.mDefenses.totalCrosses * 10.0f + rhs.mHigh.mAutoMade * 10.0f + rhs.mLow.mAutoMade * 5.0f) / (float) rhs.mDefenses.seens[Constants.Defense_Arrays.LOW_BAR_INDEX];
-                    return Float.compare(rightValue,leftValue);
+                    return Float.compare(rightValue, leftValue);
                 }
             }
         });
@@ -476,7 +601,7 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
     }
 
     /**
-     *  Sets up comparison of teams by one of the qualitative categories
+     * Sets up comparison of teams by one of the qualitative categories
      *
      * @param cursor The response from the stats database table
      */
@@ -485,18 +610,18 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-            ELI_Qualitative team = new ELI_Qualitative(teamNumber,Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length);
+            ELI_Qualitative team = new ELI_Qualitative(teamNumber, Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length);
 
             int totalMatches = cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_MATCHES);
 
             //For debugging
             //if(cursor.getColumnIndex(qualitative) > -1){
             if (totalMatches > -1) {
-                for(int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
+                for (int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
                     team.mRank[i] = cursor.getString(cursor.getColumnIndex(Constants.Qualitative_Rankings.QUALITATIVE_RANKING[i]));
                 }
             } else {
-                for(int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
+                for (int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
                     team.mRank[i] = "N/A";
                 }
             }
@@ -510,46 +635,85 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
             public int compare(ELI_Qualitative lhs, ELI_Qualitative rhs) {
                 int leftValue = 0;
                 int rightValue = 0;
-                for(int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++)
-                {
-                    if(!lhs.mRank[i].equals("N/A"))
-                    {
+                for (int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
+                    if (!lhs.mRank[i].equals("N/A")) {
                         int leftRank;
-                        if(lhs.mRank[i].charAt(0) == 'T')
-                        {
+                        if (lhs.mRank[i].charAt(0) == 'T') {
                             leftRank = Integer.parseInt(lhs.mRank[i].substring(1));
-                        }
-                        else
-                        {
+                        } else {
                             leftRank = Integer.parseInt((lhs.mRank[i]));
                         }
                         leftValue += (numTeams - leftRank);
                     }
 
 
-                    if(!rhs.mRank[i].equals("N/A"))
-                    {
+                    if (!rhs.mRank[i].equals("N/A")) {
                         int rightRank;
-                        if(rhs.mRank[i].charAt(0) == 'T')
-                        {
-                            rightRank = Integer.parseInt(lhs.mRank[i].substring(1));
-                        }
-                        else
-                        {
-                            rightRank = Integer.parseInt((lhs.mRank[i]));
+                        if (rhs.mRank[i].charAt(0) == 'T') {
+                            rightRank = Integer.parseInt(rhs.mRank[i].substring(1));
+                        } else {
+                            rightRank = Integer.parseInt((rhs.mRank[i]));
                         }
                         rightValue += (numTeams - rightRank);
                     }
                 }
 
-                return Integer.compare(rightValue,leftValue);
+                return rightValue - leftValue;
             }
         });
 
         // Header row hack
-        teams.add(0, new ELI_Qualitative(-1,0));
+        teams.add(0, new ELI_Qualitative(-1, 0));
         ELA_Qualitative ela_Qualitative = new ELA_Qualitative(this, teams);
         listView.setAdapter(ela_Qualitative);
+    }
+
+    /**
+     *
+     * @param cursor
+     * @param position
+     */
+    private void individual_qualitative(Cursor cursor, int position)
+    {
+        assert position > -1 && position < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length;
+
+        ArrayList<ELI_Qualitative> teams = new ArrayList<>();
+
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
+        {
+            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
+
+            ELI_Qualitative team = new ELI_Qualitative(teamNumber, 1);
+
+            team.mRank[0] = cursor.getString(cursor.getColumnIndex(Constants.Qualitative_Rankings.QUALITATIVE_RANKING[position]));
+
+            teams.add(team);
+        }
+
+        Collections.sort(teams, new Comparator<ELI_Qualitative>() {
+            @Override
+            public int compare(ELI_Qualitative lhs, ELI_Qualitative rhs) {
+                int left_rank;
+                if (lhs.mRank[0].charAt(0) == 'T') {
+                    left_rank = Integer.parseInt(lhs.mRank[0].substring(1));
+                } else {
+                    left_rank = Integer.parseInt(lhs.mRank[0]);
+                }
+
+                int right_rank;
+                if (rhs.mRank[0].charAt(0) == 'T') {
+                    right_rank = Integer.parseInt(rhs.mRank[0].substring(1));
+                } else {
+                    right_rank = Integer.parseInt(rhs.mRank[0]);
+                }
+
+                return left_rank - right_rank;
+            }
+        });
+
+        teams.add(0, new ELI_Qualitative(-1, 1));
+        ELA_IndividualQualitative ela_individualQualitative = new ELA_IndividualQualitative(this, teams);
+        listView.setAdapter(ela_individualQualitative);
     }
 
     /**
