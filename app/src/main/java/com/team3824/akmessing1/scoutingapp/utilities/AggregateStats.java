@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Utility class for aggregating the match and super data to be used for statistics.
+ *
  * @author Andrew Messing
  * @version 1
- *          <p/>
- *          Utility class for aggregating the match and super data to be used for statistics.
  */
 public class AggregateStats {
 

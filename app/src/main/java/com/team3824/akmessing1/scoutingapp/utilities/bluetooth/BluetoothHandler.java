@@ -189,7 +189,7 @@ public class BluetoothHandler extends Handler {
                             case Constants.Bluetooth.MATCH_HEADER:
                                 lastUpdated = syncDB.getMatchLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateMatchSync(bluetoothSync.getConnectedAddress());
-                                String matchText = Constants.Bluetooth.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
+                                String matchText = Constants.Bluetooth.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfo());
                                 for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
                                     if (bluetoothSync.write(matchText.getBytes())) {
                                         break;
@@ -204,7 +204,7 @@ public class BluetoothHandler extends Handler {
                             case Constants.Bluetooth.PIT_HEADER:
                                 lastUpdated = syncDB.getMatchLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updatePitSync(bluetoothSync.getConnectedAddress());
-                                String pitText = Constants.Bluetooth.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
+                                String pitText = Constants.Bluetooth.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfo());
                                 for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
                                     if (bluetoothSync.write(pitText.getBytes())) {
                                         break;
@@ -219,7 +219,7 @@ public class BluetoothHandler extends Handler {
                             case Constants.Bluetooth.SUPER_HEADER:
                                 lastUpdated = syncDB.getSuperLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateSuperSync(bluetoothSync.getConnectedAddress());
-                                String superText = Constants.Bluetooth.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+                                String superText = Constants.Bluetooth.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatches());
                                 for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
                                     if (bluetoothSync.write(superText.getBytes())) {
                                         break;
@@ -234,7 +234,7 @@ public class BluetoothHandler extends Handler {
                             case Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER:
                                 lastUpdated = syncDB.getDriveTeamLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateDriveTeamSync(bluetoothSync.getConnectedAddress());
-                                String driveTeamText = Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+                                String driveTeamText = Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllComments());
                                 for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
                                     if (bluetoothSync.write(driveTeamText.getBytes())) {
                                         break;
@@ -249,7 +249,7 @@ public class BluetoothHandler extends Handler {
                             case Constants.Bluetooth.STATS_HEADER:
                                 lastUpdated = syncDB.getStatsLastUpdated(bluetoothSync.getConnectedAddress());
                                 syncDB.updateStatsSync(bluetoothSync.getConnectedAddress());
-                                String statsText = Constants.Bluetooth.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStatsSince(lastUpdated));
+                                String statsText = Constants.Bluetooth.STATS_HEADER + Utilities.CursorToJsonString(statsDB.getStats());
                                 for (j = 0; j < Constants.Bluetooth.NUM_ATTEMPTS; j++) {
                                     if (bluetoothSync.write(statsText.getBytes())) {
                                         break;

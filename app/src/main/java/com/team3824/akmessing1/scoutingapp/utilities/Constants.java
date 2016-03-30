@@ -5,7 +5,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
  */
 public interface Constants {
 
-    String VERSION = "Version: 1.1.2";
+    String VERSION = "Version: 1.1.3";
     String APP_DATA = "appData";
     int OUR_TEAM_NUMBER = 3824;
 
@@ -331,8 +331,8 @@ public interface Constants {
 
     //Bluetooth
     interface Bluetooth {
-        int CONNECTION_TIMEOUT = 10000;
-        int NUM_ATTEMPTS = 5;
+        int CONNECTION_TIMEOUT = 5000;
+        int NUM_ATTEMPTS = 7;
         int CHUNK_SIZE = 4192;
         int HEADER_MSB = 0x10;
         int HEADER_LSB = 0x55;

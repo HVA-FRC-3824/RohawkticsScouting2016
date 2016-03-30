@@ -159,7 +159,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 break;
             }
             case Constants.User_Types.SERVER: {
-                setupButton(R.id.upload_download_button);
+                //setupButton(R.id.upload_download_button);
                 if(bluetoothAdapter != null) {
                     setupButton(R.id.server_button);
                     setupButton(R.id.picture_transer_button);
@@ -392,7 +392,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
          */
         @Override
         protected Void doInBackground(Void... params) {
-
+            publishProgress("Connecting to Server");
             Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
@@ -425,7 +425,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getMatchLastUpdated(connectedAddress);
             syncDB.updateMatchSync(connectedAddress);
 
-            String matchUpdatedText = Constants.Bluetooth.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfoSince(lastUpdated));
+            String matchUpdatedText = Constants.Bluetooth.MATCH_HEADER + Utilities.CursorToJsonString(matchScoutDB.getAllInfo());
             if (!matchUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.MATCH_HEADER))) {
                 for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(matchUpdatedText.getBytes())) {
@@ -475,7 +475,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
          */
         @Override
         protected Void doInBackground(Void... params) {
-
+            publishProgress("Connecting to Server");
             Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
@@ -508,7 +508,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getPitLastUpdated(connectedAddress);
             syncDB.updatePitSync(connectedAddress);
 
-            String pitUpdatedText = Constants.Bluetooth.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfoSince(lastUpdated));
+            String pitUpdatedText = Constants.Bluetooth.PIT_HEADER + Utilities.CursorToJsonString(pitScoutDB.getAllTeamsInfo());
             if (!pitUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.PIT_HEADER))) {
                 for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(pitUpdatedText.getBytes())) {
@@ -558,7 +558,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
          */
         @Override
         protected Void doInBackground(Void... params) {
-
+            publishProgress("Connecting to Server");
             Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
@@ -591,7 +591,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getSuperLastUpdated(connectedAddress);
             syncDB.updateSuperSync(connectedAddress);
 
-            String superUpdatedText = Constants.Bluetooth.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatchesSince(lastUpdated));
+            String superUpdatedText = Constants.Bluetooth.SUPER_HEADER + Utilities.CursorToJsonString(superScoutDB.getAllMatches());
             if (!superUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.SUPER_HEADER))) {
                 for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(superUpdatedText.getBytes())) {
@@ -641,7 +641,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
          */
         @Override
         protected Void doInBackground(Void... params) {
-
+            publishProgress("Connecting to Server");
             Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {
@@ -674,7 +674,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
             String lastUpdated = syncDB.getDriveTeamLastUpdated(connectedAddress);
             syncDB.updateDriveTeamSync(connectedAddress);
 
-            String driveTeamUpdatedText = Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllCommentsSince(lastUpdated));
+            String driveTeamUpdatedText = Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER + Utilities.CursorToJsonString(driveTeamFeedbackDB.getAllComments());
             if (!driveTeamUpdatedText.equals(String.format("%c[]", Constants.Bluetooth.DRIVE_TEAM_FEEDBACK_HEADER))) {
                 for (i = 0; i < Constants.Bluetooth.NUM_ATTEMPTS; i++) {
                     if (bluetoothSync.write(driveTeamUpdatedText.getBytes())) {
@@ -819,7 +819,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
          */
         @Override
         protected Void doInBackground(Void... params) {
-
+            publishProgress("Connecting to Server");
             Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
             BluetoothDevice server = null;
             for (BluetoothDevice device : devices) {

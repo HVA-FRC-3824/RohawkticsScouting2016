@@ -44,7 +44,7 @@ public class TeamNotes extends Fragment {
         Cursor cursor = matchScoutDB.getTeamInfo(teamNumber);
         if (cursor != null) {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                if (cursor.getColumnIndex(Constants.Post_Match_Inputs.POST_NOTES) != -1 && !cursor.getString(cursor.getColumnIndex(Constants.Post_Match_Inputs.POST_NOTES)).equals("")) {
+                if (cursor.getColumnIndex(Constants.Post_Match_Inputs.POST_NOTES) != -1 && cursor.getString(cursor.getColumnIndex(Constants.Post_Match_Inputs.POST_NOTES)) != null && !cursor.getString(cursor.getColumnIndex(Constants.Post_Match_Inputs.POST_NOTES)).equals("")) {
                     notes += String.format("Match %d: %s\n", cursor.getInt(cursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER)), cursor.getString(cursor.getColumnIndex(Constants.Post_Match_Inputs.POST_NOTES)));
                 }
             }

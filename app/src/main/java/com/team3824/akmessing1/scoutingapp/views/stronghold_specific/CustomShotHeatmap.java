@@ -163,7 +163,11 @@ public class CustomShotHeatmap extends View {
             hits[HIGH][i] = data.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS_HIT[i]);
             misses[HIGH][i] = data.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS_MISS[i]);
             totals[HIGH][i] = data.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_HIGH_POSITIONS[i]);
-            radiuses[HIGH][i] = totals[HIGH][i] * 10;
+            radiuses[HIGH][i] = totals[HIGH][i] * 5;
+            if(radiuses[HIGH][i] > 60)
+            {
+                radiuses[HIGH][i] = 60;
+            }
             paints[HIGH][i].setARGB(255, (int) (255 * (1.0f - ((float) hits[HIGH][i] / (float) totals[HIGH][i]))), (int)(255 * ((float)hits[HIGH][i] / (float)totals[HIGH][i])), 0);
         }
 
@@ -172,7 +176,11 @@ public class CustomShotHeatmap extends View {
             hits[LOW][i] = data.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_HIT[i]);
             misses[LOW][i] = data.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_MISS[i]);
             totals[LOW][i] = data.getInt(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS[i]);
-            radiuses[LOW][i] = totals[LOW][i] * 10;
+            radiuses[LOW][i] = totals[LOW][i] * 5;
+            if(radiuses[LOW][i] > 60)
+            {
+                radiuses[LOW][i] = 60;
+            }
             paints[LOW][i].setARGB(255, (int) (255 * (1.0f - ((float) hits[LOW][i] / (float) totals[LOW][i]))), (int)(255 * ((float)hits[LOW][i] / (float)totals[LOW][i])), 0);
 
         }

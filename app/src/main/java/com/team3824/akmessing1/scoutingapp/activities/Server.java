@@ -103,8 +103,14 @@ public class Server extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Aggregating...");
+                circularBuffer.insert("Aggregating...\n");
+                logView.setText(circularBuffer.toString());
                 ArrayList<Integer> matches = superScoutDB.getMatchNumbers();
                 AggregateStats.updateSuper(new HashSet<Integer>(matches), matchScoutDB, superScoutDB, statsDB, eventID, Server.this);
+                Log.d(TAG, "Aggregate Complete");
+                circularBuffer.insert("Aggregate Complete\n");
+                logView.setText(circularBuffer.toString());
             }
         });
 
@@ -152,6 +158,7 @@ public class Server extends Activity {
         public void receivedData(String text) {
             switch (text.charAt(0)) {
                 case Constants.Bluetooth.MATCH_HEADER:
+                    displayText("Aggregating...");
                     try {
                         JSONArray jsonArray = new JSONArray(text.substring(1));
                         Set<Integer> teams = new HashSet<>();
@@ -163,8 +170,10 @@ public class Server extends Activity {
                     } catch (JSONException e) {
                         displayText("Aggregate Error...");
                     }
+                    displayText("Aggregate Complete");
                     break;
                 case Constants.Bluetooth.SUPER_HEADER:
+                    displayText("Aggregating...");
                     try {
                         JSONArray jsonArray = new JSONArray(text.substring(1));
                         Set<Integer> matches = new HashSet<>();
@@ -176,6 +185,7 @@ public class Server extends Activity {
                     } catch (JSONException e) {
                         displayText("Aggregate Error...");
                     }
+                    displayText("Aggregate Complete");
                     break;
             }
         }
