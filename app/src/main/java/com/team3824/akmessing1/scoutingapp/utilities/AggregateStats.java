@@ -91,8 +91,8 @@ public class AggregateStats {
         int totalTeleopLowGoalHit = 0;
         int totalTeleopLowGoalMiss = 0;
 
-        int[] totalTeleopIntakePosition = new int[Constants.Teleop_Inputs.TELEOP_INTAKE_POSITIONS.length - 1];
-        int totalTeleopIntakeTime = 0;
+        //int[] totalTeleopIntakePosition = new int[Constants.Teleop_Inputs.TELEOP_INTAKE_POSITIONS.length - 1];
+        //int totalTeleopIntakeTime = 0;
 
         //Endgame
         int totalFailedChallenge = 0;
@@ -211,6 +211,7 @@ public class AggregateStats {
                     Log.e(TAG, "Error: ", e);
                 }
 
+                /*
                 positionList = new ArrayList<>(Arrays.asList(Constants.Teleop_Inputs.TELEOP_INTAKE_POSITIONS));
                 positionList.remove(Constants.Teleop_Inputs.SELECT_INTAKE_POSITION);
 
@@ -235,7 +236,7 @@ public class AggregateStats {
                 } catch (JSONException e) {
                     Log.e(TAG, "Error: ", e);
                 }
-
+                */
 
                 //Endgame
                 totalFailedChallenge += (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_CHALLENGE]))) ? 1 : 0;
@@ -297,11 +298,13 @@ public class AggregateStats {
             newTeamStats.put(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_MISS[i],totalTeleopLowShotPositionMiss[i]);
         }
 
+        /*
         for (int i = 0; i < Constants.Calculated_Totals.TOTAL_TELEOP_INTAKE_POSITIONS.length; i++) {
             newTeamStats.put(Constants.Calculated_Totals.TOTAL_TELEOP_INTAKE_POSITIONS[i], totalTeleopIntakePosition[i]);
         }
         newTeamStats.put(Constants.Calculated_Totals.TOTAL_TELEOP_INTAKE_TIME, totalTeleopIntakeTime);
-
+        */
+        
         newTeamStats.put(Constants.Calculated_Totals.TOTAL_FAILED_CHALLENGE, totalFailedChallenge);
         newTeamStats.put(Constants.Calculated_Totals.TOTAL_CHALLENGE, totalChallenge);
         newTeamStats.put(Constants.Calculated_Totals.TOTAL_FAILED_SCALE, totalFailedScale);

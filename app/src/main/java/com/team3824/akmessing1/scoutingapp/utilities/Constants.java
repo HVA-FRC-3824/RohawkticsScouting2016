@@ -5,7 +5,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
  */
 public interface Constants {
 
-    String VERSION = "Version: 1.1.3";
+    String VERSION = "Version: 1.1.4";
     String APP_DATA = "appData";
     int OUR_TEAM_NUMBER = 3824;
 

@@ -265,8 +265,8 @@ public class TeamVisuals extends Fragment implements RadioButton.OnClickListener
         radioButton.setOnClickListener(this);
         radioButton.setChecked(true);
 
-        intakeHeatmap = (CustomIntakeHeatmap)view.findViewById(R.id.intake_heatmap);
-        intakeHeatmap.setPaints(statsMap);
+        //intakeHeatmap = (CustomIntakeHeatmap)view.findViewById(R.id.intake_heatmap);
+        //intakeHeatmap.setPaints(statsMap);
 
         BarChart mBarChart = (BarChart) view.findViewById(R.id.bar_chart);
         mBarChart.setDescription("");
