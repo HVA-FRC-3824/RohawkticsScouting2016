@@ -145,7 +145,9 @@ public class PitRobotPicture extends ScoutFragment implements View.OnClickListen
      */
     @Override
     public String writeContentsToMap(ScoutMap map) {
-        map.put(Constants.Pit_Inputs.PIT_ROBOT_PICTURE, mCurrentPhotoPath);
+        if(!mCurrentPhotoPath.equals("")) {
+            map.put(Constants.Pit_Inputs.PIT_ROBOT_PICTURE, mCurrentPhotoPath);
+        }
         return super.writeContentsToMap(map);
     }
 

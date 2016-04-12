@@ -5,7 +5,7 @@ package com.team3824.akmessing1.scoutingapp.utilities;
  */
 public interface Constants {
 
-    String VERSION = "Version: 1.1.4";
+    String VERSION = "Version: 1.1.5";
     String APP_DATA = "appData";
     int OUR_TEAM_NUMBER = 3824;
 
@@ -73,11 +73,11 @@ public interface Constants {
 
         // Shooting
         String SELECT_AIM_TIME = "Select Aim Time";
-        String[] TELEOP_AIM_TIMES = {SELECT_AIM_TIME,"< 2s", "< 5s", "< 8s", "< 10s", "< 15s", "> 15s"};
+        String[] TELEOP_AIM_TIMES = {SELECT_AIM_TIME, "< 2s", "< 5s", "< 8s", "< 10s", "< 15s", "> 15s"};
         int[] TELEOP_AIM_TIMES_VALUE = {2, 5, 8, 10, 15, 20};
 
         String SELECT_SHOT_POSITION = "Select Position";
-        String OUTER_WORKS= "Outer Works";
+        String OUTER_WORKS = "Outer Works";
         String ON_NEAR_CENTER_BATTER = "On/Near Center Batter";
         String ALIGNMENT_LINE = "Alignment Line";
         String[] TELEOP_SHOT_POSITIONS = {SELECT_SHOT_POSITION, OUTER_WORKS, "On/Near Left Batter", ON_NEAR_CENTER_BATTER, "On/Near Right Batter", ALIGNMENT_LINE, "Open Space"};
@@ -90,17 +90,17 @@ public interface Constants {
         String SHOT_HIT_MISS = "shot_hit_miss";
 
         // Intaking
-        String SELECT_INTAKE_TIME = "Select Intake Time";
-        String[] TELEOP_INTAKE_TIMES = {SELECT_INTAKE_TIME, "< 2s", "< 5s", "< 8s","< 10s", "> 10s"};
-        int[] TELEOP_INTAKE_TIMES_VALUE = {2, 5, 8, 10, 15};
+        //String SELECT_INTAKE_TIME = "Select Intake Time";
+        //String[] TELEOP_INTAKE_TIMES = {SELECT_INTAKE_TIME, "< 2s", "< 5s", "< 8s","< 10s", "> 10s"};
+        //int[] TELEOP_INTAKE_TIMES_VALUE = {2, 5, 8, 10, 15};
 
-        String SELECT_INTAKE_POSITION = "Select Position";
-        String[] TELEOP_INTAKE_POSITIONS = {SELECT_INTAKE_POSITION, "Neutral Zone", "Team Secret Passage", "Opponent Secret Passage", "Team Court Yard", "Opponent Court Yard"};
+        //String SELECT_INTAKE_POSITION = "Select Position";
+        //String[] TELEOP_INTAKE_POSITIONS = {SELECT_INTAKE_POSITION, "Neutral Zone", "Team Secret Passage", "Opponent Secret Passage", "Team Court Yard", "Opponent Court Yard"};
 
-        String INTAKE_POSITION = "intake_position";
-        String INTAKE_TIME = "intake_time";
+        //String INTAKE_POSITION = "intake_position";
+        //String INTAKE_TIME = "intake_time";
 
-        String TELEOP_INTAKE = "teleop_intake";
+        //String TELEOP_INTAKE = "teleop_intake";
     }
 
     // Endgame
@@ -111,7 +111,7 @@ public interface Constants {
         int ENDGAME_FAILED_CHALLENGE = 1;
         int ENDGAME_CHALLENGE = 2;
         int ENDGAME_FAILED_SCALE = 3;
-        int ENDGAME_SCALE =4;
+        int ENDGAME_SCALE = 4;
 
         String[] ENDGAME_OPTIONS = {"Nothing", "Failed Challenge", "Challenge", "Failed Scale", "Scale"};
 
@@ -277,14 +277,14 @@ public interface Constants {
         int SHOT_POSITION_LOW_RIGHT_BATTER = 1;
         int SHOT_POSITION_LOW_OPEN_SPACE = 2;
 
-        String[] TOTAL_TELEOP_INTAKE_POSITIONS = {"total_teleop_intake_neutral_zone", "total_teleop_intake_team_secret_passage", "total_teleop_intake_opponent_secret_passage", "total_teleop_intake_team_court_yard", "total_teleop_intake_opponent_court_yard"};
-        String TOTAL_TELEOP_INTAKE_TIME = "total_teleop_intake_time";
+        //String[] TOTAL_TELEOP_INTAKE_POSITIONS = {"total_teleop_intake_neutral_zone", "total_teleop_intake_team_secret_passage", "total_teleop_intake_opponent_secret_passage", "total_teleop_intake_team_court_yard", "total_teleop_intake_opponent_court_yard"};
+        //String TOTAL_TELEOP_INTAKE_TIME = "total_teleop_intake_time";
 
-        int INTAKE_POSITION_NEUTRAL_ZONE = 0;
-        int INTAKE_POSITION_TEAM_SECRET_PASSAGE = 1;
-        int INTAKE_POSITION_OPPONENT_SECRET_PASSAGE = 2;
-        int INTAKE_POSITION_TEAM_COURTYARD = 3;
-        int INTAKE_POSITION_OPPONENT_COURTYARD = 4;
+        //int INTAKE_POSITION_NEUTRAL_ZONE = 0;
+        //int INTAKE_POSITION_TEAM_SECRET_PASSAGE = 1;
+        //int INTAKE_POSITION_OPPONENT_SECRET_PASSAGE = 2;
+        //int INTAKE_POSITION_TEAM_COURTYARD = 3;
+        //int INTAKE_POSITION_OPPONENT_COURTYARD = 4;
 
         String TOTAL_FAILED_CHALLENGE = "total_failed_challenge";
         String TOTAL_CHALLENGE = "total_challenge";
@@ -312,8 +312,8 @@ public interface Constants {
 
         String BOTTOM_TEXT = "bottom_text";
 
-        int DNP = 0;
-        int DECLINE = 1;
+        //int DNP = 0;
+        //int DECLINE = 1;
 
         String PICK_RANK = "_pick_rank";
         String PICKABILITY = "_pickability";
@@ -351,12 +351,12 @@ public interface Constants {
         char RECEIVE_HEADER = 'r';
         char PING_HEADER = 'p';
 
-        String REQUEST_MATCH = String.format("%c%c",REQUEST_HEADER,MATCH_HEADER);
-        String REQUEST_SUPER = String.format("%c%c",REQUEST_HEADER,SUPER_HEADER);
-        String REQUEST_PIT = String.format("%c%c",REQUEST_HEADER,PIT_HEADER);
-        String REQUEST_STATS = String.format("%c%c",REQUEST_HEADER,STATS_HEADER);
-        String REQUEST_DRIVE_TEAM_FEEDBACK = String.format("%c%c",REQUEST_HEADER,DRIVE_TEAM_FEEDBACK_HEADER);
-        String REQUEST_SCHEDULE = String.format("%c%c",REQUEST_HEADER,SCHEDULE_HEADER);
+        String REQUEST_MATCH = String.format("%c%c", REQUEST_HEADER, MATCH_HEADER);
+        String REQUEST_SUPER = String.format("%c%c", REQUEST_HEADER, SUPER_HEADER);
+        String REQUEST_PIT = String.format("%c%c", REQUEST_HEADER, PIT_HEADER);
+        String REQUEST_STATS = String.format("%c%c", REQUEST_HEADER, STATS_HEADER);
+        String REQUEST_DRIVE_TEAM_FEEDBACK = String.format("%c%c", REQUEST_HEADER, DRIVE_TEAM_FEEDBACK_HEADER);
+        String REQUEST_SCHEDULE = String.format("%c%c", REQUEST_HEADER, SCHEDULE_HEADER);
 
         String PING = "ping";
         String PONG = "pong";

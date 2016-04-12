@@ -68,36 +68,38 @@ public class MatchList extends Activity {
      * @param nextPage          Whether the next page should be Match Scouting, Super Scouting, or Match View.
      */
     private void displayListView(ScheduleDB scheduleDB, SharedPreferences sharedPreferences, final String nextPage) {
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.match_list);
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(4, 4, 4, 4);
+
+        if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING) || nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
+            Button button = new Button(this);
+            button.setLayoutParams(lp);
+            button.setText("Practice Match");
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = null;
+                    if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
+                        intent = new Intent(MatchList.this, MatchScouting.class);
+                    } else if (nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
+                        intent = new Intent(MatchList.this, SuperScouting.class);
+                    }
+                    intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
+                    startActivity(intent);
+                }
+            });
+            linearLayout.addView(button);
+        }
+
         Cursor cursor = scheduleDB.getSchedule();
         if (cursor != null && cursor.getCount() > 0) {
-            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.match_list);
             int alliance_number = -1;
             String alliance_color = "";
             if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
                 alliance_number = sharedPreferences.getInt(Constants.Settings.ALLIANCE_NUMBER, 0);
                 alliance_color = sharedPreferences.getString(Constants.Settings.ALLIANCE_COLOR, "");
-            }
-            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(4, 4, 4, 4);
-
-            if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING) || nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
-                Button button = new Button(this);
-                button.setLayoutParams(lp);
-                button.setText("Practice Match");
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = null;
-                        if (nextPage.equals(Constants.Intent_Extras.MATCH_SCOUTING)) {
-                            intent = new Intent(MatchList.this, MatchScouting.class);
-                        } else if (nextPage.equals(Constants.Intent_Extras.SUPER_SCOUTING)) {
-                            intent = new Intent(MatchList.this, SuperScouting.class);
-                        }
-                        intent.putExtra(Constants.Intent_Extras.MATCH_NUMBER, -1);
-                        startActivity(intent);
-                    }
-                });
-                linearLayout.addView(button);
             }
 
             // Add buttons

@@ -402,8 +402,15 @@ public class PitScoutDB extends SQLiteOpenHelper {
                     map.put(cursor.getColumnName(i), cursor.getInt(i));
                     break;
                 case Cursor.FIELD_TYPE_STRING:
-                    Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
-                    map.put(cursor.getColumnName(i), cursor.getString(i));
+                    if (cursor.getString(i) == null) {
+                        Log.d(TAG, cursor.getColumnName(i) + "<-\"\"");
+
+                        map.put(cursor.getColumnName(i), "");
+                    } else {
+                        Log.d(TAG, cursor.getColumnName(i) + "<-" + cursor.getString(i));
+
+                        map.put(cursor.getColumnName(i), cursor.getString(i));
+                    }
                     break;
             }
         }

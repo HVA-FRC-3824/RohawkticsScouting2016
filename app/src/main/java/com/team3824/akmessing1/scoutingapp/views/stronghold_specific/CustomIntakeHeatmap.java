@@ -1,3 +1,4 @@
+
 package com.team3824.akmessing1.scoutingapp.views.stronghold_specific;
 
 import android.content.Context;
@@ -16,6 +17,7 @@ import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 /**
  * @author Andrew Messing
  */
+/*
 public class CustomIntakeHeatmap extends View {
 
     private final String TAG = "CustomIntakeHeatmap";
@@ -129,3 +131,4 @@ public class CustomIntakeHeatmap extends View {
         }
     }
 }
+*/

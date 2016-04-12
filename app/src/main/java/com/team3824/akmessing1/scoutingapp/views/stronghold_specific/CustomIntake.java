@@ -30,6 +30,7 @@ import java.util.Arrays;
 /**
  * @author Andrew Messing
  */
+/*
 public class CustomIntake extends CustomScoutView implements View.OnClickListener, OnCheckedChangeListener {
 
     private final String TAG = "CustomIntake";
@@ -214,3 +215,4 @@ public class CustomIntake extends CustomScoutView implements View.OnClickListene
         }
     }
 }
+*/

@@ -38,7 +38,7 @@ import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
-import com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomIntakeHeatmap;
+//import com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomIntakeHeatmap;
 import com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomShotHeatmap;
 
 import org.json.JSONArray;
@@ -77,7 +77,7 @@ public class TeamVisuals extends Fragment implements RadioButton.OnClickListener
     private LineDataSet mTeleopLowPercent;
 
     private CustomShotHeatmap shotHeatmap;
-    private CustomIntakeHeatmap intakeHeatmap;
+    //private CustomIntakeHeatmap intakeHeatmap;
 
     private ValueFormatter intVF;
     private ValueFormatter percentVF;

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -81,6 +82,30 @@ public class PitScouting extends Activity {
 
         prevTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
         nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
+
+        int pitGroupNumber = sharedPreferences.getInt(Constants.Settings.PIT_GROUP_NUMBER,0);
+        Cursor cursor = pitScoutDB.getAllTeamsInfo();
+        int numTeams = cursor.getCount();
+        int numGroupTeams = numTeams / 6;
+        int extra = numTeams % 6;
+        int startPosition = 0;
+        int endPosition = -1;
+        startPosition = numGroupTeams * (pitGroupNumber - 1);
+        endPosition = numGroupTeams * pitGroupNumber;
+        if (extra > 0) {
+            startPosition += pitGroupNumber - 1;
+            endPosition += pitGroupNumber;
+        }
+        cursor.moveToPosition(startPosition);
+        if(prevTeamNumber < cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER)))
+        {
+            prevTeamNumber = -1;
+        }
+        cursor.moveToPosition(endPosition);
+        if(nextTeamNumber >= cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER)))
+        {
+            nextTeamNumber = -1;
+        }
 
         Utilities.setupUI(this, findViewById(android.R.id.content));
 
@@ -364,12 +389,16 @@ public class PitScouting extends Activity {
             // Change picture filename to use event id and team number
             String picture_filename = data.getString(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
             File picture = new File(getFilesDir(), picture_filename);
-            if (picture.exists()) {
+            if (picture.exists() && picture.length() > 0) {
                 String newPathName = String.format("%s_%d.jpg", eventId, teamNumber);
                 File newPath = new File(getFilesDir(), newPathName);
                 picture.renameTo(newPath);
                 data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
                 data.put(Constants.Pit_Inputs.PIT_ROBOT_PICTURE, newPathName);
+            }
+            else
+            {
+                data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
             }
 
             PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);

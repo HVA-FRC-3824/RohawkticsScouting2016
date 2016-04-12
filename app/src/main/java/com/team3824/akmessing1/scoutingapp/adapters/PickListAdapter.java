@@ -85,6 +85,8 @@ public class PickListAdapter extends ArrayAdapter<Team> {
      */
     public void add(int to, Team team) {
         teams.add(to, team);
+        clear();
+        super.addAll(teams);
     }
 
     /**
@@ -208,6 +210,12 @@ public class PickListAdapter extends ArrayAdapter<Team> {
         }
 
         return convertView;
+    }
+
+    public void remove(Team t)
+    {
+        teams.remove(t);
+        super.remove(t);
     }
 
     /**

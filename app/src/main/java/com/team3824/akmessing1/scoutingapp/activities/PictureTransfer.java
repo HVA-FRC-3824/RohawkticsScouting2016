@@ -64,6 +64,8 @@ public class PictureTransfer extends Activity implements View.OnClickListener{
         CustomHeader customHeader = (CustomHeader) findViewById(R.id.header);
         customHeader.removeHome();
 
+        findViewById(android.R.id.content).setKeepScreenOn(true);
+
         fileManager = new FileManager();
         fileManager.setHomeDir(getFilesDir().getAbsolutePath());
 
@@ -86,8 +88,8 @@ public class PictureTransfer extends Activity implements View.OnClickListener{
             }
         }
 
-        int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+        int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
         }
 
