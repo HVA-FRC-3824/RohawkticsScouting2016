@@ -91,8 +91,6 @@ public class AggregateStats {
         int totalTeleopLowGoalHit = 0;
         int totalTeleopLowGoalMiss = 0;
 
-        //int[] totalTeleopIntakePosition = new int[Constants.Teleop_Inputs.TELEOP_INTAKE_POSITIONS.length - 1];
-        //int totalTeleopIntakeTime = 0;
 
         //Endgame
         int totalFailedChallenge = 0;
@@ -114,11 +112,13 @@ public class AggregateStats {
 
         int totalMatches = 0;
 
+
+
         for (teamInfo.moveToFirst(); !teamInfo.isAfterLast(); teamInfo.moveToNext()) {
             int matchNumber = teamInfo.getInt(teamInfo.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER));
             ScoutMap superMatch = superScoutDB.getMatchInfo(matchNumber);
 
-            Log.d(TAG, String.valueOf(matchNumber));
+            //Log.d(TAG, String.valueOf(matchNumber));
 
             /*
                 If superscout has not yet recorded the match change the update time so that this
@@ -127,136 +127,230 @@ public class AggregateStats {
             if (superMatch != null) {
 
                 if (superMatch.get(Constants.Super_Inputs.DEFENSE_3) != null) {
-                    totalMatches++;
-
-                    String defense2, defense3, defense4, defense5;
-                    defense3 = superMatch.get(Constants.Super_Inputs.DEFENSE_3).getString().toLowerCase().replace(" ", "_");
-                    if (superMatch.getInt(SuperScoutDB.KEY_BLUE1) == team ||
-                            superMatch.getInt(SuperScoutDB.KEY_BLUE2) == team ||
-                            superMatch.getInt(SuperScoutDB.KEY_BLUE3) == team) {
-                        defense2 = superMatch.get(Constants.Super_Inputs.BLUE_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
-                        defense4 = superMatch.get(Constants.Super_Inputs.BLUE_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
-                        defense5 = superMatch.get(Constants.Super_Inputs.BLUE_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
-                    } else {
-                        defense2 = superMatch.get(Constants.Super_Inputs.RED_DEFENSE_2).getString().toLowerCase().replace(" ", "_");
-                        defense4 = superMatch.get(Constants.Super_Inputs.RED_DEFENSE_4).getString().toLowerCase().replace(" ", "_");
-                        defense5 = superMatch.get(Constants.Super_Inputs.RED_DEFENSE_5).getString().toLowerCase().replace(" ", "_");
-                    }
-
-                    increment_array(teamInfo, totalDefensesSeen, defense2, defense3, defense4, defense5, "seen");
 
                     //Auto
-                    increment_array(teamInfo, totalStartPosition, defense2, defense3, defense4, defense5, "start");
-                    increment_array(teamInfo, totalDefenseReaches, defense2, defense3, defense4, defense5, "reach");
-                    increment_array(teamInfo, totalDefenseCrosses, defense2, defense3, defense4, defense5, "cross");
-                    totalAutoHighGoalHit += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_HIGH_HIT));
-                    totalAutoHighGoalMiss += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_HIGH_MISS));
-                    totalAutoLowGoalHit += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_LOW_HIT));
-                    totalAutoLowGoalMiss += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_LOW_MISS));
+                    int[] tempStartPosition = new int[Constants.Defense_Arrays.DEFENSES.length + 2];
+                    int[] tempDefenseReaches = new int[Constants.Defense_Arrays.DEFENSES.length];
+                    int[] tempDefenseCrosses = new int[Constants.Defense_Arrays.DEFENSES.length];
+                    int tempAutoHighGoalHit = 0;
+                    int tempAutoHighGoalMiss = 0;
+                    int tempAutoLowGoalHit = 0;
+                    int tempAutoLowGoalMiss = 0;
+
 
                     //Teleop
-                    increment_array(teamInfo, totalTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
-                    increment_array(teamInfo, totalTeleopNotCross, defense2, defense3, defense4, defense5, "not");
-                    increment_array(teamInfo, totalTeleopDefensesPoints, defense2, defense3, defense4, defense5, "teleop_points");
-                    increment_array(teamInfo, totalDefensesTime, defense2, defense3, defense4, defense5, "time");
+                    int[] tempTeleopDefenses = new int[Constants.Defense_Arrays.DEFENSES.length];
+                    int[] tempTeleopNotCross = new int[Constants.Defense_Arrays.DEFENSES.length];
+                    int[] tempTeleopDefensesPoints = new int[Constants.Defense_Arrays.DEFENSES.length];
+                    int[] tempDefensesSeen = new int[Constants.Defense_Arrays.DEFENSES.length];
+                    int[] tempDefensesTime = new int[Constants.Defense_Arrays.DEFENSES.length];
 
-                    ArrayList<String> positionList = new ArrayList<>(Arrays.asList(Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS));
-                    positionList.remove(Constants.Teleop_Inputs.SELECT_SHOT_POSITION);
+                    int[] tempTeleopHighShotPosition = new int[Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 1];
+                    int[] tempTeleopHighShotPositionHit = new int[Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 1];
+                    int[] tempTeleopHighShotPositionMiss = new int[Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 1];
+                    int tempTeleopHighAimTime = 0;
+                    int tempTeleopHighGoalHit = 0;
+                    int tempTeleopHighGoalMiss = 0;
 
-                    ArrayList<String> timeList = new ArrayList<>(Arrays.asList(Constants.Teleop_Inputs.TELEOP_AIM_TIMES));
-                    timeList.remove(Constants.Teleop_Inputs.SELECT_AIM_TIME);
+                    int[] tempTeleopLowShotPosition = new int[Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 4];
+                    int[] tempTeleopLowShotPositionHit = new int[Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 4];
+                    int[] tempTeleopLowShotPositionMiss = new int[Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 4];
+                    int tempTeleopLowAimTime = 0;
+                    int tempTeleopLowGoalHit = 0;
+                    int tempTeleopLowGoalMiss = 0;
 
-                    String high_goal_string = teamInfo.getString(teamInfo.getColumnIndex(Constants.Teleop_Inputs.TELEOP_HIGH_SHOT));
-                    try {
-                        JSONArray jsonArray = new JSONArray(high_goal_string);
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            String position = jsonObject.getString(Constants.Teleop_Inputs.SHOT_POSITION);
-                            totalTeleopHighShotPosition[positionList.indexOf(position)]++;
-                            String time = jsonObject.getString(Constants.Teleop_Inputs.AIM_TIME);
-                            totalTeleopHighAimTime += Constants.Teleop_Inputs.TELEOP_AIM_TIMES_VALUE[timeList.indexOf(time)];
-                            if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
-                                totalTeleopHighGoalHit++;
-                                totalTeleopHighShotPositionHit[positionList.indexOf(position)]++;
-                            } else {
-                                totalTeleopHighGoalMiss++;
-                                totalTeleopHighShotPositionMiss[positionList.indexOf(position)]++;
-                            }
-                        }
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error: ", e);
-                    }
-
-
-                    positionList.remove(Constants.Teleop_Inputs.OUTER_WORKS);
-                    positionList.remove(Constants.Teleop_Inputs.ALIGNMENT_LINE);
-                    positionList.remove(Constants.Teleop_Inputs.ON_NEAR_CENTER_BATTER);
-
-                    String low_goal_string = teamInfo.getString(teamInfo.getColumnIndex(Constants.Teleop_Inputs.TELEOP_LOW_SHOT));
-                    try {
-                        JSONArray jsonArray = new JSONArray(low_goal_string);
-                        int matchLowGoalAimTime = 0;
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            String position = jsonObject.getString(Constants.Teleop_Inputs.SHOT_POSITION);
-                            totalTeleopLowShotPosition[positionList.indexOf(position)]++;
-                            String time = jsonObject.getString(Constants.Teleop_Inputs.AIM_TIME);
-                            totalTeleopLowAimTime += Constants.Teleop_Inputs.TELEOP_AIM_TIMES_VALUE[timeList.indexOf(time)];
-                            if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
-                                totalTeleopLowGoalHit++;
-                                totalTeleopLowShotPositionHit[positionList.indexOf(position)]++;
-                            } else {
-                                totalTeleopLowGoalMiss++;
-                                totalTeleopLowShotPositionMiss[positionList.indexOf(position)]++;
-                            }
-                        }
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error: ", e);
-                    }
-
-                /*
-                positionList = new ArrayList<>(Arrays.asList(Constants.Teleop_Inputs.TELEOP_INTAKE_POSITIONS));
-                positionList.remove(Constants.Teleop_Inputs.SELECT_INTAKE_POSITION);
-
-                timeList = new ArrayList<>(Arrays.asList(Constants.Teleop_Inputs.TELEOP_INTAKE_TIMES));
-                timeList.remove(Constants.Teleop_Inputs.SELECT_INTAKE_TIME);
-
-                String intake_string = teamInfo.getString(teamInfo.getColumnIndex(Constants.Teleop_Inputs.TELEOP_INTAKE));
-                try {
-                    JSONArray jsonArray = new JSONArray(intake_string);
-                    int matchIntakeTime = 0;
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String position = jsonObject.getString(Constants.Teleop_Inputs.INTAKE_POSITION);
-                        totalTeleopIntakePosition[positionList.indexOf(position)]++;
-                        String time = jsonObject.getString(Constants.Teleop_Inputs.INTAKE_TIME);
-                        matchIntakeTime += Constants.Teleop_Inputs.TELEOP_INTAKE_TIMES_VALUE[timeList.indexOf(time)];
-                    }
-                    if (jsonArray.length() > 0) {
-                        matchIntakeTime /= jsonArray.length();
-                        totalTeleopIntakeTime += matchIntakeTime;
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "Error: ", e);
-                }
-                */
 
                     //Endgame
-                    totalFailedChallenge += (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_CHALLENGE]))) ? 1 : 0;
-                    totalChallenge += (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_CHALLENGE]))) ? 1 : 0;
-                    totalFailedScale += (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_SCALE]))) ? 1 : 0;
-                    totalScale += (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_SCALE]))) ? 1 : 0;
+                    int tempFailedChallenge = 0;
+                    int tempChallenge = 0;
+                    int tempFailedScale = 0;
+                    int tempScale = 0;
 
-                    //Post Match
-                    totalDQ += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Post_Match_Inputs.POST_DQ));
-                    totalStopped += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Post_Match_Inputs.POST_STOPPED));
-                    totalDidntShowUp += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Post_Match_Inputs.POST_DIDNT_SHOW_UP));
+                    //Post
+                    int tempDQ = 0;
+                    int tempStopped = 0;
+                    int tempDidntShowUp = 0;
 
                     //Fouls
-                    totalFouls += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_STANDARD));
-                    totalTechFouls += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_TECH));
-                    totalYellowCards += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_YELLOW_CARD));
-                    totalRedCards += teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_RED_CARD));
+                    int tempFouls = 0;
+                    int tempTechFouls = 0;
+                    int tempYellowCards = 0;
+                    int tempRedCards = 0;
+
+                    // try to get the data
+                    try {
+                        totalMatches++;
+
+                        String defense2, defense3, defense4, defense5;
+                        defense3 = superMatch.getString(Constants.Super_Inputs.DEFENSE_3).toLowerCase().replace(" ", "_");
+                        if (superMatch.getInt(SuperScoutDB.KEY_BLUE1) == team ||
+                                superMatch.getInt(SuperScoutDB.KEY_BLUE2) == team ||
+                                superMatch.getInt(SuperScoutDB.KEY_BLUE3) == team) {
+                            defense2 = superMatch.getString(Constants.Super_Inputs.BLUE_DEFENSE_2).toLowerCase().replace(" ", "_");
+                            defense4 = superMatch.getString(Constants.Super_Inputs.BLUE_DEFENSE_4).toLowerCase().replace(" ", "_");
+                            defense5 = superMatch.getString(Constants.Super_Inputs.BLUE_DEFENSE_5).toLowerCase().replace(" ", "_");
+                        } else {
+                            defense2 = superMatch.getString(Constants.Super_Inputs.RED_DEFENSE_2).toLowerCase().replace(" ", "_");
+                            defense4 = superMatch.getString(Constants.Super_Inputs.RED_DEFENSE_4).toLowerCase().replace(" ", "_");
+                            defense5 = superMatch.getString(Constants.Super_Inputs.RED_DEFENSE_5).toLowerCase().replace(" ", "_");
+                        }
+
+                        increment_array(teamInfo, tempDefensesSeen, defense2, defense3, defense4, defense5, "seen");
+
+                        //Auto
+                        increment_array(teamInfo, tempStartPosition, defense2, defense3, defense4, defense5, "start");
+                        increment_array(teamInfo, tempDefenseReaches, defense2, defense3, defense4, defense5, "reach");
+                        increment_array(teamInfo, tempDefenseCrosses, defense2, defense3, defense4, defense5, "cross");
+                        tempAutoHighGoalHit = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_HIGH_HIT));
+                        tempAutoHighGoalMiss = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_HIGH_MISS));
+                        tempAutoLowGoalHit = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_LOW_HIT));
+                        tempAutoLowGoalMiss = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Auto_Inputs.AUTO_LOW_MISS));
+
+                        //Teleop
+                        increment_array(teamInfo, tempTeleopDefenses, defense2, defense3, defense4, defense5, "teleop");
+                        increment_array(teamInfo, tempTeleopNotCross, defense2, defense3, defense4, defense5, "not");
+                        increment_array(teamInfo, tempTeleopDefensesPoints, defense2, defense3, defense4, defense5, "teleop_points");
+                        increment_array(teamInfo, tempDefensesTime, defense2, defense3, defense4, defense5, "time");
+
+                        ArrayList<String> positionList = new ArrayList<>(Arrays.asList(Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS));
+                        positionList.remove(Constants.Teleop_Inputs.SELECT_SHOT_POSITION);
+
+                        ArrayList<String> timeList = new ArrayList<>(Arrays.asList(Constants.Teleop_Inputs.TELEOP_AIM_TIMES));
+                        timeList.remove(Constants.Teleop_Inputs.SELECT_AIM_TIME);
+
+                        String high_goal_string = teamInfo.getString(teamInfo.getColumnIndex(Constants.Teleop_Inputs.TELEOP_HIGH_SHOT));
+                        try {
+                            JSONArray jsonArray = new JSONArray(high_goal_string);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                String position = jsonObject.getString(Constants.Teleop_Inputs.SHOT_POSITION);
+                                tempTeleopHighShotPosition[positionList.indexOf(position)]++;
+                                String time = jsonObject.getString(Constants.Teleop_Inputs.AIM_TIME);
+                                tempTeleopHighAimTime += Constants.Teleop_Inputs.TELEOP_AIM_TIMES_VALUE[timeList.indexOf(time)];
+                                if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
+                                    tempTeleopHighGoalHit++;
+                                    tempTeleopHighShotPositionHit[positionList.indexOf(position)]++;
+                                } else {
+                                    tempTeleopHighGoalMiss++;
+                                    tempTeleopHighShotPositionMiss[positionList.indexOf(position)]++;
+                                }
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Error: ", e);
+                        }
+
+
+                        positionList.remove(Constants.Teleop_Inputs.OUTER_WORKS);
+                        positionList.remove(Constants.Teleop_Inputs.ALIGNMENT_LINE);
+                        positionList.remove(Constants.Teleop_Inputs.ON_NEAR_CENTER_BATTER);
+
+                        String low_goal_string = teamInfo.getString(teamInfo.getColumnIndex(Constants.Teleop_Inputs.TELEOP_LOW_SHOT));
+                        try {
+                            JSONArray jsonArray = new JSONArray(low_goal_string);
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                String position = jsonObject.getString(Constants.Teleop_Inputs.SHOT_POSITION);
+                                tempTeleopLowShotPosition[positionList.indexOf(position)]++;
+                                String time = jsonObject.getString(Constants.Teleop_Inputs.AIM_TIME);
+                                tempTeleopLowAimTime += Constants.Teleop_Inputs.TELEOP_AIM_TIMES_VALUE[timeList.indexOf(time)];
+                                if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
+                                    tempTeleopLowGoalHit++;
+                                    tempTeleopLowShotPositionHit[positionList.indexOf(position)]++;
+                                } else {
+                                    tempTeleopLowGoalMiss++;
+                                    tempTeleopLowShotPositionMiss[positionList.indexOf(position)]++;
+                                }
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Error: ", e);
+                        }
+
+                        //Endgame
+                        tempFailedChallenge = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_CHALLENGE]))) ? 1 : 0;
+                        tempChallenge = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_CHALLENGE]))) ? 1 : 0;
+                        tempFailedScale = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_SCALE]))) ? 1 : 0;
+                        tempScale = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_SCALE]))) ? 1 : 0;
+
+                        //Post Match
+                        tempDQ = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Post_Match_Inputs.POST_DQ));
+                        tempStopped = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Post_Match_Inputs.POST_STOPPED));
+                        tempDidntShowUp = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Post_Match_Inputs.POST_DIDNT_SHOW_UP));
+
+                        //Fouls
+                        tempFouls = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_STANDARD));
+                        tempTechFouls = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_TECH));
+                        tempYellowCards = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_YELLOW_CARD));
+                        tempRedCards = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_RED_CARD));
+
+                        // if all the data can down cleanly then add it to the totals
+
+                        for(int i = 0; i < Constants.Defense_Arrays.DEFENSES.length; i++)
+                        {
+                            totalStartPosition[i] += tempStartPosition[i];
+                            totalDefenseReaches[i] += tempDefenseReaches[i];
+                            totalDefenseCrosses[i] += tempDefenseCrosses[i];
+
+                            totalTeleopDefenses[i] += tempTeleopDefenses[i];
+                            totalTeleopNotCross[i] += tempTeleopNotCross[i];
+                            totalTeleopDefensesPoints[i] += tempTeleopDefensesPoints[i];
+                            totalDefensesSeen[i] += tempDefensesSeen[i];
+                            totalDefensesTime[i] += tempDefensesTime[i];
+                        }
+                        totalStartPosition[Constants.Defense_Arrays.DEFENSES.length] += tempStartPosition[Constants.Defense_Arrays.DEFENSES.length];
+                        totalStartPosition[Constants.Defense_Arrays.DEFENSES.length + 1] += tempStartPosition[Constants.Defense_Arrays.DEFENSES.length + 1];
+
+
+                        totalAutoHighGoalHit += tempAutoHighGoalHit;
+                        totalAutoHighGoalMiss += tempAutoHighGoalMiss;
+                        totalAutoLowGoalHit += tempAutoLowGoalHit;
+                        totalAutoLowGoalMiss += tempAutoLowGoalMiss;
+
+
+                        //Teleop
+                        for(int i = 0; i < Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 1; i++)
+                        {
+                            totalTeleopHighShotPosition[i] += tempTeleopHighShotPosition[i];
+                            totalTeleopHighShotPositionHit[i] += tempTeleopHighShotPositionHit[i];
+                            totalTeleopHighShotPositionMiss[i] += tempTeleopHighShotPositionMiss[i];
+                        }
+
+                        totalTeleopHighAimTime += tempTeleopHighAimTime;
+                        totalTeleopHighGoalHit += tempTeleopHighGoalHit;
+                        totalTeleopHighGoalMiss += tempTeleopHighGoalMiss;
+
+                        for(int i = 0; i < Constants.Teleop_Inputs.TELEOP_SHOT_POSITIONS.length - 4; i++)
+                        {
+                            totalTeleopLowShotPosition[i] += tempTeleopLowShotPosition[i];
+                            totalTeleopLowShotPositionHit[i] += tempTeleopLowShotPositionHit[i];
+                            totalTeleopLowShotPositionMiss[i] += tempTeleopLowShotPositionMiss[i];
+                        }
+
+                        totalTeleopLowAimTime += tempTeleopLowAimTime;
+                        totalTeleopLowGoalHit += tempTeleopLowGoalHit;
+                        totalTeleopLowGoalMiss += tempTeleopLowGoalMiss;
+
+
+                        //Endgame
+                        totalFailedChallenge += tempFailedChallenge;
+                        totalChallenge += tempChallenge;
+                        totalFailedScale += tempFailedScale;
+                        totalScale += tempScale;
+
+                        //Post
+                        totalDQ += tempDQ;
+                        totalStopped += tempStopped;
+                        totalDidntShowUp += tempDidntShowUp;
+
+                        //Fouls
+                        totalFouls += tempFouls;
+                        totalTechFouls += tempTechFouls;
+                        totalYellowCards += tempYellowCards;
+                        totalRedCards += tempRedCards;
+                    }
+                    catch(Exception e) {
+                        Log.e(TAG, e.getMessage(), e);
+                        totalMatches--;
+                    }
                 }
             }
         }

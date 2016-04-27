@@ -51,18 +51,16 @@ public class TeamSchedule extends Fragment{
 
         Cursor cursor = scheduleDB.getSchedule();
         final ArrayList<Integer> matches = new ArrayList<>();
-        while(!cursor.isAfterLast())
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
         {
             if(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE1)) == teamNumber ||
-                    cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)) == teamNumber ||
-                    cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)) == teamNumber ||
-                    cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)) == teamNumber ||
-                    cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)) == teamNumber ||
-                    cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)) == teamNumber)
-            {
+               cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE2)) == teamNumber ||
+               cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_BLUE3)) == teamNumber ||
+               cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED1)) == teamNumber ||
+               cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED2)) == teamNumber ||
+               cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_RED3)) == teamNumber) {
                 matches.add(cursor.getInt(cursor.getColumnIndex(ScheduleDB.KEY_MATCH_NUMBER)));
             }
-            cursor.moveToNext();
         }
 
         LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.schedule);
@@ -86,7 +84,6 @@ public class TeamSchedule extends Fragment{
             });
             linearLayout.addView(button);
         }
-
 
         return view;
     }

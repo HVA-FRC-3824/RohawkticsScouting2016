@@ -374,9 +374,9 @@ public class TeamVisuals extends Fragment implements RadioButton.OnClickListener
         ArrayList<Entry> teleopHighPercentEntries = new ArrayList<>();
         ArrayList<Entry> teleopLowPercentEntries = new ArrayList<>();
         mMatches = new ArrayList<>();
-        cursor.moveToFirst();
         float percent;
-        for(int i = 0; i < cursor.getCount(); i++)
+        int i = 0;
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext(), i++)
         {
             int autoHighHit = cursor.getInt(cursor.getColumnIndex(Constants.Auto_Inputs.AUTO_HIGH_HIT));
             int autoHighMiss = cursor.getInt(cursor.getColumnIndex(Constants.Auto_Inputs.AUTO_HIGH_MISS));
@@ -391,7 +391,7 @@ public class TeamVisuals extends Fragment implements RadioButton.OnClickListener
             try {
                 JSONArray jsonArray = new JSONArray(high_goal_string);
                 for (int j = 0; j < jsonArray.length(); j++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject jsonObject = jsonArray.getJSONObject(j);
                     if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
                         teleopHighHit++;
                     } else {
@@ -410,7 +410,7 @@ public class TeamVisuals extends Fragment implements RadioButton.OnClickListener
             try {
                 JSONArray jsonArray = new JSONArray(low_goal_string);
                 for (int j = 0; j < jsonArray.length(); j++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject jsonObject = jsonArray.getJSONObject(j);
                     if (jsonObject.getBoolean(Constants.Teleop_Inputs.SHOT_HIT_MISS)) {
                         teleopLowHit++;
                     } else {
@@ -427,21 +427,19 @@ public class TeamVisuals extends Fragment implements RadioButton.OnClickListener
             teleopHighMadeEntries.add(new Entry(teleopHighHit, i));
             teleopLowMadeEntries.add(new Entry(teleopLowHit,i));
 
-            percent = ((autoHighHit+autoHighMiss) == 0) ? 0 : autoHighHit / (float)(autoHighHit + autoHighMiss) * 100.0f;
-            autoHighPercentEntries.add(new Entry(percent,i));
+            percent = ((autoHighHit + autoHighMiss) == 0) ? 0 : autoHighHit / (float)(autoHighHit + autoHighMiss) * 100.0f;
+            autoHighPercentEntries.add(new Entry(percent, i));
 
             percent = ((autoLowHit + autoLowMiss) == 0) ? 0 : autoLowHit / (float)(autoLowHit + autoLowMiss) * 100.0f;
-            autoLowPercentEntries.add(new Entry(percent,i));
+            autoLowPercentEntries.add(new Entry(percent, i));
 
             percent = ((teleopHighHit + teleopHighMiss) == 0) ? 0 : teleopHighHit / (float)(teleopHighHit + teleopHighMiss) * 100.0f;
-            teleopHighPercentEntries.add(new Entry(percent,i));
+            teleopHighPercentEntries.add(new Entry(percent, i));
             
             percent = ((teleopLowHit + teleopLowMiss) == 0) ? 0 : teleopLowHit / (float)(teleopLowHit + teleopLowMiss) * 100.0f;
-            teleopLowPercentEntries.add(new Entry(percent,i));
+            teleopLowPercentEntries.add(new Entry(percent, i));
 
-            mMatches.add("M"+String.valueOf(cursor.getInt(cursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))));
-
-            cursor.moveToNext();
+            mMatches.add("M" + String.valueOf(cursor.getInt(cursor.getColumnIndex(MatchScoutDB.KEY_MATCH_NUMBER))));
         }
 
         mAutoHighMade = new LineDataSet(autoHighMadeEntries,"Auto High Made");

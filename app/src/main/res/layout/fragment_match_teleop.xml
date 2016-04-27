@@ -56,12 +56,5 @@
         android:layout_height="wrap_content"
         app:key="teleop_low_shot"
         app:label="Low Goal" />
-<!--
-    <com.team3824.akmessing1.scoutingapp.views.stronghold_specific.CustomIntake
-        android:id="@+id/teleop_intake"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        app:key="teleop_intake"
-        app:label="Intake" />
-        -->
+
 </LinearLayout>

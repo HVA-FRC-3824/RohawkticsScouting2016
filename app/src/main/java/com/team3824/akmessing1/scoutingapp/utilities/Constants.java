@@ -1,11 +1,11 @@
 package com.team3824.akmessing1.scoutingapp.utilities;
 
 /**
- * Inteface that contains all of the constants used through the app
+ * Interface that contains all of the constants used through the app
  */
 public interface Constants {
 
-    String VERSION = "Version: 1.1.5";
+    String VERSION = "Version: 2.0.0";
     String APP_DATA = "appData";
     int OUR_TEAM_NUMBER = 3824;
 
