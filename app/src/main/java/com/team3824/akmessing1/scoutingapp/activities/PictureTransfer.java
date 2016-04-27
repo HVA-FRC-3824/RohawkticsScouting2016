@@ -118,6 +118,8 @@ public class PictureTransfer extends Activity implements View.OnClickListener{
         sendAll.setVisibility(View.VISIBLE);
         sendAll.setOnClickListener(this);
 
+        //nfcAdapter.setBeamPushUris(null, this);
+
     }
 
     @Override
@@ -151,8 +153,9 @@ public class PictureTransfer extends Activity implements View.OnClickListener{
     @Override
     protected void onPause() {
         super.onPause();
-        if (NfcAdapter.getDefaultAdapter(this) != null)
+        if (nfcAdapter != null) {
             nfcAdapter.disableForegroundDispatch(this);
+        }
     }
 
 
@@ -270,6 +273,7 @@ public class PictureTransfer extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if(filenames.size() > 0) {
+            nfcAdapter.setBeamPushUris(null, this);
             Uri[] uris = new Uri[filenames.size()];
             File fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             for (int i = 0; i < filenames.size(); i++) {

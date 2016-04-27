@@ -255,35 +255,6 @@ public class TeamMatchData extends Fragment {
             ((TextView) linearLayout.findViewById(R.id.event_teleop_aim_time)).setText("0.0 s");
         }
 
-        // Setup qualitative header row
-        linearLayout = (LinearLayout) view.findViewById(R.id.qualitative_header);
-        linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
-        linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
-        ((TextView) linearLayout.findViewById(R.id.event_evasiveness)).setText("Evasiveness");
-        ((TextView) linearLayout.findViewById(R.id.event_blocking)).setText("Blocking");
-        ((TextView) linearLayout.findViewById(R.id.event_driver_control)).setText("Driver Control");
-        ((TextView) linearLayout.findViewById(R.id.event_pushing)).setText("Pushing");
-        ((TextView) linearLayout.findViewById(R.id.event_speed)).setText("Speed");
-
-        // Set qualitative row
-        linearLayout = (LinearLayout) view.findViewById(R.id.qualitative);
-        linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);
-        linearLayout.findViewById(R.id.event_teamNum).setVisibility(View.GONE);
-        if (hasPlayed) {
-            ((TextView) linearLayout.findViewById(R.id.event_evasiveness)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.EVASION_ABILITY_RANKING));
-            ((TextView) linearLayout.findViewById(R.id.event_blocking)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.BLOCKING_ABILITY_RANKING));
-            ((TextView) linearLayout.findViewById(R.id.event_driver_control)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.DRIVER_CONTROL_RANKING));
-            ((TextView) linearLayout.findViewById(R.id.event_pushing)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.PUSHING_ABILITY_RANKING));
-            ((TextView) linearLayout.findViewById(R.id.event_speed)).setText(getRankingText(statsMap, Constants.Qualitative_Rankings.SPEED_RANKING));
-        } else {
-            ((TextView) linearLayout.findViewById(R.id.event_evasiveness)).setText("N/A");
-            ((TextView) linearLayout.findViewById(R.id.event_blocking)).setText("N/A");
-            ((TextView) linearLayout.findViewById(R.id.event_driver_control)).setText("N/A");
-            ((TextView) linearLayout.findViewById(R.id.event_pushing)).setText("N/A");
-            ((TextView) linearLayout.findViewById(R.id.event_speed)).setText("N/A");
-        }
-
-
         // Setup endgame header row
         linearLayout = (LinearLayout) view.findViewById(R.id.endgame_header);
         linearLayout.findViewById(R.id.event_rank).setVisibility(View.GONE);

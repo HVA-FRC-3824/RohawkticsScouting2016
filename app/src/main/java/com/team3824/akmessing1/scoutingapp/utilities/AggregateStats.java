@@ -169,7 +169,6 @@ public class AggregateStats {
                     String high_goal_string = teamInfo.getString(teamInfo.getColumnIndex(Constants.Teleop_Inputs.TELEOP_HIGH_SHOT));
                     try {
                         JSONArray jsonArray = new JSONArray(high_goal_string);
-                        int matchHighGoalAimTime = 0;
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             String position = jsonObject.getString(Constants.Teleop_Inputs.SHOT_POSITION);
@@ -341,6 +340,7 @@ public class AggregateStats {
     public static void updateSuper(Set<Integer> matches, MatchScoutDB matchScoutDB, SuperScoutDB superScoutDB,
                                    StatsDB statsDB, String eventID, Context context) {
 
+        /*
         // Calculate qualitative rankings
         Cursor superData = superScoutDB.getAllMatches();
         ArrayList<Integer> teamList = statsDB.getTeamNumbers();
@@ -354,6 +354,7 @@ public class AggregateStats {
                 statsDB.updateStats(map);
             }
         }
+        */
 
         Set<Integer> teams = new HashSet<>();
         for (Integer matchNum : matches) {

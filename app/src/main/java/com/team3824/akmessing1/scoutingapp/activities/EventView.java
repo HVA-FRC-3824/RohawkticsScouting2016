@@ -12,9 +12,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_IndividualQualitative;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_PositionalShot;
-import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Qualitative;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Auto;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Defenses;
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Endgame;
@@ -24,7 +22,6 @@ import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Points
 import com.team3824.akmessing1.scoutingapp.adapters.EventListAdapters.ELA_Shot;
 import com.team3824.akmessing1.scoutingapp.database_helpers.StatsDB;
 import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_PositionalShot;
-import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Qualitative;
 import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Auto;
 import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Defenses;
 import com.team3824.akmessing1.scoutingapp.list_items.event_list_items.ELI_Endgame;
@@ -96,7 +93,6 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
      * @param pos    The position of the selected item in the menu
      * @param id     The id of the selected item
      */
-    //TODO: Fix with new qualitatve rankings
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         findViewById(R.id.key1).setVisibility(View.GONE);
         findViewById(R.id.key2).setVisibility(View.GONE);
@@ -135,15 +131,6 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
                         goal(cursor, "low");
 
                         subList = new ArrayList<>(Arrays.asList(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_LABEL));
-                        subList.add(0, "All");
-                        subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, subList);
-                        subSpinner.setAdapter(subAdapter);
-                        subSpinner.setVisibility(View.VISIBLE);
-                        break;
-                    case Constants.EVENT_VIEW.QUALITATIVE:
-                        qualitative(cursor);
-
-                        subList = new ArrayList<>(Arrays.asList(Constants.Qualitative_Rankings.QUALITATIVE_LABELS));
                         subList.add(0, "All");
                         subAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, subList);
                         subSpinner.setAdapter(subAdapter);
@@ -198,16 +185,6 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
                                 break;
                             default:
                                 positional_shooting(cursor, "low", pos - 1);
-                                break;
-                        }
-                        break;
-                    case Constants.EVENT_VIEW.QUALITATIVE:
-                        switch (pos - 1) {
-                            case -1: // All
-                                qualitative(cursor);
-                                break;
-                            default:
-                                individual_qualitative(cursor, pos - 1);
                                 break;
                         }
                         break;
@@ -598,122 +575,6 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
         teams.add(0, new ELI_Auto(-1));
         ELA_Auto ela_Auto = new ELA_Auto(this, teams);
         listView.setAdapter(ela_Auto);
-    }
-
-    /**
-     * Sets up comparison of teams by one of the qualitative categories
-     *
-     * @param cursor The response from the stats database table
-     */
-    private void qualitative(Cursor cursor) {
-        ArrayList<ELI_Qualitative> teams = new ArrayList<>();
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-            ELI_Qualitative team = new ELI_Qualitative(teamNumber, Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length);
-
-            int totalMatches = cursor.getColumnIndex(Constants.Calculated_Totals.TOTAL_MATCHES);
-
-            //For debugging
-            //if(cursor.getColumnIndex(qualitative) > -1){
-            if (totalMatches > -1) {
-                for (int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
-                    team.mRank[i] = cursor.getString(cursor.getColumnIndex(Constants.Qualitative_Rankings.QUALITATIVE_RANKING[i]));
-                }
-            } else {
-                for (int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
-                    team.mRank[i] = "N/A";
-                }
-            }
-            teams.add(team);
-        }
-
-        final int numTeams = teams.size();
-
-        Collections.sort(teams, new Comparator<ELI_Qualitative>() {
-            @Override
-            public int compare(ELI_Qualitative lhs, ELI_Qualitative rhs) {
-                int leftValue = 0;
-                int rightValue = 0;
-                for (int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length; i++) {
-                    if (!lhs.mRank[i].equals("N/A")) {
-                        int leftRank;
-                        if (lhs.mRank[i].charAt(0) == 'T') {
-                            leftRank = Integer.parseInt(lhs.mRank[i].substring(1));
-                        } else {
-                            leftRank = Integer.parseInt((lhs.mRank[i]));
-                        }
-                        leftValue += (numTeams - leftRank);
-                    }
-
-
-                    if (!rhs.mRank[i].equals("N/A")) {
-                        int rightRank;
-                        if (rhs.mRank[i].charAt(0) == 'T') {
-                            rightRank = Integer.parseInt(rhs.mRank[i].substring(1));
-                        } else {
-                            rightRank = Integer.parseInt((rhs.mRank[i]));
-                        }
-                        rightValue += (numTeams - rightRank);
-                    }
-                }
-
-                return rightValue - leftValue;
-            }
-        });
-
-        // Header row hack
-        teams.add(0, new ELI_Qualitative(-1, 0));
-        ELA_Qualitative ela_Qualitative = new ELA_Qualitative(this, teams);
-        listView.setAdapter(ela_Qualitative);
-    }
-
-    /**
-     *
-     * @param cursor
-     * @param position
-     */
-    private void individual_qualitative(Cursor cursor, int position)
-    {
-        assert position > -1 && position < Constants.Qualitative_Rankings.QUALITATIVE_RANKING.length;
-
-        ArrayList<ELI_Qualitative> teams = new ArrayList<>();
-
-        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext())
-        {
-            int teamNumber = cursor.getInt(cursor.getColumnIndex(StatsDB.KEY_TEAM_NUMBER));
-
-            ELI_Qualitative team = new ELI_Qualitative(teamNumber, 1);
-
-            team.mRank[0] = cursor.getString(cursor.getColumnIndex(Constants.Qualitative_Rankings.QUALITATIVE_RANKING[position]));
-
-            teams.add(team);
-        }
-
-        Collections.sort(teams, new Comparator<ELI_Qualitative>() {
-            @Override
-            public int compare(ELI_Qualitative lhs, ELI_Qualitative rhs) {
-                int left_rank;
-                if (lhs.mRank[0].charAt(0) == 'T') {
-                    left_rank = Integer.parseInt(lhs.mRank[0].substring(1));
-                } else {
-                    left_rank = Integer.parseInt(lhs.mRank[0]);
-                }
-
-                int right_rank;
-                if (rhs.mRank[0].charAt(0) == 'T') {
-                    right_rank = Integer.parseInt(rhs.mRank[0].substring(1));
-                } else {
-                    right_rank = Integer.parseInt(rhs.mRank[0]);
-                }
-
-                return left_rank - right_rank;
-            }
-        });
-
-        teams.add(0, new ELI_Qualitative(-1, 1));
-        ELA_IndividualQualitative ela_individualQualitative = new ELA_IndividualQualitative(this, teams);
-        listView.setAdapter(ela_individualQualitative);
     }
 
     /**

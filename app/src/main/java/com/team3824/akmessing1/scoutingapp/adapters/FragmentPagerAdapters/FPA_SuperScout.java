@@ -7,7 +7,6 @@ import android.support.v13.app.FragmentPagerAdapter;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
 import com.team3824.akmessing1.scoutingapp.fragments.SuperScouting.SuperDefenses;
 import com.team3824.akmessing1.scoutingapp.fragments.SuperScouting.SuperNotes;
-import com.team3824.akmessing1.scoutingapp.fragments.SuperScouting.SuperQualitative;
 import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
 
 import java.lang.ref.WeakReference;
@@ -21,7 +20,7 @@ import java.util.Map;
  */
 public class FPA_SuperScout extends FragmentPagerAdapter {
 
-    private String tabTitles[] = new String[]{"Defenses", "Qualitative", "Notes"};
+    private String tabTitles[] = new String[]{"Defenses"/*, "Qualitative"*/, "Notes"};
 
     private Map<Integer, WeakReference<ScoutFragment>> fragments = new HashMap<>();
 
@@ -64,11 +63,13 @@ public class FPA_SuperScout extends FragmentPagerAdapter {
             case 0:
                 fragment = new SuperDefenses();
                 break;
+            /*
             case 1:
                 fragment = new SuperQualitative();
                 ((SuperQualitative) fragment).setTeams(teams);
                 break;
-            case 2:
+            */
+            case 1:
                 fragment = new SuperNotes();
                 break;
             default:

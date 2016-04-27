@@ -88,19 +88,6 @@ public interface Constants {
         String SHOT_POSITION = "shot_position";
         String AIM_TIME = "aim_time";
         String SHOT_HIT_MISS = "shot_hit_miss";
-
-        // Intaking
-        //String SELECT_INTAKE_TIME = "Select Intake Time";
-        //String[] TELEOP_INTAKE_TIMES = {SELECT_INTAKE_TIME, "< 2s", "< 5s", "< 8s","< 10s", "> 10s"};
-        //int[] TELEOP_INTAKE_TIMES_VALUE = {2, 5, 8, 10, 15};
-
-        //String SELECT_INTAKE_POSITION = "Select Position";
-        //String[] TELEOP_INTAKE_POSITIONS = {SELECT_INTAKE_POSITION, "Neutral Zone", "Team Secret Passage", "Opponent Secret Passage", "Team Court Yard", "Opponent Court Yard"};
-
-        //String INTAKE_POSITION = "intake_position";
-        //String INTAKE_TIME = "intake_time";
-
-        //String TELEOP_INTAKE = "teleop_intake";
     }
 
     // Endgame
@@ -149,15 +136,6 @@ public interface Constants {
 
     // Super
     interface Super_Inputs {
-        String SUPER_EVASION_ABILITY = "super_evasion_ability";
-        String SUPER_BLOCKING_ABILITY = "super_block_ability";
-        String SUPER_SPEED = "super_speed";
-        String SUPER_PUSHING_ABILITY = "super_pushing_ability";
-        String SUPER_DRIVER_CONTROL = "super_driver_control";
-
-        String[] SUPER_QUALITATIVE = {SUPER_EVASION_ABILITY, SUPER_BLOCKING_ABILITY,
-                SUPER_SPEED, SUPER_PUSHING_ABILITY, SUPER_DRIVER_CONTROL};
-
         String SUPER_NOTES = "super_notes";
 
         String RED_DEFENSE_2 = "red_defense2";
@@ -191,31 +169,6 @@ public interface Constants {
         int SALLY_PORT_INDEX = 6;
         int ROCK_WALL_INDEX = 7;
         int ROUGH_TERRAIN_INDEX = 8;
-    }
-
-
-    // Qualitative Rankings
-    interface Qualitative_Rankings {
-        String EVASION_ABILITY_RANKING = "evasion_ability_ranking";
-        int EVASION_ABILITY_INDEX = 0;
-
-        String BLOCKING_ABILITY_RANKING = "block_ability_ranking";
-        int BLOCKING_ABILITY_INDEX = 1;
-
-        String SPEED_RANKING = "speed_ranking";
-        int SPEED_INDEX = 2;
-
-        String PUSHING_ABILITY_RANKING = "pushing_ability_ranking";
-        int PUSHING_ABILITY_INDEX = 3;
-
-        String DRIVER_CONTROL_RANKING = "driver_control_ranking";
-        int DRIVER_CONTROL_INDEX = 4;
-
-        String[] QUALITATIVE_RANKING = {EVASION_ABILITY_RANKING, BLOCKING_ABILITY_RANKING,
-                SPEED_RANKING, PUSHING_ABILITY_RANKING, DRIVER_CONTROL_RANKING};
-
-        String[] QUALITATIVE_LABELS = {"Evasion", "Blocking",
-                "Speed", "Pushing", "Driver Control"};
     }
 
     // Totals
@@ -277,15 +230,6 @@ public interface Constants {
         int SHOT_POSITION_LOW_RIGHT_BATTER = 1;
         int SHOT_POSITION_LOW_OPEN_SPACE = 2;
 
-        //String[] TOTAL_TELEOP_INTAKE_POSITIONS = {"total_teleop_intake_neutral_zone", "total_teleop_intake_team_secret_passage", "total_teleop_intake_opponent_secret_passage", "total_teleop_intake_team_court_yard", "total_teleop_intake_opponent_court_yard"};
-        //String TOTAL_TELEOP_INTAKE_TIME = "total_teleop_intake_time";
-
-        //int INTAKE_POSITION_NEUTRAL_ZONE = 0;
-        //int INTAKE_POSITION_TEAM_SECRET_PASSAGE = 1;
-        //int INTAKE_POSITION_OPPONENT_SECRET_PASSAGE = 2;
-        //int INTAKE_POSITION_TEAM_COURTYARD = 3;
-        //int INTAKE_POSITION_OPPONENT_COURTYARD = 4;
-
         String TOTAL_FAILED_CHALLENGE = "total_failed_challenge";
         String TOTAL_CHALLENGE = "total_challenge";
         String TOTAL_FAILED_SCALE = "total_failed_scale";
@@ -311,9 +255,6 @@ public interface Constants {
         String DEFENSIVE_PICKABILITY = "defensive_pickability";
 
         String BOTTOM_TEXT = "bottom_text";
-
-        //int DNP = 0;
-        //int DECLINE = 1;
 
         String PICK_RANK = "_pick_rank";
         String PICKABILITY = "_pickability";
@@ -458,16 +399,15 @@ public interface Constants {
 
     //Event View
     interface EVENT_VIEW {
-        String[] EVENT_VIEW_DROPDOWN = {"Points", "Defenses", "High Goal", "Low Goal", "Qualitative",
+        String[] EVENT_VIEW_DROPDOWN = {"Points", "Defenses", "High Goal", "Low Goal",
                 "Auto", "Endgame", "Fouls"};
 
         int POINTS = 0;
         int DEFENSES = 1;
         int HIGH_GOAL = 2;
         int LOW_GOAL = 3;
-        int QUALITATIVE = 4;
-        int AUTO = 5;
-        int ENDGAME = 6;
-        int FOULS = 7;
+        int AUTO = 4;
+        int ENDGAME = 5;
+        int FOULS = 6;
     }
 }

@@ -165,7 +165,9 @@ public class Utilities {
                     String key = iter.next();
                     try {
                         Object value = jsonObject.get(key);
-                        if (value instanceof Integer) {
+                        if (jsonObject.isNull(key)) {
+                            map.put(key, "");
+                        } else if (value instanceof Integer) {
                             map.put(key, (int) value);
                         } else if (value instanceof Double) {
                             map.put(key, (float) ((double) value));
@@ -194,7 +196,9 @@ public class Utilities {
                     String key = iter.next();
                     try {
                         Object value = jsonObject.get(key);
-                        if (value instanceof Integer) {
+                        if (jsonObject.isNull(key)) {
+                            map.put(key, "");
+                        } else if (value instanceof Integer) {
                             map.put(key, (int) value);
                         } else if (value instanceof Double) {
                             map.put(key, (float) ((double) value));
@@ -223,7 +227,9 @@ public class Utilities {
                     String key = iter.next();
                     try {
                         Object value = jsonObject.get(key);
-                        if (value instanceof Integer) {
+                        if (jsonObject.isNull(key)) {
+                            map.put(key, "");
+                        } else if (value instanceof Integer) {
                             map.put(key, (int) value);
                         } else if (value instanceof Double) {
                             map.put(key, (float) ((double) value));
@@ -254,7 +260,9 @@ public class Utilities {
                     String key = iter.next();
                     try {
                         Object value = jsonObject.get(key);
-                        if (value instanceof Integer) {
+                        if (jsonObject.isNull(key)) {
+                            map.put(key, "");
+                        } else if (value instanceof Integer) {
                             map.put(key, (int) value);
                         } else if (value instanceof Double) {
                             map.put(key, (float) ((double) value));
@@ -277,18 +285,20 @@ public class Utilities {
             JSONArray jsonArray = new JSONArray(message.substring(1));
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                HashMap<String, ScoutValue> map = new HashMap<>();
+                ScoutMap map = new ScoutMap();
                 Iterator<String> iter = jsonObject.keys();
                 while (iter.hasNext()) {
                     String key = iter.next();
                     try {
                         Object value = jsonObject.get(key);
-                        if (value instanceof Integer) {
-                            map.put(key, new ScoutValue((int) value));
+                        if (jsonObject.isNull(key)) {
+                            map.put(key, "");
+                        } else if (value instanceof Integer) {
+                            map.put(key, (int) value);
                         } else if (value instanceof Double) {
-                            map.put(key, new ScoutValue((float) ((double) value)));
+                            map.put(key, (float) ((double) value));
                         } else if (value instanceof String) {
-                            map.put(key, new ScoutValue((String) value));
+                            map.put(key, (String) value);
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage());
@@ -311,10 +321,8 @@ public class Utilities {
      * <i> Note: <code>fromFile</code> and <code>toFile</code> will be closed by
      * this function.</i>
      *
-     * @param fromFile
-     *            - FileInputStream for the file to copy from.
-     * @param toFile
-     *            - FileInputStream for the file to copy to.
+     * @param fromFile - FileInputStream for the file to copy from.
+     * @param toFile   - FileInputStream for the file to copy to.
      */
     public static void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
         FileChannel fromChannel = null;

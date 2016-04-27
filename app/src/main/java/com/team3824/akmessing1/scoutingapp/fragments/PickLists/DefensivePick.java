@@ -34,21 +34,6 @@ public class DefensivePick extends ScoutPick {
 
             String bottomText = "";
             int rankValue = 0;
-            for(int i = 0; i < Constants.Qualitative_Rankings.QUALITATIVE_LABELS.length; i++)
-            {
-                String ranking = statsCursor.getString(statsCursor.getColumnIndex(Constants.Qualitative_Rankings.QUALITATIVE_RANKING[i]));
-                bottomText += String.format("%s: %s ", Constants.Qualitative_Rankings.QUALITATIVE_LABELS[i],ranking);
-                int ranking_number;
-                if(ranking.charAt(0) == 'T')
-                {
-                    ranking_number = Integer.parseInt(ranking.substring(1));
-                }
-                else
-                {
-                    ranking_number = Integer.parseInt(ranking);
-                }
-                rankValue += (numberOfTeams - ranking_number);
-            }
 
             team.setMapElement(Constants.Pick_List.DEFENSIVE_PICKABILITY, new ScoutValue(rankValue));
             team.setMapElement(Constants.Pick_List.BOTTOM_TEXT,new ScoutValue(bottomText));
