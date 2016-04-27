@@ -94,13 +94,12 @@ public class EventView extends Activity implements AdapterView.OnItemSelectedLis
      * @param id     The id of the selected item
      */
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        findViewById(R.id.key1).setVisibility(View.GONE);
-        findViewById(R.id.key2).setVisibility(View.GONE);
-        findViewById(R.id.key3).setVisibility(View.GONE);
-
         Cursor cursor = statsDB.getStats();
         switch (parent.getId()) {
             case R.id.event_view_spinner: {
+                findViewById(R.id.key1).setVisibility(View.GONE);
+                findViewById(R.id.key2).setVisibility(View.GONE);
+                findViewById(R.id.key3).setVisibility(View.GONE);
                 ArrayList<String> subList;
                 ArrayAdapter<String> subAdapter;
                 switch (pos) {
