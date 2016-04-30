@@ -101,9 +101,13 @@ public class PitScouting extends Activity {
         {
             prevTeamNumber = -1;
         }
+
         cursor.moveToPosition(endPosition);
-        if(nextTeamNumber >= cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER)))
+        if(cursor.isAfterLast())
         {
+            cursor.moveToLast();
+        }
+        if (nextTeamNumber >= cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER))) {
             nextTeamNumber = -1;
         }
 
@@ -387,18 +391,18 @@ public class PitScouting extends Activity {
             ScoutMap data = maps[0];
 
             // Change picture filename to use event id and team number
-            String picture_filename = data.getString(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
-            File picture = new File(getFilesDir(), picture_filename);
-            if (picture.exists() && picture.length() > 0) {
-                String newPathName = String.format("%s_%d.jpg", eventId, teamNumber);
-                File newPath = new File(getFilesDir(), newPathName);
-                picture.renameTo(newPath);
-                data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
-                data.put(Constants.Pit_Inputs.PIT_ROBOT_PICTURE, newPathName);
-            }
-            else
-            {
-                data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+            if(data.containsKey(Constants.Pit_Inputs.PIT_ROBOT_PICTURE)) {
+                String picture_filename = data.getString(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                File picture = new File(getFilesDir(), picture_filename);
+                if (picture.exists() && picture.length() > 0) {
+                    String newPathName = String.format("%s_%d.jpg", eventId, teamNumber);
+                    File newPath = new File(getFilesDir(), newPathName);
+                    picture.renameTo(newPath);
+                    data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                    data.put(Constants.Pit_Inputs.PIT_ROBOT_PICTURE, newPathName);
+                } else {
+                    data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                }
             }
 
             PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);

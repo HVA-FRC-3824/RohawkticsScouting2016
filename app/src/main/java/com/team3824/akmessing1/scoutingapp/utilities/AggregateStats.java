@@ -266,10 +266,10 @@ public class AggregateStats {
                         }
 
                         //Endgame
-                        tempFailedChallenge = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_CHALLENGE]))) ? 1 : 0;
-                        tempChallenge = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_CHALLENGE]))) ? 1 : 0;
-                        tempFailedScale = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_SCALE]))) ? 1 : 0;
-                        tempScale = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Arrays.asList(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_SCALE]))) ? 1 : 0;
+                        tempFailedChallenge = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_CHALLENGE])) ? 1 : 0;
+                        tempChallenge = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_CHALLENGE])) ? 1 : 0;
+                        tempFailedScale = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_FAILED_SCALE])) ? 1 : 0;
+                        tempScale = (teamInfo.getString(teamInfo.getColumnIndex(Constants.Endgame_Inputs.ENDGAME_CHALLENGE_SCALE)).equals(Constants.Endgame_Inputs.ENDGAME_OPTIONS[Constants.Endgame_Inputs.ENDGAME_SCALE])) ? 1 : 0;
 
                         //Post Match
                         tempDQ = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Post_Match_Inputs.POST_DQ));
@@ -282,7 +282,7 @@ public class AggregateStats {
                         tempYellowCards = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_YELLOW_CARD));
                         tempRedCards = teamInfo.getInt(teamInfo.getColumnIndex(Constants.Foul_Inputs.FOUL_RED_CARD));
 
-                        // if all the data can down cleanly then add it to the totals
+                        // if all the data can be pulled down cleanly then add it to the totals
 
                         for(int i = 0; i < Constants.Defense_Arrays.DEFENSES.length; i++)
                         {
@@ -355,7 +355,6 @@ public class AggregateStats {
             }
         }
 
-
         // Load up new scoutmap to update the database with
         ScoutMap newTeamStats = new ScoutMap();
 
@@ -394,13 +393,6 @@ public class AggregateStats {
             newTeamStats.put(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_HIT[i], totalTeleopLowShotPositionHit[i]);
             newTeamStats.put(Constants.Calculated_Totals.TOTAL_TELEOP_LOW_POSITIONS_MISS[i], totalTeleopLowShotPositionMiss[i]);
         }
-
-        /*
-        for (int i = 0; i < Constants.Calculated_Totals.TOTAL_TELEOP_INTAKE_POSITIONS.length; i++) {
-            newTeamStats.put(Constants.Calculated_Totals.TOTAL_TELEOP_INTAKE_POSITIONS[i], totalTeleopIntakePosition[i]);
-        }
-        newTeamStats.put(Constants.Calculated_Totals.TOTAL_TELEOP_INTAKE_TIME, totalTeleopIntakeTime);
-        */
 
         newTeamStats.put(Constants.Calculated_Totals.TOTAL_FAILED_CHALLENGE, totalFailedChallenge);
         newTeamStats.put(Constants.Calculated_Totals.TOTAL_CHALLENGE, totalChallenge);
