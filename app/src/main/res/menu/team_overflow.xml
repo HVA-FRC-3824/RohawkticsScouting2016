@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/home"
+        android:title="Home"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/back"
+        android:title="Back"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/previous"
+        android:title="Previous Team"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/next"
+        android:title="Next Team"
+        app:showAsAction="never"/>
+</menu>

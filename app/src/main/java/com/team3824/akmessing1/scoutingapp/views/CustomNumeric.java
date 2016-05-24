@@ -8,16 +8,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
-
-import java.util.Map;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 // Custom textbox with label only for numbers
 public class CustomNumeric extends CustomScoutView{
 
     private String TAG = "CustomNumeric";
 
-    private TextView label;
     private EditText numeric;
     private String key;
 
@@ -29,8 +27,8 @@ public class CustomNumeric extends CustomScoutView{
         inflater.inflate(R.layout.custom_numeric, this);
 
         numeric = (EditText)this.findViewById(R.id.numeric);
-        numeric.setText("0");
-        label = (TextView)this.findViewById(R.id.label);
+        //numeric.setText("0");
+        TextView label = (TextView) this.findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
@@ -39,19 +37,21 @@ public class CustomNumeric extends CustomScoutView{
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
         if(String.valueOf(numeric.getText()).equals(""))
         {
-            map.put(key, new ScoutValue(0.0f));
+            map.put(key, 0.0f);
         }
         else {
-            map.put(key, new ScoutValue(Float.valueOf(String.valueOf(numeric.getText()))));
+            map.put(key, Float.valueOf(String.valueOf(numeric.getText())));
         }
+
+        return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map)
+    public void restoreFromMap(ScoutMap map)
     {
         ScoutValue sv = map.get(key);
         if(sv != null) {

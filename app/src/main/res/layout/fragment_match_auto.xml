@@ -1,58 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomSpinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/auto_start_position"
+            app:label="Starting Position:"
+            app:key="auto_start_position"
+            app:spinner_values="@array/auto_start_position_dropdown"/>
+
+        <com.team3824.akmessing1.scoutingapp.views.CustomRadioButtons
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/auto_reach_cross"
+            app:label="Defenses"
+            app:key="auto_reach_cross"
+            app:radio_values="@array/auto_reach_cross_radio"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp" />
+
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
-                android:layout_width="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/auto_moved"
-                app:label="Moved in Auto"
-                app:key="auto_moved"/>
+                android:layout_weight="1"
+                android:text="High Goal"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_marginTop="6dp" />
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/auto_totesMoved"
-                app:label="Totes moved to center"
-                app:key="auto_totesMoved"/>
+                android:layout_weight="1"
+                android:id="@+id/auto_high_hit"
+                app:label="Hit:"
+                app:key="auto_high_hit"
+                android:gravity="center_vertical" />
 
-            <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
-                android:layout_width="wrap_content"
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/auto_threeToteStack"
-                app:label="Three totes stacked"
-                app:key="auto_threeToteStack"/>
-
+                android:layout_weight="1"
+                android:id="@+id/auto_high_miss"
+                app:label="Missed:"
+                app:key="auto_high_miss"
+                android:gravity="center_vertical" />
         </LinearLayout>
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-                android:layout_width="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/auto_cansMoved"
-                app:label="Cans moved to center"
-                app:key="auto_cansMoved"/>
+                android:layout_weight="1"
+                android:text="Low Goal"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:layout_marginTop="6dp" />
 
             <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/auto_stepCans"
-                app:label="Cans taken from step"
-                app:key="auto_stepCans"/>
+                android:layout_weight="1"
+                android:id="@+id/auto_low_hit"
+                app:label="Hit:"
+                app:key="auto_low_hit"
+                android:gravity="center_vertical" />
+
+            <com.team3824.akmessing1.scoutingapp.views.CustomCounter
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/auto_low_miss"
+                app:label="Missed:"
+                app:key="auto_low_miss"
+                android:gravity="center_vertical" />
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

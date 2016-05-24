@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:fitsSystemWindows="true"
+    tools:context=".HomeScreen"
+    android:background="@color/columbia_blue">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:showIn="@layout/activity_start_screen" tools:context=".HomeScreen"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:text="RoHAWKtics \nScouting App"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:id="@+id/textView"
+                    android:textSize="@dimen/abc_text_size_display_3_material"
+                    android:textColor="@color/navy_blue"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@drawable/logo"
+                    android:id="@+id/logo"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/textView"/>
+
+            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/version"
+                android:layout_gravity="center_horizontal"/>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Match Schedule"
+                android:textColor="@color/white"
+                android:id="@+id/matchSchedule_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+<!-- Match Scouting -->
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Scout Match"
+                android:textColor="@color/white"
+                android:id="@+id/scoutMatch_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Sync Matches with Server"
+                android:textColor="@color/white"
+                android:id="@+id/syncMatch_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+<!-- Pit Scouting -->
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Scout Pit"
+                android:textColor="@color/white"
+                android:id="@+id/scoutPit_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Sync Pit with Server"
+                android:textColor="@color/white"
+                android:id="@+id/syncPit_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+<!-- Super Scouting -->
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Super Scout"
+                android:textColor="@color/white"
+                android:id="@+id/superScout_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Sync Super with Server"
+                android:textColor="@color/white"
+                android:id="@+id/syncSuper_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+<!-- Drive Team -->
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Drive Team Feedback"
+                android:textColor="@color/white"
+                android:id="@+id/feedback_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Sync Comments with Server"
+                android:textColor="@color/white"
+                android:id="@+id/syncDriveTeam_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Sync with Server"
+                android:textColor="@color/white"
+                android:id="@+id/syncStrategy_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Match Planning"
+                android:textColor="@color/white"
+                android:id="@+id/matchPlanning_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="View Match"
+                android:textColor="@color/white"
+                android:id="@+id/viewMatch_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Elimination Matches"
+                android:textColor="@color/white"
+                android:id="@+id/eliminationMatches_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="View Team"
+                android:textColor="@color/white"
+                android:id="@+id/viewTeam_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="View Event"
+                android:textColor="@color/white"
+                android:id="@+id/viewEvent_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="View Notes"
+                android:textColor="@color/white"
+                android:id="@+id/viewNotes_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"/>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="View Pick List"
+                android:textColor="@color/white"
+                android:id="@+id/viewPickList_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"/>
+<!-- Server -->
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Server"
+                android:id="@+id/server_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Settings"
+                android:id="@+id/settings_button"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+<!-- Admin -->
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Sync Controls"
+                android:id="@+id/sync_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Aggregate Controls"
+                android:id="@+id/aggregate_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Database Management"
+                android:id="@+id/database_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="File Management"
+                android:id="@+id/file_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Picture Transfer"
+                android:id="@+id/picture_transer_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Upload/Download"
+                android:id="@+id/upload_download_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Team List Builder"
+                android:id="@+id/teamlist_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Bluetooth"
+                android:id="@+id/bluetooth_button"
+                android:visibility="gone"
+                android:background="@color/navy_blue"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

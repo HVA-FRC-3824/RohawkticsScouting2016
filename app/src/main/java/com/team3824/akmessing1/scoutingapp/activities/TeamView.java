@@ -1,5 +1,6 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,94 +8,110 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toolbar;
 
-import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.adapters.TeamViewFragmentPagerAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_TeamView;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
 
-
-public class TeamView extends AppCompatActivity {
+/**
+ * The activity that holds all the fragments that display the collected information about a given team.
+ *
+ * @author Andrew Messing
+ * @version %I%
+ */
+public class TeamView extends Activity {
 
     final private String TAG = "TeamView";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private TeamViewFragmentPagerAdapter adapter;
+    private int previousTeamNumber, nextTeamNumber;
 
-    private int teamNumber;
-
+    /**
+     * Sets up the view pager, pager adapter, and the tab layout
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team_view);
 
-        Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt("team_number");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.team_view_toolbar);
+        setActionBar(toolbar);
 
-        TextView tv = (TextView)findViewById(R.id.team_view_team_num);
-        tv.setText("Team Number: " + teamNumber);
+        Bundle extras = getIntent().getExtras();
+        int teamNumber = extras.getInt(Constants.Intent_Extras.TEAM_NUMBER);
+        setTitle("Team Number: " + teamNumber);
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
-        viewPager = (ViewPager) findViewById(R.id.team_view_view_pager);
-        adapter = new TeamViewFragmentPagerAdapter(getFragmentManager(),teamNumber);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.team_view_view_pager);
+        FPA_TeamView adapter = new FPA_TeamView(getFragmentManager(), teamNumber);
         viewPager.setAdapter(adapter);
-        tabLayout = (TabLayout)findViewById(R.id.team_view_tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.team_view_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString("event_id", "");
-        final PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
+        String eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
+        PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
 
-        final int previousTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
-        if(previousTeamNumber == -1)
-        {
-            Button previous = (Button)findViewById(R.id.team_view_previous_team);
-            previous.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            Button prev = (Button)findViewById(R.id.team_view_previous_team);
-            prev.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "previous team pressed");
-                    // Go to the next match
-                    Intent intent = new Intent(TeamView.this, TeamView.class);
-                    intent.putExtra("team_number", previousTeamNumber);
-                    startActivity(intent);
-                }
-            });
-        }
+        previousTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
+        nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
 
-        final int nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
-        if(nextTeamNumber == -1)
-        {
-            Button next = (Button)findViewById(R.id.team_view_next_team);
-            next.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            Button next = (Button)findViewById(R.id.team_view_next_team);
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "next team pressed");
-
-                    // Go to the next match
-                    Intent intent = new Intent(TeamView.this, TeamView.class);
-                    intent.putExtra("team_number", nextTeamNumber);
-                    startActivity(intent);
-
-                }
-            });
-        }
         pitScoutDB.close();
     }
+
+    /**
+     * Creates the overflow menu
+     * @param menu The menu to be filled
+     * @return true
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.team_overflow, menu);
+        if (previousTeamNumber == -1) {
+            menu.removeItem(R.id.previous);
+        }
+        if (nextTeamNumber == -1) {
+            menu.removeItem(R.id.next);
+        }
+        return true;
+    }
+
+    /**
+     * Implements the option selected from the overflow menu
+     *
+     * @param item The item that is selected from the overflow menu
+     * @return true
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.home:
+                intent = new Intent(this, HomeScreen.class);
+                startActivity(intent);
+                break;
+            case R.id.back:
+                this.finish();
+                break;
+            case R.id.previous:
+                intent = new Intent(TeamView.this, TeamView.class);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, previousTeamNumber);
+                startActivity(intent);
+                break;
+            case R.id.next:
+                intent = new Intent(TeamView.this, TeamView.class);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
+                startActivity(intent);
+                break;
+            default:
+                assert false;
+        }
+        return true;
+    }
+
 }

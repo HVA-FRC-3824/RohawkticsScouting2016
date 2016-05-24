@@ -7,17 +7,18 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.activities.StartScreen;
+import com.team3824.akmessing1.scoutingapp.activities.HomeScreen;
 
 public class CustomHeader extends RelativeLayout {
 
-    final Context mContext;
-    Button back;
-    Button home;
+    public final String TAG = "CustomHeader";
+
+    private final Context mContext;
+    private Button back;
+    private Button home;
     public CustomHeader(Context context, AttributeSet attrs)
     {
         super(context, attrs);
@@ -38,7 +39,7 @@ public class CustomHeader extends RelativeLayout {
         home.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, StartScreen.class);
+                Intent intent = new Intent(mContext, HomeScreen.class);
                 mContext.startActivity(intent);
             }
         });

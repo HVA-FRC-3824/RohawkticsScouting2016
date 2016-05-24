@@ -16,17 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by akmessing1 on 10/17/15.
+ *
  */
-
-public class ScheduleDB extends SQLiteOpenHelper
-{
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
-    // Database Name
-    private static final String DATABASE_NAME = "RohawkticsDB";
-    private String TAG = "ScheduleDB";
-
+public class ScheduleDB extends SQLiteOpenHelper {
     // Table Columns names
     public static final String KEY_MATCH_NUMBER = "_id";
     public static final String KEY_BLUE1 = "blue1";
@@ -35,45 +27,72 @@ public class ScheduleDB extends SQLiteOpenHelper
     public static final String KEY_RED1 = "red1";
     public static final String KEY_RED2 = "red2";
     public static final String KEY_RED3 = "red3";
-    public static final String KEY_LAST_UPDATED = "last_updated";
-
-    private static String[] COLUMNS = {KEY_MATCH_NUMBER,KEY_BLUE1,KEY_BLUE2,KEY_BLUE3,KEY_RED1,KEY_RED2,KEY_RED3,KEY_LAST_UPDATED};
-    private String tableName;
+    private static final String KEY_LAST_UPDATED = "last_updated";
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+    // Database Name
+    private static final String DATABASE_NAME = "RohawkticsDB";
+    private static String[] COLUMNS = {KEY_MATCH_NUMBER, KEY_BLUE1, KEY_BLUE2, KEY_BLUE3, KEY_RED1, KEY_RED2, KEY_RED3, KEY_LAST_UPDATED};
     private static SimpleDateFormat dateFormat;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String TAG = "ScheduleDB";
+    private String tableName;
 
-
-    public ScheduleDB(Context context, String eventID)
-    {
+    /**
+     * @param context
+     * @param eventID The ID for the event based on FIRST and The Blue Alliance
+     */
+    public ScheduleDB(Context context, String eventID) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        tableName = "schedule_"+eventID;
+        tableName = "schedule_" + eventID;
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
     }
 
+    /**
+     * Creates new database table if one does not exist
+     *
+     * @param db The database to add the table to
+     */
     @Override
-    public void onCreate(SQLiteDatabase db)
-    {
-        String queryString = "CREATE TABLE IF NOT EXISTS "+tableName +
-                "( "+KEY_MATCH_NUMBER+" INTEGER PRIMARY KEY UNIQUE NOT NULL,"+
-                " "+KEY_BLUE1+" INTEGER NOT NULL,"+
-                " "+KEY_BLUE2+" INTEGER NOT NULL,"+
-                " "+KEY_BLUE3+" INTEGER NOT NULL,"+
-                " "+KEY_RED1+" INTEGER NOT NULL,"+
-                " "+KEY_RED2+" INTEGER NOT NULL,"+
-                " "+KEY_RED3+" INTEGER NOT NULL,"+
-                " "+KEY_LAST_UPDATED+" DATETIME NOT NULL);";
+    public void onCreate(SQLiteDatabase db) {
+        String queryString = "CREATE TABLE IF NOT EXISTS " + tableName +
+                "( " + KEY_MATCH_NUMBER + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                " " + KEY_BLUE1 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE2 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE3 + " INTEGER NOT NULL," +
+                " " + KEY_RED1 + " INTEGER NOT NULL," +
+                " " + KEY_RED2 + " INTEGER NOT NULL," +
+                " " + KEY_RED3 + " INTEGER NOT NULL," +
+                " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
         db.execSQL(queryString);
     }
 
+    /**
+     * Upgrades the table by dropping it and creating a new one
+     *
+     * @param db         The database to update
+     * @param oldVersion Old version number
+     * @param newVersion New version number
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+tableName);
+        db.execSQL("DROP TABLE IF EXISTS " + tableName);
         this.onCreate(db);
     }
 
-    public void addMatch(int matchNum, int blue1, int blue2, int blue3, int red1, int red2, int red3)
-    {
+    /**
+     *
+     * @param matchNum
+     * @param blue1
+     * @param blue2
+     * @param blue3
+     * @param red1
+     * @param red2
+     * @param red3
+     */
+    public void addMatch(int matchNum, int blue1, int blue2, int blue3, int red1, int red2, int red3) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_MATCH_NUMBER, matchNum);
@@ -88,14 +107,21 @@ public class ScheduleDB extends SQLiteOpenHelper
         db.close();
     }
 
-    public void removeMatch(int matchNum)
-    {
+    /**
+     *
+     * @param matchNum
+     */
+    public void removeMatch(int matchNum) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(tableName,KEY_MATCH_NUMBER+" = ?",new String[]{String.valueOf(matchNum)});
+        db.delete(tableName, KEY_MATCH_NUMBER + " = ?", new String[]{String.valueOf(matchNum)});
     }
 
-    public Cursor getMatch(int matchNum)
-    {
+    /**
+     *
+     * @param matchNum
+     * @return
+     */
+    public Cursor getMatch(int matchNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =
                 db.query(tableName, // a. table
@@ -111,15 +137,15 @@ public class ScheduleDB extends SQLiteOpenHelper
         return cursor;
     }
 
-    public void createSchedule(JSONArray array)
-    {
-        for(int i = 0; i < array.length(); i++)
-        {
-            try
-            {
+    /**
+     *
+     * @param array
+     */
+    public void createSchedule(JSONArray array) {
+        for (int i = 0; i < array.length(); i++) {
+            try {
                 JSONObject jsonObject = array.getJSONObject(i);
-                if (jsonObject.getString("comp_level").equals("qm"))
-                {
+                if (jsonObject.getString("comp_level").equals("qm")) {
                     String matchNum = jsonObject.getString("match_number");
                     JSONObject alliances = jsonObject.getJSONObject("alliances");
 
@@ -135,16 +161,19 @@ public class ScheduleDB extends SQLiteOpenHelper
                     String red2 = redTeams.getString(1).substring(3);
                     String red3 = redTeams.getString(2).substring(3);
 
-                    addMatch(Integer.parseInt(matchNum),Integer.parseInt(blue1),Integer.parseInt(blue2),Integer.parseInt(blue3),Integer.parseInt(red1),Integer.parseInt(red2),Integer.parseInt(red3));
+                    addMatch(Integer.parseInt(matchNum), Integer.parseInt(blue1), Integer.parseInt(blue2), Integer.parseInt(blue3), Integer.parseInt(red1), Integer.parseInt(red2), Integer.parseInt(red3));
                 }
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 Log.d(TAG, "Exception: " + e.toString());
             }
         }
     }
 
-    public Cursor getSchedule()
-    {
+    /**
+     *
+     * @return
+     */
+    public Cursor getSchedule() {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =
                 db.query(tableName, // a. table
@@ -160,8 +189,12 @@ public class ScheduleDB extends SQLiteOpenHelper
         return cursor;
     }
 
-    public Cursor getTeamsMatches(int teamNum)
-    {
+    /**
+     *
+     * @param teamNum
+     * @return
+     */
+    public Cursor getTeamsMatches(int teamNum) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor =
                 db.query(tableName, // a. table
@@ -177,9 +210,41 @@ public class ScheduleDB extends SQLiteOpenHelper
         return cursor;
     }
 
-    public int getNumMatches()
-    {
+    /**
+     *
+     * @return
+     */
+    public int getNumMatches() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return (int)DatabaseUtils.queryNumEntries(db, tableName);
+        return (int) DatabaseUtils.queryNumEntries(db, tableName);
+    }
+
+    /**
+     * Resets the table
+     */
+    //TODO: use onUpgrade?
+    public void reset() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE " + tableName;
+        db.execSQL(query);
+        query = "CREATE TABLE IF NOT EXISTS " + tableName +
+                "( " + KEY_MATCH_NUMBER + " INTEGER PRIMARY KEY UNIQUE NOT NULL," +
+                " " + KEY_BLUE1 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE2 + " INTEGER NOT NULL," +
+                " " + KEY_BLUE3 + " INTEGER NOT NULL," +
+                " " + KEY_RED1 + " INTEGER NOT NULL," +
+                " " + KEY_RED2 + " INTEGER NOT NULL," +
+                " " + KEY_RED3 + " INTEGER NOT NULL," +
+                " " + KEY_LAST_UPDATED + " DATETIME NOT NULL);";
+        db.execSQL(query);
+    }
+
+    /**
+     * Drops the table
+     */
+    public void remove() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DROP TABLE " + tableName;
+        db.execSQL(query);
     }
 }

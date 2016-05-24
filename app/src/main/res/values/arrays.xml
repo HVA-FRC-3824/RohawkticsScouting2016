@@ -1,9 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="play_style">
-        <item>Landfill</item>
-        <item>HP Feeder</item>
-        <item>Neither</item>
-        <item>Both</item>
+    <!-- Radio Values -->
+    <string-array name="auto_reach_cross_radio">
+        <item>Nothing</item>
+        <item>Reach</item>
+        <item>Cross</item>
     </string-array>
+    <string-array name="teleop_defense_time">
+        <item>&lt;5 seconds</item>
+        <item>&lt;10 seconds</item>
+        <item>&lt;15 seconds</item>
+        <item>Stuck</item>
+    </string-array>
+    <string-array name="endGame_challenge_scale_radio">
+        <item>Nothing</item>
+        <item>Failed Challenge</item>
+        <item>Challenge</item>
+        <item>Failed Scale</item>
+        <item>Scale</item>
+    </string-array>
+    <!--
+
+    Break Between
+
+    -->
+    <!-- Dropdown Values -->
+    <string-array name="auto_start_position_dropdown">
+        <item>Defense 1 (Low bar)</item>
+        <item>Defense 2</item>
+        <item>Defense 3</item>
+        <item>Defense 4</item>
+        <item>Defense 5</item>
+        <item>Spybox</item>
+        <item>Secret Passage</item>
+    </string-array>
+
+    <string-array name="defense_type_dropdown">
+        <item>Portcullis</item>
+        <item>Cheval de Frise</item>
+        <item>Moat</item>
+        <item>Ramparts</item>
+        <item>Drawbridge</item>
+        <item>Sally Port</item>
+        <item>Rock Wall</item>
+        <item>Rough Terrain</item>
+    </string-array>
+
+    <string-array name="database_dropdown">
+        <item>MatchScoutDB</item>
+        <item>PitScoutDB</item>
+        <item>SuperScoutDB</item>
+        <item>DriveTeamFeedbackDB</item>
+        <item>StatsDB</item>
+        <item>SyncDB</item>
+        <item>ScheduleDB</item>
+    </string-array>
+
+    <string-array name="programming_dropdown">
+        <item>Java</item>
+        <item>C++</item>
+        <item>Lab View</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

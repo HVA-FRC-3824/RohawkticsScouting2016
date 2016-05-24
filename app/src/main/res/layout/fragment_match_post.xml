@@ -18,23 +18,16 @@
         <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/post_stoppedMoving"
+            android:id="@+id/post_stopped"
             app:label="Stopped Moving"
-            app:key="post_stoppedMoving" />
+            app:key="post_stopped" />
 
         <com.team3824.akmessing1.scoutingapp.views.CustomCheckbox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/post_didntShowedUp"
+            android:id="@+id/post_didnt_show_up"
             app:label="Didn't Show Up"
-            app:key="post_didntShowedUp" />
-
-        <com.team3824.akmessing1.scoutingapp.views.CustomCounter
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/post_fouls"
-            app:label="Fouls"
-            app:key="post_fouls" />
+            app:key="post_didnt_show_up" />
 
         <com.team3824.akmessing1.scoutingapp.views.CustomEdittext
             android:layout_width="wrap_content"
@@ -42,6 +35,13 @@
             android:id="@+id/post_notes"
             app:label="Notes"
             app:key="post_notes" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="Keywords:\ndefense\nblocking\nhigh goal\nlow goal\npush\nbroke\nflip\nbattery" />
 
     </LinearLayout>
 </ScrollView>

@@ -9,14 +9,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Arrays;
-import java.util.Map;
 
 public class CustomSpinner extends CustomScoutView{
 
-    private TextView label;
+    private final String TAG = "CustomSpinner";
+
     private Spinner spinner;
     private String[] resourceStrings;
     private String key;
@@ -28,7 +29,7 @@ public class CustomSpinner extends CustomScoutView{
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.custom_spinner, this);
 
-        label = (TextView)this.findViewById(R.id.label);
+        TextView label = (TextView) this.findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
@@ -48,13 +49,14 @@ public class CustomSpinner extends CustomScoutView{
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
-        map.put(key, new ScoutValue(String.valueOf(spinner.getSelectedItem())));
+        map.put(key, String.valueOf(spinner.getSelectedItem()));
+        return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map)
+    public void restoreFromMap(ScoutMap map)
     {
         ScoutValue sv = map.get(key);
         if(sv != null) {

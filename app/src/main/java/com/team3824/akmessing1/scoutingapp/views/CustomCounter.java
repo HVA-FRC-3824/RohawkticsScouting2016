@@ -9,14 +9,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
-
-import java.util.Map;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 // Custom field with label and clickable counter
 public class CustomCounter extends CustomScoutView{
 
-    private TextView label;
     private TextView countView;
     private int count;
     private String key;
@@ -28,7 +26,7 @@ public class CustomCounter extends CustomScoutView{
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.custom_counter, this);
 
-        label = (TextView)this.findViewById(R.id.label);
+        TextView label = (TextView) this.findViewById(R.id.label);
 
         // Set label and get key
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
@@ -79,14 +77,15 @@ public class CustomCounter extends CustomScoutView{
 
     // Custom save
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
-        map.put(key,new ScoutValue(count));
+        map.put(key,count);
+        return "";
     }
 
     // Custom restore
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map)
+    public void restoreFromMap(ScoutMap map)
     {
         ScoutValue sv = map.get(key);
         if(sv != null) {

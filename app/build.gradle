@@ -8,8 +8,8 @@ android {
         applicationId "com.team3824.akmessing1.scoutingapp"
         minSdkVersion 23
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 13
+        versionName "1.1.0"
     }
     buildTypes {
         release {

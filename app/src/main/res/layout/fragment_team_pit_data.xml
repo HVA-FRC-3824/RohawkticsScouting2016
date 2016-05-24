@@ -44,7 +44,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Has can burgulars?"
+            android:text="Number of Cims:"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#000000" />
@@ -52,7 +52,15 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Willing to be cheesecaked?"
+            android:text="Drivetrain:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Programming Language:"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#000000" />
@@ -74,49 +82,56 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_robotWidth"
+            android:id="@+id/pit_robot_width"
             android:textSize="20sp"
             android:textColor="#000000" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_robotLength"
+            android:id="@+id/pit_robot_length"
             android:textSize="20sp"
             android:textColor="#000000" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_robotHeight"
+            android:id="@+id/pit_robot_height"
             android:textSize="20sp"
             android:textColor="#000000" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_robotWeight"
+            android:id="@+id/pit_robot_weight"
             android:textSize="20sp"
             android:textColor="#000000" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_canBurgular"
+            android:id="@+id/pit_number_cims"
             android:textSize="20sp"
             android:textColor="#000000" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_cheesecake"
+            android:id="@+id/pit_drivetrain"
             android:textSize="20sp"
             android:textColor="#000000" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/view_notes"
+            android:id="@+id/pit_programming_language"
+            android:textSize="20sp"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/pit_notes"
             android:textSize="20sp"
             android:textColor="#000000" />
     </LinearLayout>

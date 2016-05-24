@@ -32,7 +32,6 @@
         android:layout_alignLeft="@+id/topText"
         android:id="@+id/bottomText" />
 
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,5 +46,22 @@
         android:text="View Team"
         android:layout_toLeftOf="@id/team_picked"
         android:id="@+id/pick_view_team" />
+
+    <View
+        android:id="@+id/red_card"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="#ff0000"
+        android:layout_toLeftOf="@id/pick_view_team"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/yellow_card"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="#ffea00"
+        android:layout_toLeftOf="@id/red_card"
+        android:layout_marginRight="5dp"
+        android:visibility="gone"/>
 
 </RelativeLayout>

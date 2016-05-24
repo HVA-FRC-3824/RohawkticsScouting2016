@@ -1,0 +1,9 @@
+[submodule "libraries/drag-sort-listview"]
+	path = libraries/drag-sort-listview
+	url = https://github.com/JayH5/drag-sort-listview.git
+[submodule "libraries/volley"]
+	path = libraries/volley
+	url = https://github.com/mcxiaoke/android-volley.git
+[submodule "libraries/MPAndroidChart"]
+	path = libraries/MPAndroidChart
+	url = https://github.com/PhilJay/MPAndroidChart.git

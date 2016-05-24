@@ -4,22 +4,22 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutValue;
 
 import java.util.Arrays;
-import java.util.Map;
 
 public class CustomRadioButtons extends CustomScoutView {
-    private TextView label;
+
+    private final String TAG = "CustomRadioButtons";
+
     private String[] resourceStrings;
-    RadioGroup radios;
+    private RadioGroup radios;
     private String key;
 
     public CustomRadioButtons(Context context, AttributeSet attrs)
@@ -28,7 +28,7 @@ public class CustomRadioButtons extends CustomScoutView {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.custom_radio, this);
 
-        label = (TextView)findViewById(R.id.label);
+        TextView label = (TextView) findViewById(R.id.label);
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CustomScoutView);
         label.setText(typedArray.getString(R.styleable.CustomScoutView_label));
@@ -44,8 +44,6 @@ public class CustomRadioButtons extends CustomScoutView {
 
         radios = (RadioGroup)findViewById(R.id.radiobuttons);
 
-
-
         for(int i = 0; i < resourceStrings.length;i++)
         {
             RadioButton radioButton = new RadioButton(context, attrs);
@@ -53,22 +51,25 @@ public class CustomRadioButtons extends CustomScoutView {
             radioButton.setId(i);
             radios.addView(radioButton);
         }
+        radios.check(0);
     }
 
     @Override
-    public void writeToMap(Map<String, ScoutValue> map)
+    public String writeToMap(ScoutMap map)
     {
         if(radios.getCheckedRadioButtonId() != -1) {
-            map.put(key, new ScoutValue(resourceStrings[radios.getCheckedRadioButtonId()]));
+            map.put(key, resourceStrings[radios.getCheckedRadioButtonId()]);
         }
         else
         {
-            map.put(key, new ScoutValue(""));
+            map.put(key, "");
         }
+
+        return "";
     }
 
     @Override
-    public void restoreFromMap(Map<String, ScoutValue> map) {
+    public void restoreFromMap(ScoutMap map) {
         ScoutValue sv = map.get(key);
         if (sv != null) {
             String selectedString = sv.getString();

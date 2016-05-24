@@ -12,47 +12,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.team3824.akmessing1.scoutingapp.views.CustomHeader
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/pit_header"/>
-
-        <LinearLayout
+        <android.widget.Toolbar
+            android:id="@+id/pit_scouting_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/navy_blue"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/previous_team"
-                android:text="Previous Team"
-                android:background="@color/navy_blue"
-                android:textColor="@color/white"
-                android:paddingRight="8dp"
-                android:paddingLeft="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Team Number:"
-                android:id="@+id/pit_team_num"
-                android:textColor="#000000"
-                android:layout_weight="1"
-                android:layout_marginRight="16dp"
-                android:textStyle="bold"
-                android:gravity="center_horizontal" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/next_team"
-                android:text="Next Team"
-                android:background="@color/navy_blue"
-                android:textColor="@color/white"
-                android:paddingRight="8dp"
-                android:paddingLeft="8dp" />
-        </LinearLayout>
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

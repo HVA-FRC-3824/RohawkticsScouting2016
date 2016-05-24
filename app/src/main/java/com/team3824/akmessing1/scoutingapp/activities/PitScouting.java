@@ -1,206 +1,423 @@
 package com.team3824.akmessing1.scoutingapp.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
-import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.R;
-import com.team3824.akmessing1.scoutingapp.ScoutValue;
-import com.team3824.akmessing1.scoutingapp.adapters.PitScoutFragmentPagerAdapter;
+import com.team3824.akmessing1.scoutingapp.adapters.FragmentPagerAdapters.FPA_PitScout;
+import com.team3824.akmessing1.scoutingapp.database_helpers.PitScoutDB;
 import com.team3824.akmessing1.scoutingapp.fragments.ScoutFragment;
-import com.team3824.akmessing1.scoutingapp.views.CustomHeader;
+import com.team3824.akmessing1.scoutingapp.utilities.Constants;
+import com.team3824.akmessing1.scoutingapp.utilities.ScoutMap;
+import com.team3824.akmessing1.scoutingapp.utilities.Utilities;
 
-import java.util.HashMap;
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
-public class PitScouting extends AppCompatActivity {
+/**
+ * Activity that holds the fragments for pit scouting
+ */
+public class PitScouting extends Activity {
 
     final private String TAG = "PitScouting";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private PitScoutFragmentPagerAdapter adapter;
+    private FPA_PitScout adapter;
 
     private int teamNumber;
 
+    private String eventId;
+    private int prevTeamNumber = -1;
+    private int nextTeamNumber = -1;
+
+    /**
+     * Sets up the view pager, pager adapter, and tab layout
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pit_scouting);
 
-        CustomHeader header = (CustomHeader)findViewById(R.id.pit_header);
-        header.setBackOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PitScouting.this, PitList.class);
-                startActivity(intent);
-            }
-        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.pit_scouting_toolbar);
+        setActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
-        teamNumber = extras.getInt("team_number");
-
-        TextView tv = (TextView)findViewById(R.id.pit_team_num);
-        tv.setText("Team Number: "+teamNumber);
+        teamNumber = extras.getInt(Constants.Intent_Extras.TEAM_NUMBER);
+        setTitle("Team Number: " + teamNumber);
 
         findViewById(android.R.id.content).setKeepScreenOn(true);
-        viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
-        adapter = new PitScoutFragmentPagerAdapter(getFragmentManager());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pit_view_pager);
+        adapter = new FPA_PitScout(getFragmentManager());
         viewPager.setAdapter(adapter);
-        tabLayout = (TabLayout)findViewById(R.id.pit_tab_layout);
+        viewPager.setOffscreenPageLimit(5);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.pit_tab_layout);
         tabLayout.setTabTextColors(Color.WHITE, Color.GREEN);
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
         tabLayout.setupWithViewPager(viewPager);
 
-        final SharedPreferences sharedPreferences = getSharedPreferences("appData", Context.MODE_PRIVATE);
-        String eventId = sharedPreferences.getString("event_id", "");
-        final PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
-        Map<String, ScoutValue> map = pitScoutDB.getTeamMap(teamNumber);
-        if(map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0)
-        {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.APP_DATA, Context.MODE_PRIVATE);
+        eventId = sharedPreferences.getString(Constants.Settings.EVENT_ID, "");
+        String userType = sharedPreferences.getString(Constants.Settings.USER_TYPE, "");
+        PitScoutDB pitScoutDB = new PitScoutDB(this, eventId);
+        ScoutMap map = pitScoutDB.getTeamMap(teamNumber);
+        if (map.get(PitScoutDB.KEY_COMPLETE).getInt() > 0) {
             adapter.setValueMap(map);
         }
 
-        final int previousTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
-        if(previousTeamNumber == -1)
-        {
-            Button previous = (Button)findViewById(R.id.previous_team);
-            previous.setVisibility(View.INVISIBLE);
+        prevTeamNumber = pitScoutDB.getPreviousTeamNumber(teamNumber);
+        nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
+
+        int pitGroupNumber = sharedPreferences.getInt(Constants.Settings.PIT_GROUP_NUMBER,0);
+        Cursor cursor = pitScoutDB.getAllTeamsInfo();
+        int numTeams = cursor.getCount();
+        int numGroupTeams = numTeams / 6;
+        int extra = numTeams % 6;
+        int startPosition = 0;
+        int endPosition = -1;
+        startPosition = numGroupTeams * (pitGroupNumber - 1);
+        endPosition = numGroupTeams * pitGroupNumber;
+        if (extra > 0) {
+            startPosition += pitGroupNumber - 1;
+            endPosition += pitGroupNumber;
         }
-        else
+        cursor.moveToPosition(startPosition);
+        if(prevTeamNumber < cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER)))
         {
-            Button prev = (Button)findViewById(R.id.previous_team);
-            prev.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "previous team pressed");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
-                    builder.setTitle("Save pit data?");
+            prevTeamNumber = -1;
+        }
 
-                    // Save option
-                    builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+        cursor.moveToPosition(endPosition);
+        if(cursor.isAfterLast())
+        {
+            cursor.moveToLast();
+        }
+        if (nextTeamNumber >= cursor.getInt(cursor.getColumnIndex(PitScoutDB.KEY_TEAM_NUMBER))) {
+            nextTeamNumber = -1;
+        }
 
-                            // Collect values from all the custom elements
-                            List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                            Map<String, ScoutValue> data = new HashMap<>();
-                            for (ScoutFragment fragment : fragmentList) {
-                                fragment.writeContentsToMap(data);
-                            }
+        Utilities.setupUI(this, findViewById(android.R.id.content));
 
-                            Log.d(TAG,"Saving values");
-                            // Add the team and match numbers
-                            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                            // Store values to the database
-                            pitScoutDB.updatePit(data);
+    }
 
-                            // Go to the next match
-                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                            intent.putExtra("team_number",previousTeamNumber);
-                            startActivity(intent);
-                        }
-                    });
+    /**
+     * Creates the overflow menu for the toolbar
+     *
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.team_overflow, menu);
+        if (prevTeamNumber == -1) {
+            menu.removeItem(R.id.previous);
+        }
+        if (nextTeamNumber == -1) {
+            menu.removeItem(R.id.next);
+        }
+        return true;
+    }
 
-                    // Cancel Option
-                    builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Dialogbox goes away
-                        }
-                    });
+    /**
+     * Implements the actions that happen when a option is selected from the overflow menu
+     *
+     * @param item The item that was selected from the overflow menu
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                home_press();
+                break;
+            case R.id.back:
+                back_press();
+                break;
+            case R.id.previous:
+                previous_press();
+                break;
+            case R.id.next:
+                next_press();
+                break;
+            default:
+                assert false;
+        }
+        return true;
+    }
 
-                    // Continue w/o Saving Option
-                    builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Go to the next match
-                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                            intent.putExtra("team_number", previousTeamNumber);
-                            startActivity(intent);
-                        }
-                    });
-                    builder.show();
+    /**
+     * The action that happens when the home button is pressed. Brings up dialog with options to save
+     * and takes user to the home screen.
+     */
+    private void home_press() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
+        builder.setTitle("Save pit data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                ScoutMap data = new ScoutMap();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
                 }
-            });
-        }
 
-        final int nextTeamNumber = pitScoutDB.getNextTeamNumber(teamNumber);
-        if(nextTeamNumber == -1)
-        {
-            Button next = (Button)findViewById(R.id.next_team);
-            next.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            Button next = (Button)findViewById(R.id.next_team);
-            next.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "next team pressed");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
-                    builder.setTitle("Save pit data?");
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    new SaveTask().execute(data);
 
-                    // Save option
-                    builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            // Collect values from all the custom elements
-                            List<ScoutFragment> fragmentList = adapter.getAllFragments();
-                            Map<String, ScoutValue> data = new HashMap<>();
-                            for (ScoutFragment fragment : fragmentList) {
-                                fragment.writeContentsToMap(data);
-                            }
-
-                            Log.d(TAG,"Saving values");
-                            // Add the team and match numbers
-                            data.put(PitScoutDB.KEY_TEAM_NUMBER, new ScoutValue(teamNumber));
-                            // Store values to the database
-                            pitScoutDB.updatePit(data);
-
-                            // Go to the next match
-                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                            intent.putExtra("team_number",nextTeamNumber);
-                            startActivity(intent);
-                        }
-                    });
-
-                    // Cancel Option
-                    builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Dialog box goes away
-                        }
-                    });
-
-                    // Continue w/o Saving Option
-                    builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Go to the next match
-                            Intent intent = new Intent(PitScouting.this, PitScouting.class);
-                            intent.putExtra("team_number", nextTeamNumber);
-                            startActivity(intent);
-                        }
-                    });
-                    builder.show();
+                    Intent intent = new Intent(PitScouting.this, HomeScreen.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
                 }
-            });
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(PitScouting.this, HomeScreen.class);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * The action that happens when the back button is pressed. Brings up dialog with options to save
+     * and takes user to the team list.
+     */
+    private void back_press() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
+        builder.setTitle("Save pit data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                ScoutMap data = new ScoutMap();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
+                }
+
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    // Add the team and match numbers
+                    new SaveTask().execute(data);
+
+                    Intent intent = new Intent(PitScouting.this, TeamList.class);
+                    intent.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.PIT_SCOUTING);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent2 = new Intent(PitScouting.this, TeamList.class);
+                intent2.putExtra(Constants.Intent_Extras.NEXT_PAGE, Constants.Intent_Extras.PIT_SCOUTING);
+                startActivity(intent2);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * The action that happens when the previous team button is pressed. Brings up dialog with options to save
+     * and takes user to pit scout the previous team.
+     */
+    private void previous_press() {
+        Log.d(TAG, "previous team pressed");
+        AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
+        builder.setTitle("Save pit data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                ScoutMap data = new ScoutMap();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
+                }
+
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    new SaveTask().execute(data);
+
+                    // Go to the next match
+                    Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                    intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, prevTeamNumber);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialogbox goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, prevTeamNumber);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * The action that happens when the next team button is pressed. Brings up dialog with options to save
+     * and takes user to pit scout the next team.
+     */
+    private void next_press() {
+        Log.d(TAG, "next team pressed");
+        AlertDialog.Builder builder = new AlertDialog.Builder(PitScouting.this);
+        builder.setTitle("Save pit data?");
+
+        // Save option
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Collect values from all the custom elements
+                List<ScoutFragment> fragmentList = adapter.getAllFragments();
+                ScoutMap data = new ScoutMap();
+                String error = "";
+                for (ScoutFragment fragment : fragmentList) {
+                    error += fragment.writeContentsToMap(data);
+                }
+
+                if (error.equals("")) {
+                    Log.d(TAG, "Saving values");
+                    new SaveTask().execute(data);
+
+                    // Go to the next match
+                    Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                    intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(PitScouting.this, String.format("Error: %s", error), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Cancel Option
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Dialog box goes away
+            }
+        });
+
+        // Continue w/o Saving Option
+        builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Go to the next match
+                Intent intent = new Intent(PitScouting.this, PitScouting.class);
+                intent.putExtra(Constants.Intent_Extras.TEAM_NUMBER, nextTeamNumber);
+                startActivity(intent);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * Asynchronous Task to save the data to the database.
+     */
+    private class SaveTask extends AsyncTask<ScoutMap, Void, Void> {
+
+        @Override
+        protected Void doInBackground(ScoutMap... maps) {
+            ScoutMap data = maps[0];
+
+            // Change picture filename to use event id and team number
+            if(data.containsKey(Constants.Pit_Inputs.PIT_ROBOT_PICTURE)) {
+                String picture_filename = data.getString(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                File picture = new File(getFilesDir(), picture_filename);
+                if (picture.exists() && picture.length() > 0) {
+                    String newPathName = String.format("%s_%d.jpg", eventId, teamNumber);
+                    File newPath = new File(getFilesDir(), newPathName);
+                    picture.renameTo(newPath);
+                    data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                    data.put(Constants.Pit_Inputs.PIT_ROBOT_PICTURE, newPathName);
+                } else {
+                    data.remove(Constants.Pit_Inputs.PIT_ROBOT_PICTURE);
+                }
+            }
+
+            PitScoutDB pitScoutDB = new PitScoutDB(PitScouting.this, eventId);
+            // Add the team and match numbers
+            data.put(PitScoutDB.KEY_TEAM_NUMBER, teamNumber);
+            // Store values to the database
+            pitScoutDB.updatePit(data);
+            return null;
         }
     }
 
+
+    @Override
+    public void onBackPressed()
+    {
+        back_press();
+    }
 }

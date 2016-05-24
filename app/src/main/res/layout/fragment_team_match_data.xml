@@ -4,275 +4,154 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Number of Matches:"
+                android:text="Number of Matches: "
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="#000000" />
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Position:"
+                android:id="@+id/num_matches"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Avg. Points:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Avg. # of totes scored:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Avg. # of containers scored:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Avg. # of noodles scored:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Three tote autos:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Auto step cans:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Teleop step cans:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Driver Ability:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Coop totes placed:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Stacks knocked over:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Stacks dropped:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Fouls:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="DQs:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Robot stopped moving:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Robot didn't show up:"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-        </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_matches"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/position"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/average_points"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/average_totes"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/average_cans"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/average_noodles"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_auto_three_tote_stack"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_auto_step_cans"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_teleop_step_cans"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/driver_ability"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_coop_totes"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_knocked_over_stacks"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_dropped_stacks"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_fouls"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_dqs"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_stopped_moving"
-                android:textSize="20sp"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/total_didnt_show_up"
-                android:textSize="20sp"
                 android:textColor="#000000" />
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Points:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <include
+            layout="@layout/list_item_event_points"
+            android:id="@+id/points_header"/>
+
+        <include
+            layout="@layout/list_item_event_points"
+            android:id="@+id/points"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Defenses:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/defense_header"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/portcullis"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/cheval_de_frise"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/moat"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/ramparts"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/drawbridge"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/sally_port"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/rough_terrain"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/rock_wall"/>
+        <include
+            layout="@layout/list_item_event_individual_defense"
+            android:id="@+id/low_bar"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shooting:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <include
+            layout="@layout/list_item_event_shot"
+            android:id="@+id/shot_header"/>
+
+        <include
+            layout="@layout/list_item_event_shot"
+            android:id="@+id/high"/>
+
+        <include
+            layout="@layout/list_item_event_shot"
+            android:id="@+id/low"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Endgame:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <include
+            layout="@layout/list_item_event_endgame"
+            android:id="@+id/endgame_header"/>
+
+        <include
+            layout="@layout/list_item_event_endgame"
+            android:id="@+id/endgame"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fouls:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <include
+            layout="@layout/list_item_event_fouls"
+            android:id="@+id/fouls_header"/>
+
+        <include
+            layout="@layout/list_item_event_fouls"
+            android:id="@+id/fouls"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Misc:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <include
+            layout="@layout/list_item_event_endgame"
+            android:id="@+id/misc_header"/>
+
+        <include
+            layout="@layout/list_item_event_endgame"
+            android:id="@+id/misc"/>
+
     </LinearLayout>
 </ScrollView>
