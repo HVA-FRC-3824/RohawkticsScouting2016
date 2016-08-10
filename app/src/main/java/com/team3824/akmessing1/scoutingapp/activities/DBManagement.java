@@ -24,8 +24,8 @@ import com.team3824.akmessing1.scoutingapp.utilities.Constants;
  * @author Andrew Messing
  * @version %I%
  */
-public class DatabaseManagement extends Activity implements View.OnClickListener {
-    private String TAG = "DatabaseManagement";
+public class DBManagement extends Activity implements View.OnClickListener {
+    private String TAG = "DBManagement";
 
     private MatchScoutDB matchScoutDB;
     private PitScoutDB pitScoutDB;

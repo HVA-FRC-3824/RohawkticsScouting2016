@@ -29,8 +29,8 @@ import com.team3824.akmessing1.scoutingapp.views.CustomEdittext;
  * @author Andrew Messing
  *
  */
-public class DriveTeamFeedback extends Activity {
-    private String TAG = "DriveTeamFeedback";
+public class DTFeedback extends Activity {
+    private String TAG = "DTFeedback";
     private DriveTeamFeedbackDB driveTeamFeedbackDB;
     private int team1 = -1, team2 = -1;
     private EditText commentEditText1, commentEditText2;
@@ -157,7 +157,7 @@ public class DriveTeamFeedback extends Activity {
      * Activity is brought up.
      */
     private void home_press() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(DriveTeamFeedback.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(DTFeedback.this);
         builder.setTitle("Save match data?");
 
         // Save option
@@ -170,7 +170,7 @@ public class DriveTeamFeedback extends Activity {
                 driveTeamFeedbackDB.updateComments(team1, String.valueOf(commentEditText1.getText()));
                 driveTeamFeedbackDB.updateComments(team2, String.valueOf(commentEditText2.getText()));
 
-                Intent intent = new Intent(DriveTeamFeedback.this, HomeScreen.class);
+                Intent intent = new Intent(DTFeedback.this, HomeScreen.class);
                 startActivity(intent);
             }
         });
@@ -188,7 +188,7 @@ public class DriveTeamFeedback extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Go to the next match
-                Intent intent = new Intent(DriveTeamFeedback.this, HomeScreen.class);
+                Intent intent = new Intent(DTFeedback.this, HomeScreen.class);
                 startActivity(intent);
             }
         });
@@ -201,7 +201,7 @@ public class DriveTeamFeedback extends Activity {
      * List Activity is brought up.
      */
     private void back_press() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(DriveTeamFeedback.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(DTFeedback.this);
         builder.setTitle("Save match data?");
 
         // Save option
@@ -214,7 +214,7 @@ public class DriveTeamFeedback extends Activity {
                 driveTeamFeedbackDB.updateComments(team1, String.valueOf(commentEditText1.getText()));
                 driveTeamFeedbackDB.updateComments(team2, String.valueOf(commentEditText2.getText()));
 
-                Intent intent = new Intent(DriveTeamFeedback.this, MatchList.class);
+                Intent intent = new Intent(DTFeedback.this, MatchList.class);
                 intent.putExtra(Constants.Intent_Extras.NEXT_PAGE,Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
             }
@@ -232,7 +232,7 @@ public class DriveTeamFeedback extends Activity {
         builder.setNegativeButton("Continue w/o Saving", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(DriveTeamFeedback.this, MatchList.class);
+                Intent intent = new Intent(DTFeedback.this, MatchList.class);
                 intent.putExtra(Constants.Intent_Extras.NEXT_PAGE,Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK);
                 startActivity(intent);
             }

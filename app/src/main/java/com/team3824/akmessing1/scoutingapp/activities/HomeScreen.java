@@ -314,7 +314,7 @@ public class HomeScreen extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.database_button:
-                intent = new Intent(this, DatabaseManagement.class);
+                intent = new Intent(this, DBManagement.class);
                 startActivity(intent);
                 break;
             case R.id.file_button:

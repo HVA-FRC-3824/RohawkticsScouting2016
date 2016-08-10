@@ -147,7 +147,7 @@ public class MatchList extends Activity {
                         } else if (nextPage.equals(Constants.Intent_Extras.MATCH_VIEWING)) {
                             intent = new Intent(MatchList.this, MatchView.class);
                         } else if (nextPage.equals(Constants.Intent_Extras.DRIVE_TEAM_FEEDBACK)) {
-                            intent = new Intent(MatchList.this, DriveTeamFeedback.class);
+                            intent = new Intent(MatchList.this, DTFeedback.class);
                         } else {
                             assert false;
                         }
